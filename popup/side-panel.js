@@ -417,6 +417,16 @@ function attachShortcutListeners() {
       });
       
       if (dropdown) {
+        const isActive = dropdown.classList.contains('active');
+        
+        if (!isActive) {
+          // Position the dropdown relative to the button
+          const rect = btn.getBoundingClientRect();
+          dropdown.style.top = `${rect.bottom + 4}px`;
+          dropdown.style.right = `${window.innerWidth - rect.right}px`;
+          console.log('[DEBUG] Dropdown positioned at:', { top: dropdown.style.top, right: dropdown.style.right });
+        }
+        
         dropdown.classList.toggle('active');
         console.log('[DEBUG] Dropdown toggled, active:', dropdown.classList.contains('active'));
       }
