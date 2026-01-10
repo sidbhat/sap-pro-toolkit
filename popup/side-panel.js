@@ -124,7 +124,8 @@ async function loadNotes() {
 
 async function loadCurrentPageData() {
   try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    // Side panel needs to query across all windows, not just currentWindow
+    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     
     if (!tab || !tab.url) {
       showContextBanner(null);
@@ -614,7 +615,7 @@ function highlightActiveStates(currentURL) {
 
 async function navigateToShortcut(url) {
   try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     if (tab && tab.id) {
       await chrome.tabs.update(tab.id, { url: url });
     } else {
@@ -633,7 +634,7 @@ async function switchEnvironment(targetHostname, targetType) {
       if (!confirmed) return;
     }
     
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     
     let newURL;
     if (tab && isSFPage(tab.url)) {
@@ -906,7 +907,7 @@ async function saveShortcut() {
 }
 
 async function addCurrentPageAsShortcut() {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
   
   if (!tab || !tab.url) {
     showToast('No active tab found', 'warning');
