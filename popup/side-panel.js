@@ -862,11 +862,17 @@ function closeAddShortcutModal() {
 
 function editShortcut(id) {
   console.log('[DEBUG] editShortcut called with id:', id);
+  console.log('[DEBUG] shortcuts array:', shortcuts);
+  console.log('[DEBUG] shortcuts length:', shortcuts.length);
+  console.log('[DEBUG] shortcuts IDs:', shortcuts.map(s => s.id));
+  
   const shortcut = shortcuts.find(s => s.id === id);
   console.log('[DEBUG] Found shortcut:', shortcut);
   
   if (!shortcut) {
     console.error('[DEBUG] Shortcut not found for id:', id);
+    console.error('[DEBUG] All shortcuts:', JSON.stringify(shortcuts, null, 2));
+    showToast('Shortcut not found. Try reloading the extension.', 'error');
     return;
   }
   
