@@ -293,6 +293,10 @@ function attachEnvironmentListeners() {
 // ==================== UI RENDERING - SHORTCUTS ====================
 
 function renderShortcuts() {
+  console.log('[DEBUG] renderShortcuts() called');
+  console.log('[DEBUG] shortcuts.length:', shortcuts.length);
+  console.log('[DEBUG] shortcuts:', shortcuts);
+  
   const tbody = document.getElementById('shortcutsList');
   
   if (shortcuts.length === 0) {
@@ -367,6 +371,10 @@ function renderShortcuts() {
 }
 
 function attachShortcutListeners() {
+  console.log('[DEBUG] attachShortcutListeners() called');
+  console.log('[DEBUG] Found .edit-action buttons:', document.querySelectorAll('.shortcut-actions-cell .edit-action').length);
+  console.log('[DEBUG] Found .kebab-btn buttons:', document.querySelectorAll('.shortcut-actions-cell .kebab-btn').length);
+  
   document.querySelectorAll('.go-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
