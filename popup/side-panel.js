@@ -404,16 +404,22 @@ function attachShortcutListeners() {
   // Kebab menu toggle
   document.querySelectorAll('.shortcut-actions-cell .kebab-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
+      console.log('[DEBUG] Kebab button clicked!');
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
+      console.log('[DEBUG] Kebab button id:', id);
       const dropdown = document.querySelector(`.dropdown-menu[data-dropdown-id="${id}"]`);
+      console.log('[DEBUG] Found dropdown:', !!dropdown);
       
       // Close all other dropdowns
       document.querySelectorAll('.dropdown-menu').forEach(d => {
         if (d !== dropdown) d.classList.remove('active');
       });
       
-      dropdown?.classList.toggle('active');
+      if (dropdown) {
+        dropdown.classList.toggle('active');
+        console.log('[DEBUG] Dropdown toggled, active:', dropdown.classList.contains('active'));
+      }
     });
     
     // Keyboard support
