@@ -1,0 +1,306 @@
+{
+  "extName": {
+    "message": "SuccessFactors Pro Toolkit",
+    "description": "Name of the extension"
+  },
+  "extDescription": {
+    "message": "SAP SuccessFactors プロフェッショナル向けの生産性ツールキット",
+    "description": "extDescription translation"
+  },
+  "headerTitle": {
+    "message": "SuccessFactors Pro Toolkit",
+    "description": "Name of the extension"
+  },
+  "dcInfoBtn": {
+    "message": "データセンターディレクトリ",
+    "description": "dcInfoBtn translation"
+  },
+  "helpBtn": {
+    "message": "このツールについて・ヘルプ",
+    "description": "helpBtn translation"
+  },
+  "contextDetecting": {
+    "message": "環境を検出中...",
+    "description": "contextDetecting translation"
+  },
+  "switchEnvironmentTitle": {
+    "message": "環境を切り替える",
+    "description": "switchEnvironmentTitle translation"
+  },
+  "noEnvironments": {
+    "message": "保存された環境がまだありません",
+    "description": "noEnvironments translation"
+  },
+  "addCurrentInstance": {
+    "message": "現在のインスタンスを追加",
+    "description": "addCurrentInstance translation"
+  },
+  "addEnvironment": {
+    "message": "環境を追加",
+    "description": "addEnvironment translation"
+  },
+  "shortcutsTitle": {
+    "message": "ショートカット",
+    "description": "shortcutsTitle translation"
+  },
+  "notesTitle": {
+    "message": "クイックノート",
+    "description": "notesTitle translation"
+  },
+  "selectNote": {
+    "message": "ノートを選択...",
+    "description": "selectNote translation"
+  },
+  "addNote": {
+    "message": "ノートを追加",
+    "description": "addNote translation"
+  },
+  "editNote": {
+    "message": "ノートを編集",
+    "description": "editNote translation"
+  },
+  "deleteNote": {
+    "message": "ノートを削除",
+    "description": "deleteNote translation"
+  },
+  "copyNote": {
+    "message": "ノート内容をコピー",
+    "description": "copyNote translation"
+  },
+  "selectShortcut": {
+    "message": "ショートカットを選択...",
+    "description": "selectShortcut translation"
+  },
+  "addCurrentPage": {
+    "message": "現在のページを追加",
+    "description": "addCurrentPage translation"
+  },
+  "editSelected": {
+    "message": "選択項目を編集",
+    "description": "editSelected translation"
+  },
+  "deleteSelected": {
+    "message": "選択項目を削除",
+    "description": "deleteSelected translation"
+  },
+  "diagnosticsTitle": {
+    "message": "システム診断",
+    "description": "diagnosticsTitle translation"
+  },
+  "diagnosticsDescription": {
+    "message": "環境詳細、ユーザーデータ、技術仕様を含む包括的なシステム情報をコピーして、トラブルシューティングとサポートに役立てます。",
+    "description": "diagnosticsDescription translation"
+  },
+  "copyDiagnostics": {
+    "message": "診断レポートをコピー",
+    "description": "copyDiagnostics translation"
+  },
+  "addEnvironmentTitle": {
+    "message": "環境を追加",
+    "description": "addEnvironmentTitle translation"
+  },
+  "editEnvironmentTitle": {
+    "message": "環境を編集",
+    "description": "editEnvironmentTitle translation"
+  },
+  "environmentName": {
+    "message": "環境名",
+    "description": "environmentName translation"
+  },
+  "environmentNamePlaceholder": {
+    "message": "例：本番環境 DC68",
+    "description": "environmentNamePlaceholder translation"
+  },
+  "environmentType": {
+    "message": "環境タイプ",
+    "description": "environmentType translation"
+  },
+  "environmentTypeProduction": {
+    "message": "本番",
+    "description": "environmentTypeProduction translation"
+  },
+  "environmentTypePreview": {
+    "message": "プレビュー",
+    "description": "environmentTypePreview translation"
+  },
+  "environmentTypeSales": {
+    "message": "営業/デモ",
+    "description": "environmentTypeSales translation"
+  },
+  "environmentTypeSandbox": {
+    "message": "サンドボックス",
+    "description": "environmentTypeSandbox translation"
+  },
+  "hostname": {
+    "message": "ホスト名",
+    "description": "hostname translation"
+  },
+  "hostnamePlaceholder": {
+    "message": "例：hcm-us20.hr.cloud.sap",
+    "description": "hostnamePlaceholder translation"
+  },
+  "hostnameHelp": {
+    "message": "データセンターはホスト名から自動的に検出されます",
+    "description": "hostnameHelp translation"
+  },
+  "cancel": {
+    "message": "キャンセル",
+    "description": "cancel translation"
+  },
+  "saveEnvironment": {
+    "message": "環境を保存",
+    "description": "saveEnvironment translation"
+  },
+  "addShortcutTitle": {
+    "message": "ショートカットを追加",
+    "description": "addShortcutTitle translation"
+  },
+  "editShortcutTitle": {
+    "message": "ショートカットを編集",
+    "description": "editShortcutTitle translation"
+  },
+  "shortcutName": {
+    "message": "名前",
+    "description": "shortcutName translation"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "例：管理センター",
+    "description": "shortcutNamePlaceholder translation"
+  },
+  "shortcutUrl": {
+    "message": "URL",
+    "description": "shortcutUrl translation"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "例：https://hcm-us20.hr.cloud.sap/sf/admin",
+    "description": "shortcutUrlPlaceholder translation"
+  },
+  "shortcutUrlHelp": {
+    "message": "https:// を含む完全な URL を入力してください",
+    "description": "shortcutUrlHelp translation"
+  },
+  "shortcutNotes": {
+    "message": "メモ（任意）",
+    "description": "shortcutNotes translation"
+  },
+  "shortcutNotesPlaceholder": {
+    "message": "例：トラブルシューティング用",
+    "description": "shortcutNotesPlaceholder translation"
+  },
+  "shortcutIcon": {
+    "message": "アイコン",
+    "description": "shortcutIcon translation"
+  },
+  "saveShortcut": {
+    "message": "ショートカットを保存",
+    "description": "saveShortcut translation"
+  },
+  "addNoteTitle": {
+    "message": "ノートを追加",
+    "description": "addNoteTitle translation"
+  },
+  "editNoteTitle": {
+    "message": "ノートを編集",
+    "description": "editNoteTitle translation"
+  },
+  "noteTitle": {
+    "message": "タイトル",
+    "description": "noteTitle translation"
+  },
+  "noteTitlePlaceholder": {
+    "message": "例：一時 ID、URL、設定",
+    "description": "noteTitlePlaceholder translation"
+  },
+  "noteContent": {
+    "message": "内容",
+    "description": "noteContent translation"
+  },
+  "noteContentPlaceholder": {
+    "message": "ここに一時情報を貼り付け...\\n\\n• ユーザー ID\\n• URL\\n• 設定スニペット\\n• 素早くアクセスが必要なもの",
+    "description": "noteContentPlaceholder translation"
+  },
+  "noteIcon": {
+    "message": "アイコン",
+    "description": "noteIcon translation"
+  },
+  "noteColor": {
+    "message": "色",
+    "description": "noteColor translation"
+  },
+  "saveNote": {
+    "message": "ノートを保存",
+    "description": "saveNote translation"
+  },
+  "dcDirectoryTitle": {
+    "message": "グローバルデータセンターディレクトリ",
+    "description": "dcDirectoryTitle translation"
+  },
+  "dcDirectoryDescription": {
+    "message": "世界中の SuccessFactors データセンターの完全なリスト（場所、クラウドプロバイダー、可用性を含む）。",
+    "description": "dcDirectoryDescription translation"
+  },
+  "close": {
+    "message": "閉じる",
+    "description": "close translation"
+  },
+  "helpTitle": {
+    "message": "SuccessFactors Pro Toolkit について",
+    "description": "helpTitle translation"
+  },
+  "helpFeatures": {
+    "message": "3つの主要機能",
+    "description": "helpFeatures translation"
+  },
+  "helpFeature1Title": {
+    "message": "環境間の切り替え",
+    "description": "helpFeature1Title translation"
+  },
+  "helpFeature1Description": {
+    "message": "複数の SF インスタンス（本番、プレビュー、営業、サンドボックス）を保存し、URL を手動で変更せずに素早く切り替えます。拡張機能は切り替え時に現在のページパスを保持します。",
+    "description": "helpFeature1Description translation"
+  },
+  "helpFeature2Title": {
+    "message": "ショートカットでナビゲート",
+    "description": "helpFeature2Title translation"
+  },
+  "helpFeature2Description": {
+    "message": "管理センター、RBP、プロビジョニング、新機能ドキュメントなど、よく使用される SF ページへの素早いアクセス。定期的に訪れる SF URL のカスタムショートカットを作成できます。",
+    "description": "helpFeature2Description translation"
+  },
+  "helpFeature3Title": {
+    "message": "システム診断のコピー",
+    "description": "helpFeature3Title translation"
+  },
+  "helpFeature3Description": {
+    "message": "現在の環境詳細、データセンター情報、ユーザー ID、ブラウザ仕様、技術設定を含む包括的な診断レポートを生成し、トラブルシューティングとサポートチケットに役立てます。",
+    "description": "helpFeature3Description translation"
+  },
+  "helpProTip": {
+    "message": "プロのヒント",
+    "description": "helpProTip translation"
+  },
+  "helpProTipDescription": {
+    "message": "SuccessFactors ページを閲覧中、拡張機能はデータセンター情報と環境タイプを自動的に検出するため、作業中のインスタンスを簡単に追跡できます。",
+    "description": "helpProTipDescription translation"
+  },
+  "helpGotIt": {
+    "message": "了解しました！",
+    "description": "helpGotIt translation"
+  },
+  "switchButton": {
+    "message": "切り替え",
+    "description": "switchButton translation"
+  },
+  "editButton": {
+    "message": "編集",
+    "description": "editButton translation"
+  },
+  "deleteButton": {
+    "message": "削除",
+    "description": "deleteButton translation"
+  },
+  "required": {
+    "message": "*",
+    "description": "Required field indicator"
+  }
+}

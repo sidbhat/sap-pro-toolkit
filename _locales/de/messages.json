@@ -1,0 +1,306 @@
+{
+  "extName": {
+    "message": "SF Pro Toolkit",
+    "description": "Name of the extension"
+  },
+  "extDescription": {
+    "message": "Produktivitäts-Toolkit für SAP SuccessFactors-Profis",
+    "description": "Description of the extension"
+  },
+  "headerTitle": {
+    "message": "SF Pro Toolkit",
+    "description": "Main header title"
+  },
+  "dcInfoBtn": {
+    "message": "Rechenzentrumsverzeichnis",
+    "description": "Datacenter info button tooltip"
+  },
+  "helpBtn": {
+    "message": "Über und Hilfe",
+    "description": "Help button tooltip"
+  },
+  "contextDetecting": {
+    "message": "Umgebung wird erkannt...",
+    "description": "Loading message for environment detection"
+  },
+  "switchEnvironmentTitle": {
+    "message": "Umgebung wechseln",
+    "description": "Environment section title"
+  },
+  "noEnvironments": {
+    "message": "Noch keine Umgebungen gespeichert",
+    "description": "Empty state message for environments"
+  },
+  "addCurrentInstance": {
+    "message": "Aktuelle Instanz hinzufügen",
+    "description": "Button to add current instance"
+  },
+  "addEnvironment": {
+    "message": "Umgebung hinzufügen",
+    "description": "Button to add environment"
+  },
+  "shortcutsTitle": {
+    "message": "Verknüpfungen",
+    "description": "Shortcuts section title"
+  },
+  "notesTitle": {
+    "message": "Notizen",
+    "description": "Notes section title"
+  },
+  "selectNote": {
+    "message": "Notiz auswählen...",
+    "description": "Placeholder for notes dropdown"
+  },
+  "addNote": {
+    "message": "Notiz hinzufügen",
+    "description": "Add note button tooltip"
+  },
+  "editNote": {
+    "message": "Notiz bearbeiten",
+    "description": "Edit note button tooltip"
+  },
+  "deleteNote": {
+    "message": "Notiz löschen",
+    "description": "Delete note button tooltip"
+  },
+  "copyNote": {
+    "message": "Notizinhalt kopieren",
+    "description": "Copy note button tooltip"
+  },
+  "selectShortcut": {
+    "message": "Verknüpfung auswählen...",
+    "description": "Placeholder for shortcut dropdown"
+  },
+  "addCurrentPage": {
+    "message": "Aktuelle Seite hinzufügen",
+    "description": "Add current page button tooltip"
+  },
+  "editSelected": {
+    "message": "Ausgewählte bearbeiten",
+    "description": "Edit shortcut button tooltip"
+  },
+  "deleteSelected": {
+    "message": "Ausgewählte löschen",
+    "description": "Delete shortcut button tooltip"
+  },
+  "diagnosticsTitle": {
+    "message": "Systemdiagnose",
+    "description": "Diagnostics section title"
+  },
+  "diagnosticsDescription": {
+    "message": "Kopieren Sie umfassende Systeminformationen einschließlich Umgebungsdetails, Benutzerdaten und technischen Spezifikationen zur Fehlerbehebung und Unterstützung.",
+    "description": "Diagnostics section description"
+  },
+  "copyDiagnostics": {
+    "message": "Diagnosebericht kopieren",
+    "description": "Copy diagnostics button text"
+  },
+  "addEnvironmentTitle": {
+    "message": "Umgebung hinzufügen",
+    "description": "Add environment modal title"
+  },
+  "editEnvironmentTitle": {
+    "message": "Umgebung bearbeiten",
+    "description": "Edit environment modal title"
+  },
+  "environmentName": {
+    "message": "Umgebungsname",
+    "description": "Environment name field label"
+  },
+  "environmentNamePlaceholder": {
+    "message": "z.B. Produktions-DC68",
+    "description": "Environment name field placeholder"
+  },
+  "environmentType": {
+    "message": "Umgebungstyp",
+    "description": "Environment type field label"
+  },
+  "environmentTypeProduction": {
+    "message": "Produktion",
+    "description": "Production environment type"
+  },
+  "environmentTypePreview": {
+    "message": "Vorschau",
+    "description": "Preview environment type"
+  },
+  "environmentTypeSales": {
+    "message": "Vertrieb/Demo",
+    "description": "Sales/Demo environment type"
+  },
+  "environmentTypeSandbox": {
+    "message": "Sandbox",
+    "description": "Sandbox environment type"
+  },
+  "hostname": {
+    "message": "Hostname",
+    "description": "Hostname field label"
+  },
+  "hostnamePlaceholder": {
+    "message": "z.B. hcm-us20.hr.cloud.sap",
+    "description": "Hostname field placeholder"
+  },
+  "hostnameHelp": {
+    "message": "Rechenzentrum wird automatisch vom Hostnamen erkannt",
+    "description": "Hostname field help text"
+  },
+  "cancel": {
+    "message": "Abbrechen",
+    "description": "Cancel button text"
+  },
+  "saveEnvironment": {
+    "message": "Umgebung speichern",
+    "description": "Save environment button text"
+  },
+  "addShortcutTitle": {
+    "message": "Verknüpfung hinzufügen",
+    "description": "Add shortcut modal title"
+  },
+  "editShortcutTitle": {
+    "message": "Verknüpfung bearbeiten",
+    "description": "Edit shortcut modal title"
+  },
+  "shortcutName": {
+    "message": "Name",
+    "description": "Shortcut name field label"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "z.B. Admin-Center",
+    "description": "Shortcut name field placeholder"
+  },
+  "shortcutUrl": {
+    "message": "URL",
+    "description": "Shortcut URL field label"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "z.B. https://hcm-us20.hr.cloud.sap/sf/admin",
+    "description": "Shortcut URL field placeholder"
+  },
+  "shortcutUrlHelp": {
+    "message": "Geben Sie die vollständige URL einschließlich https:// ein",
+    "description": "Shortcut URL field help text"
+  },
+  "shortcutNotes": {
+    "message": "Notizen (optional)",
+    "description": "Shortcut notes field label"
+  },
+  "shortcutNotesPlaceholder": {
+    "message": "z.B. Zur Fehlerbehebung",
+    "description": "Shortcut notes field placeholder"
+  },
+  "shortcutIcon": {
+    "message": "Symbol",
+    "description": "Shortcut icon field label"
+  },
+  "saveShortcut": {
+    "message": "Verknüpfung speichern",
+    "description": "Save shortcut button text"
+  },
+  "addNoteTitle": {
+    "message": "Notiz hinzufügen",
+    "description": "Add note modal title"
+  },
+  "editNoteTitle": {
+    "message": "Notiz bearbeiten",
+    "description": "Edit note modal title"
+  },
+  "noteTitle": {
+    "message": "Titel",
+    "description": "Note title field label"
+  },
+  "noteTitlePlaceholder": {
+    "message": "z.B. Temporäre IDs, URLs, Konfiguration",
+    "description": "Note title field placeholder"
+  },
+  "noteContent": {
+    "message": "Inhalt",
+    "description": "Note content field label"
+  },
+  "noteContentPlaceholder": {
+    "message": "Temporäre Informationen hier einfügen...\\n\\n• Benutzer-IDs\\n• URLs\\n• Konfigurationsausschnitte\\n• Alles, was Sie schnell benötigen",
+    "description": "Note content field placeholder"
+  },
+  "noteIcon": {
+    "message": "Symbol",
+    "description": "Note icon field label"
+  },
+  "noteColor": {
+    "message": "Farbe",
+    "description": "Note color field label"
+  },
+  "saveNote": {
+    "message": "Notiz speichern",
+    "description": "Save note button text"
+  },
+  "dcDirectoryTitle": {
+    "message": "Globales Rechenzentrumsverzeichnis",
+    "description": "Datacenter directory modal title"
+  },
+  "dcDirectoryDescription": {
+    "message": "Vollständige Liste der weltweiten SuccessFactors-Rechenzentren mit ihren Standorten, Cloud-Anbietern und Verfügbarkeit.",
+    "description": "Datacenter directory modal description"
+  },
+  "close": {
+    "message": "Schließen",
+    "description": "Close button text"
+  },
+  "helpTitle": {
+    "message": "Über SF Pro Toolkit",
+    "description": "Help modal title"
+  },
+  "helpFeatures": {
+    "message": "Drei Kernfunktionen",
+    "description": "Help features heading"
+  },
+  "helpFeature1Title": {
+    "message": "Zwischen Umgebungen wechseln",
+    "description": "Help feature 1 title"
+  },
+  "helpFeature1Description": {
+    "message": "Speichern Sie mehrere SF-Instanzen (Produktion, Vorschau, Vertrieb, Sandbox) und wechseln Sie schnell zwischen ihnen, ohne URLs manuell zu ändern. Die Erweiterung behält Ihren aktuellen Seitenpfad beim Wechsel bei.",
+    "description": "Help feature 1 description"
+  },
+  "helpFeature2Title": {
+    "message": "Mit Verknüpfungen navigieren",
+    "description": "Help feature 2 title"
+  },
+  "helpFeature2Description": {
+    "message": "Schneller Zugriff auf häufig verwendete SF-Seiten wie Admin-Center, RBP, Bereitstellung und Neuigkeiten-Dokumentation. Erstellen Sie benutzerdefinierte Verknüpfungen für jede SF-URL, die Sie regelmäßig besuchen.",
+    "description": "Help feature 2 description"
+  },
+  "helpFeature3Title": {
+    "message": "Systemdiagnose kopieren",
+    "description": "Help feature 3 title"
+  },
+  "helpFeature3Description": {
+    "message": "Erstellen Sie umfassende Diagnoseberichte mit aktuellen Umgebungsdetails, Rechenzentrumsinfos, Benutzer-IDs, Browserspezifikationen und technischer Konfiguration zur Fehlerbehebung und für Support-Tickets.",
+    "description": "Help feature 3 description"
+  },
+  "helpProTip": {
+    "message": "Profi-Tipp",
+    "description": "Help pro tip heading"
+  },
+  "helpProTipDescription": {
+    "message": "Die Erweiterung erkennt automatisch Rechenzentrumsinfos und Umgebungstyp, wenn Sie sich auf einer SuccessFactors-Seite befinden, sodass Sie leicht verfolgen können, an welcher Instanz Sie arbeiten.",
+    "description": "Help pro tip description"
+  },
+  "helpGotIt": {
+    "message": "Verstanden!",
+    "description": "Help modal close button"
+  },
+  "switchButton": {
+    "message": "Wechseln",
+    "description": "Switch environment button text"
+  },
+  "editButton": {
+    "message": "Bearbeiten",
+    "description": "Edit button tooltip"
+  },
+  "deleteButton": {
+    "message": "Löschen",
+    "description": "Delete button tooltip"
+  },
+  "required": {
+    "message": "*",
+    "description": "Required field indicator"
+  }
+}

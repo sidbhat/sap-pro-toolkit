@@ -1,0 +1,306 @@
+{
+  "extName": {
+    "message": "SuccessFactors Pro Toolkit",
+    "description": "Name of the extension"
+  },
+  "extDescription": {
+    "message": "SAP SuccessFactors 전문가를 위한 생산성 툴킷",
+    "description": "extDescription translation"
+  },
+  "headerTitle": {
+    "message": "SuccessFactors Pro Toolkit",
+    "description": "Name of the extension"
+  },
+  "dcInfoBtn": {
+    "message": "데이터 센터 디렉터리",
+    "description": "dcInfoBtn translation"
+  },
+  "helpBtn": {
+    "message": "정보 및 도움말",
+    "description": "helpBtn translation"
+  },
+  "contextDetecting": {
+    "message": "환경 감지 중...",
+    "description": "contextDetecting translation"
+  },
+  "switchEnvironmentTitle": {
+    "message": "환경 전환",
+    "description": "switchEnvironmentTitle translation"
+  },
+  "noEnvironments": {
+    "message": "저장된 환경이 아직 없습니다",
+    "description": "noEnvironments translation"
+  },
+  "addCurrentInstance": {
+    "message": "현재 인스턴스 추가",
+    "description": "addCurrentInstance translation"
+  },
+  "addEnvironment": {
+    "message": "환경 추가",
+    "description": "addEnvironment translation"
+  },
+  "shortcutsTitle": {
+    "message": "바로 가기",
+    "description": "shortcutsTitle translation"
+  },
+  "notesTitle": {
+    "message": "빠른 메모",
+    "description": "notesTitle translation"
+  },
+  "selectNote": {
+    "message": "메모 선택...",
+    "description": "selectNote translation"
+  },
+  "addNote": {
+    "message": "메모 추가",
+    "description": "addNote translation"
+  },
+  "editNote": {
+    "message": "메모 편집",
+    "description": "editNote translation"
+  },
+  "deleteNote": {
+    "message": "메모 삭제",
+    "description": "deleteNote translation"
+  },
+  "copyNote": {
+    "message": "메모 내용 복사",
+    "description": "copyNote translation"
+  },
+  "selectShortcut": {
+    "message": "바로 가기 선택...",
+    "description": "selectShortcut translation"
+  },
+  "addCurrentPage": {
+    "message": "현재 페이지 추가",
+    "description": "addCurrentPage translation"
+  },
+  "editSelected": {
+    "message": "선택 항목 편집",
+    "description": "editSelected translation"
+  },
+  "deleteSelected": {
+    "message": "선택 항목 삭제",
+    "description": "deleteSelected translation"
+  },
+  "diagnosticsTitle": {
+    "message": "시스템 진단",
+    "description": "diagnosticsTitle translation"
+  },
+  "diagnosticsDescription": {
+    "message": "환경 세부정보, 사용자 데이터 및 기술 사양을 포함한 포괄적인 시스템 정보를 복사하여 문제 해결 및 지원에 활용하십시오.",
+    "description": "diagnosticsDescription translation"
+  },
+  "copyDiagnostics": {
+    "message": "진단 보고서 복사",
+    "description": "copyDiagnostics translation"
+  },
+  "addEnvironmentTitle": {
+    "message": "환경 추가",
+    "description": "addEnvironmentTitle translation"
+  },
+  "editEnvironmentTitle": {
+    "message": "환경 편집",
+    "description": "editEnvironmentTitle translation"
+  },
+  "environmentName": {
+    "message": "환경 이름",
+    "description": "environmentName translation"
+  },
+  "environmentNamePlaceholder": {
+    "message": "예: 프로덕션 DC68",
+    "description": "environmentNamePlaceholder translation"
+  },
+  "environmentType": {
+    "message": "환경 유형",
+    "description": "environmentType translation"
+  },
+  "environmentTypeProduction": {
+    "message": "프로덕션",
+    "description": "environmentTypeProduction translation"
+  },
+  "environmentTypePreview": {
+    "message": "미리보기",
+    "description": "environmentTypePreview translation"
+  },
+  "environmentTypeSales": {
+    "message": "영업/데모",
+    "description": "environmentTypeSales translation"
+  },
+  "environmentTypeSandbox": {
+    "message": "샌드박스",
+    "description": "environmentTypeSandbox translation"
+  },
+  "hostname": {
+    "message": "호스트 이름",
+    "description": "hostname translation"
+  },
+  "hostnamePlaceholder": {
+    "message": "예: hcm-us20.hr.cloud.sap",
+    "description": "hostnamePlaceholder translation"
+  },
+  "hostnameHelp": {
+    "message": "데이터 센터는 호스트 이름에서 자동으로 감지됩니다",
+    "description": "hostnameHelp translation"
+  },
+  "cancel": {
+    "message": "취소",
+    "description": "cancel translation"
+  },
+  "saveEnvironment": {
+    "message": "환경 저장",
+    "description": "saveEnvironment translation"
+  },
+  "addShortcutTitle": {
+    "message": "바로 가기 추가",
+    "description": "addShortcutTitle translation"
+  },
+  "editShortcutTitle": {
+    "message": "바로 가기 편집",
+    "description": "editShortcutTitle translation"
+  },
+  "shortcutName": {
+    "message": "이름",
+    "description": "shortcutName translation"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "예: 관리 센터",
+    "description": "shortcutNamePlaceholder translation"
+  },
+  "shortcutUrl": {
+    "message": "URL",
+    "description": "shortcutUrl translation"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "예: https://hcm-us20.hr.cloud.sap/sf/admin",
+    "description": "shortcutUrlPlaceholder translation"
+  },
+  "shortcutUrlHelp": {
+    "message": "https://를 포함한 전체 URL을 입력하십시오",
+    "description": "shortcutUrlHelp translation"
+  },
+  "shortcutNotes": {
+    "message": "메모 (선택사항)",
+    "description": "shortcutNotes translation"
+  },
+  "shortcutNotesPlaceholder": {
+    "message": "예: 문제 해결용",
+    "description": "shortcutNotesPlaceholder translation"
+  },
+  "shortcutIcon": {
+    "message": "아이콘",
+    "description": "shortcutIcon translation"
+  },
+  "saveShortcut": {
+    "message": "바로 가기 저장",
+    "description": "saveShortcut translation"
+  },
+  "addNoteTitle": {
+    "message": "메모 추가",
+    "description": "addNoteTitle translation"
+  },
+  "editNoteTitle": {
+    "message": "메모 편집",
+    "description": "editNoteTitle translation"
+  },
+  "noteTitle": {
+    "message": "제목",
+    "description": "noteTitle translation"
+  },
+  "noteTitlePlaceholder": {
+    "message": "예: 임시 ID, URL, 구성",
+    "description": "noteTitlePlaceholder translation"
+  },
+  "noteContent": {
+    "message": "내용",
+    "description": "noteContent translation"
+  },
+  "noteContentPlaceholder": {
+    "message": "여기에 임시 정보 붙여넣기...\\n\\n• 사용자 ID\\n• URL\\n• 구성 스니펫\\n• 빠른 액세스가 필요한 모든 것",
+    "description": "noteContentPlaceholder translation"
+  },
+  "noteIcon": {
+    "message": "아이콘",
+    "description": "noteIcon translation"
+  },
+  "noteColor": {
+    "message": "색상",
+    "description": "noteColor translation"
+  },
+  "saveNote": {
+    "message": "메모 저장",
+    "description": "saveNote translation"
+  },
+  "dcDirectoryTitle": {
+    "message": "글로벌 데이터 센터 디렉터리",
+    "description": "dcDirectoryTitle translation"
+  },
+  "dcDirectoryDescription": {
+    "message": "위치, 클라우드 공급자 및 가용성이 포함된 전 세계 SuccessFactors 데이터 센터의 전체 목록입니다.",
+    "description": "dcDirectoryDescription translation"
+  },
+  "close": {
+    "message": "닫기",
+    "description": "close translation"
+  },
+  "helpTitle": {
+    "message": "SuccessFactors Pro Toolkit 정보",
+    "description": "helpTitle translation"
+  },
+  "helpFeatures": {
+    "message": "세 가지 핵심 기능",
+    "description": "helpFeatures translation"
+  },
+  "helpFeature1Title": {
+    "message": "환경 간 전환",
+    "description": "helpFeature1Title translation"
+  },
+  "helpFeature1Description": {
+    "message": "여러 SF 인스턴스(프로덕션, 미리보기, 영업, 샌드박스)를 저장하고 URL을 수동으로 변경하지 않고 빠르게 전환하십시오. 확장 프로그램은 전환 시 현재 페이지 경로를 유지합니다.",
+    "description": "helpFeature1Description translation"
+  },
+  "helpFeature2Title": {
+    "message": "바로 가기로 탐색",
+    "description": "helpFeature2Title translation"
+  },
+  "helpFeature2Description": {
+    "message": "관리 센터, RBP, 프로비저닝 및 새로운 기능 문서와 같이 자주 사용하는 SF 페이지에 빠르게 액세스하십시오. 정기적으로 방문하는 SF URL에 대한 사용자 지정 바로 가기를 만드십시오.",
+    "description": "helpFeature2Description translation"
+  },
+  "helpFeature3Title": {
+    "message": "시스템 진단 복사",
+    "description": "helpFeature3Title translation"
+  },
+  "helpFeature3Description": {
+    "message": "현재 환경 세부정보, 데이터 센터 정보, 사용자 ID, 브라우저 사양 및 기술 구성을 포함한 포괄적인 진단 보고서를 생성하여 문제 해결 및 지원 티켓에 활용하십시오.",
+    "description": "helpFeature3Description translation"
+  },
+  "helpProTip": {
+    "message": "전문가 팁",
+    "description": "helpProTip translation"
+  },
+  "helpProTipDescription": {
+    "message": "SuccessFactors 페이지에 있을 때 확장 프로그램이 데이터 센터 정보와 환경 유형을 자동으로 감지하여 작업 중인 인스턴스를 쉽게 추적할 수 있습니다.",
+    "description": "helpProTipDescription translation"
+  },
+  "helpGotIt": {
+    "message": "알겠습니다!",
+    "description": "helpGotIt translation"
+  },
+  "switchButton": {
+    "message": "전환",
+    "description": "switchButton translation"
+  },
+  "editButton": {
+    "message": "편집",
+    "description": "editButton translation"
+  },
+  "deleteButton": {
+    "message": "삭제",
+    "description": "deleteButton translation"
+  },
+  "required": {
+    "message": "*",
+    "description": "Required field indicator"
+  }
+}

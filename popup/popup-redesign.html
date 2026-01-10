@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SF Pro Toolkit</title>
+  <link rel="stylesheet" href="popup-redesign.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="header-content">
+        <button class="header-btn" id="dcInfoBtn" data-i18n-title="dcInfoBtn" title="Datacenter Directory">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </button>
+        <h1 class="header-title" data-i18n="headerTitle">SuccessFactors Pro Toolkit</h1>
+        <button class="header-btn" id="helpBtn" data-i18n-title="helpBtn" title="Help">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Global Search -->
+    <div class="search-bar">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input 
+        type="text" 
+        id="globalSearch" 
+        class="search-input" 
+        placeholder="Search environments, shortcuts, notes..."
+        data-i18n-placeholder="globalSearchPlaceholder"
+      >
+      <button class="search-clear" id="clearSearch" style="display: none;">×</button>
+    </div>
+
+    <!-- Current Instance Card -->
+    <div class="instance-card" id="instanceCard" style="display: none;">
+      <div class="instance-info">
+        <span class="instance-emoji" id="instanceEmoji">🟢</span>
+        <div class="instance-details">
+          <div class="instance-type" id="instanceType">PREVIEW</div>
+          <div class="instance-meta" id="instanceMeta">DC68 • 🇺🇸 US East</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Environments Section -->
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">ENVIRONMENTS</h2>
+          <p class="section-desc">Switch between Production, Preview, Sales, and Sandbox instances</p>
+        </div>
+        <button class="btn-add" id="addEnvBtn" title="Add Environment">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="table-container">
+        <table class="data-table" id="environmentsTable">
+          <tbody id="environmentList">
+            <tr class="empty-row">
+              <td colspan="4">
+                <div class="empty-state">
+                  <p>No saved environments</p>
+                  <button class="btn btn-secondary btn-sm" id="addEnvBtnInline">+ Add Current Instance</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Shortcuts Section -->
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">SHORTCUTS</h2>
+          <p class="section-desc">Quick links to frequently accessed pages</p>
+        </div>
+        <button class="btn-add" id="addShortcutBtn" title="Add Shortcut">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="table-container">
+        <table class="data-table" id="shortcutsTable">
+          <tbody id="shortcutsList">
+            <tr class="empty-row">
+              <td colspan="4">
+                <div class="empty-state">
+                  <p>No shortcuts</p>
+                  <button class="btn btn-secondary btn-sm" id="addCurrentPageBtnEmpty">+ Add Current Page</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Notes Section -->
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">SCRATCH NOTES</h2>
+          <p class="section-desc">Store temporary IDs, URLs, and quick reference info</p>
+        </div>
+        <button class="btn-add" id="addNoteBtn" title="Add Note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="table-container">
+        <table class="data-table" id="notesTable">
+          <tbody id="notesList">
+            <tr class="empty-row">
+              <td colspan="4">
+                <div class="empty-state">
+                  <p>No notes</p>
+                  <button class="btn btn-secondary btn-sm" id="addNoteBtnEmpty">+ Add Note</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Diagnostics Section -->
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">DIAGNOSTICS</h2>
+          <p class="section-desc">Generate system report for troubleshooting</p>
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-block diagnostics-btn" id="copyDiagnosticsBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        <span>Show System Diagnostics</span>
+      </button>
+    </section>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <!-- Modals (keeping existing modals) -->
+  
+  <!-- Add Environment Modal -->
+  <div class="modal" id="addEnvModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 data-i18n="addEnvironmentTitle">Add Environment</h3>
+        <button class="modal-close" id="closeAddEnvModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="addEnvForm">
+          <div class="form-group">
+            <label for="envName"><span data-i18n="environmentName">Environment Name</span> <span data-i18n="required">*</span></label>
+            <input type="text" id="envName" data-i18n-placeholder="environmentNamePlaceholder" placeholder="e.g., Production DC68" required>
+          </div>
+          <div class="form-group">
+            <label for="envType"><span data-i18n="environmentType">Environment Type</span> <span data-i18n="required">*</span></label>
+            <select id="envType" required>
+              <option value="production">🔴 Production</option>
+              <option value="preview">🟢 Preview</option>
+              <option value="sales">🟠 Sales/Demo</option>
+              <option value="sandbox">🟣 Sandbox</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="envHostname"><span data-i18n="hostname">Hostname</span> <span data-i18n="required">*</span></label>
+            <input type="text" id="envHostname" data-i18n-placeholder="hostnamePlaceholder" placeholder="e.g., hcm-us20.hr.cloud.sap" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelAddEnvBtn" data-i18n="cancel">Cancel</button>
+        <button class="btn btn-primary" id="saveEnvBtn" data-i18n="saveEnvironment">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Shortcut Modal -->
+  <div class="modal" id="addShortcutModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 data-i18n="addShortcutTitle">Add Shortcut</h3>
+        <button class="modal-close" id="closeAddShortcutModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="addShortcutForm">
+          <div class="form-group">
+            <label for="shortcutName"><span data-i18n="shortcutName">Name</span> *</label>
+            <input type="text" id="shortcutName" placeholder="e.g., Admin Center" required>
+          </div>
+          <div class="form-group">
+            <label for="shortcutPath"><span data-i18n="shortcutUrl">URL</span> *</label>
+            <input type="text" id="shortcutPath" placeholder="e.g., https://..." required>
+          </div>
+          <div class="form-group">
+            <label for="shortcutNotes">Notes</label>
+            <input type="text" id="shortcutNotes" placeholder="Optional description">
+          </div>
+          <div class="form-group">
+            <label for="shortcutIcon">Icon</label>
+            <select id="shortcutIcon">
+              <option value="🗺️">🗺️</option>
+              <option value="⚙️">⚙️</option>
+              <option value="🔐">🔐</option>
+              <option value="👥">👥</option>
+              <option value="📊">📊</option>
+              <option value="🛠️">🛠️</option>
+              <option value="📝">📝</option>
+              <option value="🎯">🎯</option>
+              <option value="📄">📄</option>
+              <option value="🔗">🔗</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelAddShortcutBtn">Cancel</button>
+        <button class="btn btn-primary" id="saveShortcutBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Note Modal -->
+  <div class="modal" id="addNoteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Scratch Note</h3>
+        <button class="modal-close" id="closeAddNoteModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="addNoteForm">
+          <div class="form-group">
+            <label for="noteTitle">Title *</label>
+            <input type="text" id="noteTitle" placeholder="e.g., Test User IDs" required>
+          </div>
+          <div class="form-group">
+            <label for="noteContent">Content</label>
+            <textarea id="noteContent" rows="6" placeholder="Paste IDs, URLs, configs..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="noteIcon">Icon</label>
+            <select id="noteIcon">
+              <option value="📝">📝</option>
+              <option value="🔑">🔑</option>
+              <option value="🆔">🆔</option>
+              <option value="🔗">🔗</option>
+              <option value="⚙️">⚙️</option>
+              <option value="📋">📋</option>
+              <option value="💡">💡</option>
+              <option value="📌">📌</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelAddNoteBtn">Cancel</button>
+        <button class="btn btn-primary" id="saveNoteBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Datacenter Directory Modal -->
+  <div class="modal modal-large" id="dcModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>🌍 Datacenter Directory</h3>
+        <button class="modal-close" id="closeDcModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="dcList"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="closeDcBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <div class="modal" id="helpModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>About SF Pro Toolkit</h3>
+        <button class="modal-close" id="closeHelpModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 12px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 20px;">
+          SF Pro Toolkit helps SuccessFactors professionals work more efficiently by providing quick access to environments, shortcuts, and diagnostic tools.
+        </p>
+        
+        <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">Key Features</h4>
+        <ul style="font-size: 12px; line-height: 1.8; color: var(--text-secondary); margin: 0; padding-left: 20px;">
+          <li><strong>Environment Switching</strong>: Quickly switch between Production, Preview, Sales, and Sandbox instances</li>
+          <li><strong>Quick Shortcuts</strong>: Save and access frequently used pages with one click</li>
+          <li><strong>Scratch Notes</strong>: Store temporary IDs, URLs, and reference information</li>
+          <li><strong>System Diagnostics</strong>: Generate detailed reports for troubleshooting</li>
+          <li><strong>Datacenter Directory</strong>: View all SAP SuccessFactors datacenters worldwide</li>
+          <li><strong>Multi-language Support</strong>: Available in 10+ languages</li>
+        </ul>
+        
+        <p style="font-size: 11px; text-align: center; color: var(--text-tertiary); margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-light);">
+          <strong>v1.1.0</strong> • Made with ❤️ for SF Pros
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="closeHelpBtn">Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagnostics Modal -->
+  <div class="modal modal-large" id="diagnosticsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>System Diagnostics</h3>
+        <button class="modal-close" id="closeDiagnosticsModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="diagnosticsContent" class="diagnostics-content">
+          <div class="diagnostics-loading">
+            <div class="spinner"></div>
+            <span>Gathering diagnostics...</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="closeDiagnosticsBtn">Close</button>
+        <button class="btn btn-primary" id="copyAllDiagnosticsBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          Copy All
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup-redesign.js"></script>
+</body>
+</html>
