@@ -51,32 +51,75 @@ async function loadShortcuts() {
   const result = await chrome.storage.local.get('shortcuts');
   shortcuts = result.shortcuts || [];
   
-  // Add default Product Roadmap shortcut if no shortcuts exist
+  // Load professional default data on first install
   if (shortcuts.length === 0) {
-    shortcuts = [{
-      id: `shortcut-${Date.now()}`,
-      name: 'Product Roadmap',
-      url: 'https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1',
-      notes: 'SAP SuccessFactors Product Roadmap',
-      icon: '0',
-      tags: ['roadmap']
-    }];
-    await chrome.storage.local.set({ shortcuts });
+    try {
+      const response = await fetch(chrome.runtime.getURL('resources/successfactors-internal.json'));
+      const defaultData = await response.json();
+      
+      if (defaultData.shortcuts && Array.isArray(defaultData.shortcuts)) {
+        shortcuts = defaultData.shortcuts;
+        await chrome.storage.local.set({ shortcuts });
+      }
+    } catch (error) {
+      console.error('Failed to load default shortcuts:', error);
+      // Fallback to single Product Roadmap shortcut
+      shortcuts = [{
+        id: `shortcut-${Date.now()}`,
+        name: 'Product Roadmap',
+        url: 'https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1',
+        notes: 'SAP SuccessFactors Product Roadmap',
+        icon: '0',
+        tags: ['roadmap']
+      }];
+      await chrome.storage.local.set({ shortcuts });
+    }
   }
   
-  // Render shortcuts after ensuring data is loaded
   renderShortcuts();
 }
 
 async function loadEnvironments() {
   const result = await chrome.storage.local.get('environments');
   environments = result.environments || [];
+  
+  // Load professional default environments on first install
+  if (environments.length === 0) {
+    try {
+      const response = await fetch(chrome.runtime.getURL('resources/successfactors-internal.json'));
+      const defaultData = await response.json();
+      
+      if (defaultData.environments && Array.isArray(defaultData.environments)) {
+        environments = defaultData.environments;
+        await chrome.storage.local.set({ environments });
+      }
+    } catch (error) {
+      console.error('Failed to load default environments:', error);
+    }
+  }
+  
   renderEnvironments();
 }
 
 async function loadNotes() {
   const result = await chrome.storage.local.get('notes');
   notes = result.notes || [];
+  
+  // Load professional default notes on first install
+  if (notes.length === 0) {
+    try {
+      const response = await fetch(chrome.runtime.getURL('resources/successfactors-internal.json'));
+      const defaultData = await response.json();
+      
+      if (defaultData.notes && Array.isArray(defaultData.notes)) {
+        notes = defaultData.notes;
+        await chrome.storage.local.set({ notes });
+      }
+    } catch (error) {
+      console.error('Failed to load default notes:', error);
+    }
+  }
+  
   renderNotes();
 }
 

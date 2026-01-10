@@ -1,0 +1,148 @@
+{
+  "version": "1.0",
+  "shortcuts": [
+    {
+      "icon": "0",
+      "id": "shortcut-1768075477960",
+      "name": "Product Roadmap",
+      "notes": "SAP SuccessFactors Product Roadmap",
+      "tags": ["roadmap"],
+      "url": "https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1"
+    },
+    {
+      "icon": "9",
+      "id": "shortcut-1768075965385",
+      "name": "WalkMe - DC68",
+      "notes": "WalkMe Premium content",
+      "tags": ["walkme-url"],
+      "url": "https://hcm68sales.successfactors.com/login?company=SFSALES009958"
+    },
+    {
+      "icon": "7",
+      "id": "shortcut-1768076044148",
+      "name": "DCA - Create Org",
+      "notes": "DCA - create demo orgs",
+      "tags": ["dca-self-service"],
+      "url": "https://demodatageneration-gckf8hvo.authentication.us10.hana.ondemand.com/login"
+    },
+    {
+      "icon": "7",
+      "id": "shortcut-1768076921803",
+      "name": "SDE How to enroll link",
+      "notes": "How to enroll a user in SDE",
+      "tags": ["sde", "user-enrollment"],
+      "url": "https://sap.sharepoint.com/sites/203948/SitePages/Accessing-Public-Landscapes-via-the-SDE.aspx"
+    },
+    {
+      "icon": "5",
+      "id": "shortcut-1768077055632",
+      "name": "Partner - Learning about SDE2",
+      "notes": "partner enablement",
+      "tags": ["partner", "sde2"],
+      "url": "https://learning.sap.com/courses/leveraging-sap-demo-environment-2-0"
+    },
+    {
+      "icon": "0",
+      "id": "shortcut-1768077128491",
+      "name": "Joule - End to End IVJ",
+      "notes": "joule successfactors ivj",
+      "tags": ["joule", "sf", "ivj"],
+      "url": "https://ivj-vx.cfapps.eu10.hana.ondemand.com/journey/7860c44b-cf77-4f0a-8e9d-9e6739886654/intro"
+    },
+    {
+      "icon": "4",
+      "id": "shortcut-1768077195647",
+      "name": "SuccessFactors Help",
+      "notes": "successfactors help documentation",
+      "tags": ["help", "guide"],
+      "url": "https://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM"
+    },
+    {
+      "icon": "7",
+      "id": "shortcut-1768077316538",
+      "name": "Snapshot and restore my demo instance",
+      "notes": "snapshot and restore a demo tenant",
+      "tags": ["demo-reset-tool"],
+      "url": "https://sap.sharepoint.com/sites/203948/SitePages/SuccessFactors-Tenant-Snapshot-&-Restore.aspx"
+    }
+  ],
+  "environments": [
+    {
+      "id": "env-1768075490937",
+      "name": "Demo Companion App - Production",
+      "type": "production",
+      "hostname": "hcm-us20-sales.hr.cloud.sap"
+    },
+    {
+      "id": "env-1768076685887",
+      "name": "SFSALES008934 Payroll Americas",
+      "type": "sales",
+      "hostname": "hcm-us10-sales.hr.cloud.sap"
+    },
+    {
+      "id": "env-1768076514983",
+      "name": "SFSALES009574 Shared Instance",
+      "type": "preview",
+      "hostname": "hcm68sales.successfactors.com"
+    }
+  ],
+  "notes": [
+    {
+      "content": "You can access the environment at the following link:\nhttps://hcm-us20-sales.hr.cloud.sap/sf/home?bplte_company=SFSALES010182\nCompany ID: SFSALES010182\n\nCoPilot/MS Team Joule Agent - Login in incognito https://teams.microsoft.com/v2/\nLogin with your user @rxdp.onmicrosoft.com\n\nShould you encounter any issues during login, please try using the incognito mode in your web browser.\n\nYou can learn more about Demo Companion by visiting our information page: Demo Companion Website\n\nIf you have any questions, please contact us at: DL_67CF692328D9C70136347AA9@global.corp.sap",
+      "icon": "4",
+      "id": "note-1768075688107",
+      "tags": ["dca-guide"],
+      "timestamp": 1768075688107,
+      "title": "DCA Notes and Support"
+    },
+    {
+      "content": "https://hcm-us20-sales.hr.cloud.sap/sf/home?bplte_company=SFSALES010182\nCompany ID: SFSALES010182\n\ncolgate-user-1\n- Hiring Manager: M_I8062320819113757\n- HR: H_I8062320819113757\n- Recruiter/Employee: I8062320819113757_1\n\ncolgate-user-2\n- Hiring Manager: M_I8062320819113519\n- HR: H_I8062320819113519\n- Recruiter/Employee: I8062320819113519_1\n\ncolgate-user-3\n- Hiring Manager: M_I8062320819111057\n- HR: H_I8062320819111057\n- Recruiter/Employee: I8062320819111057_1\n\ncolgate-user-4\n- Hiring Manager: M_I8062320819113957\n- HR: H_I8062320819113957\n- Recruiter/Employee: I8062320819113957_1\n\ncolgate-user-5\n- Hiring Manager: M_I8062320819113344\n- HR: H_I8062320819113344\n- Recruiter/Employee: I8062320819113344_1",
+      "icon": "2",
+      "id": "note-1768075577308",
+      "tags": ["hackathon"],
+      "timestamp": 1768075577308,
+      "title": "DCA Bulk Users for Customer Event"
+    },
+    {
+      "content": "https://hcm-us10-sales.hr.cloud.sap/login?company=SFSALES011168\n\nOur latest baseline (all modules) Joule w/document grounding\nLogin with ghill/sfadmin\n\nWalkMe Demo Extension Configuration\n\n1. Install this PropelDemo extension in your browser (use Chrome browser) -\nhttps://me-download.walkme.com/downloadPage.html?guid=a6fa3560d4c711eea9ac179d71c807fb&customer=PropelDemo&profile=default&cdnName=aws&customExtension=false&isNewExtension=true\n\n2. Open the Extensions options page, then open the \"Walkme Extension For DAP\" Options\n\n3. Enter the following password at the prompt below - wmBuilderMode\n\n4. Toggle on the \"Enable Environment Change\"\n\n5. Go back to the extensions page and pin the \"WalkMe Extension for DAP\" icon so it is visible to the right of your browser URL box\n\n6. Select the \"Propel\" demo environment for the WalkMe extension (you may not see this or the \"WalkMe loaded successfully\" until you are in the demo environments)",
+      "icon": "7",
+      "id": "note-1768075801184",
+      "tags": ["walkme"],
+      "timestamp": 1768075801184,
+      "title": "WalkMe Premium Setup"
+    },
+    {
+      "content": "IVJ\n\nhttps://ivj-vx.cfapps.eu10.hana.ondemand.com/public/journey/185f3aa9-d9a0-4e35-9a89-b05e1332df52/outro\n\nJoule Studio in SAP Build Deck\n\nhttps://sap.sharepoint.com/:p:/r/sites/126536/_layouts/15/Doc.aspx?sourcedoc=%7BA03005C7-6DCF-4051-9A2A-A5F9077D5DA1%7D&file=BTP%20Enablement%20-%20Joule%20Studio.pptx&action=edit&mobileredirect=true\n\nJoule Studio GA with Skill Builder only\nhttps://joule-studio-sa234536.us10.build.cloud.sap/lobby",
+      "icon": "5",
+      "id": "note-1768075855169",
+      "tags": ["joule-studio"],
+      "timestamp": 1768075855169,
+      "title": "Joule Studio"
+    },
+    {
+      "content": "How SAP SuccessFactors Outshines Workday in 2025: A Strategic Perspective\n\nIn today's fast-evolving enterprise cloud market, SAP SuccessFactors and Workday are in fierce competition—especially in the Human Capital Management (HCM) space. While Workday is aggressively repositioning itself as an AI-driven platform, SAP is leveraging its integrated ERP suite, mature AI capabilities, and robust global infrastructure.\n\nIntroduction\nWorkday, founded in 2005, has built its reputation on a \"one code base\" and a cloud-native approach to HCM. Its bold \"Forever Forward\" theme emphasizes AI-powered innovation through its Illuminate AI platform and a series of strategic acquisitions. However, these moves come with integration complexities and a relatively narrow partner ecosystem. This is no longer true with Workday acquiring over 14 companies defying its own idea of one code base.\n\nSAP SuccessFactors is part of the broader SAP ERP ecosystem. It provides state-of-the-art HCM capabilities and seamlessly integrates with finance, supply chain, and other critical business functions. With SAP's mature AI solution—Joule—and a flexible, modular implementation strategy (SAGE: Start Anywhere Go Everywhere), SAP delivers robust global payroll, localization, and a powerful partner network.\n\n1. Integration Challenges vs. Seamless Connectivity\n\nWorkday's strategy of acquiring new technologies to fill capability gaps has resulted in a fragmented system that struggles with integration. Their \"one code base\" narrative is often undermined by the complexity of integrating multiple acquired solutions. High-profile implementation challenges have been reported by major customers, reflecting the high TCO and risks associated with their approach.\n\nSAP SuccessFactors benefits from the comprehensive integration provided by the SAP Business Technology Platform (BTP). With pre-built, supported connectors, SAP ensures a seamless experience across its suite—reducing maintenance headaches and total cost of ownership.\n\n2. AI Capabilities: Mature Solutions vs. Vaporware\n\nWorkday is heavily marketing its Illuminate AI as the future of HR. However, many of its AI features are in early stages—often seen as \"AI vaporware\" until fully developed. Workday's strategy relies on acquiring AI companies (such as HiredScore and Evisort), which can lead to disjointed implementations.\n\nSAP's Joule AI is already deployed across HCM, S/4HANA finance, SAC, and several other LOBs. It is a mature, cross-functional solution that drives tangible business outcomes. This breadth and maturity provide a more reliable, scalable foundation compared to Workday's emerging offerings. SAP's Agent strategy builds on the concept by providing BDC as the data layer and AI Agents like HR Advisors, Workforce Planners, and Recruiter agents that would augment the jobs of employees.\n\n3. Partner Ecosystem: Open and Extensive vs. Walled Garden\n\nDespite recent moves to expand its partner network, Workday's ecosystem remains relatively closed—a \"walled garden\" that limits third-party integrations. This restricted approach can hamper customer flexibility and slow innovation.\n\nSAP boasts an extensive partner ecosystem with over 500 partners and 300+ third-party apps. This openness not only ensures deeper integrations but also provides a wide range of industry-specific solutions, enabling customers to tailor the platform to their unique needs.\n\n4. Core ERP, Global Payroll, and Implementation Flexibility\n\nWorkday's focus on HCM means it lacks a full ERP solution. Its requirement for a mandatory full Core HR implementation limits flexibility and can delay time-to-value. Additionally, Workday's native global payroll supports only a handful of countries.\n\nSAP SuccessFactors is integrated with the full SAP ERP suite, covering finance, procurement, supply chain, and more. Its global payroll solution supports over 50 countries with 100+ localizations. Furthermore, the SAGE strategy allows customers to implement modules gradually, adapting to specific business needs without disruption.",
+      "icon": "0",
+      "id": "note-1768075923403",
+      "tags": ["workday"],
+      "timestamp": 1768075923403,
+      "title": "Workday Competitive Analysis"
+    },
+    {
+      "content": "Demo Instance Details\nhttps://hcm-us10-sales.hr.cloud.sap/login?company=SFSALES008934\n\nPayroll System FC2, Client 200\nfor countries US and Canada",
+      "icon": "2",
+      "id": "note-1768076761115",
+      "tags": ["payroll-notes"],
+      "timestamp": 1768076761115,
+      "title": "Payroll Americas Demo Notes"
+    },
+    {
+      "content": "https://sap.sharepoint.com/sites/203948/SitePages/Accessing-Public-Landscapes-via-the-SDE.aspx",
+      "icon": "0",
+      "id": "note-1768076843798",
+      "tags": ["sde-how-to"],
+      "timestamp": 1768076843798,
+      "title": "SDE - How to enroll guide"
+    }
+  ],
+  "exportDate": "2026-01-10T20:37:42.563Z"
+}
