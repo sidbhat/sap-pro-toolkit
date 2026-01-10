@@ -765,40 +765,87 @@ async function deleteEnvironment(id) {
 async function saveEnvironment() {
   const name = document.getElementById('envName').value.trim();
   const type = document.getElementById('envType').value;
-  const hostname = document.getElementById('envHostname').value.trim();
+  let hostname = document.getElementById('envHostname').value.trim();
   
-  if (!name || !hostname) {
-    showToast('Please fill in required fields', 'warning');
+  // Validation 1: Required fields
+  if (!name) {
+    showToast('Environment name is required', 'warning');
+    document.getElementById('envName').focus();
     return;
   }
   
+  if (!hostname) {
+    showToast('Hostname is required', 'warning');
+    document.getElementById('envHostname').focus();
+    return;
+  }
+  
+  // Validation 2: Remove protocol if present
+  hostname = hostname.replace(/^https?:\/\//, '');
+  
+  // Validation 3: Remove trailing slashes or paths
+  hostname = hostname.split('/')[0];
+  
+  // Validation 4: Check for valid hostname format (no spaces, valid characters)
+  if (/\s/.test(hostname)) {
+    showToast('Hostname cannot contain spaces', 'error');
+    document.getElementById('envHostname').focus();
+    return;
+  }
+  
+  if (!/^[a-zA-Z0-9.-]+$/.test(hostname)) {
+    showToast('Hostname contains invalid characters. Use only letters, numbers, dots, and hyphens', 'error');
+    document.getElementById('envHostname').focus();
+    return;
+  }
+  
+  // Validation 5: Check for valid SuccessFactors domain
   const sfDomains = ['hr.cloud.sap', 'sapsf.com', 'sapsf.cn', 'sapcloud.cn',
                      'successfactors.eu', 'sapsf.eu', 'successfactors.com'];
   const isValidSFHostname = sfDomains.some(domain => hostname.includes(domain));
   
   if (!isValidSFHostname) {
-    showToast('Please enter a valid SuccessFactors hostname', 'error');
+    showToast('Must be a valid SuccessFactors hostname (e.g., company.sapsf.com)', 'error');
+    document.getElementById('envHostname').focus();
     return;
   }
   
+  // Validation 6: Check for duplicate hostname (when adding new)
   const modal = document.getElementById('addEnvModal');
   const editId = modal.getAttribute('data-edit-id');
   
-  if (editId) {
-    // Remove the existing item and add updated version at the top
-    environments = environments.filter(e => e.id !== editId);
-    environments.unshift({ id: editId, name, type, hostname });
-    showToast('Environment updated ✓', 'success');
-    modal.removeAttribute('data-edit-id');
-  } else {
-    const newEnv = { id: `env-${Date.now()}`, name, type, hostname };
-    environments.unshift(newEnv);
-    showToast('Environment saved ✓', 'success');
+  if (!editId) {
+    const isDuplicate = environments.some(e => e.hostname.toLowerCase() === hostname.toLowerCase());
+    if (isDuplicate) {
+      showToast('This hostname already exists', 'warning');
+      document.getElementById('envHostname').focus();
+      return;
+    }
   }
   
-  await chrome.storage.local.set({ environments });
-  renderEnvironments();
-  closeAddEnvironmentModal();
+  // Update the cleaned hostname value
+  document.getElementById('envHostname').value = hostname;
+  
+  // Save environment
+  try {
+    if (editId) {
+      environments = environments.filter(e => e.id !== editId);
+      environments.unshift({ id: editId, name, type, hostname });
+      showToast('Environment updated ✓', 'success');
+      modal.removeAttribute('data-edit-id');
+    } else {
+      const newEnv = { id: `env-${Date.now()}`, name, type, hostname };
+      environments.unshift(newEnv);
+      showToast('Environment saved ✓', 'success');
+    }
+    
+    await chrome.storage.local.set({ environments });
+    renderEnvironments();
+    closeAddEnvironmentModal();
+  } catch (error) {
+    console.error('Failed to save environment:', error);
+    showToast('Failed to save environment. Please try again.', 'error');
+  }
 }
 
 // ==================== CRUD - SHORTCUTS ====================
