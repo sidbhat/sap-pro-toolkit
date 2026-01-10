@@ -258,7 +258,9 @@ function attachEnvironmentListeners() {
         if (d !== dropdown) d.classList.remove('active');
       });
       
-      dropdown?.classList.toggle('active');
+      if (dropdown) {
+        dropdown.classList.toggle('active');
+      }
     });
   });
   
@@ -402,7 +404,7 @@ function attachShortcutListeners() {
   });
   
   // Kebab menu toggle
-  document.querySelectorAll('.shortcut-actions-cell .kebab-btn').forEach(btn => {
+  document.querySelectorAll('.kebab-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       console.log('[DEBUG] Kebab button clicked!');
       e.stopPropagation();
@@ -417,18 +419,7 @@ function attachShortcutListeners() {
       });
       
       if (dropdown) {
-        const isActive = dropdown.classList.contains('active');
-        
-        if (!isActive) {
-          // Position the dropdown relative to the button
-          const rect = btn.getBoundingClientRect();
-          dropdown.style.top = `${rect.bottom + 4}px`;
-          dropdown.style.right = `${window.innerWidth - rect.right}px`;
-          console.log('[DEBUG] Dropdown positioned at:', { top: dropdown.style.top, right: dropdown.style.right });
-        }
-        
         dropdown.classList.toggle('active');
-        console.log('[DEBUG] Dropdown toggled, active:', dropdown.classList.contains('active'));
       }
     });
     
@@ -575,7 +566,9 @@ function attachNoteListeners() {
         if (d !== dropdown) d.classList.remove('active');
       });
       
-      dropdown?.classList.toggle('active');
+      if (dropdown) {
+        dropdown.classList.toggle('active');
+      }
     });
     
     // Keyboard support

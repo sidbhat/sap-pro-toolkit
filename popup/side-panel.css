@@ -642,6 +642,7 @@ body {
   align-items: center;
   flex-wrap: nowrap;
   position: relative;
+  z-index: 1;
 }
 
 .icon-btn {
@@ -736,8 +737,9 @@ body {
 
 /* Dropdown Menu */
 .dropdown-menu {
-  position: fixed;
-  margin-top: 4px;
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
   min-width: 140px;
   background: white;
   border: 1px solid var(--border);
@@ -829,9 +831,10 @@ body {
   transform: translateX(-50%) translateY(8px);
 }
 
-/* Ensure table containers don't clip tooltips */
+/* Ensure table containers don't clip dropdowns and tooltips */
 .table-container {
   overflow: visible;
+  position: relative;
 }
 
 .data-table {

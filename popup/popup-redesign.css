@@ -702,6 +702,7 @@ body {
   align-items: center;
   flex-wrap: nowrap;
   position: relative;
+  z-index: 1;
 }
 
 /* Kebab Menu Button */
@@ -737,25 +738,26 @@ body {
 /* Dropdown Menu */
 .dropdown-menu {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 4px);
   right: 0;
-  margin-top: 4px;
   min-width: 140px;
   background: white;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-xl);
-  z-index: 1000;
+  z-index: 10000;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px);
   transition: all var(--transition-base);
+  pointer-events: none;
 }
 
 .dropdown-menu.active {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .dropdown-item {

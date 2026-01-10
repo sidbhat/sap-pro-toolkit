@@ -259,8 +259,9 @@ function attachEnvironmentListeners() {
         if (d !== dropdown) d.classList.remove('active');
       });
       
-      // Toggle this dropdown
-      dropdown?.classList.toggle('active');
+      if (dropdown) {
+        dropdown.classList.toggle('active');
+      }
     });
   });
   
@@ -373,10 +374,6 @@ function renderShortcuts() {
 }
 
 function attachShortcutListeners() {
-  console.log('[DEBUG] attachShortcutListeners() called');
-  console.log('[DEBUG] Found .edit-action buttons:', document.querySelectorAll('.shortcut-actions-cell .edit-action').length);
-  console.log('[DEBUG] Found .kebab-btn buttons:', document.querySelectorAll('.shortcut-actions-cell .kebab-btn').length);
-  
   document.querySelectorAll('.go-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -404,7 +401,7 @@ function attachShortcutListeners() {
   });
   
   // Kebab menu toggle
-  document.querySelectorAll('.shortcut-actions-cell .kebab-btn').forEach(btn => {
+  document.querySelectorAll('.kebab-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
@@ -415,7 +412,9 @@ function attachShortcutListeners() {
         if (d !== dropdown) d.classList.remove('active');
       });
       
-      dropdown?.classList.toggle('active');
+      if (dropdown) {
+        dropdown.classList.toggle('active');
+      }
     });
     
     // Keyboard support
@@ -561,7 +560,9 @@ function attachNoteListeners() {
         if (d !== dropdown) d.classList.remove('active');
       });
       
-      dropdown?.classList.toggle('active');
+      if (dropdown) {
+        dropdown.classList.toggle('active');
+      }
     });
     
     // Keyboard support
