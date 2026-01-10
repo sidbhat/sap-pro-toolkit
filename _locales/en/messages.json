@@ -1,14 +1,14 @@
 {
   "extName": {
-    "message": "SuccessFactors Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "extDescription": {
-    "message": "Productivity toolkit for SAP SuccessFactors professionals",
+    "message": "Productivity toolkit for SAP professionals",
     "description": "Description of the extension"
   },
   "headerTitle": {
-    "message": "SuccessFactors Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Header title in popup"
   },
   "dcInfoBtn": {
@@ -236,7 +236,7 @@
     "description": "Datacenter directory modal title"
   },
   "dcDirectoryDescription": {
-    "message": "Complete list of SuccessFactors datacenters worldwide with their locations, cloud providers, and availability.",
+    "message": "Complete list of SAP SuccessFactors datacenters worldwide with their locations, cloud providers, and availability.",
     "description": "Datacenter directory modal description"
   },
   "close": {
@@ -244,7 +244,7 @@
     "description": "Close button text"
   },
   "helpTitle": {
-    "message": "About SF Pro Toolkit",
+    "message": "About SAP Pro Toolkit",
     "description": "Help modal title"
   },
   "helpFeatures": {
@@ -256,12 +256,12 @@
     "description": "Help feature 1 title"
   },
   "helpFeature1Description": {
-    "message": "Save multiple SF instances (Production, Preview, Sales, Sandbox) and quickly switch between them without manually changing URLs. The extension preserves your current page path when switching.",
+    "message": "Save multiple SAP instances (Production, Preview, Sales, Sandbox) and quickly switch between them without manually changing URLs. The extension preserves your current page path when switching.",
     "description": "Help feature 1 description"
   },
-  "helpFeature2Title": {
-    "message": "Navigate with Shortcuts",
-    "description": "Help feature 2 title"
+  "helpFeature2Description": {
+    "message": "Quick access to frequently-used SAP pages like Admin Center, RBP, Provisioning, and What's New documentation. Create custom shortcuts for any SAP URL you visit regularly.",
+    "description": "Help feature 2 description"
   },
   "helpFeature2Description": {
     "message": "Quick access to frequently-used SF pages like Admin Center, RBP, Provisioning, and What's New documentation. Create custom shortcuts for any SF URL you visit regularly.",
@@ -280,7 +280,7 @@
     "description": "Help pro tip heading"
   },
   "helpProTipDescription": {
-    "message": "The extension automatically detects datacenter information and environment type when you're on a SuccessFactors page, making it easy to track which instance you're working on.",
+    "message": "The extension automatically detects datacenter information and environment type when you're on an SAP SuccessFactors page, making it easy to track which instance you're working on.",
     "description": "Help pro tip description"
   },
   "helpGotIt": {

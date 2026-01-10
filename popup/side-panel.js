@@ -1,5 +1,5 @@
-// SF Pro Toolkit - Popup Redesign Logic
-// Card-based dashboard with instant actions
+// SF Pro Toolkit - Side Panel Edition
+// Enhanced with Starter Pack Import System
 // Uses shared toolkit-core.js for common functionality
 
 // ==================== STATE ====================
@@ -49,19 +49,6 @@ async function loadSettings() {
 async function loadShortcuts() {
   const result = await chrome.storage.local.get('shortcuts');
   shortcuts = result.shortcuts || [];
-  
-  // Add default Product Roadmap shortcut if no shortcuts exist
-  if (shortcuts.length === 0) {
-    shortcuts = [{
-      id: `shortcut-${Date.now()}`,
-      name: 'Product Roadmap',
-      url: 'https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1',
-      notes: 'SAP SuccessFactors Product Roadmap',
-      icon: '0'
-    }];
-    await chrome.storage.local.set({ shortcuts });
-  }
-  
   renderShortcuts();
 }
 
@@ -337,7 +324,7 @@ function attachShortcutListeners() {
   
   document.querySelectorAll('.shortcut-row').forEach(row => {
     row.addEventListener('click', (e) => {
-      if (e.target.closest('.icon-btn')) return;
+      if (e.target.closest('.table-btn')) return;
       const url = row.getAttribute('data-url');
       const builtUrl = buildShortcutUrl({ url }, currentPageData);
       if (builtUrl) {
@@ -522,19 +509,10 @@ function highlightActiveStates(currentURL) {
 async function navigateToShortcut(url) {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    
-    const isExternal = url.startsWith('http://') || url.startsWith('https://');
-    const currentUrl = tab?.url || '';
-    const isSameDomain = currentUrl && isExternal && new URL(url).hostname === new URL(currentUrl).hostname;
-    
-    if (isExternal && !isSameDomain) {
-      await chrome.tabs.create({ url: url });
+    if (tab && tab.id) {
+      await chrome.tabs.update(tab.id, { url: url });
     } else {
-      if (tab && tab.id) {
-        await chrome.tabs.update(tab.id, { url: url });
-      } else {
-        await chrome.tabs.create({ url: url });
-      }
+      await chrome.tabs.create({ url: url });
     }
   } catch (error) {
     console.error('Navigation error:', error);
@@ -561,7 +539,6 @@ async function switchEnvironment(targetHostname, targetType) {
     
     await chrome.tabs.update(tab.id, { url: newURL });
     showToast(`Switching to ${targetHostname}...`, 'success');
-    window.close();
   } catch (error) {
     console.error('Environment switch error:', error);
     showToast('Failed to switch environment', 'error');
@@ -999,7 +976,7 @@ async function downloadTemplate() {
 }
 
 async function loadDisplayModeSetting() {
-  const result = await chrome.storage.local.get({ displayMode: 'popup' });
+  const result = await chrome.storage.local.get({ displayMode: 'sidepanel' });
   const mode = result.displayMode;
   
   const popupRadio = document.getElementById('displayModePopup');

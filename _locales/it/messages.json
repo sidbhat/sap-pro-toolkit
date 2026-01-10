@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "SuccessFactors Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "extDescription": {
@@ -8,7 +8,7 @@
     "description": "extDescription translation"
   },
   "headerTitle": {
-    "message": "SuccessFactors Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "dcInfoBtn": {
@@ -236,7 +236,7 @@
     "description": "dcDirectoryTitle translation"
   },
   "dcDirectoryDescription": {
-    "message": "Elenco completo dei data center SuccessFactors in tutto il mondo con le loro posizioni, fornitori cloud e disponibilità.",
+    "message": "Elenco completo dei data center SAP SuccessFactors in tutto il mondo con le loro posizioni, fornitori cloud e disponibilità.",
     "description": "dcDirectoryDescription translation"
   },
   "close": {
@@ -244,7 +244,7 @@
     "description": "close translation"
   },
   "helpTitle": {
-    "message": "Informazioni su SuccessFactors Pro Toolkit",
+    "message": "Informazioni su SAP Pro Toolkit",
     "description": "helpTitle translation"
   },
   "helpFeatures": {
@@ -256,12 +256,12 @@
     "description": "helpFeature1Title translation"
   },
   "helpFeature1Description": {
-    "message": "Salva più istanze SF (Produzione, Anteprima, Vendite, Sandbox) e passa rapidamente tra di esse senza modificare manualmente gli URL. L'estensione preserva il percorso della pagina corrente durante il cambio.",
+    "message": "Salva più istanze SAP (Produzione, Anteprima, Vendite, Sandbox) e passa rapidamente tra di esse senza modificare manualmente gli URL. L'estensione preserva il percorso della pagina corrente durante il cambio.",
     "description": "helpFeature1Description translation"
   },
-  "helpFeature2Title": {
-    "message": "Naviga con collegamenti",
-    "description": "helpFeature2Title translation"
+  "helpFeature2Description": {
+    "message": "Accesso rapido alle pagine SAP usate frequentemente come Centro amministrazione, RBP, Provisioning e documentazione novità. Crea collegamenti personalizzati per qualsiasi URL SAP che visiti regolarmente.",
+    "description": "helpFeature2Description translation"
   },
   "helpFeature2Description": {
     "message": "Accesso rapido alle pagine SF usate frequentemente come Centro amministrazione, RBP, Provisioning e documentazione novità. Crea collegamenti personalizzati per qualsiasi URL SF che visiti regolarmente.",
@@ -280,7 +280,7 @@
     "description": "helpProTip translation"
   },
   "helpProTipDescription": {
-    "message": "L'estensione rileva automaticamente le informazioni sul data center e il tipo di ambiente quando sei su una pagina SuccessFactors, rendendo facile tenere traccia dell'istanza su cui stai lavorando.",
+    "message": "L'estensione rileva automaticamente le informazioni sul data center e il tipo di ambiente quando sei su una pagina SAP SuccessFactors, rendendo facile tenere traccia dell'istanza su cui stai lavorando.",
     "description": "helpProTipDescription translation"
   },
   "helpGotIt": {

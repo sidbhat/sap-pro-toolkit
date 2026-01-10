@@ -1,10 +1,10 @@
-// SF Pro Toolkit - Injected Script
+// SAP Pro Toolkit - Injected Script
 // Runs in page context to access window.pageHeaderJsonData
 
 (function() {
   'use strict';
   
-  console.log('[SF Pro Toolkit] Injected script loaded');
+  console.log('[SAP Pro Toolkit] Injected script loaded');
   
   let lastCompanyId = null;
   let lastUrl = window.location.href;
@@ -15,7 +15,7 @@
       
       // Only send if data changed or first time
       if (currentCompanyId !== lastCompanyId || window.location.href !== lastUrl) {
-        console.log('[SF Pro Toolkit Injected] Sending pageHeaderJsonData:', {
+        console.log('[SAP Pro Toolkit Injected] Sending pageHeaderJsonData:', {
           companyId: currentCompanyId,
           baseUrl: window.pageHeaderJsonData.baseUrl,
           url: window.location.href,
@@ -49,7 +49,7 @@
     }
     
     if (attempts >= maxAttempts) {
-      console.log('[SF Pro Toolkit] pageHeaderJsonData not found after 10 seconds');
+      console.log('[SAP Pro Toolkit] pageHeaderJsonData not found after 10 seconds');
       window.postMessage({
         type: 'sf-pro-toolkit-error',
         error: 'pageHeaderJsonData not found'
@@ -62,7 +62,7 @@
   let lastCheckedUrl = window.location.href;
   setInterval(() => {
     if (window.location.href !== lastCheckedUrl) {
-      console.log('[SF Pro Toolkit] URL changed, re-checking pageHeaderJsonData');
+      console.log('[SAP Pro Toolkit] URL changed, re-checking pageHeaderJsonData');
       lastCheckedUrl = window.location.href;
       sendPageData();
     }

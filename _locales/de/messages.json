@@ -1,14 +1,14 @@
 {
   "extName": {
-    "message": "SF Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "extDescription": {
-    "message": "Produktivitäts-Toolkit für SAP SuccessFactors-Profis",
+    "message": "Produktivitäts-Toolkit für SAP-Profis",
     "description": "Description of the extension"
   },
   "headerTitle": {
-    "message": "SF Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Main header title"
   },
   "dcInfoBtn": {
@@ -236,7 +236,7 @@
     "description": "Datacenter directory modal title"
   },
   "dcDirectoryDescription": {
-    "message": "Vollständige Liste der weltweiten SuccessFactors-Rechenzentren mit ihren Standorten, Cloud-Anbietern und Verfügbarkeit.",
+    "message": "Vollständige Liste der weltweiten SAP SuccessFactors-Rechenzentren mit ihren Standorten, Cloud-Anbietern und Verfügbarkeit.",
     "description": "Datacenter directory modal description"
   },
   "close": {
@@ -244,7 +244,7 @@
     "description": "Close button text"
   },
   "helpTitle": {
-    "message": "Über SF Pro Toolkit",
+    "message": "Über SAP Pro Toolkit",
     "description": "Help modal title"
   },
   "helpFeatures": {
@@ -256,12 +256,12 @@
     "description": "Help feature 1 title"
   },
   "helpFeature1Description": {
-    "message": "Speichern Sie mehrere SF-Instanzen (Produktion, Vorschau, Vertrieb, Sandbox) und wechseln Sie schnell zwischen ihnen, ohne URLs manuell zu ändern. Die Erweiterung behält Ihren aktuellen Seitenpfad beim Wechsel bei.",
+    "message": "Speichern Sie mehrere SAP-Instanzen (Produktion, Vorschau, Vertrieb, Sandbox) und wechseln Sie schnell zwischen ihnen, ohne URLs manuell zu ändern. Die Erweiterung behält Ihren aktuellen Seitenpfad beim Wechsel bei.",
     "description": "Help feature 1 description"
   },
-  "helpFeature2Title": {
-    "message": "Mit Verknüpfungen navigieren",
-    "description": "Help feature 2 title"
+  "helpFeature2Description": {
+    "message": "Schneller Zugriff auf häufig verwendete SAP-Seiten wie Admin-Center, RBP, Bereitstellung und Neuigkeiten-Dokumentation. Erstellen Sie benutzerdefinierte Verknüpfungen für jede SAP-URL, die Sie regelmäßig besuchen.",
+    "description": "Help feature 2 description"
   },
   "helpFeature2Description": {
     "message": "Schneller Zugriff auf häufig verwendete SF-Seiten wie Admin-Center, RBP, Bereitstellung und Neuigkeiten-Dokumentation. Erstellen Sie benutzerdefinierte Verknüpfungen für jede SF-URL, die Sie regelmäßig besuchen.",
@@ -280,7 +280,7 @@
     "description": "Help pro tip heading"
   },
   "helpProTipDescription": {
-    "message": "Die Erweiterung erkennt automatisch Rechenzentrumsinfos und Umgebungstyp, wenn Sie sich auf einer SuccessFactors-Seite befinden, sodass Sie leicht verfolgen können, an welcher Instanz Sie arbeiten.",
+    "message": "Die Erweiterung erkennt automatisch Rechenzentrumsinfos und Umgebungstyp, wenn Sie sich auf einer SAP SuccessFactors-Seite befinden, sodass Sie leicht verfolgen können, an welcher Instanz Sie arbeiten.",
     "description": "Help pro tip description"
   },
   "helpGotIt": {

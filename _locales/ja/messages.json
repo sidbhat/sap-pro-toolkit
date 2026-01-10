@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "SuccessFactors Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "extDescription": {
@@ -8,7 +8,7 @@
     "description": "extDescription translation"
   },
   "headerTitle": {
-    "message": "SuccessFactors Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "dcInfoBtn": {
@@ -236,7 +236,7 @@
     "description": "dcDirectoryTitle translation"
   },
   "dcDirectoryDescription": {
-    "message": "世界中の SuccessFactors データセンターの完全なリスト（場所、クラウドプロバイダー、可用性を含む）。",
+    "message": "世界中の SAP SuccessFactors データセンターの完全なリスト（場所、クラウドプロバイダー、可用性を含む）。",
     "description": "dcDirectoryDescription translation"
   },
   "close": {
@@ -244,7 +244,7 @@
     "description": "close translation"
   },
   "helpTitle": {
-    "message": "SuccessFactors Pro Toolkit について",
+    "message": "SAP Pro Toolkit について",
     "description": "helpTitle translation"
   },
   "helpFeatures": {
@@ -256,12 +256,12 @@
     "description": "helpFeature1Title translation"
   },
   "helpFeature1Description": {
-    "message": "複数の SF インスタンス（本番、プレビュー、営業、サンドボックス）を保存し、URL を手動で変更せずに素早く切り替えます。拡張機能は切り替え時に現在のページパスを保持します。",
+    "message": "複数の SAP インスタンス（本番、プレビュー、営業、サンドボックス）を保存し、URL を手動で変更せずに素早く切り替えます。拡張機能は切り替え時に現在のページパスを保持します。",
     "description": "helpFeature1Description translation"
   },
-  "helpFeature2Title": {
-    "message": "ショートカットでナビゲート",
-    "description": "helpFeature2Title translation"
+  "helpFeature2Description": {
+    "message": "管理センター、RBP、プロビジョニング、新機能ドキュメントなど、よく使用される SAP ページへの素早いアクセス。定期的に訪れる SAP URL のカスタムショートカットを作成できます。",
+    "description": "helpFeature2Description translation"
   },
   "helpFeature2Description": {
     "message": "管理センター、RBP、プロビジョニング、新機能ドキュメントなど、よく使用される SF ページへの素早いアクセス。定期的に訪れる SF URL のカスタムショートカットを作成できます。",
@@ -280,7 +280,7 @@
     "description": "helpProTip translation"
   },
   "helpProTipDescription": {
-    "message": "SuccessFactors ページを閲覧中、拡張機能はデータセンター情報と環境タイプを自動的に検出するため、作業中のインスタンスを簡単に追跡できます。",
+    "message": "SAP SuccessFactors ページを閲覧中、拡張機能はデータセンター情報と環境タイプを自動的に検出するため、作業中のインスタンスを簡単に追跡できます。",
     "description": "helpProTipDescription translation"
   },
   "helpGotIt": {

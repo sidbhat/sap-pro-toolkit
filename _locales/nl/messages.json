@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "SuccessFactors Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "extDescription": {
@@ -8,7 +8,7 @@
     "description": "extDescription translation"
   },
   "headerTitle": {
-    "message": "SuccessFactors Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "dcInfoBtn": {
@@ -236,7 +236,7 @@
     "description": "dcDirectoryTitle translation"
   },
   "dcDirectoryDescription": {
-    "message": "Volledige lijst van SuccessFactors datacenters wereldwijd met hun locaties, cloudproviders en beschikbaarheid.",
+    "message": "Volledige lijst van SAP SuccessFactors datacenters wereldwijd met hun locaties, cloudproviders en beschikbaarheid.",
     "description": "dcDirectoryDescription translation"
   },
   "close": {
@@ -244,7 +244,7 @@
     "description": "close translation"
   },
   "helpTitle": {
-    "message": "Over SuccessFactors Pro Toolkit",
+    "message": "Over SAP Pro Toolkit",
     "description": "helpTitle translation"
   },
   "helpFeatures": {
@@ -256,12 +256,12 @@
     "description": "helpFeature1Title translation"
   },
   "helpFeature1Description": {
-    "message": "Bewaar meerdere SF instanties (Productie, Voorbeeld, Verkoop, Sandbox) en schakel snel tussen hen zonder handmatig URL's te wijzigen. De extensie behoudt uw huidige paginapad bij het wisselen.",
+    "message": "Bewaar meerdere SAP instanties (Productie, Voorbeeld, Verkoop, Sandbox) en schakel snel tussen hen zonder handmatig URL's te wijzigen. De extensie behoudt uw huidige paginapad bij het wisselen.",
     "description": "helpFeature1Description translation"
   },
-  "helpFeature2Title": {
-    "message": "Navigeren met snelkoppelingen",
-    "description": "helpFeature2Title translation"
+  "helpFeature2Description": {
+    "message": "Snelle toegang tot veelgebruikte SAP-pagina's zoals Beheercentrum, RBP, Provisioning en documentatie voor nieuwe functies. Maak aangepaste snelkoppelingen voor elke SAP URL die u regelmatig bezoekt.",
+    "description": "helpFeature2Description translation"
   },
   "helpFeature2Description": {
     "message": "Snelle toegang tot veelgebruikte SF-pagina's zoals Beheercentrum, RBP, Provisioning en documentatie voor nieuwe functies. Maak aangepaste snelkoppelingen voor elke SF URL die u regelmatig bezoekt.",
@@ -280,7 +280,7 @@
     "description": "helpProTip translation"
   },
   "helpProTipDescription": {
-    "message": "De extensie detecteert automatisch datacenterinformatie en omgevingstype wanneer u op een SuccessFactors-pagina bent, waardoor u gemakkelijk kunt bijhouden aan welke instantie u werkt.",
+    "message": "De extensie detecteert automatisch datacenterinformatie en omgevingstype wanneer u op een SAP SuccessFactors-pagina bent, waardoor u gemakkelijk kunt bijhouden aan welke instantie u werkt.",
     "description": "helpProTipDescription translation"
   },
   "helpGotIt": {

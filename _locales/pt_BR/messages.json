@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "SuccessFactors Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "extDescription": {
@@ -8,7 +8,7 @@
     "description": "extDescription translation"
   },
   "headerTitle": {
-    "message": "SuccessFactors Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "dcInfoBtn": {
@@ -236,7 +236,7 @@
     "description": "dcDirectoryTitle translation"
   },
   "dcDirectoryDescription": {
-    "message": "Lista completa de data centers SuccessFactors em todo o mundo com suas localizações, provedores de nuvem e disponibilidade.",
+    "message": "Lista completa de data centers SAP SuccessFactors em todo o mundo com suas localizações, provedores de nuvem e disponibilidade.",
     "description": "dcDirectoryDescription translation"
   },
   "close": {
@@ -244,7 +244,7 @@
     "description": "close translation"
   },
   "helpTitle": {
-    "message": "Sobre o SuccessFactors Pro Toolkit",
+    "message": "Sobre o SAP Pro Toolkit",
     "description": "helpTitle translation"
   },
   "helpFeatures": {
@@ -256,12 +256,12 @@
     "description": "helpFeature1Title translation"
   },
   "helpFeature1Description": {
-    "message": "Salve várias instâncias SF (Produção, Pré-visualização, Vendas, Sandbox) e troque rapidamente entre elas sem alterar URLs manualmente. A extensão preserva o caminho da página atual ao trocar.",
+    "message": "Salve várias instâncias SAP (Produção, Pré-visualização, Vendas, Sandbox) e troque rapidamente entre elas sem alterar URLs manualmente. A extensão preserva o caminho da página atual ao trocar.",
     "description": "helpFeature1Description translation"
   },
-  "helpFeature2Title": {
-    "message": "Navegar com atalhos",
-    "description": "helpFeature2Title translation"
+  "helpFeature2Description": {
+    "message": "Acesso rápido a páginas SAP frequentemente usadas como Centro de administração, RBP, Provisionamento e documentação de novidades. Crie atalhos personalizados para qualquer URL SAP que você visite regularmente.",
+    "description": "helpFeature2Description translation"
   },
   "helpFeature2Description": {
     "message": "Acesso rápido a páginas SF frequentemente usadas como Centro de administração, RBP, Provisionamento e documentação de novidades. Crie atalhos personalizados para qualquer URL SF que você visite regularmente.",
@@ -280,7 +280,7 @@
     "description": "helpProTip translation"
   },
   "helpProTipDescription": {
-    "message": "A extensão detecta automaticamente informações do data center e tipo de ambiente quando você está em uma página SuccessFactors, facilitando o rastreamento da instância em que está trabalhando.",
+    "message": "A extensão detecta automaticamente informações do data center e tipo de ambiente quando você está em uma página SAP SuccessFactors, facilitando o rastreamento da instância em que está trabalhando.",
     "description": "helpProTipDescription translation"
   },
   "helpGotIt": {

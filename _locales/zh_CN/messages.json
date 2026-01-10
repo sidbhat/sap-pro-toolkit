@@ -1,14 +1,14 @@
 {
   "extName": {
-    "message": "SF Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Name of the extension"
   },
   "extDescription": {
-    "message": "SAP SuccessFactors 专业人员的生产力工具包",
+    "message": "SAP 专业人员的生产力工具包",
     "description": "Description of the extension"
   },
   "headerTitle": {
-    "message": "SF Pro Toolkit",
+    "message": "SAP Pro Toolkit",
     "description": "Main header title"
   },
   "dcInfoBtn": {
@@ -236,7 +236,7 @@
     "description": "Datacenter directory modal title"
   },
   "dcDirectoryDescription": {
-    "message": "全球 SuccessFactors 数据中心的完整列表，包括其位置、云提供商和可用性。",
+    "message": "全球 SAP SuccessFactors 数据中心的完整列表，包括其位置、云提供商和可用性。",
     "description": "Datacenter directory modal description"
   },
   "close": {
@@ -244,7 +244,7 @@
     "description": "Close button text"
   },
   "helpTitle": {
-    "message": "关于 SF Pro Toolkit",
+    "message": "关于 SAP Pro Toolkit",
     "description": "Help modal title"
   },
   "helpFeatures": {
@@ -256,12 +256,12 @@
     "description": "Help feature 1 title"
   },
   "helpFeature1Description": {
-    "message": "保存多个 SF 实例（生产、预览、销售、沙箱）并快速切换，无需手动更改 URL。扩展会在切换时保留您当前的页面路径。",
+    "message": "保存多个 SAP 实例（生产、预览、销售、沙箱）并快速切换，无需手动更改 URL。扩展会在切换时保留您当前的页面路径。",
     "description": "Help feature 1 description"
   },
-  "helpFeature2Title": {
-    "message": "使用快捷方式导航",
-    "description": "Help feature 2 title"
+  "helpFeature2Description": {
+    "message": "快速访问常用的 SAP 页面，如管理中心、RBP、配置和新功能文档。为任何您经常访问的 SAP URL 创建自定义快捷方式。",
+    "description": "Help feature 2 description"
   },
   "helpFeature2Description": {
     "message": "快速访问常用的 SF 页面，如管理中心、RBP、配置和新功能文档。为任何您经常访问的 SF URL 创建自定义快捷方式。",
@@ -280,7 +280,7 @@
     "description": "Help pro tip heading"
   },
   "helpProTipDescription": {
-    "message": "当您在 SuccessFactors 页面上时，扩展会自动检测数据中心信息和环境类型，方便您跟踪正在使用的实例。",
+    "message": "当您在 SAP SuccessFactors 页面上时，扩展会自动检测数据中心信息和环境类型，方便您跟踪正在使用的实例。",
     "description": "Help pro tip description"
   },
   "helpGotIt": {

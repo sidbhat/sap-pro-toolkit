@@ -1,5 +1,5 @@
-// SF Pro Toolkit - Content Script
-// Runs on all SuccessFactors pages to detect environment and inject visual indicators
+// SAP Pro Toolkit - Content Script
+// Runs on all SAP SuccessFactors pages to detect environment and inject visual indicators
 
 // ==================== CONSTANTS ====================
 
@@ -53,7 +53,7 @@ let darkModeEnabled = false;
     listenForPageData();
     
   } catch (error) {
-    console.error('[SF Pro Toolkit] Initialization error:', error);
+    console.error('[SAP Pro Toolkit] Initialization error:', error);
   }
 })();
 
@@ -64,7 +64,7 @@ async function loadDatacenterDB() {
     const response = await fetch(chrome.runtime.getURL('resources/dc.json'));
     datacenterDB = await response.json();
   } catch (error) {
-    console.error('[SF Pro Toolkit] Failed to load datacenter DB:', error);
+    console.error('[SAP Pro Toolkit] Failed to load datacenter DB:', error);
     datacenterDB = [];
   }
 }
@@ -79,7 +79,7 @@ async function loadSettings() {
     applyDarkMode(result.darkMode);
     
   } catch (error) {
-    console.error('[SF Pro Toolkit] Failed to load settings:', error);
+    console.error('[SAP Pro Toolkit] Failed to load settings:', error);
   }
 }
 
@@ -94,7 +94,7 @@ function injectHelperScript() {
     };
     (document.head || document.documentElement).appendChild(script);
   } catch (error) {
-    console.error('[SF Pro Toolkit] Failed to inject helper script:', error);
+    console.error('[SAP Pro Toolkit] Failed to inject helper script:', error);
   }
 }
 
@@ -127,9 +127,9 @@ function listenForPageData() {
       // KEY FIX: Use baseUrl from pageHeaderJsonData (like SuccessFactors Toolkit does)
       const hostname = sfData.baseUrl ? sfData.baseUrl.replace('https://', '').replace('http://', '') : window.location.hostname;
       
-      console.log('[SF Pro Toolkit] Looking up hostname:', hostname);
-      console.log('[SF Pro Toolkit] Company ID:', sfData.companyId);
-      console.log('[SF Pro Toolkit] datacenterDB loaded?', datacenterDB ? 'YES' : 'NO', 'Entries:', datacenterDB?.length);
+      console.log('[SAP Pro Toolkit] Looking up hostname:', hostname);
+      console.log('[SAP Pro Toolkit] Company ID:', sfData.companyId);
+      console.log('[SAP Pro Toolkit] datacenterDB loaded?', datacenterDB ? 'YES' : 'NO', 'Entries:', datacenterDB?.length);
       
       // Look up datacenter info - prioritize csd_hostname, then old_hostname, then sales_hostname
       let dcEntry = datacenterDB?.find(dc => dc.csd_hostname === hostname);
@@ -141,10 +141,10 @@ function listenForPageData() {
       }
       
       if (dcEntry) {
-        console.log('[SF Pro Toolkit] MATCH FOUND in DC entry:', dcEntry);
+        console.log('[SAP Pro Toolkit] MATCH FOUND in DC entry:', dcEntry);
       }
       
-      console.log('[SF Pro Toolkit] DC Entry found:', dcEntry ? 'YES' : 'NO', dcEntry);
+      console.log('[SAP Pro Toolkit] DC Entry found:', dcEntry ? 'YES' : 'NO', dcEntry);
       
       // Extract relevant information including all user fields
       pageData = {
@@ -178,11 +178,11 @@ function listenForPageData() {
       
       currentEnvironment = pageData;
       
-      console.log('[SF Pro Toolkit] Final page data:', pageData);
+      console.log('[SAP Pro Toolkit] Final page data:', pageData);
     }
     
     if (event.data.type === 'sf-pro-toolkit-error') {
-      console.log('[SF Pro Toolkit] Could not find pageHeaderJsonData, using URL-based detection');
+      console.log('[SAP Pro Toolkit] Could not find pageHeaderJsonData, using URL-based detection');
     }
   });
 }
@@ -376,14 +376,14 @@ function injectDarkCSS() {
   link.href = chrome.runtime.getURL('content/dark.css');
   document.head.appendChild(link);
   
-  console.log('[SF Pro Toolkit] Dark mode enabled');
+    console.log('[SAP Pro Toolkit] Dark mode enabled');
 }
 
 function removeDarkCSS() {
   const link = document.getElementById('sf-toolkit-dark-mode');
   if (link) {
     link.remove();
-    console.log('[SF Pro Toolkit] Dark mode disabled');
+    console.log('[SAP Pro Toolkit] Dark mode disabled');
   }
 }
 
@@ -391,4 +391,4 @@ function removeDarkCSS() {
 // ==================== UTILITY ====================
 
 // Log extension loaded
-console.log('[SF Pro Toolkit] Content script loaded on:', window.location.hostname);
+console.log('[SAP Pro Toolkit] Content script loaded on:', window.location.hostname);

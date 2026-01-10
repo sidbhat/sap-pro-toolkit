@@ -1,18 +1,77 @@
-// SF Pro Toolkit - Background Service Worker
-// Handles extension lifecycle, environment switching, and badge updates
+// SAP Pro Toolkit - Background Service Worker
+// Handles extension lifecycle, side panel, environment switching, and badge updates
 
-console.log('[SF Pro Toolkit] Background service worker initialized');
+console.log('[SAP Pro Toolkit] Background service worker initialized');
+
+// ==================== DISPLAY MODE HANDLER ====================
+
+// Listen for display mode changes and update action behavior
+chrome.storage.onChanged.addListener(async (changes, area) => {
+  if (area === 'local' && changes.displayMode) {
+    const newMode = changes.displayMode.newValue;
+    await updateDisplayMode(newMode);
+  }
+});
+
+// Update display mode dynamically
+async function updateDisplayMode(mode) {
+  try {
+    if (mode === 'sidepanel') {
+      // Remove popup to enable onClicked handler for side panel
+      await chrome.action.setPopup({ popup: '' });
+      console.log('[SAP Pro Toolkit] Display mode set to: Side Panel');
+    } else {
+      // Set popup back
+      await chrome.action.setPopup({ popup: 'popup/popup-redesign.html' });
+      console.log('[SAP Pro Toolkit] Display mode set to: Popup');
+    }
+  } catch (error) {
+    console.error('[SAP Pro Toolkit] Failed to update display mode:', error);
+  }
+}
+
+// Handle extension icon click (only triggered when popup is disabled for side panel mode)
+chrome.action.onClicked.addListener(async (tab) => {
+  console.log('[SAP Pro Toolkit] Extension icon clicked, tab:', tab.id);
+  try {
+    // This is only called when in side panel mode (popup is disabled)
+    console.log('[SAP Pro Toolkit] Opening side panel...');
+    // Open side panel - Chrome will use the default_path from manifest.json
+    await chrome.sidePanel.open({ windowId: tab.windowId });
+    console.log('[SAP Pro Toolkit] Side panel opened successfully for tab:', tab.id);
+  } catch (error) {
+    console.error('[SAP Pro Toolkit] Failed to open side panel:', error);
+    console.error('[SAP Pro Toolkit] Error details:', error.message, error.stack);
+  }
+});
+
+// Initialize display mode on startup AND when service worker wakes up
+chrome.runtime.onStartup.addListener(async () => {
+  const result = await chrome.storage.local.get({ displayMode: 'popup' });
+  await updateDisplayMode(result.displayMode);
+});
+
+// Initialize display mode immediately when service worker starts
+(async () => {
+  const result = await chrome.storage.local.get({ displayMode: 'popup' });
+  await updateDisplayMode(result.displayMode);
+  console.log('[SAP Pro Toolkit] Display mode initialized on service worker start:', result.displayMode);
+})();
 
 // ==================== INSTALLATION ====================
 
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
-    console.log('[SF Pro Toolkit] Extension installed');
+    console.log('[SAP Pro Toolkit] Extension installed');
     
     // Set default settings
     chrome.storage.sync.set({
       showConfirmationForProd: true
     });
+    
+    // Set default display mode to popup
+    await chrome.storage.local.set({ displayMode: 'popup' });
+    await updateDisplayMode('popup');
     
     // Load default shortcuts
     try {
@@ -34,12 +93,16 @@ chrome.runtime.onInstalled.addListener(async (details) => {
       });
       
       await chrome.storage.local.set({ shortcuts });
-      console.log('[SF Pro Toolkit] Default shortcuts loaded:', shortcuts.length);
+      console.log('[SAP Pro Toolkit] Default shortcuts loaded:', shortcuts.length);
     } catch (error) {
-      console.error('[SF Pro Toolkit] Failed to load default shortcuts:', error);
+      console.error('[SAP Pro Toolkit] Failed to load default shortcuts:', error);
     }
   } else if (details.reason === 'update') {
-    console.log('[SF Pro Toolkit] Extension updated to version', chrome.runtime.getManifest().version);
+    console.log('[SAP Pro Toolkit] Extension updated to version', chrome.runtime.getManifest().version);
+    
+    // Ensure display mode is initialized on update
+    const result = await chrome.storage.local.get({ displayMode: 'popup' });
+    await updateDisplayMode(result.displayMode);
   }
 });
 
@@ -83,11 +146,11 @@ async function handleEnvironmentSwitch(request, tabId) {
     // Update tab
     await chrome.tabs.update(tabId, { url: newURL });
     
-    console.log('[SF Pro Toolkit] Environment switched:', currentURL.hostname, '→', targetHostname);
+    console.log('[SAP Pro Toolkit] Environment switched:', currentURL.hostname, '→', targetHostname);
     
     return { success: true };
   } catch (error) {
-    console.error('[SF Pro Toolkit] Environment switch error:', error);
+    console.error('[SAP Pro Toolkit] Environment switch error:', error);
     throw error;
   }
 }
@@ -117,20 +180,20 @@ function updateBadge(envType, tabId) {
     tabId: tabId
   });
   
-  console.log('[SF Pro Toolkit] Badge updated for tab', tabId, ':', envType);
+  console.log('[SAP Pro Toolkit] Badge updated for tab', tabId, ':', envType);
 }
 
 // ==================== TAB UPDATES ====================
 
-// Listen for tab updates to detect SF pages
+// Listen for tab updates to detect SAP pages
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url) {
-    // Check if it's an SF page
+    // Check if it's an SAP page
     if (isSFPage(tab.url)) {
-      console.log('[SF Pro Toolkit] SF page detected:', tab.url);
+      console.log('[SAP Pro Toolkit] SAP page detected:', tab.url);
       // Badge will be updated by content script via message
     } else {
-      // Clear badge for non-SF pages
+      // Clear badge for non-SAP pages
       chrome.action.setBadgeText({ text: '', tabId: tabId });
     }
   }
@@ -177,6 +240,6 @@ function isSFPage(url) {
 // 
 // chrome.runtime.onStartup.addListener(() => {
 //   keepAliveInterval = setInterval(() => {
-//     console.log('[SF Pro Toolkit] Keep alive ping');
+//     console.log('[SAP Pro Toolkit] Keep alive ping');
 //   }, 20000); // Ping every 20 seconds
 // });

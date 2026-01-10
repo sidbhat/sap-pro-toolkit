@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SF Pro Toolkit</title>
-  <link rel="stylesheet" href="popup-redesign.css">
+  <link rel="stylesheet" href="side-panel.css">
 </head>
 <body>
-  <div class="popup-container">
+  <div class="side-panel-container">
     <!-- Header -->
-    <div class="popup-header">
+    <div class="side-panel-header">
       <div class="header-content">
         <button class="header-btn" id="helpBtn" data-i18n-title="helpBtn" title="Help">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -170,8 +170,6 @@
     <div class="toast" id="toast"></div>
   </div>
 
-  <!-- Modals (keeping existing modals) -->
-  
   <!-- Add Environment Modal -->
   <div class="modal" id="addEnvModal">
     <div class="modal-content">
@@ -222,7 +220,10 @@
           </div>
           <div class="form-group">
             <label for="shortcutPath"><span data-i18n="shortcutUrl">URL</span> *</label>
-            <input type="text" id="shortcutPath" placeholder="e.g., https://..." required>
+            <input type="text" id="shortcutPath" placeholder="e.g., https://... or /sf/admin" required>
+            <small style="color: var(--text-secondary); font-size: 11px; display: block; margin-top: 4px;">
+              Use relative URLs (e.g., /sf/admin) or absolute URLs (e.g., https://...)
+            </small>
           </div>
           <div class="form-group">
             <label for="shortcutNotes">Notes</label>
@@ -235,9 +236,9 @@
               <option value="1">⚙️ Settings</option>
               <option value="2">🔐 Security</option>
               <option value="3">👥 People</option>
-              <option value="4">📊 Reports</option>
+              <option value="4">📊 Analytics</option>
               <option value="5">🛠️ Tools</option>
-              <option value="6">📝 Forms</option>
+              <option value="6">📝 Document</option>
               <option value="7">🎯 Target</option>
               <option value="8">📄 Page</option>
               <option value="9">🔗 Link</option>
@@ -276,8 +277,8 @@
               <option value="1">🔑 Key</option>
               <option value="2">🆔 ID</option>
               <option value="3">🔗 Link</option>
-              <option value="4">⚙️ Config</option>
-              <option value="5">📋 Checklist</option>
+              <option value="4">⚙️ Settings</option>
+              <option value="5">📋 Clipboard</option>
               <option value="6">💡 Idea</option>
               <option value="7">📌 Pin</option>
             </select>
@@ -300,12 +301,11 @@
       </div>
       <div class="modal-body">
         <div class="settings-section">
-          <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary);">Import/Export Toolkit</h4>
+          <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary);">Configuration Management</h4>
           <p style="font-size: 12px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 16px;">
-            Import shortcuts from a JSON file or export your current configuration.
+            Import or export your toolkit configuration (shortcuts, environments, notes).
           </p>
-          <input type="file" id="importFileInput" accept=".json" style="display: none;">
-          <div style="display: flex; gap: 8px;">
+          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
             <button class="btn btn-primary" id="importJsonBtn" style="flex: 1;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -323,9 +323,10 @@
               Export JSON
             </button>
           </div>
-          <a href="#" id="downloadTemplateLink" style="display: block; margin-top: 12px; font-size: 11px; color: var(--primary); text-decoration: none;">
-            📄 Download Template JSON
-          </a>
+          <p style="font-size: 11px; color: var(--text-tertiary); margin-top: 8px;">
+            <a href="#" id="downloadTemplateLink" style="color: var(--accent-blue); text-decoration: none;">📥 Download template JSON</a>
+          </p>
+          <input type="file" id="importFileInput" accept=".json" style="display: none;">
         </div>
         
         <div class="settings-section" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-light);">
@@ -374,9 +375,11 @@
         
         <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">Key Features</h4>
         <ul style="font-size: 12px; line-height: 1.8; color: var(--text-secondary); margin: 0; padding-left: 20px;">
-          <li><strong>Environment Switching</strong>: Quickly switch between Production, Preview, Sales, and Sandbox instances</li>
-          <li><strong>Quick Shortcuts</strong>: Save and access frequently used pages with one click</li>
+          <li><strong>Side Panel</strong>: Always accessible on the right side while you work</li>
+          <li><strong>Environment Switching</strong>: Quickly switch between Production, Preview, Sales instances</li>
+          <li><strong>Smart URLs</strong>: Supports both relative SF paths and absolute external URLs</li>
           <li><strong>Scratch Notes</strong>: Store temporary IDs, URLs, and reference information</li>
+          <li><strong>JSON Import/Export</strong>: Backup and share your configuration</li>
           <li><strong>System Diagnostics</strong>: Generate detailed reports for troubleshooting</li>
           <li><strong>Multi-language Support</strong>: Available in 10+ languages</li>
         </ul>
@@ -449,6 +452,6 @@
   </div>
 
   <script src="toolkit-core.js"></script>
-  <script src="popup-redesign.js"></script>
+  <script src="side-panel.js"></script>
 </body>
 </html>

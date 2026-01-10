@@ -8,7 +8,8 @@
   "permissions": [
     "storage",
     "tabs",
-    "activeTab"
+    "activeTab",
+    "sidePanel"
   ],
   
   "host_permissions": [
@@ -52,11 +53,17 @@
     }
   ],
   
+  "side_panel": {
+    "default_path": "popup/side-panel.html"
+  },
+  
   "web_accessible_resources": [
     {
       "resources": [
         "content/injected.js",
-        "resources/dc.json"
+        "resources/dc.json",
+        "resources/starter-packs.json",
+        "resources/toolkit-template.json"
       ],
       "matches": ["<all_urls>"]
     }

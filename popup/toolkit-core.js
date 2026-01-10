@@ -1,0 +1,367 @@
+// SF Pro Toolkit - Shared Core Logic
+// This file contains all shared functionality used by both popup and side panel
+
+// ==================== I18N INITIALIZATION ====================
+
+async function detectLanguage() {
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tab && tab.url && isSFPage(tab.url)) {
+      const url = new URL(tab.url);
+      
+      const localeParam = url.searchParams.get('locale');
+      if (localeParam) {
+        const lang = localeParam.split('_')[0];
+        console.log('[SAP Pro Toolkit] Language detected from URL locale parameter:', lang);
+        return lang;
+      }
+      
+      const pathMatch = url.pathname.match(/\/([a-z]{2}_[A-Z]{2})\//);
+      if (pathMatch) {
+        const lang = pathMatch[1].split('_')[0];
+        console.log('[SAP Pro Toolkit] Language detected from URL path:', lang);
+        return lang;
+      }
+    }
+  } catch (error) {
+    console.log('[SAP Pro Toolkit] Error detecting language from URL:', error);
+  }
+  
+  const browserLang = navigator.language.split('-')[0];
+  console.log('[SAP Pro Toolkit] Using browser language:', browserLang);
+  return browserLang;
+}
+
+function initI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    const key = element.getAttribute('data-i18n');
+    element.textContent = chrome.i18n.getMessage(key) || element.textContent;
+  });
+  
+  document.querySelectorAll('[data-i18n-title]').forEach(element => {
+    const key = element.getAttribute('data-i18n-title');
+    element.title = chrome.i18n.getMessage(key) || element.title;
+  });
+  
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+    const key = element.getAttribute('data-i18n-placeholder');
+    element.placeholder = chrome.i18n.getMessage(key) || element.placeholder;
+  });
+}
+
+// ==================== CONSTANTS ====================
+
+const ENV_COLORS = {
+  'production': '#ef4444',
+  'preview': '#10b981',
+  'sales': '#f59e0b',
+  'sandbox': '#a855f7',
+  'unknown': '#6b7280'
+};
+
+const ENV_EMOJIS = {
+  'production': '🔴',
+  'preview': '🟢',
+  'sales': '🟠',
+  'sandbox': '🟣',
+  'unknown': '⚫'
+};
+
+const ENV_LABELS = {
+  'production': 'PRODUCTION',
+  'preview': 'PREVIEW',
+  'sales': 'SALES',
+  'sandbox': 'SANDBOX',
+  'unknown': 'UNKNOWN'
+};
+
+const COUNTRY_FLAGS = {
+  'AE': '🇦🇪', 'SA': '🇸🇦', 'CN': '🇨🇳', 'DE': '🇩🇪',
+  'US': '🇺🇸', 'CA': '🇨🇦', 'JP': '🇯🇵', 'SG': '🇸🇬',
+  'NL': '🇳🇱', 'BR': '🇧🇷', 'AU': '🇦🇺', 'CH': '🇨🇭', 'IN': '🇮🇳'
+};
+
+const SHORTCUT_ICONS = ['🗺️', '⚙️', '🔐', '👥', '📊', '🛠️', '📝', '🎯', '📄', '🔗'];
+const NOTE_ICONS = ['📝', '🔑', '🆔', '🔗', '⚙️', '📋', '💡', '📌'];
+
+// ==================== ICON HELPER ====================
+
+function getIcon(iconValue, iconArray, defaultIndex = 0) {
+  if (typeof iconValue === 'number' || !isNaN(iconValue)) {
+    const index = parseInt(iconValue);
+    return iconArray[index] !== undefined ? iconArray[index] : iconArray[defaultIndex];
+  }
+  if (typeof iconValue === 'string' && iconValue.length > 0) {
+    return iconValue;
+  }
+  return iconArray[defaultIndex];
+}
+
+// ==================== ENVIRONMENT DETECTION ====================
+
+function isSFPage(url) {
+  if (!url) return false;
+  const sfDomains = ['hr.cloud.sap', 'sapsf.com', 'sapsf.cn', 'sapcloud.cn', 
+                      'successfactors.eu', 'sapsf.eu', 'successfactors.com'];
+  return sfDomains.some(domain => url.includes(domain));
+}
+
+function detectEnvironmentFromURL(url) {
+  const hostname = new URL(url).hostname;
+  const envType = detectEnvironmentHeuristic(hostname);
+  
+  return {
+    environment: envType,
+    datacenter: 'Unknown',
+    hostname: hostname,
+    country: 'Unknown',
+    platform: 'Unknown',
+    region: 'Unknown',
+    apiHostname: 'Unknown',
+    detectedVia: 'heuristic'
+  };
+}
+
+function detectEnvironmentHeuristic(hostname) {
+  if (hostname.includes('preview')) return 'preview';
+  if (hostname.includes('sales') || hostname.includes('demo')) return 'sales';
+  if (hostname.includes('sandbox') || hostname.includes('test')) return 'sandbox';
+  return 'production';
+}
+
+// ==================== URL HANDLING ====================
+
+function buildShortcutUrl(shortcut, currentPageData) {
+  const url = shortcut.url;
+  
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  
+  if (url.startsWith('/')) {
+    if (currentPageData && currentPageData.hostname) {
+      return `https://${currentPageData.hostname}${url}`;
+    }
+    return null;
+  }
+  
+  if (currentPageData && currentPageData.hostname) {
+    return `https://${currentPageData.hostname}/${url}`;
+  }
+  
+  return url;
+}
+
+function isAbsoluteUrl(url) {
+  return url && (url.startsWith('http://') || url.startsWith('https://'));
+}
+
+// ==================== KEYBOARD NAVIGATION ====================
+
+function setupEnhancedKeyboardShortcuts(callbacks) {
+  document.addEventListener('keydown', (e) => {
+    // Cmd/Ctrl + K → Focus search
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      document.getElementById('globalSearch')?.focus();
+    }
+    
+    // Cmd/Ctrl + N → New shortcut
+    if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+      e.preventDefault();
+      if (callbacks.addShortcut) callbacks.addShortcut();
+    }
+    
+    // Cmd/Ctrl + M → New note
+    if ((e.metaKey || e.ctrlKey) && e.key === 'm') {
+      e.preventDefault();
+      if (callbacks.addNote) callbacks.addNote();
+    }
+    
+    // Arrow key navigation through ALL rows (not in input/textarea/select)
+    if (!e.target.matches('input, textarea, select')) {
+      const allRows = document.querySelectorAll('.env-row:not([style*="display: none"]), .shortcut-row:not([style*="display: none"]), .note-row:not([style*="display: none"])');
+      const currentIndex = Array.from(allRows).findIndex(row => row.classList.contains('keyboard-focus'));
+      
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        navigateRows(allRows, currentIndex, 1);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        navigateRows(allRows, currentIndex, -1);
+      } else if (e.key === 'Enter' && currentIndex >= 0) {
+        e.preventDefault();
+        const focusedRow = allRows[currentIndex];
+        
+        // Determine row type and trigger appropriate action
+        if (focusedRow.classList.contains('env-row')) {
+          const switchBtn = focusedRow.querySelector('.switch-btn');
+          if (switchBtn) switchBtn.click();
+        } else if (focusedRow.classList.contains('shortcut-row')) {
+          focusedRow.click();
+        } else if (focusedRow.classList.contains('note-row')) {
+          const copyBtn = focusedRow.querySelector('.copy-btn');
+          if (copyBtn) copyBtn.click();
+        }
+      }
+    }
+    
+    // Tab navigation for buttons (built-in browser behavior, but ensure visible focus)
+    if (e.key === 'Tab' && !e.target.matches('input, textarea, select')) {
+      // Remove row focus when tabbing to buttons
+      document.querySelectorAll('.keyboard-focus').forEach(el => {
+        el.classList.remove('keyboard-focus');
+      });
+    }
+    
+    // Escape → Close modals/clear search
+    if (e.key === 'Escape') {
+      const openModal = document.querySelector('.modal.active');
+      if (openModal) {
+        openModal.classList.remove('active');
+      } else {
+        const searchInput = document.getElementById('globalSearch');
+        if (searchInput && searchInput.value) {
+          searchInput.value = '';
+          const clearBtn = document.getElementById('clearSearch');
+          if (clearBtn) clearBtn.style.display = 'none';
+          if (callbacks.filterContent) callbacks.filterContent('');
+        }
+      }
+    }
+  });
+  
+  // Clear keyboard focus when clicking anywhere
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.keyboard-focus').forEach(el => {
+      el.classList.remove('keyboard-focus');
+    });
+  });
+}
+
+function navigateRows(rows, currentIndex, direction) {
+  rows.forEach(row => row.classList.remove('keyboard-focus'));
+  
+  let newIndex = currentIndex + direction;
+  if (newIndex < 0) newIndex = 0;
+  if (newIndex >= rows.length) newIndex = rows.length - 1;
+  
+  if (rows[newIndex]) {
+    rows[newIndex].classList.add('keyboard-focus');
+    rows[newIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+// ==================== PLATFORM DETECTION ====================
+
+function updatePlatformSpecificUI() {
+  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const modKey = isMac ? '⌘' : 'Ctrl';
+  
+  const searchHint = document.getElementById('searchKeyboardHint');
+  if (searchHint) {
+    searchHint.textContent = `${modKey}K`;
+  }
+  
+  const modKey1 = document.getElementById('modKey1');
+  const modKey2 = document.getElementById('modKey2');
+  const modKey3 = document.getElementById('modKey3');
+  if (modKey1) modKey1.textContent = modKey;
+  if (modKey2) modKey2.textContent = modKey;
+  if (modKey3) modKey3.textContent = modKey;
+  
+  console.log('[SAP Pro Toolkit] Platform detected:', isMac ? 'macOS' : 'Windows/Linux');
+}
+
+// ==================== TOAST NOTIFICATIONS ====================
+
+function showToast(message, type = 'info') {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  
+  toast.textContent = message;
+  toast.className = `toast toast-${type} active`;
+  
+  setTimeout(() => {
+    toast.classList.remove('active');
+  }, 3000);
+}
+
+// ==================== DIAGNOSTICS ====================
+
+async function gatherDiagnostics(currentPageData) {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const browserInfo = await chrome.runtime.getPlatformInfo();
+  
+  const result = await chrome.storage.local.get(['shortcuts', 'environments', 'notes']);
+  
+  return {
+    timestamp: new Date().toLocaleString(),
+    instance: currentPageData || {},
+    browser: `Chrome ${navigator.userAgent.match(/Chrome\/([0-9.]+)/)?.[1] || 'Unknown'}`,
+    extension: chrome.runtime.getManifest().version,
+    platform: browserInfo.os,
+    currentURL: tab?.url || 'N/A',
+    shortcuts: (result.shortcuts || []).length,
+    environments: (result.environments || []).length,
+    notes: (result.notes || []).length
+  };
+}
+
+function formatDiagnosticsReport(data) {
+  const env = data.instance;
+  const envLabel = env.environment ? ENV_LABELS[env.environment] : 'N/A';
+  const emoji = env.environment ? ENV_EMOJIS[env.environment] : '';
+  
+  let userInfo = '';
+  if (env.userName) userInfo += `Full Name:       ${env.userName}\n`;
+  if (env.userId) userInfo += `User ID:         ${env.userId}\n`;
+  if (env.personId) userInfo += `Person ID:       ${env.personId}\n`;
+  if (env.personIdExternal) userInfo += `Person ID (ext): ${env.personIdExternal}\n`;
+  if (env.assignmentIdExternal || env.assignmentId) {
+    userInfo += `Assignment UUID: ${env.assignmentIdExternal || env.assignmentId}\n`;
+  }
+  if (env.proxyId) userInfo += `Proxy ID:        ${env.proxyId}\n`;
+  if (!userInfo) userInfo = 'No user information available\n';
+  
+  return `═══════════════════════════════════════
+SAP PRO TOOLKIT - DIAGNOSTICS REPORT
+Side Panel Edition v${data.extension}
+═══════════════════════════════════════
+Generated: ${data.timestamp}
+
+INSTANCE INFORMATION
+───────────────────────────────────────
+Environment:     ${emoji} ${envLabel}
+Company ID:      ${env.companyId || 'N/A'}
+Datacenter:      ${env.datacenter || 'N/A'}
+Provider:        ${env.platform || 'N/A'}
+Region:          ${env.region || 'N/A'}
+Country:         ${env.country || 'N/A'}
+
+URLS
+───────────────────────────────────────
+Current:         ${data.currentURL}
+Hostname:        ${env.hostname || 'N/A'}
+API Endpoint:    ${env.apiHostname || 'N/A'}
+
+USER INFORMATION
+───────────────────────────────────────
+${userInfo}
+TOOLKIT DATA
+───────────────────────────────────────
+Saved Environments: ${data.environments}
+Shortcuts:          ${data.shortcuts}
+Notes:              ${data.notes}
+
+TECHNICAL DETAILS
+───────────────────────────────────────
+Browser:         ${data.browser}
+Extension:       SAP Pro Toolkit v${data.extension}
+Platform:        ${data.platform}
+Detection:       ${env.detectedVia || 'N/A'}
+
+═══════════════════════════════════════
+Copy this information when reporting issues
+═══════════════════════════════════════`;
+}
