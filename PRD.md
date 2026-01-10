@@ -191,7 +191,7 @@ chrome.tabs.update(tabId, { url: newUrl });
 ```
 
 **Features**:
-- ✅ Save up to 6 frequently-used environments
+- ✅ Save unlimited frequently-used environments
 - ✅ Auto-detect environment from current page
 - ✅ "Add Current Instance" button (auto-fills form)
 - ✅ Switch between saved environments

@@ -20,17 +20,16 @@ SuccessFactors Pro Toolkit is the essential productivity companion for SAP Succe
 **🔄 Smart Environment Switching**
 Stop manually editing URLs to switch between Production, Preview, Sales, and Sandbox environments. Save your frequently-used instances and switch with a single click while preserving your current page path. Built-in production warnings help prevent accidental changes to live systems.
 
-- Save up to 6 frequently-used SF instances
+- Save unlimited SF instances
 - One-click switching between environments
 - Automatic datacenter detection for 40+ global datacenters
 - Production safety confirmation
 - Preserves current page path when switching
 
 **🎯 Quick Navigation Shortcuts**
-Navigate directly to deep admin pages without clicking through multiple menus. Pre-loaded with essential shortcuts to Admin Center, Permission Roles, Diagnostic Tool, Integration Center, and more.
+Navigate directly to deep admin pages without clicking through multiple menus. Add shortcuts to any SuccessFactors page for instant access.
 
-- 7 pre-configured shortcuts to common SF pages
-- Add custom shortcuts for any SF URL
+- Add unlimited custom shortcuts for any SF URL
 - "Add Current Page" feature for easy shortcut creation
 - Organized by category for easy access
 - Personal notes field for each shortcut
@@ -565,7 +564,6 @@ successfactors-pro-toolkit/
 - Requires Chrome 88+ or Edge 88+
 - Only works on SuccessFactors pages
 - Some SF pages may not support all features
-- Limited to 6 saved environments (by design)
 
 ---
 

@@ -81,8 +81,6 @@ const COUNTRY_FLAGS = {
   'NL': '🇳🇱', 'BR': '🇧🇷', 'AU': '🇦🇺', 'CH': '🇨🇭', 'IN': '🇮🇳'
 };
 
-const MAX_VISIBLE_SHORTCUTS = 6;
-
 // ==================== STATE ====================
 
 let currentPageData = null;
