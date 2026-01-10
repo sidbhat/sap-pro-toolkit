@@ -15,7 +15,17 @@ Productivity toolkit for SAP SuccessFactors professionals: environment switcher,
 
 **Transform Your SuccessFactors Workflow**
 
-SuccessFactors Pro Toolkit is the essential productivity companion for SAP SuccessFactors consultants, administrators, and professionals. Save time, prevent mistakes, and navigate efficiently with three powerful features designed specifically for SuccessFactors users.
+SuccessFactors Pro Toolkit is the essential productivity companion for SAP SuccessFactors consultants, administrators, and professionals. Save time, prevent mistakes, and navigate efficiently with powerful features designed specifically for SuccessFactors users. Ships with professional starter template on first install - no configuration required!
+
+**🎯 Professional Starter Template**
+Get productive immediately with our curated starter configuration that loads automatically on first install. Includes essential shortcuts, sample environments, and helpful notes to get you started. Need a custom setup? Import/export JSON configurations to share toolkits across teams or create personalized collections.
+
+- Professional template loads automatically on install
+- 9 curated shortcuts to common SF pages
+- Sample environments for Production, Preview, and Sales
+- Import/export toolkit configurations
+- Downloadable public template available
+- Zero configuration required to get started
 
 **🔄 Smart Environment Switching**
 Stop manually editing URLs to switch between Production, Preview, Sales, and Sandbox environments. Save your frequently-used instances and switch with a single click while preserving your current page path. Built-in production warnings help prevent accidental changes to live systems.
@@ -25,14 +35,18 @@ Stop manually editing URLs to switch between Production, Preview, Sales, and San
 - Automatic datacenter detection for 40+ global datacenters
 - Production safety confirmation
 - Preserves current page path when switching
+- Direct Edit/Delete buttons for quick management
 
-**🎯 Quick Navigation Shortcuts**
-Navigate directly to deep admin pages without clicking through multiple menus. Add shortcuts to any SuccessFactors page for instant access.
+**⚡ Quick Navigation Shortcuts**
+Navigate directly to deep admin pages without clicking through multiple menus. Add shortcuts to any SuccessFactors page for instant access. The starter template includes shortcuts to Admin Center, Permission Roles, Integration Center, and other frequently-accessed pages.
 
 - Add unlimited custom shortcuts for any SF URL
 - "Add Current Page" feature for easy shortcut creation
-- Organized by category for easy access
+- Organized by category with visual icons
 - Personal notes field for each shortcut
+- Tag-based filtering for quick access
+- Category dropdown for organization
+- Search across all shortcuts
 
 **📋 System Diagnostics**
 Generate comprehensive diagnostic reports instantly for troubleshooting and support tickets. One click copies all critical system information including environment details, datacenter info, user IDs, and technical specifications.
@@ -57,18 +71,27 @@ Available in 10 languages with automatic detection:
 - Dutch (Nederlands)
 
 **📝 Personal Notes**
-Quick scratch pad for temporary information:
-- Color-coded notes (yellow, blue, green, pink, purple)
-- Icon selection for visual organization
+Quick scratch pad for temporary information with the starter template including helpful examples:
+- Icon-coded notes for visual organization
 - Perfect for storing user IDs, URLs, configuration snippets
 - One-click copy functionality
+- Searchable and filterable
+- Starter notes include Demo Companion access, bulk user accounts, and more
+
+**🎨 Flexible UI Modes**
+Choose your preferred workspace layout:
+- **Popup Mode**: Quick access via toolbar icon (450px compact view)
+- **Side Panel Mode**: Persistent side panel for continuous access
+- **Keyboard Shortcuts**: Navigate efficiently with keyboard commands (Ctrl/Cmd+K to search)
+- Modern, professional interface with smooth animations
 
 **✅ Key Benefits**
+- **Zero configuration** - professional template loads automatically on install
 - **Save 5-15 minutes daily** with faster navigation and switching
 - **Prevent production mistakes** with clear environment indicators
-- **Zero configuration** - works immediately after install
+- **Share configurations** - import/export JSON for team collaboration
 - **Complete privacy** - all data stored locally, no external tracking
-- **Professional design** - modern interface worthy of daily use
+- **Professional design** - modern interface with direct action buttons
 
 **🔒 Privacy & Security**
 - All data stored locally on your device

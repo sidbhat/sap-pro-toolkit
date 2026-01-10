@@ -426,7 +426,7 @@ body {
 .env-icon-cell {
   width: 40px;
   text-align: center;
-  font-size: 20px;
+  font-size: 24px;
   padding-left: 12px !important;
   padding-right: 8px !important;
 }
@@ -514,7 +514,7 @@ body {
 .shortcut-icon-cell {
   width: 40px;
   text-align: center;
-  font-size: 20px;
+  font-size: 24px;
   padding-left: 12px !important;
   padding-right: 8px !important;
 }
@@ -593,7 +593,7 @@ body {
 .note-icon-cell {
   width: 40px;
   text-align: center;
-  font-size: 20px;
+  font-size: 24px;
   padding-left: 12px !important;
   padding-right: 8px !important;
 }
