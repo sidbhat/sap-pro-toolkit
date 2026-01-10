@@ -340,29 +340,18 @@ function renderShortcuts() {
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </button>
-            <button class="kebab-btn" data-id="${shortcut.id}" title="More actions" tabindex="0">
+            <button class="icon-btn edit-btn" data-id="${shortcut.id}" title="Edit" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="1"/>
-                <circle cx="12" cy="5" r="1"/>
-                <circle cx="12" cy="19" r="1"/>
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
             </button>
-            <div class="dropdown-menu" data-dropdown-id="${shortcut.id}">
-              <button class="dropdown-item edit-action" data-id="${shortcut.id}">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-                Edit
-              </button>
-              <button class="dropdown-item danger delete-action" data-id="${shortcut.id}">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="3 6 5 6 21 6"/>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                </svg>
-                Delete
-              </button>
-            </div>
+            <button class="icon-btn danger delete-btn" data-id="${shortcut.id}" title="Delete" tabindex="0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+            </button>
           </div>
         </td>
       </tr>
@@ -373,10 +362,6 @@ function renderShortcuts() {
 }
 
 function attachShortcutListeners() {
-  console.log('[DEBUG] attachShortcutListeners() called');
-  console.log('[DEBUG] Found .edit-action buttons:', document.querySelectorAll('.shortcut-actions-cell .edit-action').length);
-  console.log('[DEBUG] Found .kebab-btn buttons:', document.querySelectorAll('.shortcut-actions-cell .kebab-btn').length);
-  
   document.querySelectorAll('.go-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -392,7 +377,7 @@ function attachShortcutListeners() {
   
   document.querySelectorAll('.shortcut-row').forEach(row => {
     row.addEventListener('click', (e) => {
-      if (e.target.closest('.icon-btn, .kebab-btn, .dropdown-menu')) return;
+      if (e.target.closest('.icon-btn')) return;
       const url = row.getAttribute('data-url');
       const builtUrl = buildShortcutUrl({ url }, currentPageData);
       if (builtUrl) {
@@ -403,52 +388,21 @@ function attachShortcutListeners() {
     });
   });
   
-  // Kebab menu toggle
-  document.querySelectorAll('.kebab-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      console.log('[DEBUG] Kebab button clicked!');
-      e.stopPropagation();
-      const id = btn.getAttribute('data-id');
-      console.log('[DEBUG] Kebab button id:', id);
-      const dropdown = document.querySelector(`.dropdown-menu[data-dropdown-id="${id}"]`);
-      console.log('[DEBUG] Found dropdown:', !!dropdown);
-      
-      // Close all other dropdowns
-      document.querySelectorAll('.dropdown-menu').forEach(d => {
-        if (d !== dropdown) d.classList.remove('active');
-      });
-      
-      if (dropdown) {
-        dropdown.classList.toggle('active');
-      }
-    });
-    
-    // Keyboard support
-    btn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        btn.click();
-      }
-    });
-  });
-  
-  // Edit action
-  document.querySelectorAll('.shortcut-actions-cell .edit-action').forEach(btn => {
+  // Edit button
+  document.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
       editShortcut(id);
-      document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('active'));
     });
   });
   
-  // Delete action
-  document.querySelectorAll('.shortcut-actions-cell .delete-action').forEach(btn => {
+  // Delete button
+  document.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
       deleteShortcut(id);
-      document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('active'));
     });
   });
   
