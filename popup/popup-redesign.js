@@ -176,19 +176,38 @@ async function loadCurrentPageData() {
       return;
     }
     
-    chrome.tabs.sendMessage(tab.id, { action: 'getPageData' }, (response) => {
-      if (chrome.runtime.lastError) {
-        currentPageData = detectEnvironmentFromURL(tab.url);
-      } else {
-        currentPageData = response;
-      }
-      
-      showContextBanner(currentPageData);
-      highlightActiveStates(tab.url);
+    // Try to get enhanced data from content script with timeout
+    const messagePromise = new Promise((resolve) => {
+      chrome.tabs.sendMessage(tab.id, { action: 'getPageData' }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.log('[SF Pro Toolkit] Content script message failed, using URL detection');
+          resolve(null);
+        } else {
+          resolve(response);
+        }
+      });
     });
     
+    // Set timeout for message response
+    const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 500));
+    
+    // Race between message response and timeout
+    const response = await Promise.race([messagePromise, timeoutPromise]);
+    
+    // Use response if available, otherwise fall back to URL detection
+    if (response && response.hostname) {
+      currentPageData = response;
+      console.log('[SF Pro Toolkit] Using enhanced data from content script:', currentPageData);
+    } else {
+      currentPageData = detectEnvironmentFromURL(tab.url);
+      console.log('[SF Pro Toolkit] Using URL-based detection:', currentPageData);
+    }
+    
+    showContextBanner(currentPageData);
+    highlightActiveStates(tab.url);
+    
   } catch (error) {
-    console.error('Failed to load page data:', error);
+    console.error('[SF Pro Toolkit] Failed to load page data:', error);
     showContextBanner(null);
   }
 }
@@ -1079,7 +1098,7 @@ function setupEventListeners() {
   document.getElementById('saveEnvBtn')?.addEventListener('click', saveEnvironment);
   
   // Add Shortcut
-  document.getElementById('addShortcutBtn')?.addEventListener('click', openAddShortcutModal);
+  document.getElementById('addShortcutBtn')?.addEventListener('click', addCurrentPageAsShortcut);
   document.getElementById('closeAddShortcutModal')?.addEventListener('click', closeAddShortcutModal);
   document.getElementById('cancelAddShortcutBtn')?.addEventListener('click', closeAddShortcutModal);
   document.getElementById('saveShortcutBtn')?.addEventListener('click', saveShortcut);
