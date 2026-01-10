@@ -1136,7 +1136,26 @@ async function handleFileImport(event) {
   
   try {
     const text = await file.text();
-    const data = JSON.parse(text);
+    
+    // Validate JSON format
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      showToast('Invalid JSON file. Please check file format.', 'error');
+      event.target.value = '';
+      return;
+    }
+    
+    // Check if file has expected structure
+    if (!data.shortcuts && !data.environments && !data.notes) {
+      showToast('Invalid file structure. Expected shortcuts, environments, or notes.', 'error');
+      event.target.value = '';
+      return;
+    }
+    
+    let importCount = 0;
     
     if (data.shortcuts && Array.isArray(data.shortcuts)) {
       const newShortcuts = data.shortcuts.filter(imported => 
@@ -1144,6 +1163,7 @@ async function handleFileImport(event) {
       );
       shortcuts = [...newShortcuts, ...shortcuts];
       await chrome.storage.local.set({ shortcuts });
+      importCount += newShortcuts.length;
     }
     
     if (data.environments && Array.isArray(data.environments)) {
@@ -1152,6 +1172,7 @@ async function handleFileImport(event) {
       );
       environments = [...newEnvs, ...environments];
       await chrome.storage.local.set({ environments });
+      importCount += newEnvs.length;
     }
     
     if (data.notes && Array.isArray(data.notes)) {
@@ -1160,17 +1181,22 @@ async function handleFileImport(event) {
       );
       notes = [...newNotes, ...notes];
       await chrome.storage.local.set({ notes });
+      importCount += newNotes.length;
     }
     
     renderShortcuts();
     renderEnvironments();
     renderNotes();
     
-    showToast(`Import successful! Added new items ✓`, 'success');
+    if (importCount === 0) {
+      showToast('No new items to import (all items already exist)', 'warning');
+    } else {
+      showToast(`Import successful! Added ${importCount} new item(s) ✓`, 'success');
+    }
     
   } catch (error) {
     console.error('Import failed:', error);
-    showToast('Failed to import JSON file', 'error');
+    showToast(`Import failed: ${error.message}`, 'error');
   }
   
   event.target.value = '';
