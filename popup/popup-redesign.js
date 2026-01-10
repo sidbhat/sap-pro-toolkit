@@ -184,7 +184,7 @@ function renderEnvironments() {
     const isActive = currentHostname && currentHostname === env.hostname;
     
     return `
-      <tr class="env-row ${isActive ? 'active-row' : ''}" data-env-id="${env.id}">
+      <tr class="env-row ${env.type}-env ${isActive ? 'active-row' : ''}" data-env-id="${env.id}">
         <td class="env-icon-cell">
           <span class="env-icon">${emoji}</span>
         </td>
@@ -206,18 +206,29 @@ function renderEnvironments() {
                 </svg>
               </button>
             ` : '<span class="env-badge active">ACTIVE</span>'}
-            <button class="icon-btn edit-btn" data-id="${env.id}" title="Edit environment">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            <button class="kebab-btn" data-id="${env.id}" title="More actions">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="12" cy="5" r="1"/>
+                <circle cx="12" cy="19" r="1"/>
               </svg>
             </button>
-            <button class="icon-btn danger delete-btn" data-id="${env.id}" title="Delete environment">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"/>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-              </svg>
-            </button>
+            <div class="dropdown-menu" data-dropdown-id="${env.id}">
+              <button class="dropdown-item edit-action" data-id="${env.id}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit
+              </button>
+              <button class="dropdown-item danger delete-action" data-id="${env.id}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+                Delete
+              </button>
+            </div>
           </div>
         </td>
       </tr>
@@ -236,20 +247,48 @@ function attachEnvironmentListeners() {
     });
   });
   
-  document.querySelectorAll('.env-actions-cell .edit-btn').forEach(btn => {
+  // Kebab menu toggle
+  document.querySelectorAll('.kebab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-id');
+      const dropdown = document.querySelector(`.dropdown-menu[data-dropdown-id="${id}"]`);
+      
+      // Close all other dropdowns
+      document.querySelectorAll('.dropdown-menu').forEach(d => {
+        if (d !== dropdown) d.classList.remove('active');
+      });
+      
+      // Toggle this dropdown
+      dropdown?.classList.toggle('active');
+    });
+  });
+  
+  // Edit action from dropdown
+  document.querySelectorAll('.edit-action').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
       editEnvironment(id);
+      document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('active'));
     });
   });
   
-  document.querySelectorAll('.env-actions-cell .delete-btn').forEach(btn => {
+  // Delete action from dropdown
+  document.querySelectorAll('.delete-action').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
       deleteEnvironment(id);
+      document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('active'));
     });
+  });
+  
+  // Add tooltips to truncated text
+  document.querySelectorAll('.env-name, .env-hostname').forEach(el => {
+    if (el.scrollWidth > el.clientWidth) {
+      el.setAttribute('title', el.textContent);
+    }
   });
 }
 

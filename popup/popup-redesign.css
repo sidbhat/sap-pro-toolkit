@@ -383,6 +383,39 @@ body {
   white-space: nowrap;
 }
 
+/* Color-coded environment row backgrounds */
+.env-row.production-env {
+  background: rgba(239, 68, 68, 0.03) !important;
+}
+
+.env-row.production-env:hover {
+  background: rgba(239, 68, 68, 0.08) !important;
+}
+
+.env-row.preview-env {
+  background: rgba(16, 185, 129, 0.03) !important;
+}
+
+.env-row.preview-env:hover {
+  background: rgba(16, 185, 129, 0.08) !important;
+}
+
+.env-row.sales-env {
+  background: rgba(245, 158, 11, 0.03) !important;
+}
+
+.env-row.sales-env:hover {
+  background: rgba(245, 158, 11, 0.08) !important;
+}
+
+.env-row.sandbox-env {
+  background: rgba(168, 85, 247, 0.03) !important;
+}
+
+.env-row.sandbox-env:hover {
+  background: rgba(168, 85, 247, 0.08) !important;
+}
+
 .env-actions-cell {
   text-align: right;
   white-space: nowrap;
@@ -557,13 +590,113 @@ body {
   min-width: 120px;
 }
 
-/* Table Action Buttons */
+/* Table Action Buttons - Kebab Menu System */
 .table-actions {
   display: flex;
   gap: 6px;
   justify-content: flex-end;
   align-items: center;
   flex-wrap: nowrap;
+  position: relative;
+}
+
+/* Kebab Menu Button */
+.kebab-btn {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: white;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.kebab-btn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.kebab-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  min-width: 140px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all var(--transition-base);
+}
+
+.dropdown-menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: var(--font-small);
+  font-weight: 500;
+  color: var(--text-primary);
+  background: white;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dropdown-item:first-child {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.dropdown-item:last-child {
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.dropdown-item:only-child {
+  border-radius: var(--radius-md);
+}
+
+.dropdown-item:hover {
+  background: var(--bg-secondary);
+  color: var(--primary);
+}
+
+.dropdown-item.danger:hover {
+  background: #FEE2E2;
+  color: var(--env-production);
+}
+
+.dropdown-item svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  flex-shrink: 0;
 }
 
 .icon-btn {
@@ -620,6 +753,18 @@ body {
   height: 16px;
   stroke: currentColor;
   flex-shrink: 0;
+  transition: all var(--transition-base);
+}
+
+/* Copy Success Animation */
+.icon-btn.copy-success {
+  background: var(--env-preview) !important;
+  border-color: var(--env-preview) !important;
+  color: white !important;
+}
+
+.icon-btn.copy-success svg {
+  transform: scale(1.1);
 }
 
 /* Tooltip for icon buttons */
