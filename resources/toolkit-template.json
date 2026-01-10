@@ -2,98 +2,147 @@
   "version": "1.0",
   "shortcuts": [
     {
-      "id": "shortcut-example-1",
-      "name": "SAP Product Roadmap",
-      "url": "https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1",
       "icon": "0",
+      "id": "shortcut-template-1",
+      "name": "Product Roadmap",
       "notes": "SAP SuccessFactors Product Roadmap",
-      "tags": ["roadmap", "planning"]
+      "tags": ["roadmap"],
+      "url": "https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1"
     },
     {
-      "id": "shortcut-example-2",
-      "name": "Admin Center",
-      "url": "/sf/admin",
       "icon": "1",
-      "notes": "SuccessFactors Admin Center",
-      "tags": ["admin", "configuration"]
+      "id": "shortcut-template-2",
+      "name": "Admin Center",
+      "notes": "Quick access to SuccessFactors Admin Center",
+      "tags": ["admin", "configuration"],
+      "url": "/sf/admin"
     },
     {
-      "id": "shortcut-example-3",
-      "name": "User Management",
-      "url": "/sf/start",
+      "icon": "4",
+      "id": "shortcut-template-3",
+      "name": "SuccessFactors Help",
+      "notes": "Official SuccessFactors platform documentation and help center",
+      "tags": ["help", "documentation"],
+      "url": "https://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM"
+    },
+    {
       "icon": "3",
-      "notes": "User management and permissions",
-      "tags": ["admin", "users"]
+      "id": "shortcut-template-4",
+      "name": "SAP Community",
+      "notes": "SuccessFactors community discussions and best practices",
+      "tags": ["community", "support"],
+      "url": "https://community.sap.com/topics/successfactors"
     },
     {
-      "id": "shortcut-example-4",
-      "name": "SF Help Portal",
-      "url": "https://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM",
       "icon": "5",
-      "notes": "Official SuccessFactors documentation",
-      "tags": ["documentation", "help"]
+      "id": "shortcut-template-5",
+      "name": "Learning Hub",
+      "notes": "SAP Learning Hub for training and certification",
+      "tags": ["training", "learning"],
+      "url": "https://learning.sap.com"
     },
     {
-      "id": "shortcut-example-5",
-      "name": "Partner Central",
-      "url": "https://partneredge.sap.com/en/partnership/manage.html",
-      "icon": "3",
-      "notes": "SAP Partner resources and tools",
-      "tags": ["partners", "resources"]
+      "icon": "6",
+      "id": "shortcut-template-6",
+      "name": "Release Notes",
+      "notes": "Latest SuccessFactors release information and updates",
+      "tags": ["documentation", "releases"],
+      "url": "https://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM/4b48151bd8274f388b3e4ecc3ee87efe/b37954a56e8b4bf8ad9cb6a302efd65d.html"
     },
     {
-      "id": "shortcut-example-6",
-      "name": "SF Community",
-      "url": "https://community.sap.com/topics/successfactors",
       "icon": "3",
-      "notes": "SuccessFactors community discussions",
-      "tags": ["community", "support"]
+      "id": "shortcut-template-7",
+      "name": "Partner Portal",
+      "notes": "SAP PartnerEdge resources and partner tools",
+      "tags": ["partners", "resources"],
+      "url": "https://partneredge.sap.com"
+    },
+    {
+      "icon": "4",
+      "id": "shortcut-template-8",
+      "name": "API Documentation",
+      "notes": "SuccessFactors OData API reference and integration guides",
+      "tags": ["api", "integration", "documentation"],
+      "url": "https://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM/d599f15995d348a1b45ba5603e2aba9b/03e1fc3791684367a6a76a614a2916de.html"
     }
   ],
   "environments": [
     {
-      "id": "env-example-1",
-      "name": "Production DC68",
+      "id": "env-template-1",
+      "name": "Production - DC68",
       "type": "production",
-      "hostname": "companyid.hr.cloud.sap"
+      "hostname": "your-company.sapsf.com"
     },
     {
-      "id": "env-example-2",
-      "name": "Preview DC2",
+      "id": "env-template-2",
+      "name": "Preview - US Data Center",
       "type": "preview",
-      "hostname": "companyid-preview.hr.cloud.sap"
+      "hostname": "your-company-preview.hr.cloud.sap"
     },
     {
-      "id": "env-example-3",
-      "name": "Sales Demo",
+      "id": "env-template-3",
+      "name": "Sales Demo Environment",
       "type": "sales",
-      "hostname": "demo.sapsf.com"
+      "hostname": "demo-tenant.sapsf.com"
     }
   ],
   "notes": [
     {
-      "id": "note-example-1",
-      "title": "Test User IDs",
-      "content": "admin@company.com\ntest-user@company.com\nmanager@company.com",
+      "content": "Production Environment:\nhttps://your-company.sapsf.com\nCompany ID: YOUR_COMPANY_ID\n\nAdmin Users:\n- System Admin: admin@your-company.com\n- HR Admin: hradmin@your-company.com\n\nSupport Contact:\nEmail: sf-support@your-company.com\nPhone: +1-XXX-XXX-XXXX",
+      "icon": "6",
+      "id": "note-template-1",
+      "tags": ["production", "contacts"],
+      "timestamp": 1736533200000,
+      "title": "Production Environment - Access & Support"
+    },
+    {
+      "content": "Common Test Users:\n\ntest-employee-1:\n- Role: Employee\n- Username: employee1@test.com\n- Manager: manager1@test.com\n\ntest-manager-1:\n- Role: Manager\n- Username: manager1@test.com\n- Department: HR\n\ntest-admin:\n- Role: System Administrator\n- Username: admin@test.com\n- Permissions: Full Access",
       "icon": "2",
-      "timestamp": 1704931200000,
-      "tags": ["testing", "users"]
+      "id": "note-template-2",
+      "tags": ["testing", "users"],
+      "timestamp": 1736533200000,
+      "title": "Test User Accounts"
     },
     {
-      "id": "note-example-2",
-      "title": "Partner Contact Info",
-      "content": "Partner Portal: https://partners.sap.com\nSupport Email: partner-support@sap.com",
-      "icon": "3",
-      "timestamp": 1704931200000,
-      "tags": ["partners", "contacts"]
+      "content": "Key Integration Endpoints:\n\nOData API:\nhttps://api.successfactors.com/odata/v2/\n\nBizX API:\nhttps://api.successfactors.com/bizx/\n\nSFAPI (SOAP):\nhttps://api.successfactors.com/sfapi/v1/soap\n\nAuthentication:\n- OAuth 2.0 recommended\n- Basic Auth supported (legacy)\n- X.509 certificates for SSO\n\nRate Limits:\n- Standard: 20,000 calls/hour\n- Burst: 100 calls/minute",
+      "icon": "4",
+      "id": "note-template-3",
+      "tags": ["api", "integration"],
+      "timestamp": 1736533200000,
+      "title": "API Integration Reference"
     },
     {
-      "id": "note-example-3",
-      "title": "Pre-Sales Demo Links",
-      "content": "Demo Instance: https://demo.sapsf.com\nDemo Users: demo1@sap.com, demo2@sap.com",
-      "icon": "7",
-      "timestamp": 1704931200000,
-      "tags": ["pre-sales", "demo"]
+      "content": "Pre-Sales Demo Script:\n\n1. Recruiting (20 min)\n- Show job requisition creation\n- Candidate experience portal\n- Interview scheduling\n- Offer management\n\n2. Onboarding (15 min)\n- New hire portal\n- E-signature workflows\n- Equipment provisioning\n- First day checklist\n\n3. Performance & Goals (15 min)\n- Goal cascade\n- Continuous feedback\n- Performance review\n- 360 feedback\n\n4. Learning (10 min)\n- Learning catalog\n- Assignments & compliance\n- Mobile learning\n\nDemo Credentials:\nUsername: demo@sap.com\nPassword: Demo2024!\n\nDemo URL:\nhttps://demo.successfactors.com",
+      "icon": "5",
+      "id": "note-template-4",
+      "tags": ["demo", "pre-sales"],
+      "timestamp": 1736533200000,
+      "title": "Pre-Sales Demo Runbook"
+    },
+    {
+      "content": "SuccessFactors vs Workday - Key Differentiators:\n\n1. INTEGRATION\n- Workday: Fragmented after 14+ acquisitions\n- SAP: Seamless BTP integration, lower TCO\n\n2. AI CAPABILITIES  \n- Workday: Illuminate AI (early stage)\n- SAP: Joule AI production-ready across HCM, S/4HANA\n\n3. PARTNER ECOSYSTEM\n- Workday: Limited 3rd-party integrations\n- SAP: 500+ partners, 300+ apps\n\n4. GLOBAL REACH\n- Workday: Payroll in handful of countries\n- SAP: 50+ countries, 100+ localizations\n\n5. ERP COMPLETENESS\n- Workday: HCM-only\n- SAP: Complete ERP suite\n\nPositioning: SAP = mature, integrated, flexible",
+      "icon": "6",
+      "id": "note-template-5",
+      "tags": ["competitive-intelligence"],
+      "timestamp": 1736533200000,
+      "title": "Competitive Talking Points - Workday"
+    },
+    {
+      "content": "Common Support Issues & Solutions:\n\n1. SSO Configuration Issues\n- Verify SAML metadata is current\n- Check certificate expiration\n- Validate attribute mappings\n\n2. Integration Failures\n- Check API credentials\n- Verify IP whitelist\n- Review error logs in Provisioning\n\n3. Performance Issues\n- Clear browser cache\n- Check scheduled jobs\n- Review custom MDF objects\n\n4. Permission Problems\n- Verify role-based permissions\n- Check position-based permissions\n- Review target population settings\n\n5. Data Loading Errors\n- Validate CSV format\n- Check field mappings\n- Review import log details\n\nSupport Portal:\nhttps://launchpad.support.sap.com",
+      "icon": "4",
+      "id": "note-template-6",
+      "tags": ["troubleshooting", "support"],
+      "timestamp": 1736533200000,
+      "title": "Common Issues & Troubleshooting"
+    },
+    {
+      "content": "Implementation Checklist:\n\nPhase 1: Discovery (2-4 weeks)\n☐ Stakeholder interviews\n☐ Current state analysis\n☐ Requirements gathering\n☐ Solution design workshops\n\nPhase 2: Configuration (6-8 weeks)\n☐ Instance provisioning\n☐ Security & permissions setup\n☐ Core modules configuration\n☐ Integration development\n☐ Data migration planning\n\nPhase 3: Testing (3-4 weeks)\n☐ Unit testing\n☐ Integration testing\n☐ User acceptance testing\n☐ Performance testing\n\nPhase 4: Deployment (2-3 weeks)\n☐ Production data migration\n☐ Go-live support\n☐ Hypercare period\n☐ Post-deployment review\n\nKey Success Factors:\n✓ Executive sponsorship\n✓ Change management\n✓ User training program\n✓ Regular communication",
+      "icon": "5",
+      "id": "note-template-7",
+      "tags": ["implementation", "project-management"],
+      "timestamp": 1736533200000,
+      "title": "Implementation Project Checklist"
     }
-  ]
+  ],
+  "exportDate": "2026-01-10T20:56:00.000Z"
 }
