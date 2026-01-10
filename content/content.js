@@ -252,9 +252,18 @@ function detectEnvironmentFromURL(url) {
 }
 
 function detectEnvironmentHeuristic(hostname) {
-  if (hostname.includes('preview')) return 'preview';
-  if (hostname.includes('sales') || hostname.includes('demo')) return 'sales';
-  if (hostname.includes('sandbox') || hostname.includes('test')) return 'sandbox';
+  // More specific preview detection
+  if (hostname.includes('-preview') || hostname.includes('preview-') || hostname.includes('preview.')) return 'preview';
+  
+  // Sales/Demo detection - only if it's in the subdomain or company ID
+  const hostnameLower = hostname.toLowerCase();
+  if (hostnameLower.startsWith('demo.') || hostnameLower.startsWith('sales.')) return 'sales';
+  if (hostnameLower.includes('-demo') || hostnameLower.includes('-sales')) return 'sales';
+  
+  // Sandbox/Test detection
+  if (hostname.includes('sandbox') || hostname.includes('-test') || hostname.includes('test-')) return 'sandbox';
+  
+  // Default to production for standard hostnames
   return 'production';
 }
 
