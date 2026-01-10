@@ -335,7 +335,7 @@ function formatDiagnosticsReport(data) {
   
   return `═══════════════════════════════════════
 SAP PRO TOOLKIT - DIAGNOSTICS REPORT
-Side Panel Edition v${data.extension}
+v${data.extension}
 ═══════════════════════════════════════
 Generated: ${data.timestamp}
 
