@@ -49,6 +49,21 @@ async function loadSettings() {
 async function loadShortcuts() {
   const result = await chrome.storage.local.get('shortcuts');
   shortcuts = result.shortcuts || [];
+  
+  // Add default Product Roadmap shortcut if no shortcuts exist
+  if (shortcuts.length === 0) {
+    shortcuts = [{
+      id: `shortcut-${Date.now()}`,
+      name: 'Product Roadmap',
+      url: 'https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1',
+      notes: 'SAP SuccessFactors Product Roadmap',
+      icon: '0',
+      tags: ['roadmap']
+    }];
+    await chrome.storage.local.set({ shortcuts });
+  }
+  
+  // Render shortcuts after ensuring data is loaded
   renderShortcuts();
 }
 
@@ -172,10 +187,7 @@ function renderEnvironments() {
     
     return `
       <tr class="env-row ${env.type}-env ${isActive ? 'active-row' : ''}" data-env-id="${env.id}">
-        <td class="env-icon-cell">
-          <span class="env-icon">${emoji}</span>
-        </td>
-        <td class="env-name-cell">
+        <td class="env-name-cell" style="padding-left: 12px;">
           <div class="env-name">
             <span class="status-dot ${env.type} ${isActive ? 'active' : ''}"></span>
             ${env.name}
@@ -299,11 +311,8 @@ function renderShortcuts() {
   }
   
   tbody.innerHTML = shortcuts.map(shortcut => {
-    const isExternal = isAbsoluteUrl(shortcut.url);
-    const badge = isExternal 
-      ? '<span class="badge-external">EXTERNAL</span>' 
-      : '<span class="badge-relative">SF PAGE</span>';
     const displayIcon = getIcon(shortcut.icon, SHORTCUT_ICONS, 8);
+    const tagBadgesHTML = renderTagBadges(shortcut.tags);
     
     return `
       <tr class="shortcut-row" data-shortcut-id="${shortcut.id}" data-url="${shortcut.url}">
@@ -313,9 +322,9 @@ function renderShortcuts() {
         <td class="shortcut-name-cell">
           <div class="shortcut-name">
             ${shortcut.name}
-            ${badge}
           </div>
           ${shortcut.notes ? `<div class="shortcut-notes">${shortcut.notes}</div>` : ''}
+          ${tagBadgesHTML}
         </td>
         <td class="shortcut-actions-cell">
           <div class="table-actions">
@@ -461,6 +470,7 @@ function renderNotes() {
       ? (note.content.length > 60 ? note.content.substring(0, 60) + '...' : note.content)
       : '';
     const displayIcon = getIcon(note.icon, NOTE_ICONS, 0);
+    const tagBadgesHTML = renderTagBadges(note.tags);
     
     return `
       <tr class="note-row" data-note-id="${note.id}">
@@ -470,6 +480,7 @@ function renderNotes() {
         <td class="note-content-cell">
           <div class="note-title">${note.title}</div>
           ${contentPreview ? `<div class="note-preview">${contentPreview}</div>` : ''}
+          ${tagBadgesHTML}
         </td>
         <td class="note-actions-cell">
           <div class="table-actions">
@@ -603,6 +614,7 @@ function setupSearchFilter() {
 function filterContent(searchTerm) {
   const term = searchTerm.toLowerCase();
   
+  // Enhanced search: includes name, notes, and tags
   document.querySelectorAll('.env-row').forEach(row => {
     const name = row.querySelector('.env-name')?.textContent.toLowerCase() || '';
     const hostname = row.querySelector('.env-hostname')?.textContent.toLowerCase() || '';
@@ -611,10 +623,18 @@ function filterContent(searchTerm) {
   });
   
   document.querySelectorAll('.shortcut-row').forEach(row => {
-    const name = row.querySelector('.shortcut-name')?.textContent.toLowerCase() || '';
-    const notes = row.querySelector('.shortcut-notes')?.textContent.toLowerCase() || '';
-    const matches = name.includes(term) || notes.includes(term);
-    row.style.display = matches ? '' : 'none';
+    const shortcutId = row.getAttribute('data-shortcut-id');
+    const shortcut = shortcuts.find(s => s.id === shortcutId);
+    
+    if (shortcut) {
+      const name = (shortcut.name || '').toLowerCase();
+      const notes = (shortcut.notes || '').toLowerCase();
+      const tags = shortcut.tags ? shortcut.tags.map(t => t.toLowerCase()).join(' ') : '';
+      const matches = name.includes(term) || notes.includes(term) || tags.includes(term);
+      row.style.display = matches ? '' : 'none';
+    } else {
+      row.style.display = 'none';
+    }
   });
   
   document.querySelectorAll('.note-row').forEach(row => {
@@ -624,12 +644,24 @@ function filterContent(searchTerm) {
     if (note) {
       const title = (note.title || '').toLowerCase();
       const content = (note.content || '').toLowerCase();
-      const matches = title.includes(term) || content.includes(term);
+      const tags = note.tags ? note.tags.map(t => t.toLowerCase()).join(' ') : '';
+      const matches = title.includes(term) || content.includes(term) || tags.includes(term);
       row.style.display = matches ? '' : 'none';
     } else {
       row.style.display = 'none';
     }
   });
+}
+
+// ==================== TAG RENDERING ====================
+
+function renderTagBadges(tags) {
+  if (!tags || tags.length === 0) return '';
+  // Capitalize first letter of each tag for better readability
+  return `<div class="tag-badges">${tags.map(tag => {
+    const capitalized = tag.charAt(0).toUpperCase() + tag.slice(1);
+    return `<span class="tag-badge">${capitalized}</span>`;
+  }).join('')}</div>`;
 }
 
 // ==================== ACTIVE STATE HIGHLIGHTING ====================
@@ -786,23 +818,13 @@ async function saveEnvironment() {
     return;
   }
   
-  // Validation 6: Check for duplicate hostname (when adding new)
-  const modal = document.getElementById('addEnvModal');
-  const editId = modal.getAttribute('data-edit-id');
-  
-  if (!editId) {
-    const isDuplicate = environments.some(e => e.hostname.toLowerCase() === hostname.toLowerCase());
-    if (isDuplicate) {
-      showToast('This hostname already exists', 'warning');
-      document.getElementById('envHostname').focus();
-      return;
-    }
-  }
-  
   // Update the cleaned hostname value
   document.getElementById('envHostname').value = hostname;
   
   // Save environment
+  const modal = document.getElementById('addEnvModal');
+  const editId = modal.getAttribute('data-edit-id');
+  
   try {
     if (editId) {
       environments = environments.filter(e => e.id !== editId);
@@ -839,16 +861,50 @@ function closeAddShortcutModal() {
 }
 
 function editShortcut(id) {
+  console.log('[DEBUG] editShortcut called with id:', id);
   const shortcut = shortcuts.find(s => s.id === id);
-  if (!shortcut) return;
+  console.log('[DEBUG] Found shortcut:', shortcut);
   
-  document.getElementById('shortcutName').value = shortcut.name;
-  document.getElementById('shortcutPath').value = shortcut.url;
-  document.getElementById('shortcutNotes').value = shortcut.notes || '';
-  document.getElementById('shortcutIcon').value = shortcut.icon || '8';
-  document.getElementById('addShortcutModal').setAttribute('data-edit-id', id);
-  document.querySelector('#addShortcutModal .modal-header h3').textContent = 'Edit Shortcut';
+  if (!shortcut) {
+    console.error('[DEBUG] Shortcut not found for id:', id);
+    return;
+  }
   
+  // Get all form elements
+  const nameEl = document.getElementById('shortcutName');
+  const pathEl = document.getElementById('shortcutPath');
+  const notesEl = document.getElementById('shortcutNotes');
+  const iconEl = document.getElementById('shortcutIcon');
+  const tagsEl = document.getElementById('shortcutTags');
+  const modalEl = document.getElementById('addShortcutModal');
+  const headerEl = document.querySelector('#addShortcutModal .modal-header h3');
+  
+  console.log('[DEBUG] Form elements found:', {
+    nameEl: !!nameEl,
+    pathEl: !!pathEl,
+    notesEl: !!notesEl,
+    iconEl: !!iconEl,
+    tagsEl: !!tagsEl,
+    modalEl: !!modalEl,
+    headerEl: !!headerEl
+  });
+  
+  if (!nameEl || !pathEl || !modalEl) {
+    console.error('[DEBUG] Critical form elements missing!');
+    showToast('Error: Form elements not found', 'error');
+    return;
+  }
+  
+  // Set values
+  nameEl.value = shortcut.name;
+  pathEl.value = shortcut.url;
+  notesEl.value = shortcut.notes || '';
+  iconEl.value = shortcut.icon || '8';
+  tagsEl.value = shortcut.tags ? shortcut.tags.join(', ') : '';
+  modalEl.setAttribute('data-edit-id', id);
+  if (headerEl) headerEl.textContent = 'Edit Shortcut';
+  
+  console.log('[DEBUG] Opening modal...');
   openAddShortcutModal();
 }
 
@@ -871,6 +927,8 @@ async function saveShortcut() {
   const url = document.getElementById('shortcutPath').value.trim();
   const notes = document.getElementById('shortcutNotes').value.trim();
   const icon = document.getElementById('shortcutIcon').value || '8';
+  const tagsInput = document.getElementById('shortcutTags').value.trim();
+  const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
   
   if (!name || !url) {
     showToast('Please fill in required fields', 'warning');
@@ -891,11 +949,11 @@ async function saveShortcut() {
   if (editId) {
     // Remove the existing item and add updated version at the top
     shortcuts = shortcuts.filter(s => s.id !== editId);
-    shortcuts.unshift({ id: editId, name, url, notes, icon });
+    shortcuts.unshift({ id: editId, name, url, notes, icon, tags });
     showToast('Shortcut updated ✓', 'success');
     modal.removeAttribute('data-edit-id');
   } else {
-    const newShortcut = { id: `shortcut-${Date.now()}`, name, url, notes, icon };
+    const newShortcut = { id: `shortcut-${Date.now()}`, name, url, notes, icon, tags };
     shortcuts.unshift(newShortcut);
     showToast('Shortcut saved ✓', 'success');
   }
@@ -941,6 +999,7 @@ function editNote(id) {
   document.getElementById('noteTitle').value = note.title;
   document.getElementById('noteContent').value = note.content || '';
   document.getElementById('noteIcon').value = note.icon || '0';
+  document.getElementById('noteTags').value = note.tags ? note.tags.join(', ') : '';
   document.getElementById('addNoteModal').setAttribute('data-edit-id', id);
   document.querySelector('#addNoteModal .modal-header h3').textContent = 'Edit Note';
   
@@ -965,6 +1024,8 @@ async function saveNote() {
   const title = document.getElementById('noteTitle').value.trim();
   const content = document.getElementById('noteContent').value.trim();
   const icon = document.getElementById('noteIcon').value || '0';
+  const tagsInput = document.getElementById('noteTags').value.trim();
+  const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
   
   if (!title) {
     showToast('Please enter a title', 'warning');
@@ -977,11 +1038,11 @@ async function saveNote() {
   if (editId) {
     // Remove the existing item and add updated version at the top
     notes = notes.filter(n => n.id !== editId);
-    notes.unshift({ id: editId, title, content, icon, timestamp: Date.now() });
+    notes.unshift({ id: editId, title, content, icon, tags, timestamp: Date.now() });
     showToast('Note updated ✓', 'success');
     modal.removeAttribute('data-edit-id');
   } else {
-    const newNote = { id: `note-${Date.now()}`, title, content, icon, timestamp: Date.now() };
+    const newNote = { id: `note-${Date.now()}`, title, content, icon, tags, timestamp: Date.now() };
     notes.unshift(newNote);
     showToast('Note saved ✓', 'success');
   }

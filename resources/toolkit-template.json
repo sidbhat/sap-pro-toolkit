@@ -5,22 +5,49 @@
       "id": "shortcut-example-1",
       "name": "SAP Product Roadmap",
       "url": "https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1",
-      "icon": "🗺️",
-      "notes": "SAP Product Roadmap for SuccessFactors"
+      "icon": "0",
+      "notes": "SAP SuccessFactors Product Roadmap",
+      "tags": ["roadmap", "planning"]
     },
     {
       "id": "shortcut-example-2",
       "name": "Admin Center",
       "url": "/sf/admin",
-      "icon": "⚙️",
-      "notes": "Relative URL - will use current hostname"
+      "icon": "1",
+      "notes": "SuccessFactors Admin Center",
+      "tags": ["admin", "configuration"]
     },
     {
       "id": "shortcut-example-3",
       "name": "User Management",
       "url": "/sf/start",
-      "icon": "👥",
-      "notes": "Another relative URL example"
+      "icon": "3",
+      "notes": "User management and permissions",
+      "tags": ["admin", "users"]
+    },
+    {
+      "id": "shortcut-example-4",
+      "name": "SF Help Portal",
+      "url": "https://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM",
+      "icon": "5",
+      "notes": "Official SuccessFactors documentation",
+      "tags": ["documentation", "help"]
+    },
+    {
+      "id": "shortcut-example-5",
+      "name": "Partner Central",
+      "url": "https://partneredge.sap.com/en/partnership/manage.html",
+      "icon": "3",
+      "notes": "SAP Partner resources and tools",
+      "tags": ["partners", "resources"]
+    },
+    {
+      "id": "shortcut-example-6",
+      "name": "SF Community",
+      "url": "https://community.sap.com/topics/successfactors",
+      "icon": "3",
+      "notes": "SuccessFactors community discussions",
+      "tags": ["community", "support"]
     }
   ],
   "environments": [
@@ -35,15 +62,38 @@
       "name": "Preview DC2",
       "type": "preview",
       "hostname": "companyid-preview.hr.cloud.sap"
+    },
+    {
+      "id": "env-example-3",
+      "name": "Sales Demo",
+      "type": "sales",
+      "hostname": "demo.sapsf.com"
     }
   ],
   "notes": [
     {
       "id": "note-example-1",
       "title": "Test User IDs",
-      "content": "admin@company.com\ntest-user@company.com",
-      "icon": "📝",
-      "timestamp": 1704931200000
+      "content": "admin@company.com\ntest-user@company.com\nmanager@company.com",
+      "icon": "2",
+      "timestamp": 1704931200000,
+      "tags": ["testing", "users"]
+    },
+    {
+      "id": "note-example-2",
+      "title": "Partner Contact Info",
+      "content": "Partner Portal: https://partners.sap.com\nSupport Email: partner-support@sap.com",
+      "icon": "3",
+      "timestamp": 1704931200000,
+      "tags": ["partners", "contacts"]
+    },
+    {
+      "id": "note-example-3",
+      "title": "Pre-Sales Demo Links",
+      "content": "Demo Instance: https://demo.sapsf.com\nDemo Users: demo1@sap.com, demo2@sap.com",
+      "icon": "7",
+      "timestamp": 1704931200000,
+      "tags": ["pre-sales", "demo"]
     }
   ]
 }

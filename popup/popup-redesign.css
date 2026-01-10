@@ -122,6 +122,91 @@ body {
   stroke: currentColor;
 }
 
+/* ==================== FILTER BAR ==================== */
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.filter-dropdown-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.filter-dropdown {
+  font-size: 11px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.filter-dropdown:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.filter-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  font-size: 10px;
+  padding: 4px 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.filter-chip:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.filter-chip.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.filter-clear-btn {
+  font-size: 10px;
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  transition: all var(--transition-base);
+}
+
+.filter-clear-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--text-tertiary);
+}
+
 /* ==================== SEARCH ==================== */
 
 .search-bar {
@@ -427,8 +512,8 @@ body {
 
 /* Status Indicators */
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: inline-block;
   margin-right: 6px;
@@ -443,7 +528,7 @@ body {
 .status-dot.sandbox { background: var(--env-sandbox); }
 
 .status-dot.active {
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8);
 }
 
 .env-badge {
@@ -507,6 +592,25 @@ body {
 
 .shortcut-name-cell:hover .shortcut-name {
   color: var(--primary);
+}
+
+/* Tag Badges on Items */
+.tag-badges {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.tag-badge {
+  font-size: 9px;
+  padding: 2px 6px;
+  background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+  border-radius: 8px;
+  color: #1E40AF;
+  font-weight: 600;
+  border: 1px solid #93C5FD;
+  letter-spacing: 0.3px;
 }
 
 .shortcut-actions-cell {
