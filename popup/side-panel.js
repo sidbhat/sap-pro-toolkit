@@ -1467,6 +1467,8 @@ async function handleFileImport(event) {
       return;
     }
     
+    // Build import summary
+    const importSummary = [];
     let importCount = 0;
     
     if (data.shortcuts && Array.isArray(data.shortcuts)) {
@@ -1476,6 +1478,7 @@ async function handleFileImport(event) {
       shortcuts = [...newShortcuts, ...shortcuts];
       await chrome.storage.local.set({ shortcuts });
       importCount += newShortcuts.length;
+      if (newShortcuts.length > 0) importSummary.push(`${newShortcuts.length} shortcuts`);
     }
     
     if (data.environments && Array.isArray(data.environments)) {
@@ -1488,6 +1491,7 @@ async function handleFileImport(event) {
       const storageKey = `environments_${currentProfile}`;
       await chrome.storage.local.set({ [storageKey]: environments });
       importCount += newEnvs.length;
+      if (newEnvs.length > 0) importSummary.push(`${newEnvs.length} environments`);
     }
     
     if (data.notes && Array.isArray(data.notes)) {
@@ -1497,6 +1501,7 @@ async function handleFileImport(event) {
       notes = [...newNotes, ...notes];
       await chrome.storage.local.set({ notes });
       importCount += newNotes.length;
+      if (newNotes.length > 0) importSummary.push(`${newNotes.length} notes`);
     }
     
     renderShortcuts();
@@ -1506,7 +1511,8 @@ async function handleFileImport(event) {
     if (importCount === 0) {
       showToast('No new items to import (all items already exist)', 'warning');
     } else {
-      showToast(`Import successful! Added ${importCount} new item(s) ✓`, 'success');
+      const summary = importSummary.join(', ');
+      showToast(`Imported ${summary} into ${currentProfile === 'profile-all' ? 'current profile' : availableProfiles.find(p => p.id === currentProfile)?.name} ✓`, 'success');
     }
     
   } catch (error) {
@@ -1519,12 +1525,19 @@ async function handleFileImport(event) {
 
 async function exportJsonToFile() {
   try {
+    // Get profile name for filename
+    const profile = availableProfiles.find(p => p.id === currentProfile);
+    const profileName = profile ? profile.name.toLowerCase().replace(/\s+/g, '-') : 'data';
+    
     const exportData = {
       version: '1.0',
+      profile: currentProfile,
+      profileName: profile ? profile.name : 'Unknown',
       shortcuts: shortcuts,
       environments: environments,
       notes: notes,
-      exportDate: new Date().toISOString()
+      exportDate: new Date().toISOString(),
+      description: 'User-created data only (shortcuts, environments, notes). Does not include system profile defaults.'
     };
     
     const jsonStr = JSON.stringify(exportData, null, 2);
@@ -1534,11 +1547,11 @@ async function exportJsonToFile() {
     
     const a = document.createElement('a');
     a.href = url;
-    a.download = `sap-pro-toolkit-${timestamp}.json`;
+    a.download = `sap-pro-toolkit-${profileName}-${timestamp}.json`;
     a.click();
     
     URL.revokeObjectURL(url);
-    showToast('Configuration exported ✓', 'success');
+    showToast(`Exported ${shortcuts.length + environments.length + notes.length} user items ✓`, 'success');
     
   } catch (error) {
     console.error('Export failed:', error);
