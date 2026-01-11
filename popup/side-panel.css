@@ -59,9 +59,10 @@
   --border: #3F4B54;
   --border-light: #2E363D;
   
-  --primary: #7BB4EC;
-  --primary-dark: #5C9FDB;
-  --primary-glow: rgba(123, 180, 236, 0.2);
+  /* Vibrant blue for dark mode - better contrast and visibility */
+  --primary: #3B9EFF;
+  --primary-dark: #1E7FE0;
+  --primary-glow: rgba(59, 158, 255, 0.25);
   
   /* Glassmorphism Dark */
   --glass-bg: rgba(29, 35, 42, 0.9);
@@ -85,9 +86,10 @@
     --border: #3F4B54;
     --border-light: #2E363D;
     
-    --primary: #7BB4EC;
-    --primary-dark: #5C9FDB;
-    --primary-glow: rgba(123, 180, 236, 0.2);
+    /* Vibrant blue for dark mode - better contrast and visibility */
+    --primary: #3B9EFF;
+    --primary-dark: #1E7FE0;
+    --primary-glow: rgba(59, 158, 255, 0.25);
     
     --glass-bg: rgba(29, 35, 42, 0.9);
     --glass-border: rgba(255, 255, 255, 0.1);
