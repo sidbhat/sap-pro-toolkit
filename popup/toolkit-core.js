@@ -178,14 +178,22 @@ const SOLUTION_PATTERNS = {
     'sapcloud.cn'
   ],
   s4hana: [
+    's4hana.ondemand.com',
+    's4hana.cloud.sap',
     '/sap/bc/ui5',
     '/sap/bc/webdynpro',
-    'fiorilaunchpad'
+    'fiorilaunchpad',
+    '#Shell-home'
   ],
   btp: [
     'hana.ondemand.com',
     'cfapps',
-    'build.cloud.sap'
+    'build.cloud.sap',
+    'cockpit.btp'
+  ],
+  ibp: [
+    'ibp.cloud.sap',
+    'ibplanning'
   ]
 };
 
@@ -200,8 +208,14 @@ function detectSolutionType(url, hostname) {
   
   // S/4HANA detection
   const s4Patterns = SOLUTION_PATTERNS.s4hana;
-  if (s4Patterns.some(pattern => url.includes(pattern))) {
+  if (s4Patterns.some(pattern => url.includes(pattern) || hostname.includes(pattern))) {
     return 's4hana';
+  }
+  
+  // IBP detection
+  const ibpPatterns = SOLUTION_PATTERNS.ibp;
+  if (ibpPatterns.some(pattern => hostname.includes(pattern) || url.includes(pattern))) {
+    return 'ibp';
   }
   
   // BTP detection
@@ -215,7 +229,7 @@ function detectSolutionType(url, hostname) {
 
 // ==================== URL PARAMETER EXTRACTION ====================
 
-function extractAllUrlParameters(currentUrl) {
+function extractAllUrlParameters(currentUrl, contentScriptData) {
   if (!currentUrl) return {};
   
   try {
@@ -227,13 +241,39 @@ function extractAllUrlParameters(currentUrl) {
       params[key] = value;
     });
     
+    // Extract company ID from multiple sources (priority order):
+    let companyId = '';
+    
+    // 1. First check content script data (most reliable)
+    if (contentScriptData && contentScriptData.companyId) {
+      companyId = contentScriptData.companyId;
+    }
+    // 2. Check URL query parameters
+    else if (params.bplte_company) {
+      companyId = params.bplte_company;
+    }
+    else if (params.company) {
+      companyId = params.company;
+    }
+    // 3. Extract from hostname pattern (e.g., companyXYZ.successfactors.com)
+    else {
+      const hostnameMatch = url.hostname.match(/^([^.]+)\./);
+      if (hostnameMatch && hostnameMatch[1]) {
+        // Verify it looks like a company ID (not 'www', 'api', etc.)
+        const potentialCompany = hostnameMatch[1];
+        if (!['www', 'api', 'auth', 'login'].includes(potentialCompany.toLowerCase())) {
+          companyId = potentialCompany;
+        }
+      }
+    }
+    
     return {
       hostname: url.hostname,
       protocol: url.protocol,
       pathname: url.pathname,
       params: params,
       // Specific common parameters
-      company: params.bplte_company || params.company || '',
+      company: companyId,
       proxy: params.proxy || '',
       locale: params.locale || '',
       // Build full query string

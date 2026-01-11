@@ -39,6 +39,107 @@
           "category": "Reporting"
         }
       ]
+    },
+    {
+      "id": "s4hana",
+      "name": "SAP S/4HANA Cloud",
+      "patterns": ["s4hana.ondemand.com", "s4hana.cloud.sap"],
+      "quickActions": [
+        {
+          "id": "s4-home",
+          "name": "Fiori Launchpad",
+          "path": "/ui#Shell-home",
+          "icon": "🏠",
+          "description": "Main Fiori launchpad",
+          "category": "Core"
+        },
+        {
+          "id": "s4-apps",
+          "name": "App Finder",
+          "path": "/ui#Shell-appFinder",
+          "icon": "🔍",
+          "description": "Browse available apps",
+          "category": "Navigation"
+        },
+        {
+          "id": "s4-settings",
+          "name": "User Settings",
+          "path": "/ui#Shell-settings",
+          "icon": "⚙️",
+          "description": "Configure user preferences",
+          "category": "Settings"
+        },
+        {
+          "id": "s4-notifications",
+          "name": "Notifications",
+          "path": "/ui#Shell-notifications",
+          "icon": "🔔",
+          "description": "View system notifications",
+          "category": "Core"
+        }
+      ]
+    },
+    {
+      "id": "btp",
+      "name": "SAP Business Technology Platform",
+      "patterns": ["hana.ondemand.com", "cfapps", "build.cloud.sap"],
+      "quickActions": [
+        {
+          "id": "btp-cockpit",
+          "name": "BTP Cockpit",
+          "path": "/cockpit",
+          "icon": "🎛️",
+          "description": "BTP administration",
+          "category": "Admin"
+        },
+        {
+          "id": "btp-apps",
+          "name": "Applications",
+          "path": "/cockpit#/globalaccount/applications",
+          "icon": "📦",
+          "description": "Manage applications",
+          "category": "Apps"
+        },
+        {
+          "id": "btp-services",
+          "name": "Service Marketplace",
+          "path": "/cockpit#/globalaccount/services",
+          "icon": "🛒",
+          "description": "Browse services",
+          "category": "Services"
+        }
+      ]
+    },
+    {
+      "id": "ibp",
+      "name": "SAP Integrated Business Planning",
+      "patterns": ["ibp.cloud.sap", "ibplanning"],
+      "quickActions": [
+        {
+          "id": "ibp-home",
+          "name": "IBP Home",
+          "path": "/",
+          "icon": "🏠",
+          "description": "IBP home page",
+          "category": "Core"
+        },
+        {
+          "id": "ibp-planning",
+          "name": "Planning View",
+          "path": "/planning",
+          "icon": "📊",
+          "description": "Access planning tools",
+          "category": "Planning"
+        },
+        {
+          "id": "ibp-analytics",
+          "name": "Analytics",
+          "path": "/analytics",
+          "icon": "📈",
+          "description": "View analytics dashboard",
+          "category": "Analytics"
+        }
+      ]
     }
   ],
   "globalShortcuts": [
@@ -109,19 +210,19 @@
   ],
   "environments": [
     {
-      "hostname": "hcm-us20-sales.hr.cloud.sap",
+      "hostname": "hcm-us20-sales.hr.cloud.sap?bplte_company=SFSALES010182",
       "id": "env-1768075490937",
       "name": "Demo Companion App - Production",
       "type": "production"
     },
     {
-      "hostname": "hcm-us10-sales.hr.cloud.sap",
+      "hostname": "hcm-us10-sales.hr.cloud.sap?bplte_company=SFSALES008934",
       "id": "env-1768076685887",
       "name": "SFSALES008934 Payroll Americas",
       "type": "sales"
     },
     {
-      "hostname": "hcm68sales.successfactors.com",
+      "hostname": "hcm68sales.successfactors.com?bplte_company=SFSALES009574",
       "id": "env-1768076514983",
       "name": "SFSALES009574 Shared Instance",
       "type": "preview"
