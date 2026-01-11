@@ -1101,6 +1101,19 @@ body {
   background: var(--bg-secondary);
 }
 
+.modal-header-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.modal-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
 .modal-header h3 {
   font-size: 15px;
   font-weight: 700;

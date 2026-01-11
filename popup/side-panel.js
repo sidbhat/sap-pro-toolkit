@@ -1356,6 +1356,7 @@ async function toggleTheme() {
 async function discoverProfiles() {
   // Available profiles based on renamed JSON files
   availableProfiles = [
+    { id: 'profile-all', name: 'All Profiles', file: null }, // Special "All" option
     { id: 'profile-default', name: 'Default', file: 'profile-default.json' },
     { id: 'profile-successfactors', name: 'SuccessFactors', file: 'profile-successfactors.json' }
   ];
@@ -1425,14 +1426,50 @@ async function switchProfile(profileId) {
   }
   
   try {
-    // Load profile data from JSON file
-    const response = await fetch(chrome.runtime.getURL(`resources/${profile.file}`));
-    const profileData = await response.json();
-    
-    // Update state
-    shortcuts = profileData.shortcuts || [];
-    environments = profileData.environments || [];
-    notes = profileData.notes || [];
+    // Handle "All Profiles" - combine data from all profile files
+    if (profileId === 'profile-all') {
+      let allShortcuts = [];
+      let allEnvironments = [];
+      let allNotes = [];
+      
+      // Load and combine all profile files
+      for (const p of availableProfiles) {
+        if (p.file) { // Skip the "All" profile itself
+          try {
+            const response = await fetch(chrome.runtime.getURL(`resources/${p.file}`));
+            const data = await response.json();
+            
+            // Add profile source to each item for reference
+            if (data.shortcuts) {
+              allShortcuts.push(...data.shortcuts.map(s => ({ ...s, _source: p.name })));
+            }
+            if (data.environments) {
+              allEnvironments.push(...data.environments.map(e => ({ ...e, _source: p.name })));
+            }
+            if (data.notes) {
+              allNotes.push(...data.notes.map(n => ({ ...n, _source: p.name })));
+            }
+          } catch (err) {
+            console.warn(`Failed to load profile ${p.name}:`, err);
+          }
+        }
+      }
+      
+      // Remove duplicates based on URL/hostname/title
+      shortcuts = removeDuplicates(allShortcuts, 'url');
+      environments = removeDuplicates(allEnvironments, 'hostname');
+      notes = removeDuplicates(allNotes, 'title');
+      
+    } else {
+      // Load single profile data from JSON file
+      const response = await fetch(chrome.runtime.getURL(`resources/${profile.file}`));
+      const profileData = await response.json();
+      
+      // Update state
+      shortcuts = profileData.shortcuts || [];
+      environments = profileData.environments || [];
+      notes = profileData.notes || [];
+    }
     
     // Save to storage
     await chrome.storage.local.set({ 
@@ -1452,10 +1489,23 @@ async function switchProfile(profileId) {
     renderProfileMenu();
     document.getElementById('profileMenu')?.classList.remove('active');
     
-    showToast(`Switched to ${profile.name} profile`, 'success');
+    showToast(`Switched to ${profile.name}`, 'success');
     
   } catch (error) {
     console.error('Failed to switch profile:', error);
     showToast('Failed to switch profile', 'error');
   }
+}
+
+// Helper function to remove duplicates from array based on key
+function removeDuplicates(arr, key) {
+  const seen = new Set();
+  return arr.filter(item => {
+    const value = item[key];
+    if (seen.has(value)) {
+      return false;
+    }
+    seen.add(value);
+    return true;
+  });
 }
