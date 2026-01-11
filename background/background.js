@@ -76,7 +76,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     // Set default display mode to sidepanel
     await chrome.storage.local.set({ 
       displayMode: 'sidepanel',
-      activeProfile: 'profile-successfactors' // Default to SuccessFactors profile
+      activeProfile: 'profile-global' // Default to Global base profile
     });
     await updateDisplayMode('sidepanel');
     

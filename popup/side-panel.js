@@ -221,28 +221,61 @@ function updateDiagnosticsButton() {
 }
 
 
+/**
+ * Load profile data with Global base layer
+ * Every profile (except "All Profiles") loads Global first, then merges profile-specific data
+ * @param {string} profileId - The profile ID to load
+ * @returns {Object} Merged profile data (Global + Profile-specific)
+ */
 async function loadProfileData(profileId) {
   console.log('[Profile] Loading profile:', profileId);
-  const profile = availableProfiles.find(p => p.id === profileId);
-  console.log('[Profile] Found profile config:', profile);
   
-  if (!profile || !profile.file) {
-    console.warn('[Profile] No profile file specified for:', profileId);
-    return { globalShortcuts: [], solutions: [], environments: [], notes: [] };
+  // Special case: "All Profiles" handled separately
+  if (profileId === 'profile-all') {
+    return { globalShortcuts: [], solutions: [], environments: [] };
   }
   
   try {
-    const url = chrome.runtime.getURL(`resources/${profile.file}`);
-    console.log('[Profile] Fetching from URL:', url);
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log('[Profile] Loaded data:', data);
-    console.log('[Profile] Has solutions?:', !!data.solutions);
-    console.log('[Profile] Solutions array:', data.solutions);
-    return data;
+    // Step 1: Always load Global base layer first
+    const globalResponse = await fetch(chrome.runtime.getURL('resources/profile-global.json'));
+    const globalData = await globalResponse.json();
+    console.log('[Profile] Loaded Global base layer');
+    
+    // Step 2: If loading Global profile itself, return it
+    if (profileId === 'profile-global') {
+      return globalData;
+    }
+    
+    // Step 3: Load profile-specific data
+    const profile = availableProfiles.find(p => p.id === profileId);
+    if (!profile || !profile.file) {
+      console.warn('[Profile] No profile file for:', profileId);
+      return globalData; // Return just Global
+    }
+    
+    const profileResponse = await fetch(chrome.runtime.getURL(`resources/${profile.file}`));
+    const profileData = await profileResponse.json();
+    console.log('[Profile] Loaded profile-specific data:', profileId);
+    
+    // Step 4: Merge Global + Profile data
+    const merged = {
+      globalShortcuts: [
+        ...(globalData.globalShortcuts || []),
+        ...(profileData.globalShortcuts || [])
+      ],
+      solutions: profileData.solutions || globalData.solutions || [],
+      environments: [
+        ...(globalData.environments || []),
+        ...(profileData.environments || [])
+      ]
+    };
+    
+    console.log('[Profile] Merged data - shortcuts:', merged.globalShortcuts.length, 'environments:', merged.environments.length);
+    return merged;
+    
   } catch (error) {
     console.error('[Profile] Failed to load profile data:', error);
-    return { globalShortcuts: [], solutions: [], environments: [], notes: [] };
+    return { globalShortcuts: [], solutions: [], environments: [] };
   }
 }
 
@@ -1694,19 +1727,23 @@ async function toggleTheme() {
 // ==================== PROFILE MANAGEMENT ====================
 
 async function discoverProfiles() {
-  // Available profiles based on renamed JSON files
+  // Available profiles with Global as base layer
   availableProfiles = [
     { id: 'profile-all', name: 'All Profiles', file: null }, // Special "All" option
-    { id: 'profile-default', name: 'Default', file: 'profile-default.json' },
+    { id: 'profile-global', name: 'Global', file: 'profile-global.json' }, // Base layer
     { id: 'profile-successfactors', name: 'SuccessFactors', file: 'profile-successfactors.json' }
   ];
   
   renderProfileMenu();
 }
 
+/**
+ * Load the active profile from storage
+ * Defaults to profile-global if no profile is set
+ */
 async function loadActiveProfile() {
   const result = await chrome.storage.local.get({ 
-    activeProfile: 'profile-successfactors'
+    activeProfile: 'profile-global'
   });
   currentProfile = result.activeProfile;
   
@@ -1768,12 +1805,16 @@ async function switchProfile(profileId) {
   }
   
   try {
-    // Handle "All Profiles" - load from storage keys
+    // Handle "All Profiles" - load Global once, then all other profiles
     if (profileId === 'profile-all') {
-      // Load shortcuts from all profiles
-      let allShortcuts = [];
+      // Step 1: Load Global base layer once
+      const globalResponse = await fetch(chrome.runtime.getURL('resources/profile-global.json'));
+      const globalData = await globalResponse.json();
+      let allShortcuts = [...(globalData.globalShortcuts || [])];
+      
+      // Step 2: Load shortcuts from other profiles (excluding Global)
       for (const p of availableProfiles) {
-        if (p.file) {
+        if (p.file && p.id !== 'profile-global') {
           try {
             const response = await fetch(chrome.runtime.getURL(`resources/${p.file}`));
             const data = await response.json();
@@ -1788,7 +1829,7 @@ async function switchProfile(profileId) {
       }
       shortcuts = removeDuplicates(allShortcuts, 'url');
       
-      // Load environments from all profile storage keys (user-modified data)
+      // Step 3: Load environments from all profile storage keys (user-modified data)
       let allEnvironments = [];
       for (const p of availableProfiles) {
         if (p.file) {
@@ -1801,17 +1842,16 @@ async function switchProfile(profileId) {
       }
       environments = removeDuplicates(allEnvironments, 'hostname');
       
-      // Load notes from storage (user-created notes)
+      // Step 4: Load notes from storage (user-created notes)
       const storageResult = await chrome.storage.local.get('notes');
       notes = storageResult.notes || [];
       
     } else {
-      // Load single profile data from JSON file
-      const response = await fetch(chrome.runtime.getURL(`resources/${profile.file}`));
-      const profileData = await response.json();
+      // Load profile data with Global base layer merged in
+      const profileData = await loadProfileData(profileId);
       
       // Update state
-      shortcuts = profileData.globalShortcuts || profileData.shortcuts || [];
+      shortcuts = profileData.globalShortcuts || [];
       environments = profileData.environments || [];
       
       // Load notes from storage (user-created notes) for individual profiles

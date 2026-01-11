@@ -61,8 +61,7 @@
       "resources": [
         "content/injected.js",
         "resources/dc.json",
-        "resources/starter-packs.json",
-        "resources/profile-default.json",
+        "resources/profile-global.json",
         "resources/profile-successfactors.json"
       ],
       "matches": ["<all_urls>"]
