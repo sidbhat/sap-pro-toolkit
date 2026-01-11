@@ -9,6 +9,8 @@ let shortcuts = [];
 let environments = [];
 let notes = [];
 let settings = { showConfirmationForProd: true };
+let availableProfiles = [];
+let currentProfile = 'profile-default';
 
 // ==================== INITIALIZATION ====================
 
@@ -17,6 +19,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const detectedLang = await detectLanguage();
     await chrome.storage.local.set({ detectedLanguage: detectedLang });
     initI18n();
+    
+    // Load theme first
+    await loadTheme();
+    
+    // Discover and load profiles
+    await discoverProfiles();
+    await loadActiveProfile();
     
     await loadSettings();
     await loadShortcuts();
@@ -1284,4 +1293,169 @@ function setupEventListeners() {
       if (e.target === modal) modal.classList.remove('active');
     });
   });
+  
+  // Footer button handlers
+  document.getElementById('footerSettingsBtn')?.addEventListener('click', openSettingsModal);
+  document.getElementById('footerDiagnosticsBtn')?.addEventListener('click', showDiagnosticsModal);
+  document.getElementById('footerThemeBtn')?.addEventListener('click', toggleTheme);
+  
+  // Profile switcher handlers
+  document.getElementById('profileDropdownBtn')?.addEventListener('click', toggleProfileMenu);
+  
+  // Close profile menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.profile-switcher')) {
+      document.getElementById('profileMenu')?.classList.remove('active');
+    }
+  });
+}
+
+// ==================== THEME MANAGEMENT ====================
+
+async function loadTheme() {
+  const result = await chrome.storage.local.get({ theme: 'auto' });
+  const theme = result.theme;
+  applyTheme(theme);
+}
+
+function applyTheme(theme) {
+  document.body.setAttribute('data-theme', theme);
+  
+  // Update footer button indicator
+  const themeBtn = document.getElementById('footerThemeBtn');
+  if (themeBtn) {
+    themeBtn.setAttribute('data-theme-active', theme !== 'auto' ? 'true' : 'false');
+  }
+  
+  console.log('[Theme] Applied theme:', theme);
+}
+
+async function toggleTheme() {
+  const result = await chrome.storage.local.get({ theme: 'auto' });
+  let currentTheme = result.theme;
+  
+  // Cycle: auto → light → dark → auto
+  let nextTheme;
+  if (currentTheme === 'auto') {
+    nextTheme = 'light';
+  } else if (currentTheme === 'light') {
+    nextTheme = 'dark';
+  } else {
+    nextTheme = 'auto';
+  }
+  
+  await chrome.storage.local.set({ theme: nextTheme });
+  applyTheme(nextTheme);
+  
+  const themeLabels = { auto: 'Auto', light: 'Light', dark: 'Dark' };
+  showToast(`Theme: ${themeLabels[nextTheme]}`, 'success');
+}
+
+// ==================== PROFILE MANAGEMENT ====================
+
+async function discoverProfiles() {
+  // Available profiles based on renamed JSON files
+  availableProfiles = [
+    { id: 'profile-default', name: 'Default', file: 'profile-default.json' },
+    { id: 'profile-successfactors', name: 'SuccessFactors', file: 'profile-successfactors.json' }
+  ];
+  
+  renderProfileMenu();
+}
+
+async function loadActiveProfile() {
+  const result = await chrome.storage.local.get({ activeProfile: 'profile-default' });
+  currentProfile = result.activeProfile;
+  
+  // Update UI to show current profile
+  const profile = availableProfiles.find(p => p.id === currentProfile);
+  if (profile) {
+    document.getElementById('currentProfileName').textContent = profile.name;
+  }
+  
+  console.log('[Profile] Loaded active profile:', currentProfile);
+}
+
+function renderProfileMenu() {
+  const menu = document.getElementById('profileMenu');
+  if (!menu) return;
+  
+  menu.innerHTML = availableProfiles.map(profile => {
+    const isActive = profile.id === currentProfile;
+    return `
+      <button class="profile-menu-item ${isActive ? 'active' : ''}" data-profile-id="${profile.id}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        ${profile.name}
+        ${isActive ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+      </button>
+    `;
+  }).join('');
+  
+  // Attach click handlers
+  menu.querySelectorAll('.profile-menu-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const profileId = item.getAttribute('data-profile-id');
+      switchProfile(profileId);
+    });
+  });
+}
+
+function toggleProfileMenu() {
+  const menu = document.getElementById('profileMenu');
+  if (!menu) return;
+  
+  const isActive = menu.classList.contains('active');
+  menu.classList.toggle('active', !isActive);
+}
+
+async function switchProfile(profileId) {
+  if (profileId === currentProfile) {
+    document.getElementById('profileMenu')?.classList.remove('active');
+    return;
+  }
+  
+  const profile = availableProfiles.find(p => p.id === profileId);
+  if (!profile) {
+    showToast('Profile not found', 'error');
+    return;
+  }
+  
+  try {
+    // Load profile data from JSON file
+    const response = await fetch(chrome.runtime.getURL(`resources/${profile.file}`));
+    const profileData = await response.json();
+    
+    // Update state
+    shortcuts = profileData.shortcuts || [];
+    environments = profileData.environments || [];
+    notes = profileData.notes || [];
+    
+    // Save to storage
+    await chrome.storage.local.set({ 
+      shortcuts,
+      environments,
+      notes,
+      activeProfile: profileId 
+    });
+    
+    currentProfile = profileId;
+    
+    // Update UI
+    document.getElementById('currentProfileName').textContent = profile.name;
+    renderShortcuts();
+    renderEnvironments();
+    renderNotes();
+    renderProfileMenu();
+    document.getElementById('profileMenu')?.classList.remove('active');
+    
+    showToast(`Switched to ${profile.name} profile`, 'success');
+    
+  } catch (error) {
+    console.error('Failed to switch profile:', error);
+    showToast('Failed to switch profile', 'error');
+  }
 }

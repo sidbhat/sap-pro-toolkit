@@ -23,7 +23,6 @@
   ],
   
   "action": {
-    "default_popup": "popup/popup-redesign.html",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",
@@ -63,7 +62,8 @@
         "content/injected.js",
         "resources/dc.json",
         "resources/starter-packs.json",
-        "resources/toolkit-template.json"
+        "resources/profile-default.json",
+        "resources/profile-successfactors.json"
       ],
       "matches": ["<all_urls>"]
     }
