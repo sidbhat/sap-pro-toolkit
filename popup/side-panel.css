@@ -616,8 +616,9 @@ body {
   padding-left: 26px; /* Align with name text after status dot */
   margin-top: 4px;
   font-style: italic;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .env-actions-cell {

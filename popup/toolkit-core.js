@@ -293,6 +293,14 @@ function buildQuickActionUrl(quickAction, currentPageData, currentUrl) {
   // Start with the path from Quick Action
   let targetPath = quickAction.path;
   
+  // Extract hash fragment (for S/4HANA Fiori navigation like #Shell-settings)
+  let hashFragment = '';
+  if (targetPath.includes('#')) {
+    const [pathPart, hash] = targetPath.split('#');
+    targetPath = pathPart;
+    hashFragment = '#' + hash;
+  }
+  
   // Extract path and its own parameters
   const [pathOnly, pathParams] = targetPath.split('?');
   
@@ -317,11 +325,12 @@ function buildQuickActionUrl(quickAction, currentPageData, currentUrl) {
     });
   }
   
-  // Build final URL with ALL parameters preserved
-  const finalUrl = `https://${urlInfo.hostname}${pathOnly}?${allParams.toString()}`;
+  // Build final URL with ALL parameters preserved + hash fragment
+  const finalUrl = `https://${urlInfo.hostname}${pathOnly}?${allParams.toString()}${hashFragment}`;
   
   console.log('[Quick Action] Built URL:', finalUrl);
   console.log('[Quick Action] Preserved params:', Object.fromEntries(allParams));
+  console.log('[Quick Action] Hash fragment:', hashFragment);
   
   return finalUrl;
 }
