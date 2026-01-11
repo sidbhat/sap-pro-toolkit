@@ -350,11 +350,11 @@ body {
 .tag-badge {
   font-size: 9px;
   padding: 2px 6px;
-  background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+  background: var(--primary-glow);
   border-radius: 8px;
-  color: #1E40AF;
+  color: var(--primary);
   font-weight: 600;
-  border: 1px solid #93C5FD;
+  border: 1px solid var(--primary);
   letter-spacing: 0.3px;
 }
 
@@ -670,15 +670,15 @@ body {
 }
 
 .badge-external {
-  background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
-  color: #1E40AF;
-  box-shadow: 0 1px 2px rgba(30, 64, 175, 0.1);
+  background: rgba(59, 158, 255, 0.2);
+  color: var(--primary);
+  border: 1px solid var(--primary);
 }
 
 .badge-relative {
-  background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
-  color: #065F46;
-  box-shadow: 0 1px 2px rgba(6, 95, 70, 0.1);
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--env-preview);
+  border: 1px solid var(--env-preview);
 }
 
 /* Note Table Cells - Responsive */
@@ -886,7 +886,7 @@ body {
 }
 
 .dropdown-item.danger:hover {
-  background: #FEE2E2;
+  background: rgba(239, 68, 68, 0.15);
   color: var(--env-production);
 }
 
@@ -1192,8 +1192,8 @@ body {
   top: var(--space-lg);
   left: var(--space-lg);
   right: var(--space-lg);
-  background: var(--text-primary);
-  color: white;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
   padding: var(--space-lg);
   border-radius: var(--radius-lg);
   font-size: 13px;
@@ -1205,6 +1205,7 @@ body {
   pointer-events: none;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border);
 }
 
 .toast.active {
@@ -1214,14 +1215,20 @@ body {
 
 .toast-success {
   background: var(--env-preview);
+  color: white;
+  border-color: var(--env-preview);
 }
 
 .toast-error {
   background: var(--env-production);
+  color: white;
+  border-color: var(--env-production);
 }
 
 .toast-warning {
   background: var(--env-sales);
+  color: white;
+  border-color: var(--env-sales);
 }
 
 /* ==================== SPINNER ==================== */
@@ -1310,18 +1317,21 @@ body {
 }
 
 .dc-badge.prod {
-  background: #FEE2E2;
-  color: #991B1B;
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--env-production);
+  border: 1px solid var(--env-production);
 }
 
 .dc-badge.prev {
-  background: #D1FAE5;
-  color: #065F46;
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--env-preview);
+  border: 1px solid var(--env-preview);
 }
 
 .dc-badge.sales {
-  background: #FEF3C7;
-  color: #92400E;
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--env-sales);
+  border: 1px solid var(--env-sales);
 }
 
 /* ==================== STICKY FOOTER ==================== */
