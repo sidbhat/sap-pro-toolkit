@@ -375,14 +375,14 @@ body {
 
 /* Dark mode instance card */
 [data-theme="dark"] .instance-card {
-  background: rgba(251, 191, 36, 0.15);
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.25);
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="auto"] .instance-card {
-    background: rgba(251, 191, 36, 0.15);
-    border: 1px solid rgba(251, 191, 36, 0.3);
+    background: rgba(251, 191, 36, 0.12);
+    border: 1px solid rgba(251, 191, 36, 0.25);
   }
 }
 
@@ -395,6 +395,18 @@ body {
 .instance-emoji {
   font-size: 16px;
   line-height: 1;
+  filter: none;
+}
+
+/* Ensure emojis render properly in dark mode */
+[data-theme="dark"] .instance-emoji {
+  filter: brightness(1) contrast(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] .instance-emoji {
+    filter: brightness(1) contrast(1);
+  }
 }
 
 .instance-details {
