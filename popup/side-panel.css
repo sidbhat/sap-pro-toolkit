@@ -498,15 +498,15 @@ body {
 }
 
 .data-table tbody tr:hover:not(.empty-row) {
-  background: var(--bg-secondary);
+  background: var(--bg-secondary) !important;
 }
 
 .data-table tbody tr:nth-child(even):not(.empty-row) {
-  background: var(--bg-tertiary);
+  background: var(--bg-secondary);
 }
 
 .data-table tbody tr:nth-child(even):hover:not(.empty-row) {
-  background: var(--bg-secondary);
+  background: var(--bg-tertiary) !important;
 }
 
 .data-table td {
