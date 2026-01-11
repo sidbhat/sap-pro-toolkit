@@ -11,18 +11,27 @@
     <!-- Header -->
     <div class="side-panel-header">
       <div class="header-content">
+        <div class="profile-switcher">
+          <button class="profile-dropdown" id="profileDropdownBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <span id="currentProfileName">Default</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="profile-menu" id="profileMenu">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+        <h1 class="header-title" data-i18n="headerTitle">SF Pro Toolkit</h1>
         <button class="header-btn" id="helpBtn" data-i18n-title="helpBtn" title="Help">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
             <line x1="12" y1="17" x2="12.01" y2="17"/>
-          </svg>
-        </button>
-        <h1 class="header-title" data-i18n="headerTitle">SAP Pro Toolkit</h1>
-        <button class="header-btn" id="settingsBtn" data-i18n-title="settingsBtn" title="Settings">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"/>
           </svg>
         </button>
       </div>
@@ -166,6 +175,31 @@
         <span>Show System Diagnostics</span>
       </button>
     </section>
+
+    <!-- Sticky Footer -->
+    <footer class="sticky-footer">
+      <button class="footer-btn" id="footerSettingsBtn" title="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"/>
+        </svg>
+        <span class="footer-btn-label">Settings</span>
+      </button>
+      <button class="footer-btn" id="footerDiagnosticsBtn" title="Diagnostics">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <span class="footer-btn-label">Diagnostics</span>
+      </button>
+      <button class="footer-btn" id="footerThemeBtn" title="Toggle Theme" data-theme-active="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <span class="footer-btn-label">Theme</span>
+      </button>
+    </footer>
 
     <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
