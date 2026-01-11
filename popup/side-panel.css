@@ -982,7 +982,7 @@ body {
 }
 
 .btn-secondary {
-  background: white;
+  background: var(--bg-primary);
   color: var(--text-primary);
   border: 1px solid var(--border);
 }
