@@ -47,13 +47,13 @@ chrome.action.onClicked.addListener(async (tab) => {
 
 // Initialize display mode on startup AND when service worker wakes up
 chrome.runtime.onStartup.addListener(async () => {
-  const result = await chrome.storage.local.get({ displayMode: 'popup' });
+  const result = await chrome.storage.local.get({ displayMode: 'sidepanel' });
   await updateDisplayMode(result.displayMode);
 });
 
 // Initialize display mode immediately when service worker starts
 (async () => {
-  const result = await chrome.storage.local.get({ displayMode: 'popup' });
+  const result = await chrome.storage.local.get({ displayMode: 'sidepanel' });
   await updateDisplayMode(result.displayMode);
   console.log('[SAP Pro Toolkit] Display mode initialized on service worker start:', result.displayMode);
 })();
@@ -69,9 +69,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
       showConfirmationForProd: true
     });
     
-    // Set default display mode to popup
-    await chrome.storage.local.set({ displayMode: 'popup' });
-    await updateDisplayMode('popup');
+    // Set default display mode to sidepanel
+    await chrome.storage.local.set({ displayMode: 'sidepanel' });
+    await updateDisplayMode('sidepanel');
     
     // Load default shortcuts
     try {
@@ -100,9 +100,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   } else if (details.reason === 'update') {
     console.log('[SAP Pro Toolkit] Extension updated to version', chrome.runtime.getManifest().version);
     
-    // Ensure display mode is initialized on update
-    const result = await chrome.storage.local.get({ displayMode: 'popup' });
-    await updateDisplayMode(result.displayMode);
+    // Force sidepanel mode on update
+    await chrome.storage.local.set({ displayMode: 'sidepanel' });
+    await updateDisplayMode('sidepanel');
   }
 });
 
