@@ -86,27 +86,43 @@
       "quickActions": [
         {
           "id": "btp-cockpit",
-          "name": "BTP Cockpit",
+          "name": "Cockpit Home",
           "path": "/cockpit",
-          "icon": "🎛️",
-          "description": "BTP administration",
-          "category": "Admin"
+          "icon": "🏠",
+          "description": "BTP Cockpit home",
+          "category": "Core"
         },
         {
-          "id": "btp-apps",
-          "name": "Applications",
-          "path": "/cockpit#/globalaccount/applications",
-          "icon": "📦",
-          "description": "Manage applications",
-          "category": "Apps"
+          "id": "btp-subaccounts",
+          "name": "Subaccounts",
+          "path": "/cockpit#/globalaccount/subaccounts",
+          "icon": "📂",
+          "description": "Manage subaccounts",
+          "category": "Admin"
         },
         {
           "id": "btp-services",
           "name": "Service Marketplace",
           "path": "/cockpit#/globalaccount/services",
           "icon": "🛒",
-          "description": "Browse services",
+          "description": "Browse and subscribe to services",
           "category": "Services"
+        },
+        {
+          "id": "btp-security",
+          "name": "Security",
+          "path": "/cockpit#/globalaccount/security",
+          "icon": "🔐",
+          "description": "User management and security",
+          "category": "Security"
+        },
+        {
+          "id": "btp-billing",
+          "name": "Usage & Billing",
+          "path": "/cockpit#/globalaccount/usage",
+          "icon": "💰",
+          "description": "View usage and costs",
+          "category": "Admin"
         }
       ]
     },
