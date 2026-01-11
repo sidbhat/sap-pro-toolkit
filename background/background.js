@@ -60,6 +60,10 @@ chrome.runtime.onStartup.addListener(async () => {
 
 // ==================== INSTALLATION ====================
 
+/**
+ * Handle extension installation and updates
+ * Sets default configuration and forces side panel mode
+ */
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
     console.log('[SAP Pro Toolkit] Extension installed');
@@ -70,33 +74,13 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     });
     
     // Set default display mode to sidepanel
-    await chrome.storage.local.set({ displayMode: 'sidepanel' });
+    await chrome.storage.local.set({ 
+      displayMode: 'sidepanel',
+      activeProfile: 'profile-successfactors' // Default to SuccessFactors profile
+    });
     await updateDisplayMode('sidepanel');
     
-    // Load default shortcuts
-    try {
-      const response = await fetch(chrome.runtime.getURL('resources/shortcuts-default.json'));
-      const defaultShortcuts = await response.json();
-      
-      // Transform shortcuts to include full URLs
-      const shortcuts = defaultShortcuts.map(shortcut => {
-        // If shortcut has a 'path' property, it's relative and needs current hostname
-        // If it has 'url' property, it's absolute and can be used directly
-        return {
-          id: shortcut.id,
-          name: shortcut.name,
-          url: shortcut.url || shortcut.path, // Use url if available, otherwise path
-          icon: shortcut.icon,
-          notes: shortcut.notes,
-          isDefault: true
-        };
-      });
-      
-      await chrome.storage.local.set({ shortcuts });
-      console.log('[SAP Pro Toolkit] Default shortcuts loaded:', shortcuts.length);
-    } catch (error) {
-      console.error('[SAP Pro Toolkit] Failed to load default shortcuts:', error);
-    }
+    console.log('[SAP Pro Toolkit] Initial setup complete - using profile system for shortcuts');
   } else if (details.reason === 'update') {
     console.log('[SAP Pro Toolkit] Extension updated to version', chrome.runtime.getManifest().version);
     
