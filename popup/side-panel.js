@@ -1041,6 +1041,9 @@ async function showDiagnosticsModal() {
   `;
   
   try {
+    // Refresh page data before gathering diagnostics to ensure latest state
+    await loadCurrentPageData();
+    
     const diagnostics = await gatherDiagnostics(currentPageData);
     const formatted = formatDiagnosticsReport(diagnostics);
     contentDiv.innerHTML = `<pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">${formatted}</pre>`;
@@ -1056,6 +1059,9 @@ function closeDiagnosticsModal() {
 
 async function copyAllDiagnostics() {
   try {
+    // Refresh page data before copying diagnostics to ensure latest state
+    await loadCurrentPageData();
+    
     const diagnostics = await gatherDiagnostics(currentPageData);
     const formatted = formatDiagnosticsReport(diagnostics);
     await navigator.clipboard.writeText(formatted);
