@@ -1030,8 +1030,9 @@ async function saveEnvironment() {
   // Validation 2: Remove protocol if present
   hostname = hostname.replace(/^https?:\/\//, '');
   
-  // Validation 3: Split hostname from path/params for domain validation only
-  const [hostnameOnly] = hostname.split('/')[0].split('?');
+  // Validation 3: Split hostname from path/params/hash for domain validation only
+  // Extract just the domain part before any path, query, or hash
+  let hostnameOnly = hostname.split('/')[0].split('?')[0].split('#')[0];
   
   // Validation 4: Check for valid hostname format (no spaces in hostname part)
   if (/\s/.test(hostnameOnly)) {
@@ -1056,7 +1057,7 @@ async function saveEnvironment() {
     // BTP
     'hana.ondemand.com', 'cfapps', 'build.cloud.sap',
     // IBP
-    'ibp.cloud.sap'
+    'ibp.cloud.sap', 'scmibp.ondemand.com', 'ibplanning'
   ];
   const isValidSAPHostname = sapDomains.some(domain => hostnameOnly.includes(domain));
   
