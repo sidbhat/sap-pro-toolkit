@@ -335,10 +335,8 @@ async function renderEnvironments() {
   // Load Quick Actions for the solution type (independent of profile)
   let quickActions = [];
   if (solutionType) {
-    // For SF environments, always load from successfactors profile
-    const targetProfile = solutionType === 'successfactors' ? 'profile-successfactors' : currentProfile;
-    
-    const profileData = await loadProfileData(targetProfile);
+    // Always load from successfactors profile (which contains all solution definitions)
+    const profileData = await loadProfileData('profile-successfactors');
     console.log('[Quick Actions] Profile data loaded:', profileData);
     console.log('[Quick Actions] Looking for solution type:', solutionType);
     
