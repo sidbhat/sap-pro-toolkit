@@ -68,7 +68,12 @@
   --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-/* Auto Mode - System Preference */
+/* Auto Mode - Default to Light Theme */
+[data-theme="auto"] {
+  /* Light theme as default (already defined in :root) */
+}
+
+/* Auto Mode - Apply Dark Theme when system prefers dark */
 @media (prefers-color-scheme: dark) {
   [data-theme="auto"] {
     --bg-primary: #1D232A;
@@ -117,6 +122,9 @@ body {
   max-width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 80px; /* Space for sticky footer */
 }
 
 /* ==================== HEADER ==================== */
@@ -1290,7 +1298,7 @@ body {
 /* ==================== STICKY FOOTER ==================== */
 
 .sticky-footer {
-  position: sticky;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
