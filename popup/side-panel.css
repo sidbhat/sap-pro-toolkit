@@ -48,44 +48,44 @@
   --radius-lg: 8px;
 }
 
-/* Dark Mode (SAP Horizon Dark) */
+/* Dark Mode (SAP Fiori Dark - Quartz Dark Theme) */
 [data-theme="dark"] {
-  --bg-primary: #1D2D3E;
-  --bg-secondary: #2A3F54;
-  --bg-tertiary: #354A5F;
+  --bg-primary: #1D232A;
+  --bg-secondary: #2A3238;
+  --bg-tertiary: #3A4248;
   --text-primary: #FAFAFA;
-  --text-secondary: #D1D5DB;
-  --text-tertiary: #9CA3AF;
-  --border: #4A5F7A;
-  --border-light: #3A4F64;
+  --text-secondary: #C5C5C5;
+  --text-tertiary: #999999;
+  --border: #3F4B54;
+  --border-light: #2E363D;
   
-  --primary: #5899DA;
-  --primary-dark: #4080C0;
-  --primary-glow: rgba(88, 153, 218, 0.15);
+  --primary: #7BB4EC;
+  --primary-dark: #5C9FDB;
+  --primary-glow: rgba(123, 180, 236, 0.2);
   
   /* Glassmorphism Dark */
-  --glass-bg: rgba(29, 45, 62, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-bg: rgba(29, 35, 42, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 /* Auto Mode - System Preference */
 @media (prefers-color-scheme: dark) {
   [data-theme="auto"] {
-    --bg-primary: #1D2D3E;
-    --bg-secondary: #2A3F54;
-    --bg-tertiary: #354A5F;
+    --bg-primary: #1D232A;
+    --bg-secondary: #2A3238;
+    --bg-tertiary: #3A4248;
     --text-primary: #FAFAFA;
-    --text-secondary: #D1D5DB;
-    --text-tertiary: #9CA3AF;
-    --border: #4A5F7A;
-    --border-light: #3A4F64;
+    --text-secondary: #C5C5C5;
+    --text-tertiary: #999999;
+    --border: #3F4B54;
+    --border-light: #2E363D;
     
-    --primary: #5899DA;
-    --primary-dark: #4080C0;
-    --primary-glow: rgba(88, 153, 218, 0.15);
+    --primary: #7BB4EC;
+    --primary-dark: #5C9FDB;
+    --primary-glow: rgba(123, 180, 236, 0.2);
     
-    --glass-bg: rgba(29, 45, 62, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-bg: rgba(29, 35, 42, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -255,7 +255,8 @@ body {
   padding: 6px 10px;
   border: 1px solid var(--border);
   border-radius: 4px;
-  background: white;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s ease;
   min-width: 140px;
@@ -438,7 +439,7 @@ body {
 /* ==================== TABLES ==================== */
 
 .table-container {
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: visible;
@@ -707,7 +708,7 @@ body {
   padding: 0;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: white;
+  background: var(--bg-primary);
   color: var(--text-secondary);
   cursor: pointer;
   display: flex;
@@ -768,7 +769,7 @@ body {
   padding: 0;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: white;
+  background: var(--bg-primary);
   color: var(--text-secondary);
   cursor: pointer;
   display: flex;
@@ -795,7 +796,7 @@ body {
   top: calc(100% + 4px);
   right: 0;
   min-width: 140px;
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -822,7 +823,7 @@ body {
   font-size: 11px;
   font-weight: 500;
   color: var(--text-primary);
-  background: white;
+  background: transparent;
   border: none;
   width: 100%;
   text-align: left;
@@ -1129,7 +1130,7 @@ body {
   border-radius: var(--radius-md);
   font-size: 13px;
   font-family: inherit;
-  background: white;
+  background: var(--bg-primary);
   color: var(--text-primary);
   transition: all 0.2s ease;
 }
@@ -1552,7 +1553,7 @@ body {
   min-width: 24px;
   height: 24px;
   padding: 0 8px;
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border);
   border-radius: 4px;
   box-shadow: 0 2px 0 var(--border), 0 3px 1px rgba(0, 0, 0, 0.05);

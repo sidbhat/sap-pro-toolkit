@@ -1070,7 +1070,7 @@ async function copyAllDiagnostics() {
 
 function openSettingsModal() {
   document.getElementById('settingsModal').classList.add('active');
-  loadDisplayModeSetting();
+  // loadDisplayModeSetting() removed - side panel mode only
 }
 
 function closeSettingsModal() {
@@ -1206,6 +1206,10 @@ async function downloadTemplate() {
   }
 }
 
+// ==================== DISPLAY MODE FUNCTIONS (DISABLED - SIDE PANEL ONLY) ====================
+// These functions are commented out since the extension now operates in side panel mode only
+
+/* 
 async function loadDisplayModeSetting() {
   const result = await chrome.storage.local.get({ displayMode: 'sidepanel' });
   const mode = result.displayMode;
@@ -1226,6 +1230,7 @@ async function saveDisplayMode(mode) {
   await chrome.storage.local.set({ displayMode: mode });
   showToast(`Display mode will change after reloading extension`, 'success');
 }
+*/
 
 // ==================== EVENT LISTENERS ====================
 
@@ -1281,12 +1286,7 @@ function setupEventListeners() {
   });
   document.getElementById('importFileInput')?.addEventListener('change', handleFileImport);
   
-  document.getElementById('displayModePopup')?.addEventListener('change', (e) => {
-    if (e.target.checked) saveDisplayMode('popup');
-  });
-  document.getElementById('displayModeSidePanel')?.addEventListener('change', (e) => {
-    if (e.target.checked) saveDisplayMode('sidepanel');
-  });
+  // Display mode event listeners removed - extension operates in side panel mode only
   
   document.querySelectorAll('.modal').forEach(modal => {
     modal.addEventListener('click', (e) => {
