@@ -15,27 +15,11 @@
           "category": "Time"
         },
         {
-          "id": "sf-record-time",
-          "name": "Record Time",
-          "path": "/sf/timeoff#TimeOff-recordTime?bplte_company={{company}}",
-          "icon": "⏱️",
-          "description": "Clock in/out or record timesheet",
-          "category": "Time"
-        },
-        {
           "id": "sf-edit-profile",
           "name": "Update My Profile",
           "path": "/sf/liveprofile#LiveProfile-editProfile?bplte_company={{company}}",
           "icon": "👤",
-          "description": "Edit profile and skills (Most demo-friendly)",
-          "category": "Profile"
-        },
-        {
-          "id": "sf-change-address",
-          "name": "Change Address",
-          "path": "/sf/liveprofile#PeopleProfile-editAddress?bplte_company={{company}}",
-          "icon": "🏠",
-          "description": "Update personal address information",
+          "description": "Edit profile and skills",
           "category": "Profile"
         },
         {
@@ -44,22 +28,6 @@
           "path": "/sf/recruiting#Recruiting-createJobReq?bplte_company={{company}}",
           "icon": "📝",
           "description": "Create new job requisition",
-          "category": "Recruiting"
-        },
-        {
-          "id": "sf-manage-requisitions",
-          "name": "Manage Requisitions",
-          "path": "/sf/recruiting#Recruiting-manageJobReq?bplte_company={{company}}",
-          "icon": "📋",
-          "description": "View and manage job requisitions",
-          "category": "Recruiting"
-        },
-        {
-          "id": "sf-review-candidates",
-          "name": "Review Candidates",
-          "path": "/sf/recruiting#Recruiting-manageCandidates?bplte_company={{company}}",
-          "icon": "👥",
-          "description": "Candidate overview and management",
           "category": "Recruiting"
         },
         {
@@ -77,30 +45,6 @@
           "icon": "⚙️",
           "description": "System configuration and settings",
           "category": "Admin"
-        },
-        {
-          "id": "sf-provisioning",
-          "name": "Provisioning",
-          "path": "/sf/provisioning?bplte_company={{company}}",
-          "icon": "🔐",
-          "description": "User management and roles",
-          "category": "Admin"
-        },
-        {
-          "id": "sf-reports",
-          "name": "Report Center",
-          "path": "/sf/reportcenter?bplte_company={{company}}",
-          "icon": "📈",
-          "description": "Analytics and reporting tools",
-          "category": "Analytics"
-        },
-        {
-          "id": "sf-home",
-          "name": "Employee Central Home",
-          "path": "/sf/home?bplte_company={{company}}",
-          "icon": "🏢",
-          "description": "Employee homepage",
-          "category": "Core"
         }
       ]
     },
@@ -111,10 +55,10 @@
       "quickActions": [
         {
           "id": "s4-procurement-overview",
-          "name": "Procurement Overview (F1990)",
+          "name": "Procurement Overview",
           "path": "/ui#ProcurementOverview-display",
           "icon": "🛒",
-          "description": "Buyer cockpit with KPIs (Most demoed app)",
+          "description": "Buyer cockpit with KPIs",
           "category": "Procurement"
         },
         {
@@ -126,22 +70,6 @@
           "category": "Procurement"
         },
         {
-          "id": "s4-manage-po",
-          "name": "Manage Purchase Orders",
-          "path": "/ui#PurchaseOrder-manage",
-          "icon": "📋",
-          "description": "Central PO management",
-          "category": "Procurement"
-        },
-        {
-          "id": "s4-create-pr",
-          "name": "Create Purchase Requisition",
-          "path": "/ui#PurchaseRequisition-create",
-          "icon": "📝",
-          "description": "Create purchase requisition",
-          "category": "Procurement"
-        },
-        {
           "id": "s4-sales-fulfillment",
           "name": "Sales Order Fulfillment Monitor",
           "path": "/ui#SalesOrder-monitor",
@@ -150,16 +78,8 @@
           "category": "Sales"
         },
         {
-          "id": "s4-manage-sales-orders",
-          "name": "Manage Sales Orders",
-          "path": "/ui#SalesOrder-manage",
-          "icon": "🛍️",
-          "description": "Central sales order cockpit",
-          "category": "Sales"
-        },
-        {
           "id": "s4-cash-flow",
-          "name": "Cash Flow Analysis (F0513A)",
+          "name": "Cash Flow Analysis",
           "path": "/ui#CashFlow-analyze",
           "icon": "💰",
           "description": "Interactive cash flow visualization",
@@ -172,38 +92,6 @@
           "icon": "📈",
           "description": "Balance sheet and P&L reports",
           "category": "Finance"
-        },
-        {
-          "id": "s4-journal-entries",
-          "name": "Post General Journal Entries",
-          "path": "/ui#JournalEntry-create",
-          "icon": "✏️",
-          "description": "Create journal entries",
-          "category": "Finance"
-        },
-        {
-          "id": "s4-trial-balance",
-          "name": "Trial Balance",
-          "path": "/ui#TrialBalance-display",
-          "icon": "⚖️",
-          "description": "View trial balance by G/L",
-          "category": "Finance"
-        },
-        {
-          "id": "s4-home",
-          "name": "Fiori Launchpad Home",
-          "path": "/ui#Shell-home",
-          "icon": "🏠",
-          "description": "Main Fiori launchpad",
-          "category": "Core"
-        },
-        {
-          "id": "s4-apps",
-          "name": "App Finder",
-          "path": "/ui#Shell-appFinder",
-          "icon": "🔍",
-          "description": "Browse available apps",
-          "category": "Navigation"
         }
       ]
     },
