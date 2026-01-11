@@ -146,7 +146,22 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--space-lg);
+  gap: var(--space-md);
+}
+
+.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 1;
+  justify-content: center;
+}
+
+.header-logo {
+  width: 20px;
+  height: 20px;
+  stroke: white;
+  flex-shrink: 0;
 }
 
 .header-title {
@@ -154,8 +169,6 @@ body {
   font-weight: 700;
   color: white;
   letter-spacing: 0.3px;
-  flex: 1;
-  text-align: center;
 }
 
 .header-btn {
