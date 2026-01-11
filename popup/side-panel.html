@@ -7,6 +7,29 @@
   <link rel="stylesheet" href="side-panel.css">
 </head>
 <body>
+<!-- 
+  ===== SF PRO TOOLKIT BRANDING STANDARDS =====
+  
+  LOGO USAGE:
+  - Source: ../icons/icon-32.png (official extension icon)
+  - Header: 28x28px with class="header-logo"
+  - Modals: 32x32px with class="modal-icon"
+  
+  STANDARD MODAL HEADER PATTERN:
+  <div class="modal-header">
+    <div class="modal-header-title">
+      <img src="../icons/icon-32.png" alt="SF Pro Toolkit" class="modal-icon">
+      <h3>[Modal Title]</h3>
+    </div>
+    <button class="modal-close" id="close[Modal]Modal">&times;</button>
+  </div>
+  
+  CHECKLIST FOR NEW MODALS:
+  ✓ modal-header has modal-header-title wrapper?
+  ✓ Includes icon-32.png with class="modal-icon"?
+  ✓ Alt text is "SF Pro Toolkit"?
+  ✓ CSS uses var(--logo-size-modal)?
+-->
   <div class="side-panel-container">
     <!-- Header -->
     <div class="side-panel-header">
@@ -19,14 +42,7 @@
           </svg>
         </button>
         <div class="header-title-group">
-          <svg class="header-logo" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-            <polyline points="7.5 4.21 12 6.81 16.5 4.21"/>
-            <polyline points="7.5 19.79 7.5 14.6 3 12"/>
-            <polyline points="21 12 16.5 14.6 16.5 19.79"/>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-            <line x1="12" y1="22.08" x2="12" y2="12"/>
-          </svg>
+          <img src="../icons/icon-32.png" alt="SF Pro Toolkit" class="header-logo">
           <h1 class="header-title" data-i18n="headerTitle">SF Pro Toolkit</h1>
         </div>
         <div class="profile-switcher">
@@ -207,7 +223,10 @@
   <div class="modal" id="addEnvModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 data-i18n="addEnvironmentTitle">Add Environment</h3>
+        <div class="modal-header-title">
+          <img src="../icons/icon-32.png" alt="SF Pro Toolkit" class="modal-icon">
+          <h3 data-i18n="addEnvironmentTitle">Add Environment</h3>
+        </div>
         <button class="modal-close" id="closeAddEnvModal">&times;</button>
       </div>
       <div class="modal-body">
@@ -242,7 +261,10 @@
   <div class="modal" id="addShortcutModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 data-i18n="addShortcutTitle">Add Shortcut</h3>
+        <div class="modal-header-title">
+          <img src="../icons/icon-32.png" alt="SF Pro Toolkit" class="modal-icon">
+          <h3 data-i18n="addShortcutTitle">Add Shortcut</h3>
+        </div>
         <button class="modal-close" id="closeAddShortcutModal">&times;</button>
       </div>
       <div class="modal-body">
@@ -297,7 +319,10 @@
   <div class="modal" id="addNoteModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Scratch Note</h3>
+        <div class="modal-header-title">
+          <img src="../icons/icon-32.png" alt="SF Pro Toolkit" class="modal-icon">
+          <h3>Scratch Note</h3>
+        </div>
         <button class="modal-close" id="closeAddNoteModal">&times;</button>
       </div>
       <div class="modal-body">
