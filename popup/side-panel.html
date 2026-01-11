@@ -87,6 +87,17 @@
         <div class="instance-details">
           <div class="instance-type" id="instanceType"></div>
           <div class="instance-meta" id="instanceMeta"></div>
+          <div class="instance-company" id="instanceCompany"></div>
+        </div>
+      </div>
+      
+      <!-- Quick Actions Section -->
+      <div class="quick-actions" id="quickActions" style="display: none;">
+        <div class="quick-actions-header">
+          <h4>QUICK ACTIONS</h4>
+        </div>
+        <div class="quick-actions-list" id="quickActionsList">
+          <!-- Populated dynamically -->
         </div>
       </div>
     </div>
@@ -122,12 +133,12 @@
       </div>
     </section>
 
-    <!-- Combined Links & Notes Section -->
+    <!-- Combined Shortcuts & Notes Section -->
     <section class="section">
       <div class="section-header">
         <div>
-          <h2 class="section-title">LINKS & NOTES</h2>
-          <p class="section-desc">Quick links and reference information</p>
+          <h2 class="section-title">SHORTCUTS & NOTES</h2>
+          <p class="section-desc">External links and reference information</p>
         </div>
       </div>
       
@@ -275,9 +286,9 @@
           </div>
           <div class="form-group">
             <label for="shortcutPath"><span data-i18n="shortcutUrl">URL</span> *</label>
-            <input type="text" id="shortcutPath" placeholder="e.g., https://... or /sf/admin" required>
+            <input type="text" id="shortcutPath" placeholder="e.g., https://roadmaps.sap.com/..." required>
             <small style="color: var(--text-secondary); font-size: 11px; display: block; margin-top: 4px;">
-              Use relative URLs (e.g., /sf/admin) or absolute URLs (e.g., https://...)
+              Enter full URL starting with https:// (external links only)
             </small>
           </div>
           <div class="form-group">

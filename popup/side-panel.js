@@ -56,34 +56,11 @@ async function loadSettings() {
 }
 
 async function loadShortcuts() {
-  const result = await chrome.storage.local.get('shortcuts');
-  shortcuts = result.shortcuts || [];
+  // Load from current profile's globalShortcuts
+  const profileData = await loadProfileData(currentProfile);
+  shortcuts = profileData.globalShortcuts || profileData.shortcuts || [];
   
-  // Load professional default data on first install
-  if (shortcuts.length === 0) {
-    try {
-      const response = await fetch(chrome.runtime.getURL('resources/successfactors-internal.json'));
-      const defaultData = await response.json();
-      
-      if (defaultData.shortcuts && Array.isArray(defaultData.shortcuts)) {
-        shortcuts = defaultData.shortcuts;
-        await chrome.storage.local.set({ shortcuts });
-      }
-    } catch (error) {
-      console.error('Failed to load default shortcuts:', error);
-      // Fallback to single Product Roadmap shortcut
-      shortcuts = [{
-        id: `shortcut-${Date.now()}`,
-        name: 'Product Roadmap',
-        url: 'https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1',
-        notes: 'SAP SuccessFactors Product Roadmap',
-        icon: '0',
-        tags: ['roadmap']
-      }];
-      await chrome.storage.local.set({ shortcuts });
-    }
-  }
-  
+  await chrome.storage.local.set({ shortcuts });
   renderShortcuts();
 }
 
@@ -141,7 +118,11 @@ async function loadCurrentPageData() {
       return;
     }
     
-    if (!isSFPage(tab.url)) {
+    // Check if it's any SAP page (not just SF)
+    const hostname = new URL(tab.url).hostname;
+    const solutionType = detectSolutionType(tab.url, hostname);
+    
+    if (!solutionType) {
       showContextBanner(null);
       return;
     }
@@ -149,7 +130,7 @@ async function loadCurrentPageData() {
     const messagePromise = new Promise((resolve) => {
       chrome.tabs.sendMessage(tab.id, { action: 'getPageData' }, (response) => {
         if (chrome.runtime.lastError) {
-          console.log('[SAP Pro Toolkit] Content script message failed, using URL detection');
+          console.log('[SF Pro Toolkit] Content script message failed, using URL detection');
           resolve(null);
         } else {
           resolve(response);
@@ -162,27 +143,31 @@ async function loadCurrentPageData() {
     
     if (response && response.hostname) {
       currentPageData = response;
-      console.log('[SAP Pro Toolkit] Using enhanced data from content script:', currentPageData);
+      currentPageData.url = tab.url;
+      currentPageData.solutionType = solutionType;
+      console.log('[SF Pro Toolkit] Using enhanced data from content script:', currentPageData);
     } else {
       currentPageData = detectEnvironmentFromURL(tab.url);
-      console.log('[SAP Pro Toolkit] Using URL-based detection:', currentPageData);
+      currentPageData.url = tab.url;
+      currentPageData.solutionType = solutionType;
+      console.log('[SF Pro Toolkit] Using URL-based detection:', currentPageData);
     }
     
-    showContextBanner(currentPageData);
+    showContextBanner(currentPageData, tab.url);
     highlightActiveStates(tab.url);
     
   } catch (error) {
-    console.error('[SAP Pro Toolkit] Failed to load page data:', error);
+    console.error('[SF Pro Toolkit] Failed to load page data:', error);
     showContextBanner(null);
   }
 }
 
 // ==================== UI RENDERING - INSTANCE CARD ====================
 
-function showContextBanner(data) {
+async function showContextBanner(data, currentUrl) {
   const card = document.getElementById('instanceCard');
   
-  if (!data) {
+  if (!data || !data.solutionType) {
     card.style.display = 'none';
     return;
   }
@@ -207,6 +192,143 @@ function showContextBanner(data) {
   }
   
   document.getElementById('instanceMeta').textContent = metaText || 'Unknown Region';
+  
+  // Show company ID if available
+  const urlParams = extractAllUrlParameters(currentUrl || data.url || '');
+  if (urlParams.company) {
+    document.getElementById('instanceCompany').textContent = `Company: ${urlParams.company}`;
+    document.getElementById('instanceCompany').style.display = 'block';
+  } else {
+    document.getElementById('instanceCompany').style.display = 'none';
+  }
+  
+  // Render Quick Actions for detected solution
+  await renderQuickActions(data.solutionType, data, currentUrl);
+}
+
+// ==================== QUICK ACTIONS ====================
+
+async function renderQuickActions(solutionType, currentPageData, currentUrl) {
+  const quickActionsSection = document.getElementById('quickActions');
+  const quickActionsList = document.getElementById('quickActionsList');
+  
+  if (!solutionType) {
+    quickActionsSection.style.display = 'none';
+    return;
+  }
+  
+  // Load profile data to get quick actions
+  const profileData = await loadProfileData(currentProfile);
+  
+  if (!profileData.solutions) {
+    quickActionsSection.style.display = 'none';
+    return;
+  }
+  
+  const solution = profileData.solutions.find(s => s.id === solutionType);
+  
+  if (!solution || !solution.quickActions || solution.quickActions.length === 0) {
+    quickActionsSection.style.display = 'none';
+    return;
+  }
+  
+  // Show Quick Actions section
+  quickActionsSection.style.display = 'block';
+  
+  // Render Quick Action buttons
+  quickActionsList.innerHTML = solution.quickActions.map(action => `
+    <button class="quick-action-btn" 
+            data-action-id="${action.id}"
+            data-path="${action.path}"
+            title="${action.description || action.name}">
+      <span class="action-icon">${action.icon}</span>
+      <span class="action-name">${action.name}</span>
+      <button class="quick-action-edit" 
+              data-action-id="${action.id}"
+              title="Edit Quick Action"
+              onclick="event.stopPropagation();">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </button>
+    </button>
+  `).join('');
+  
+  // Attach click handlers
+  attachQuickActionHandlers(currentPageData, currentUrl);
+}
+
+function attachQuickActionHandlers(currentPageData, currentUrl) {
+  // Main button click - navigate
+  document.querySelectorAll('.quick-action-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      if (e.target.closest('.quick-action-edit')) return; // Don't navigate if edit button clicked
+      
+      const actionId = btn.getAttribute('data-action-id');
+      await navigateToQuickAction(actionId, currentPageData, currentUrl);
+    });
+  });
+  
+  // Edit button click
+  document.querySelectorAll('.quick-action-edit').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const actionId = btn.getAttribute('data-action-id');
+      console.log('[Quick Action] Edit clicked:', actionId);
+      showToast('Quick Action editing coming soon!', 'info');
+    });
+  });
+}
+
+async function navigateToQuickAction(actionId, currentPageData, currentUrl) {
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+    if (!tab) return;
+    
+    // Load profile data to find the action
+    const profileData = await loadProfileData(currentProfile);
+    const solution = profileData.solutions?.find(s => s.id === currentPageData.solutionType);
+    const action = solution?.quickActions?.find(a => a.id === actionId);
+    
+    if (!action) {
+      showToast('Quick Action not found', 'error');
+      return;
+    }
+    
+    // Build URL with all parameters preserved
+    const targetUrl = buildQuickActionUrl(action, currentPageData, currentUrl || tab.url);
+    
+    console.group('[Quick Action Navigation]');
+    console.log('Action:', action.name);
+    console.log('Current URL:', tab.url);
+    console.log('Target URL:', targetUrl);
+    console.groupEnd();
+    
+    await chrome.tabs.update(tab.id, { url: targetUrl });
+    showToast(`Navigating to ${action.name}...`, 'success');
+    
+  } catch (error) {
+    console.error('[Quick Action] Navigation failed:', error);
+    showToast('Failed to navigate', 'error');
+  }
+}
+
+async function loadProfileData(profileId) {
+  const profile = availableProfiles.find(p => p.id === profileId);
+  
+  if (!profile || !profile.file) {
+    return { globalShortcuts: [], solutions: [], environments: [], notes: [] };
+  }
+  
+  try {
+    const response = await fetch(chrome.runtime.getURL(`resources/${profile.file}`));
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('[Profile] Failed to load profile data:', error);
+    return { globalShortcuts: [], solutions: [], environments: [], notes: [] };
+  }
 }
 
 // ==================== UI RENDERING - ENVIRONMENTS ====================
@@ -887,11 +1009,10 @@ async function saveShortcut() {
     return;
   }
   
-  const isAbsolute = url.startsWith('http://') || url.startsWith('https://');
-  const isRelative = url.startsWith('/');
-  
-  if (!isAbsolute && !isRelative) {
-    showToast('URL must start with http://, https://, or / (for relative paths)', 'warning');
+  // ONLY allow absolute URLs (external links)
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    showToast('URL must start with http:// or https:// (external links only)', 'warning');
+    document.getElementById('shortcutPath').focus();
     return;
   }
   

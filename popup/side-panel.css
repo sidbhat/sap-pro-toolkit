@@ -414,6 +414,101 @@ body {
   font-weight: 500;
 }
 
+.instance-company {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+  margin-top: 2px;
+  font-family: 'SF Mono', monospace;
+}
+
+/* ==================== QUICK ACTIONS ==================== */
+
+.quick-actions {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+}
+
+.quick-actions-header {
+  margin-bottom: 8px;
+}
+
+.quick-actions-header h4 {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+.quick-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quick-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--primary);
+  color: white;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.quick-action-btn:hover {
+  background: var(--primary-dark);
+  transform: translateX(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quick-action-btn .action-icon {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.quick-action-btn .action-name {
+  flex: 1;
+  text-align: left;
+}
+
+.quick-action-edit {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  padding: 0;
+  margin-left: auto;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.quick-action-edit:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.quick-action-edit svg {
+  width: 14px;
+  height: 14px;
+  stroke: white;
+}
+
 /* ==================== SECTIONS ==================== */
 
 .section {

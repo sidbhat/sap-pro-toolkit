@@ -165,6 +165,127 @@ function isAbsoluteUrl(url) {
   return url && (url.startsWith('http://') || url.startsWith('https://'));
 }
 
+// ==================== SOLUTION TYPE DETECTION ====================
+
+const SOLUTION_PATTERNS = {
+  successfactors: [
+    'successfactors.com',
+    'sapsf.com',
+    'sapsf.cn',
+    'sapsf.eu',
+    'hr.cloud.sap',
+    'successfactors.eu',
+    'sapcloud.cn'
+  ],
+  s4hana: [
+    '/sap/bc/ui5',
+    '/sap/bc/webdynpro',
+    'fiorilaunchpad'
+  ],
+  btp: [
+    'hana.ondemand.com',
+    'cfapps',
+    'build.cloud.sap'
+  ]
+};
+
+function detectSolutionType(url, hostname) {
+  if (!url || !hostname) return null;
+  
+  // SuccessFactors detection
+  const sfPatterns = SOLUTION_PATTERNS.successfactors;
+  if (sfPatterns.some(pattern => hostname.includes(pattern))) {
+    return 'successfactors';
+  }
+  
+  // S/4HANA detection
+  const s4Patterns = SOLUTION_PATTERNS.s4hana;
+  if (s4Patterns.some(pattern => url.includes(pattern))) {
+    return 's4hana';
+  }
+  
+  // BTP detection
+  const btpPatterns = SOLUTION_PATTERNS.btp;
+  if (btpPatterns.some(pattern => hostname.includes(pattern))) {
+    return 'btp';
+  }
+  
+  return null;
+}
+
+// ==================== URL PARAMETER EXTRACTION ====================
+
+function extractAllUrlParameters(currentUrl) {
+  if (!currentUrl) return {};
+  
+  try {
+    const url = new URL(currentUrl);
+    const params = {};
+    
+    // Get ALL query parameters
+    url.searchParams.forEach((value, key) => {
+      params[key] = value;
+    });
+    
+    return {
+      hostname: url.hostname,
+      protocol: url.protocol,
+      pathname: url.pathname,
+      params: params,
+      // Specific common parameters
+      company: params.bplte_company || params.company || '',
+      proxy: params.proxy || '',
+      locale: params.locale || '',
+      // Build full query string
+      queryString: url.search.substring(1) // Remove leading '?'
+    };
+  } catch (error) {
+    console.error('[SF Pro Toolkit] Failed to parse URL:', error);
+    return {};
+  }
+}
+
+// ==================== QUICK ACTION URL BUILDING ====================
+
+function buildQuickActionUrl(quickAction, currentPageData, currentUrl) {
+  const urlInfo = extractAllUrlParameters(currentUrl);
+  
+  // Start with the path from Quick Action
+  let targetPath = quickAction.path;
+  
+  // Extract path and its own parameters
+  const [pathOnly, pathParams] = targetPath.split('?');
+  
+  // Merge: Current URL params + Quick Action params
+  const allParams = new URLSearchParams(urlInfo.queryString);
+  
+  // Add/override with Quick Action specific params
+  if (pathParams) {
+    const actionParams = new URLSearchParams(pathParams);
+    actionParams.forEach((value, key) => {
+      // Handle template variables
+      if (value.includes('{{company}}')) {
+        value = value.replace('{{company}}', urlInfo.company);
+      }
+      if (value.includes('{{proxy}}')) {
+        value = value.replace('{{proxy}}', urlInfo.proxy);
+      }
+      if (value.includes('{{hostname}}')) {
+        value = value.replace('{{hostname}}', urlInfo.hostname);
+      }
+      allParams.set(key, value);
+    });
+  }
+  
+  // Build final URL with ALL parameters preserved
+  const finalUrl = `https://${urlInfo.hostname}${pathOnly}?${allParams.toString()}`;
+  
+  console.log('[Quick Action] Built URL:', finalUrl);
+  console.log('[Quick Action] Preserved params:', Object.fromEntries(allParams));
+  
+  return finalUrl;
+}
+
 // ==================== KEYBOARD NAVIGATION ====================
 
 function setupEnhancedKeyboardShortcuts(callbacks) {
