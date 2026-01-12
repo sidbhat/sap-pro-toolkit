@@ -65,6 +65,12 @@ function copyDir(src, dest) {
       continue;
     }
 
+    // Skip profile-successfactors.json (contains SAP-internal data)
+    if (entry.name === 'profile-successfactors.json') {
+      console.log(`  ${colors.yellow}⚠${colors.reset} Skipping ${srcPath} (SAP-internal only, see .gitignore)`);
+      continue;
+    }
+
     if (entry.isDirectory()) {
       fileCount += copyDir(srcPath, destPath);
     } else {
