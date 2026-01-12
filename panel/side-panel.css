@@ -711,8 +711,9 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 1.4;
-  margin-left: 26px; /* Align with environment name text (status dot 20px + gap 6px) */
+  margin-left: 0; /* No left margin - already inside env-name-cell with proper padding */
   margin-top: 4px;
+  padding-left: 26px; /* Align with environment name text (status dot 20px + gap 8px - 2px adjustment) */
 }
 
 .env-notes {
@@ -720,8 +721,9 @@ body {
   font-weight: 500;
   color: var(--primary);
   line-height: 1.4;
-  margin-left: 26px; /* Align with hostname above */
+  margin-left: 0;
   margin-top: 4px;
+  padding-left: 26px; /* Align with hostname above */
   font-style: italic;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -732,7 +734,8 @@ body {
   font-size: 9px;
   color: var(--text-tertiary);
   margin-top: 3px;
-  margin-left: 26px; /* Align with hostname/notes above */
+  margin-left: 0;
+  padding-left: 26px; /* Align with hostname/notes above */
   line-height: 1.3;
   font-style: italic;
   opacity: 0.7;
