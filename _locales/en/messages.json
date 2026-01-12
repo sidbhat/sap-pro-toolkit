@@ -302,5 +302,29 @@
   "required": {
     "message": "*",
     "description": "Required field indicator"
+  },
+  "profileSwitchSuggestion": {
+    "message": "💡 You're on {solutionLabel} - Switch to {profileName} profile?",
+    "description": "Toast message suggesting profile switch based on detected solution"
+  },
+  "confirmDeleteEnvironment": {
+    "message": "Delete environment \"{envName}\"?",
+    "description": "Confirmation dialog for deleting an environment"
+  },
+  "confirmDeleteShortcut": {
+    "message": "Delete shortcut \"{shortcutName}\"?",
+    "description": "Confirmation dialog for deleting a shortcut"
+  },
+  "confirmDeleteNote": {
+    "message": "Delete note \"{noteTitle}\"?",
+    "description": "Confirmation dialog for deleting a note"
+  },
+  "ossNoteCopied": {
+    "message": "OSS Note URL copied ✓",
+    "description": "Success message when OSS note URL is copied to clipboard"
+  },
+  "globalSearchPlaceholder": {
+    "message": "Search environments, shortcuts, notes...",
+    "description": "Placeholder text for global search input"
   }
 }

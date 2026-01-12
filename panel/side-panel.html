@@ -89,6 +89,15 @@
       <button class="search-clear" id="clearSearch" style="display: none;">×</button>
     </div>
 
+    <!-- Read-Only Mode Banner (All Profiles) -->
+    <div class="readonly-banner" id="readonlyBanner" style="display: none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <span>📘 Viewing all profiles (read-only mode)</span>
+    </div>
+
     <!-- Environments Section -->
     <section class="section" data-section="environments">
       <div class="section-header">
@@ -570,7 +579,6 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="cancelAddNoteBtn">Cancel</button>
         <button class="btn btn-secondary" id="prettifyNoteBtn" title="Format note content">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -700,7 +708,7 @@
             <span class="shortcut-desc">Focus search bar</span>
           </div>
           <div class="shortcut-item">
-            <kbd id="modKey2">⌘</kbd><kbd>N</kbd>
+            <kbd id="modKey2">⌘</kbd><kbd>Shift</kbd><kbd>N</kbd>
             <span class="shortcut-desc">Add new shortcut</span>
           </div>
           <div class="shortcut-item">

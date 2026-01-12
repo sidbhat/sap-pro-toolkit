@@ -72,14 +72,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Listen for tab changes to update UI
     chrome.tabs.onActivated.addListener(async () => {
-      console.log('[Tab Change] Active tab changed, reloading page data...');
       await loadCurrentPageData();
     });
     
     // Listen for URL changes within the same tab
     chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       if (changeInfo.status === 'complete') {
-        console.log('[Tab Update] Tab URL updated, reloading page data...');
         await loadCurrentPageData();
       }
     });
@@ -113,7 +111,6 @@ async function loadShortcuts() {
     
     // Remove duplicates based on URL
     shortcuts = removeDuplicates(allShortcuts, 'url');
-    console.log('[Shortcuts] All Profiles mode - total unique shortcuts:', shortcuts.length);
     renderShortcuts();
     return;
   }
@@ -138,7 +135,6 @@ async function loadEnvironments() {
         const result = await chrome.storage.local.get(storageKey);
         
         if (result[storageKey] && Array.isArray(result[storageKey])) {
-          console.log(`[Environments] Loading ${result[storageKey].length} environments from ${p.name}`);
           allEnvironments.push(...result[storageKey].map(e => ({ ...e, _source: p.name })));
         }
       }
@@ -146,7 +142,6 @@ async function loadEnvironments() {
     
     // Remove duplicates
     environments = removeDuplicates(allEnvironments, 'hostname');
-    console.log('[Environments] All Profiles mode - total unique environments:', environments.length);
     renderEnvironments();
     return;
   }
@@ -156,18 +151,15 @@ async function loadEnvironments() {
   const result = await chrome.storage.local.get(storageKey);
   
   if (result[storageKey] && Array.isArray(result[storageKey]) && result[storageKey].length > 0) {
-    console.log('[Environments] Loaded from profile storage:', result[storageKey].length, 'environments for profile:', currentProfile);
     environments = result[storageKey];
   } else {
     // Load default environments from current profile file
-    console.log('[Environments] No environments in profile storage, loading from profile file...');
     try {
       const profileData = await loadProfileData(currentProfile);
       
       if (profileData.environments && Array.isArray(profileData.environments)) {
         environments = profileData.environments;
         await chrome.storage.local.set({ [storageKey]: environments });
-        console.log('[Environments] Saved default environments to profile storage');
       } else {
         environments = [];
       }
@@ -177,7 +169,6 @@ async function loadEnvironments() {
     }
   }
   
-  console.log('[Environments] Final count:', environments.length, 'for profile:', currentProfile);
   renderEnvironments();
 }
 
@@ -197,7 +188,6 @@ async function loadNotes() {
       const globalData = await globalResponse.json();
       
       if (globalData.notes && Array.isArray(globalData.notes) && globalData.notes.length > 0) {
-        console.log('[Notes] First run - importing', globalData.notes.length, 'template notes from profile-global.json');
         notes = [...globalData.notes, ...notes]; // Prepend template notes
         
         // Save to storage and mark as initialized
@@ -205,7 +195,6 @@ async function loadNotes() {
           notes: notes,
           notesInitialized: true 
         });
-        console.log('[Notes] Template notes imported and saved to storage');
       }
     } catch (error) {
       console.error('[Notes] Failed to load template notes from profile-global.json:', error);
@@ -324,7 +313,10 @@ async function suggestProfileSwitch(solutionType) {
   };
   
   const solutionLabel = solutionLabels[solutionType] || solutionType;
-  showToast(`💡 You're on ${solutionLabel} - Switch to ${profile.name} profile?`, 'info', 5000, () => {
+  const message = chrome.i18n.getMessage('profileSwitchSuggestion')
+    .replace('{solutionLabel}', solutionLabel)
+    .replace('{profileName}', profile.name);
+  showToast(message, 'info', 5000, () => {
     switchProfile(recommendedProfile);
   });
 }
@@ -352,8 +344,6 @@ function updateDiagnosticsButton() {
  * @returns {Object} Merged profile data (Global + Profile-specific)
  */
 async function loadProfileData(profileId) {
-  console.log('[Profile] Loading profile:', profileId);
-  
   // Special case: "All Profiles" handled separately
   if (profileId === 'profile-all') {
     return { globalShortcuts: [], solutions: [], environments: [] };
@@ -363,7 +353,6 @@ async function loadProfileData(profileId) {
     // Step 1: Always load Global base layer first
     const globalResponse = await fetch(chrome.runtime.getURL('resources/profile-global.json'));
     const globalData = await globalResponse.json();
-    console.log('[Profile] Loaded Global base layer');
     
     // Step 2: If loading Global profile itself, return it
     if (profileId === 'profile-global') {
@@ -373,13 +362,11 @@ async function loadProfileData(profileId) {
     // Step 3: Load profile-specific data
     const profile = availableProfiles.find(p => p.id === profileId);
     if (!profile || !profile.file) {
-      console.warn('[Profile] No profile file for:', profileId);
       return globalData; // Return just Global
     }
     
     const profileResponse = await fetch(chrome.runtime.getURL(`resources/${profile.file}`));
     const profileData = await profileResponse.json();
-    console.log('[Profile] Loaded profile-specific data:', profileId);
     
     // Step 4: Merge Global + Profile data
     const merged = {
@@ -394,7 +381,6 @@ async function loadProfileData(profileId) {
       ]
     };
     
-    console.log('[Profile] Merged data - shortcuts:', merged.globalShortcuts.length, 'environments:', merged.environments.length);
     return merged;
     
   } catch (error) {
@@ -559,8 +545,6 @@ async function renderEnvironments() {
           </td>
         </tr>
       `;
-      
-      console.log('[Quick Actions] Built standalone bar for', currentPageData.solutionType);
     }
   }
   
@@ -751,10 +735,6 @@ function attachEnvironmentListeners() {
 // ==================== UI RENDERING - SHORTCUTS ====================
 
 function renderShortcuts() {
-  console.log('[DEBUG] renderShortcuts() called');
-  console.log('[DEBUG] shortcuts.length:', shortcuts.length);
-  console.log('[DEBUG] shortcuts:', shortcuts);
-  
   const tbody = document.getElementById('shortcutsList');
   
   // Update section header Add button state based on profile mode
@@ -882,9 +862,6 @@ function attachShortcutListeners() {
 // ==================== UI RENDERING - NOTES ====================
 
 function renderNotes() {
-  console.log('[Notes] renderNotes() called with', notes.length, 'notes');
-  console.log('[Notes] Notes array:', notes);
-  
   const tbody = document.getElementById('notesList');
   
   if (!tbody) {
@@ -1231,7 +1208,8 @@ async function deleteEnvironment(id) {
   const env = environments.find(e => e.id === id);
   if (!env) return;
   
-  const confirmed = confirm(`Delete environment "${env.name}"?`);
+  const message = chrome.i18n.getMessage('confirmDeleteEnvironment').replace('{envName}', env.name);
+  const confirmed = confirm(message);
   if (!confirmed) return;
   
   environments = environments.filter(e => e.id !== id);
@@ -1355,17 +1333,9 @@ function closeAddShortcutModal() {
 }
 
 function editShortcut(id) {
-  console.log('[DEBUG] editShortcut called with id:', id);
-  console.log('[DEBUG] shortcuts array:', shortcuts);
-  console.log('[DEBUG] shortcuts length:', shortcuts.length);
-  console.log('[DEBUG] shortcuts IDs:', shortcuts.map(s => s.id));
-  
   const shortcut = shortcuts.find(s => s.id === id);
-  console.log('[DEBUG] Found shortcut:', shortcut);
   
   if (!shortcut) {
-    console.error('[DEBUG] Shortcut not found for id:', id);
-    console.error('[DEBUG] All shortcuts:', JSON.stringify(shortcuts, null, 2));
     showToast('Shortcut not found. Try reloading the extension.', 'error');
     return;
   }
@@ -1379,18 +1349,7 @@ function editShortcut(id) {
   const modalEl = document.getElementById('addShortcutModal');
   const headerEl = document.querySelector('#addShortcutModal .modal-header h3');
   
-  console.log('[DEBUG] Form elements found:', {
-    nameEl: !!nameEl,
-    pathEl: !!pathEl,
-    notesEl: !!notesEl,
-    iconEl: !!iconEl,
-    tagsEl: !!tagsEl,
-    modalEl: !!modalEl,
-    headerEl: !!headerEl
-  });
-  
   if (!nameEl || !pathEl || !modalEl) {
-    console.error('[DEBUG] Critical form elements missing!');
     showToast('Error: Form elements not found', 'error');
     return;
   }
@@ -1404,7 +1363,6 @@ function editShortcut(id) {
   modalEl.setAttribute('data-edit-id', id);
   if (headerEl) headerEl.textContent = 'Edit Shortcut';
   
-  console.log('[DEBUG] Opening modal...');
   openAddShortcutModal();
 }
 
@@ -1418,7 +1376,8 @@ async function deleteShortcut(id) {
   const shortcut = shortcuts.find(s => s.id === id);
   if (!shortcut) return;
   
-  const confirmed = confirm(`Delete shortcut "${shortcut.name}"?`);
+  const message = chrome.i18n.getMessage('confirmDeleteShortcut').replace('{shortcutName}', shortcut.name);
+  const confirmed = confirm(message);
   if (!confirmed) return;
   
   shortcuts = shortcuts.filter(s => s.id !== id);
@@ -1550,11 +1509,11 @@ function editNote(id) {
   document.getElementById('addNoteModal').setAttribute('data-edit-id', id);
   document.querySelector('#addNoteModal .modal-header h3').textContent = 'Edit Note';
   
-  // Show download button in edit mode
+  openAddNoteModal();
+  
+  // Show download button in edit mode (must be after openAddNoteModal)
   const downloadBtn = document.getElementById('downloadNoteBtn');
   if (downloadBtn) downloadBtn.style.display = 'inline-flex';
-  
-  openAddNoteModal();
 }
 
 /**
@@ -1605,7 +1564,8 @@ async function deleteNote(id) {
   const note = notes.find(n => n.id === id);
   if (!note) return;
   
-  const confirmed = confirm(`Delete note "${note.title}"?`);
+  const message = chrome.i18n.getMessage('confirmDeleteNote').replace('{noteTitle}', note.title);
+  const confirmed = confirm(message);
   if (!confirmed) return;
   
   notes = notes.filter(n => n.id !== id);
@@ -1648,12 +1608,7 @@ async function saveNote() {
     showToast('Note saved ✓', 'success');
   }
   
-  console.log('[Notes] Saving notes to storage:', notes.length, 'notes');
   await chrome.storage.local.set({ notes });
-  
-  // Verify save worked
-  const verifyResult = await chrome.storage.local.get('notes');
-  console.log('[Notes] Verified storage after save:', verifyResult.notes?.length || 0, 'notes');
   
   renderNotes();
   closeAddNoteModal();
@@ -1930,7 +1885,6 @@ async function loadPopularOssNotes() {
   try {
     const response = await fetch(chrome.runtime.getURL('resources/popular-oss-notes.json'));
     popularOssNotes = await response.json();
-    console.log('[Popular OSS Notes] Loaded data:', popularOssNotes);
     return popularOssNotes;
   } catch (error) {
     console.error('[Popular OSS Notes] Failed to load:', error);
@@ -2004,8 +1958,6 @@ async function renderPopularNotes() {
       await openPopularOssNote(noteNumber);
     });
   });
-  
-  console.log('[Popular OSS Notes] Rendered', popularNotes.length, 'notes for profile:', currentProfile);
 }
 
 /**
@@ -2135,7 +2087,7 @@ async function copyOssNoteUrl() {
   try {
     const ossNoteUrl = `https://launchpad.support.sap.com/#/notes/${noteNumber}`;
     await navigator.clipboard.writeText(ossNoteUrl);
-    showToast(`OSS Note URL copied ✓`, 'success');
+    showToast(chrome.i18n.getMessage('ossNoteCopied'), 'success');
     
     // Keep input value (don't clear) so user can still use it
     
@@ -2309,13 +2261,10 @@ async function handleFileImport(event) {
       const qaCount = data.solutions.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0);
       if (qaCount > 0) {
         importSummary.push(`${qaCount} Quick Actions`);
-        console.log('[Import] Imported', qaCount, 'Quick Actions across', data.solutions.length, 'solutions');
       }
     }
-    
-    renderShortcuts();
-    renderEnvironments();
-    renderNotes();
+  
+  renderNotes();
     
     if (importCount === 0) {
       showToast('No new items to import (all items already exist)', 'warning');
@@ -2560,8 +2509,6 @@ async function toggleSection(sectionId) {
   const sectionStates = result.sectionStates || {};
   sectionStates[sectionId] = newState;
   await chrome.storage.local.set({ sectionStates });
-  
-  console.log(`[Section] ${sectionId} ${newState ? 'expanded' : 'collapsed'}`);
 }
 
 /**
@@ -2636,7 +2583,6 @@ function setupEventListeners() {
   
   document.getElementById('addNoteBtn')?.addEventListener('click', openAddNoteModal);
   document.getElementById('closeAddNoteModal')?.addEventListener('click', closeAddNoteModal);
-  document.getElementById('cancelAddNoteBtn')?.addEventListener('click', closeAddNoteModal);
   document.getElementById('saveNoteBtn')?.addEventListener('click', saveNote);
   document.getElementById('prettifyNoteBtn')?.addEventListener('click', prettifyNote);
   document.getElementById('downloadNoteBtn')?.addEventListener('click', () => {
@@ -2783,7 +2729,6 @@ async function discoverProfiles() {
     });
   }
   
-  console.log('[Profile] Discovered profiles:', availableProfiles);
   renderProfileMenu();
 }
 
@@ -2803,7 +2748,20 @@ async function loadActiveProfile() {
     document.getElementById('currentProfileName').textContent = profile.name;
   }
   
-  console.log('[Profile] Loaded active profile:', currentProfile);
+  // Update read-only banner visibility
+  updateReadOnlyBanner();
+}
+
+/**
+ * Update read-only banner visibility based on current profile
+ * Shows banner when in "All Profiles" mode, hides it otherwise
+ */
+function updateReadOnlyBanner() {
+  const banner = document.getElementById('readonlyBanner');
+  if (!banner) return;
+  
+  const isReadOnly = currentProfile === 'profile-all';
+  banner.style.display = isReadOnly ? 'flex' : 'none';
 }
 
 function renderProfileMenu() {
@@ -2865,6 +2823,9 @@ async function switchProfile(profileId) {
     // Update UI display
     document.getElementById('currentProfileName').textContent = profile.name;
     
+    // Update read-only banner visibility
+    updateReadOnlyBanner();
+    
     // Reload data (loadShortcuts, loadEnvironments, loadNotes handle "All Profiles" logic)
     await loadShortcuts();
     await loadEnvironments();
@@ -2897,7 +2858,7 @@ function removeDuplicates(arr, key) {
 // ==================== ICON AUTO-SUGGESTION ====================
 
 /**
- * Setup auto-suggestion for shortcut icons
+ * Setup auto-suggestion for shortcut icons with 500ms debounce
  * Monitors name, notes, and tags fields for keywords and suggests appropriate icons
  */
 function setupShortcutIconAutoSuggestion() {
@@ -2912,6 +2873,7 @@ function setupShortcutIconAutoSuggestion() {
   if (!nameInput || !iconSelect || !suggestionEl) return;
   
   let currentSuggestion = null;
+  let debounceTimer = null;
   
   function updateSuggestion() {
     const name = nameInput.value.trim();
@@ -2937,6 +2899,18 @@ function setupShortcutIconAutoSuggestion() {
     }
   }
   
+  function debouncedUpdateSuggestion() {
+    // Clear existing timer
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+    
+    // Set new timer for 500ms
+    debounceTimer = setTimeout(() => {
+      updateSuggestion();
+    }, 500);
+  }
+  
   // Accept suggestion handler
   if (acceptBtn) {
     acceptBtn.addEventListener('click', () => {
@@ -2947,10 +2921,10 @@ function setupShortcutIconAutoSuggestion() {
     });
   }
   
-  // Attach event listeners
-  nameInput.addEventListener('input', updateSuggestion);
-  if (notesInput) notesInput.addEventListener('input', updateSuggestion);
-  if (tagsInput) tagsInput.addEventListener('input', updateSuggestion);
+  // Attach event listeners with debounce
+  nameInput.addEventListener('input', debouncedUpdateSuggestion);
+  if (notesInput) notesInput.addEventListener('input', debouncedUpdateSuggestion);
+  if (tagsInput) tagsInput.addEventListener('input', debouncedUpdateSuggestion);
   
   // Hide suggestion when icon is manually changed
   iconSelect.addEventListener('change', () => {
@@ -2960,7 +2934,7 @@ function setupShortcutIconAutoSuggestion() {
 
 
 /**
- * Setup auto-suggestion for note icons
+ * Setup auto-suggestion for note icons with 500ms debounce
  * Monitors title, content, and tags fields for keywords and suggests appropriate icons
  */
 function setupNoteIconAutoSuggestion() {
@@ -2975,6 +2949,7 @@ function setupNoteIconAutoSuggestion() {
   if (!titleInput || !iconSelect || !suggestionEl) return;
   
   let currentSuggestion = null;
+  let debounceTimer = null;
   
   function updateSuggestion() {
     const title = titleInput.value.trim();
@@ -3000,6 +2975,18 @@ function setupNoteIconAutoSuggestion() {
     }
   }
   
+  function debouncedUpdateSuggestion() {
+    // Clear existing timer
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+    
+    // Set new timer for 500ms
+    debounceTimer = setTimeout(() => {
+      updateSuggestion();
+    }, 500);
+  }
+  
   // Accept suggestion handler
   if (acceptBtn) {
     acceptBtn.addEventListener('click', () => {
@@ -3010,10 +2997,10 @@ function setupNoteIconAutoSuggestion() {
     });
   }
   
-  // Attach event listeners
-  titleInput.addEventListener('input', updateSuggestion);
-  if (contentInput) contentInput.addEventListener('input', updateSuggestion);
-  if (tagsInput) tagsInput.addEventListener('input', updateSuggestion);
+  // Attach event listeners with debounce
+  titleInput.addEventListener('input', debouncedUpdateSuggestion);
+  if (contentInput) contentInput.addEventListener('input', debouncedUpdateSuggestion);
+  if (tagsInput) tagsInput.addEventListener('input', debouncedUpdateSuggestion);
   
   // Hide suggestion when icon is manually changed
   iconSelect.addEventListener('change', () => {

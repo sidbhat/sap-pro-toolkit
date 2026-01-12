@@ -51,63 +51,55 @@
   ],
   "globalShortcuts": [
     {
-      "icon": "5",
-      "id": "shortcut-btp-cockpit",
-      "name": "BTP Cockpit (Global)",
-      "notes": "Entry point for all subaccounts.",
-      "tags": ["infrastructure"],
-      "url": "https://cockpit.btp.cloud.sap"
+      "icon": "4",
+      "id": "shortcut-btp-discovery",
+      "name": "Discovery Center",
+      "notes": "Cost estimators, reference architectures, and BTP blueprints",
+      "tags": ["technical"],
+      "url": "https://discovery-center.cloud.sap"
     },
     {
-      "icon": "7",
-      "id": "shortcut-btp-bas",
-      "name": "Business App Studio (BAS)",
-      "notes": "Cloud IDE. Remember to start your Dev Space!",
-      "tags": ["development"],
-      "url": "https://account.hanatrial.ondemand.com/trial/#/home/trial"
+      "icon": "5",
+      "id": "shortcut-btp-build",
+      "name": "SAP Build",
+      "notes": "Low-code platform (Apps, Process Automation, Work Zone)",
+      "tags": ["technical"],
+      "url": "https://build.cloud.sap"
     },
     {
       "icon": "3",
-      "id": "shortcut-btp-ui5",
-      "name": "SAP UI5 SDK / Samples",
-      "notes": "Copy-paste code samples from 'Explored'.",
-      "tags": ["development"],
-      "url": "https://ui5.sap.com"
+      "id": "shortcut-btp-ai-hub",
+      "name": "Generative AI Hub",
+      "notes": "Access to foundation models and AI orchestration",
+      "tags": ["technical"],
+      "url": "https://help.sap.com/docs/sap-ai-core"
     },
     {
-      "icon": "4",
-      "id": "shortcut-btp-cap",
-      "name": "CAP Documentation",
-      "notes": "Cloud Application Programming Model bible.",
-      "tags": ["development"],
-      "url": "https://cap.cloud.sap/docs/"
+      "icon": "7",
+      "id": "shortcut-cap-samples",
+      "name": "CAP Samples (GitHub)",
+      "notes": "Official SAP CAP sample projects and best practices",
+      "tags": ["technical"],
+      "url": "https://github.com/SAP-samples/cloud-cap-samples"
     }
   ],
   "environments": [],
   "notes": [
     {
-      "content": "BTP Region and Datacenter Mapping:\n\n**Americas:**\n• US East (VA) = us10 (AWS)\n• US East (VA) Gov = us30 (AWS GovCloud)\n• Canada = ca10 (Azure)\n• Brazil = br10 (AWS)\n\n**Europe:**\n• Europe (Frankfurt) = eu10 (AWS)\n• Europe (Netherlands) = eu20 (Azure)\n• Europe (Frankfurt) = eu30 (AWS)\n• Switzerland = ch20 (Azure)\n\n**Asia-Pacific:**\n• Singapore = ap10 (AWS)\n• Japan = jp10 (AWS)\n• Australia = ap11 (AWS)\n• South Korea = ap12 (AWS)\n\n**URL Pattern:**\n{region}.hana.ondemand.com\n\n**Examples:**\n• https://eu10.hana.ondemand.com\n• https://us10.hana.ondemand.com\n• https://ap10.hana.ondemand.com\n\n**Cloud Foundry API Pattern:**\nhttps://api.cf.{region}.hana.ondemand.com",
-      "icon": "0",
-      "id": "note-btp-regions",
-      "tags": ["infrastructure"],
-      "timestamp": 1736633640000,
-      "title": "BTP Region Mapping"
+      "content": "=== RAG on SAP Data (Vector Engine + Generative AI Hub) ===\n• \"Analyze [business documents/emails/tickets] and summarize key decisions, action items, and owners in 5 bullet points.\"\n\n• \"Answer: [business question]. Use ONLY the provided context from HANA Cloud Vector Engine. If insufficient, state: 'I do not have enough information.'\"\n\n=== AI-Powered Development (Joule + Build Code) ===\n• \"Generate a CAP service for managing customer complaints integrated with S/4HANA with CRUD handlers, input validation, authorization checks, and unit tests.\"\n\n• \"Create a Node.js CAP service that: 1) Reads BusinessPartner from S/4HANA API, 2) Enriches with sentiment analysis via AI Core, 3) Returns JSON response.\"\n\n=== Workflow Automation (Build Process Automation) ===\n• \"Design a workflow to automate: [business process description]. Return JSON spec with steps, decisions, service tasks, and human approval points.\"\n\n• \"Request an approval to move sales order 8001234 delivery from March 15 to March 10; this is high urgency for our top customer.\"\n\n=== Joule Studio - Custom Skills ===\nSystem Prompt Template:\n\"You summarize long business texts (emails, meeting notes, ticket logs) into concise summaries.\n\nGuidelines:\n- Output language: same as input\n- Length: max {word_limit} words\n- Focus on decisions, open actions, and owners\n- Exclude greetings and informal chit-chat\n- Never invent facts not present in the input text\"\n\n=== Multi-Step Orchestration ===\n• \"For customer ACME in the US: 1) Summarize all open sales orders with delivery dates in the next 30 days. 2) Identify those at risk due to material availability or credit blocks. 3) Propose an action plan and draft an email to the account manager.\"\n\n=== Architecture Patterns (Design Phase) ===\n• \"Analyze this business goal: [goal description]. List the 3-5 most promising SAP BTP generative-AI patterns with required services (AI Hub, HANA Vector Engine, Build Process Automation), data needed, and key risks (hallucination, data leakage, latency).\"\n\n=== Key Resources ===\n• Joule Studio: https://joule-studio.build.cloud.sap\n• AI Core SDK: https://github.com/SAP/ai-sdk-js\n• BTP Generative AI Hub: https://help.sap.com/docs/sap-ai-core\n• CAP Samples: https://github.com/SAP-samples/cloud-cap-samples",
+      "icon": "ai",
+      "id": "note-btp-joule-prompts",
+      "tags": ["ai", "joule", "prompts", "development"],
+      "timestamp": 1736634200000,
+      "title": "🤖 Joule Prompts Library - BTP & AI Core"
     },
     {
-      "content": "Append these to any OData URL for quick debugging:\n\n**/$metadata**\n→ Shows service structure (entities, properties)\n→ Check if service is healthy\n→ Example: https://api.sapsf.com/odata/v2/User/$metadata\n\n**/?$format=json**\n→ View data in JSON format\n→ Easier to read than XML\n→ Example: https://api.sapsf.com/odata/v2/User?$format=json\n\n**/?$top=1**\n→ Fetch just 1 record (performance test)\n→ Example: https://api.sapsf.com/odata/v2/User?$top=1\n\n**/?$filter=Status eq 'Active'**\n→ Test filtering logic\n→ Example: https://api.sapsf.com/odata/v2/User?$filter=status eq 'active'\n\n**/?$select=userId,username**\n→ Return only specific fields\n→ Example: https://api.sapsf.com/odata/v2/User?$select=userId,username\n\n**Combine Parameters:**\nhttps://api.sapsf.com/odata/v2/User?$format=json&$top=5&$select=userId,username\n\n**Pro Tip:** Always use $format=json for readability",
-      "icon": "4",
-      "id": "note-btp-odata",
-      "tags": ["development"],
-      "timestamp": 1736633640000,
-      "title": "OData Service Quick Checks"
-    },
-    {
-      "content": "Essential Cloud Foundry CLI commands:\n\n**Login & Target:**\ncf login -a https://api.cf.{region}.hana.ondemand.com\ncf target -o {org} -s {space}\n\n**App Management:**\ncf apps (list all apps)\ncf app {app-name} (show app details)\ncf logs {app-name} --recent (view logs)\ncf env {app-name} (check environment variables)\n\n**App Operations:**\ncf restart {app-name}\ncf restage {app-name} (rebuild with new buildpack)\ncf scale {app-name} -i 2 (scale to 2 instances)\ncf scale {app-name} -m 512M (increase memory)\n\n**Deployment:**\ncf push {app-name}\ncf stop {app-name}\ncf start {app-name}\n\n**Services:**\ncf services (list bound services)\ncf service {service-name} (show service details)\ncf bind-service {app-name} {service-name}\n\n**Troubleshooting:**\ncf events {app-name} (view crash logs)\ncf ssh {app-name} (SSH into container)\n\n**Pro Tip:** Use cf CLI v8+ for faster performance",
-      "icon": "7",
-      "id": "note-btp-cf-cli",
-      "tags": ["infrastructure"],
-      "timestamp": 1736633640000,
-      "title": "Cloud Foundry CLI Essentials"
+      "content": "BTP Services Pricing (PUPM Model):\n\n=== Core Services ===\n• Cloud Foundry Runtime: $0.03/GB-hour\n• HANA Cloud: $3.50/GB-month\n• PostgreSQL: $0.50/GB-month\n\n=== AI Services ===\n• Generative AI Hub: $0.50 per 1000 API calls\n• Document Information Extraction: $0.40/page\n• AI Core (training): $2.00/GPU-hour\n\n=== Integration ===\n• Integration Suite: $500/tenant/month\n• API Management: $250/tenant/month\n\n=== Low-Code ===\n• SAP Build Apps: $10/user/month\n• SAP Build Process Automation: $25/bot/month\n\n💡 Cost Optimization Tips:\n• Use free tier for dev (200 AUs/month)\n• Scale HANA compute separately from storage\n• Use Cloud Foundry vs Kyma based on workload\n• Monitor with SAP Cloud ALM\n\nPricing Calculator:\nhttps://discovery-center.cloud.sap/estimator",
+      "icon": "pricing",
+      "id": "note-btp-pricing",
+      "tags": ["operations"],
+      "timestamp": 1736633700000,
+      "title": "💰 BTP Services Pricing (2025)"
     }
   ],
   "exportDate": "2026-01-11T23:59:00.000Z"

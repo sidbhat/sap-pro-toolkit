@@ -353,12 +353,12 @@ body {
 
 .tag-badge {
   font-size: 9px;
-  padding: 2px 6px;
+  padding: 3px 8px;
   background: var(--primary-glow);
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--primary);
   font-weight: 600;
-  border: 1px solid var(--primary);
+  border: none;
   letter-spacing: 0.3px;
 }
 
@@ -955,10 +955,17 @@ body {
   transform: translateY(-1px);
 }
 
+.icon-btn.danger {
+  color: var(--text-tertiary);
+  border-color: var(--border-light);
+  opacity: 0.6;
+}
+
 .icon-btn.danger:hover {
-  background: var(--env-production);
-  border-color: var(--env-production);
-  color: white;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--env-production);
+  opacity: 1;
 }
 
 .icon-btn svg {
@@ -1239,7 +1246,7 @@ body {
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   width: 100%;
-  max-width: 400px;
+  max-width: 480px;
   max-height: 90vh;
   overflow: hidden;
   display: flex;
@@ -1366,7 +1373,12 @@ body {
 
 .form-group textarea {
   resize: vertical;
-  min-height: 200px;
+  min-height: 280px;
+}
+
+/* Note modal specifically needs even more space */
+#addNoteModal textarea#noteContent {
+  min-height: 320px;
 }
 
 /* ==================== TOAST ==================== */
@@ -1863,18 +1875,67 @@ body {
   align-items: center;
   justify-content: center;
   padding: 3px 6px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   font-size: 10px;
   font-weight: 600;
-  color: var(--text-tertiary);
+  color: rgba(255, 255, 255, 0.7);
   pointer-events: none;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
+/* Dark mode - even brighter for better visibility */
+[data-theme="dark"] .keyboard-hint {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] .keyboard-hint {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.85);
+  }
+}
+
 .search-input:focus ~ .keyboard-hint {
   opacity: 0;
+}
+
+/* ==================== READ-ONLY MODE BANNER ==================== */
+
+.readonly-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(135deg, rgba(59, 158, 255, 0.1) 0%, rgba(59, 158, 255, 0.15) 100%);
+  border-bottom: 1px solid var(--primary);
+  border-top: 1px solid var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  animation: slideDown 0.3s ease;
+}
+
+.readonly-banner svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--primary);
+  flex-shrink: 0;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .readonly-banner {
+  background: linear-gradient(135deg, rgba(59, 158, 255, 0.15) 0%, rgba(59, 158, 255, 0.20) 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] .readonly-banner {
+    background: linear-gradient(135deg, rgba(59, 158, 255, 0.15) 0%, rgba(59, 158, 255, 0.20) 100%);
+  }
 }
 
 /* ==================== MOBILE-FIRST RESPONSIVE ==================== */

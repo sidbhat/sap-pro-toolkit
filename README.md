@@ -210,15 +210,28 @@ A: The extension supports 10 languages: English, Chinese (Simplified), German, F
 **Q: How do I use the Notes feature?**  
 A: Click "Add Note" in the Notes section, enter a title and content, choose a color, and save. Notes are stored locally and persist across sessions. You can edit or delete notes by hovering over them.
 
+## ⌨️ Keyboard Shortcuts
+
+Boost your productivity with keyboard shortcuts:
+
+| Shortcut | Action |
+|----------|--------|
+| `Cmd+K` (Mac) / `Ctrl+K` (Windows) | Focus search bar |
+| `Cmd+Shift+N` (Mac) / `Ctrl+Shift+N` (Windows) | Add new shortcut |
+| `Cmd+M` (Mac) / `Ctrl+M` (Windows) | Add new note |
+| `↑` `↓` Arrow keys | Navigate items |
+| `Tab` | Navigate buttons |
+| `Enter` | Open selected item |
+| `Esc` | Close modal or clear search |
+
+**Note**: Keyboard shortcuts work throughout the extension for faster navigation and actions.
+
 ## 🎯 Roadmap
 
 Future enhancements under consideration:
-- Keyboard shortcuts for common actions
-- Quick search across shortcuts and notes
 - Environment favorites/pinning
 - Bulk environment import/export
 - Note categories and tags
-- Export notes to clipboard
 - Enhanced datacenter information display
 
 ---

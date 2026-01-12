@@ -3,66 +3,23 @@
 
 console.log('[SAP Pro Toolkit] Background service worker initialized');
 
-// ==================== DISPLAY MODE HANDLER ====================
+// ==================== SIDE PANEL HANDLER ====================
 
-// Listen for display mode changes and update action behavior
-chrome.storage.onChanged.addListener(async (changes, area) => {
-  if (area === 'local' && changes.displayMode) {
-    const newMode = changes.displayMode.newValue;
-    await updateDisplayMode(newMode);
-  }
-});
-
-// Update display mode dynamically
-async function updateDisplayMode(mode) {
-  try {
-    if (mode === 'sidepanel') {
-      // Remove popup to enable onClicked handler for side panel
-      await chrome.action.setPopup({ popup: '' });
-      console.log('[SAP Pro Toolkit] Display mode set to: Side Panel');
-    } else {
-      // Set popup back
-      await chrome.action.setPopup({ popup: 'popup/popup-redesign.html' });
-      console.log('[SAP Pro Toolkit] Display mode set to: Popup');
-    }
-  } catch (error) {
-    console.error('[SAP Pro Toolkit] Failed to update display mode:', error);
-  }
-}
-
-// Handle extension icon click (only triggered when popup is disabled for side panel mode)
+// Handle extension icon click to open side panel
 chrome.action.onClicked.addListener(async (tab) => {
-  console.log('[SAP Pro Toolkit] Extension icon clicked, tab:', tab.id);
   try {
-    // This is only called when in side panel mode (popup is disabled)
-    console.log('[SAP Pro Toolkit] Opening side panel...');
-    // Open side panel - Chrome will use the default_path from manifest.json
     await chrome.sidePanel.open({ windowId: tab.windowId });
-    console.log('[SAP Pro Toolkit] Side panel opened successfully for tab:', tab.id);
+    console.log('[SAP Pro Toolkit] Side panel opened for tab:', tab.id);
   } catch (error) {
     console.error('[SAP Pro Toolkit] Failed to open side panel:', error);
-    console.error('[SAP Pro Toolkit] Error details:', error.message, error.stack);
   }
 });
-
-// Initialize display mode on startup AND when service worker wakes up
-chrome.runtime.onStartup.addListener(async () => {
-  const result = await chrome.storage.local.get({ displayMode: 'sidepanel' });
-  await updateDisplayMode(result.displayMode);
-});
-
-// Initialize display mode immediately when service worker starts
-(async () => {
-  const result = await chrome.storage.local.get({ displayMode: 'sidepanel' });
-  await updateDisplayMode(result.displayMode);
-  console.log('[SAP Pro Toolkit] Display mode initialized on service worker start:', result.displayMode);
-})();
 
 // ==================== INSTALLATION ====================
 
 /**
  * Handle extension installation and updates
- * Sets default configuration and forces side panel mode
+ * Sets default configuration for side panel
  */
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
@@ -73,20 +30,14 @@ chrome.runtime.onInstalled.addListener(async (details) => {
       showConfirmationForProd: true
     });
     
-    // Set default display mode to sidepanel
+    // Set default active profile
     await chrome.storage.local.set({ 
-      displayMode: 'sidepanel',
-      activeProfile: 'profile-global' // Default to Global base profile
+      activeProfile: 'profile-global'
     });
-    await updateDisplayMode('sidepanel');
     
-    console.log('[SAP Pro Toolkit] Initial setup complete - using profile system for shortcuts');
+    console.log('[SAP Pro Toolkit] Initial setup complete');
   } else if (details.reason === 'update') {
     console.log('[SAP Pro Toolkit] Extension updated to version', chrome.runtime.getManifest().version);
-    
-    // Force sidepanel mode on update
-    await chrome.storage.local.set({ displayMode: 'sidepanel' });
-    await updateDisplayMode('sidepanel');
   }
 });
 
@@ -197,19 +148,15 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
 
 // ==================== UTILITY FUNCTIONS ====================
 
+/**
+ * Check if URL is a SuccessFactors page
+ * Note: This is a standalone version for the background service worker
+ * The main version with additional functionality is in toolkit-core.js
+ */
 function isSFPage(url) {
   if (!url) return false;
-  
-  const sfDomains = [
-    '.hr.cloud.sap',
-    '.sapsf.com',
-    '.sapsf.cn',
-    '.sapcloud.cn',
-    '.successfactors.eu',
-    '.sapsf.eu',
-    '.successfactors.com'
-  ];
-  
+  const sfDomains = ['hr.cloud.sap', 'sapsf.com', 'sapsf.cn', 'sapcloud.cn', 
+                      'successfactors.eu', 'sapsf.eu', 'successfactors.com'];
   return sfDomains.some(domain => url.includes(domain));
 }
 

@@ -65,13 +65,12 @@
         "https://*.scmibp.ondemand.com/*"
       ],
       "js": ["content/content.js"],
-      "css": ["content/indicators.css"],
       "run_at": "document_start"
     }
   ],
   
   "side_panel": {
-    "default_path": "popup/side-panel.html"
+    "default_path": "panel/side-panel.html"
   },
   
   "web_accessible_resources": [

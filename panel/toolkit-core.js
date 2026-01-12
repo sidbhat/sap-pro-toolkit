@@ -12,23 +12,20 @@ async function detectLanguage() {
       const localeParam = url.searchParams.get('locale');
       if (localeParam) {
         const lang = localeParam.split('_')[0];
-        console.log('[SAP Pro Toolkit] Language detected from URL locale parameter:', lang);
         return lang;
       }
       
       const pathMatch = url.pathname.match(/\/([a-z]{2}_[A-Z]{2})\//);
       if (pathMatch) {
         const lang = pathMatch[1].split('_')[0];
-        console.log('[SAP Pro Toolkit] Language detected from URL path:', lang);
         return lang;
       }
     }
   } catch (error) {
-    console.log('[SAP Pro Toolkit] Error detecting language from URL:', error);
+    // Silently fall through to browser language
   }
   
   const browserLang = navigator.language.split('-')[0];
-  console.log('[SAP Pro Toolkit] Using browser language:', browserLang);
   return browserLang;
 }
 
@@ -89,7 +86,6 @@ const COUNTRY_FLAGS = {
  */
 function renderSAPIcon(iconValue, iconType = 'shortcut', size = 16) {
   if (typeof window.SAPIconLibrary === 'undefined') {
-    console.error('[Icon] SAPIconLibrary not loaded!');
     // Fallback to emoji if library not loaded
     const fallbackEmojis = {
       'shortcut': '🗺️',
@@ -345,10 +341,6 @@ function buildQuickActionUrl(quickAction, currentPageData, currentUrl) {
   // Build final URL with ALL parameters preserved + hash fragment
   const finalUrl = `https://${urlInfo.hostname}${pathOnly}?${allParams.toString()}${hashFragment}`;
   
-  console.log('[Quick Action] Built URL:', finalUrl);
-  console.log('[Quick Action] Preserved params:', Object.fromEntries(allParams));
-  console.log('[Quick Action] Hash fragment:', hashFragment);
-  
   return finalUrl;
 }
 
@@ -362,8 +354,8 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
       document.getElementById('globalSearch')?.focus();
     }
     
-    // Cmd/Ctrl + N → New shortcut
-    if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+    // Cmd/Ctrl + Shift + N → New shortcut (avoid Chrome's "New Window" conflict)
+    if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'N') {
       e.preventDefault();
       if (callbacks.addShortcut) callbacks.addShortcut();
     }
@@ -465,8 +457,6 @@ function updatePlatformSpecificUI() {
   if (modKey1) modKey1.textContent = modKey;
   if (modKey2) modKey2.textContent = modKey;
   if (modKey3) modKey3.textContent = modKey;
-  
-  console.log('[SAP Pro Toolkit] Platform detected:', isMac ? 'macOS' : 'Windows/Linux');
 }
 
 // ==================== TOAST NOTIFICATIONS ====================

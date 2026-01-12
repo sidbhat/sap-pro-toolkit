@@ -1,53 +1,23 @@
 // SAP Pro Toolkit - Content Script
-// Runs on all SAP SuccessFactors pages to detect environment and inject visual indicators
-
-// ==================== CONSTANTS ====================
-
-const ENV_COLORS = {
-  'production': '#ef4444',
-  'preview': '#10b981',
-  'sales': '#f59e0b',
-  'sandbox': '#a855f7',
-  'unknown': '#6b7280'
-};
-
-const ENV_EMOJIS = {
-  'production': '🔴',
-  'preview': '🟢',
-  'sales': '🟠',
-  'sandbox': '🟣',
-  'unknown': '⚫'
-};
-
-const ENV_LABELS = {
-  'production': 'PRODUCTION',
-  'preview': 'PREVIEW',
-  'sales': 'SALES',
-  'sandbox': 'SANDBOX',
-  'unknown': 'UNKNOWN'
-};
+// Detects SAP environment and provides data to side panel
 
 // ==================== STATE ====================
 
 let pageData = null;
 let datacenterDB = null;
 let currentEnvironment = null;
-let darkModeEnabled = false;
 
 // ==================== INITIALIZATION ====================
 
 (async function init() {
   try {
     await loadDatacenterDB();
-    await loadSettings();
     injectHelperScript();
     setupMessageListeners();
     
     // Detect environment from URL immediately
     const urlBasedEnv = detectEnvironmentFromURL(window.location.href);
     currentEnvironment = urlBasedEnv;
-    // Visual indicators disabled - popup still uses detection data
-    // injectVisualIndicators(urlBasedEnv);
     
     // Wait for SF page data (enhanced detection)
     listenForPageData();
@@ -69,20 +39,6 @@ async function loadDatacenterDB() {
   }
 }
 
-async function loadSettings() {
-  try {
-    const result = await chrome.storage.sync.get({
-      darkMode: 'light'
-    });
-    
-    // Apply dark mode based on settings (only if explicitly set to dark)
-    applyDarkMode(result.darkMode);
-    
-  } catch (error) {
-    console.error('[SAP Pro Toolkit] Failed to load settings:', error);
-  }
-}
-
 // ==================== SCRIPT INJECTION ====================
 
 function injectHelperScript() {
@@ -101,16 +57,10 @@ function injectHelperScript() {
 // ==================== MESSAGE LISTENERS ====================
 
 function setupMessageListeners() {
-  // Listen to messages from popup
+  // Listen to messages from side panel
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'getPageData') {
       sendResponse(pageData || currentEnvironment);
-      return true;
-    }
-    
-    if (request.action === 'setDarkMode') {
-      applyDarkMode(request.mode);
-      sendResponse({ success: true });
       return true;
     }
   });
@@ -267,134 +217,6 @@ function detectEnvironmentHeuristic(hostname) {
   return 'production';
 }
 
-// ==================== VISUAL INDICATORS ====================
-
-function injectVisualIndicators(envData) {
-  if (!envData) return;
-  
-  const envType = envData.environment || 'unknown';
-  const color = ENV_COLORS[envType];
-  const emoji = ENV_EMOJIS[envType];
-  const label = ENV_LABELS[envType];
-  
-  // Inject border
-  injectBorder(color);
-  
-  // Inject banner
-  injectBanner(emoji, label, color, envData);
-}
-
-function injectBorder(color) {
-  // Remove existing border if any
-  document.body.classList.remove(
-    'sf-toolkit-env-production',
-    'sf-toolkit-env-preview',
-    'sf-toolkit-env-sales',
-    'sf-toolkit-env-sandbox',
-    'sf-toolkit-env-unknown'
-  );
-  
-  // Apply border via CSS class
-  const envType = Object.keys(ENV_COLORS).find(key => ENV_COLORS[key] === color) || 'unknown';
-  document.body.classList.add(`sf-toolkit-env-${envType}`);
-}
-
-function injectBanner(emoji, label, color, envData) {
-  // Check if banner already exists
-  let banner = document.getElementById('sf-toolkit-env-banner');
-  
-  if (!banner) {
-    banner = document.createElement('div');
-    banner.id = 'sf-toolkit-env-banner';
-    banner.className = 'sf-toolkit-env-banner';
-    document.body.appendChild(banner);
-  }
-  
-  // Update banner content
-  const dcInfo = envData.datacenter !== 'Unknown' ? ` • ${envData.datacenter}` : '';
-  
-  banner.innerHTML = `
-    <div class="sf-toolkit-banner-content" style="background: linear-gradient(135deg, ${color}dd, ${color}ff); border: 2px solid ${color};">
-      <span class="sf-toolkit-banner-emoji">${emoji}</span>
-      <span class="sf-toolkit-banner-text">${label}${dcInfo}</span>
-    </div>
-  `;
-  
-  // Add click handler to show tooltip
-  banner.addEventListener('click', () => {
-    showEnvironmentTooltip(envData);
-  });
-}
-
-function showEnvironmentTooltip(envData) {
-  // Create tooltip
-  const tooltip = document.createElement('div');
-  tooltip.className = 'sf-toolkit-tooltip';
-  tooltip.innerHTML = `
-    <div class="sf-toolkit-tooltip-content">
-      <div><strong>Environment:</strong> ${ENV_LABELS[envData.environment]}</div>
-      <div><strong>Datacenter:</strong> ${envData.datacenter}</div>
-      <div><strong>Region:</strong> ${envData.region}</div>
-      <div><strong>Hostname:</strong> ${envData.hostname}</div>
-      ${envData.companyId ? `<div><strong>Company:</strong> ${envData.companyId}</div>` : ''}
-    </div>
-  `;
-  
-  document.body.appendChild(tooltip);
-  
-  // Position near banner
-  const banner = document.getElementById('sf-toolkit-env-banner');
-  const rect = banner.getBoundingClientRect();
-  tooltip.style.position = 'fixed';
-  tooltip.style.top = (rect.bottom + 10) + 'px';
-  tooltip.style.left = rect.left + 'px';
-  
-  // Auto-remove after 3 seconds
-  setTimeout(() => {
-    tooltip.remove();
-  }, 3000);
-  
-  // Remove on click
-  tooltip.addEventListener('click', () => {
-    tooltip.remove();
-  });
-}
-
-// ==================== DARK MODE ====================
-
-function applyDarkMode(mode) {
-  // Only enable dark mode if explicitly set to 'dark'
-  darkModeEnabled = mode === 'dark';
-  
-  if (darkModeEnabled) {
-    injectDarkCSS();
-  } else {
-    removeDarkCSS();
-  }
-}
-
-function injectDarkCSS() {
-  // Check if already injected
-  if (document.getElementById('sf-toolkit-dark-mode')) {
-    return;
-  }
-  
-  const link = document.createElement('link');
-  link.id = 'sf-toolkit-dark-mode';
-  link.rel = 'stylesheet';
-  link.href = chrome.runtime.getURL('content/dark.css');
-  document.head.appendChild(link);
-  
-    console.log('[SAP Pro Toolkit] Dark mode enabled');
-}
-
-function removeDarkCSS() {
-  const link = document.getElementById('sf-toolkit-dark-mode');
-  if (link) {
-    link.remove();
-    console.log('[SAP Pro Toolkit] Dark mode disabled');
-  }
-}
 
 
 // ==================== UTILITY ====================
