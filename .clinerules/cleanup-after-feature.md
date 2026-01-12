@@ -4,9 +4,31 @@ This rule should be triggered after completing any feature implementation to ens
 
 **Trigger phrase**: "run cleanup" or "/cleanup" or "cleanup task"
 
+## IMPORTANT: Security First
+
+⚠️ **ALWAYS run security audit BEFORE cleanup**:
+1. Run `/security` first (see security-audit.md)
+2. Sanitize any violations found
+3. Then proceed with cleanup steps below
+4. Finally commit cleaned, secure code
+
 ## Execution Steps
 
-### 1. CODE CLEANUP (High Priority)
+### 1. SECURITY AUDIT (CRITICAL - Run First)
+
+Before any cleanup, run security checks:
+
+```bash
+# Run automated security scans
+grep -r "password\|credential\|@corp.sap" --include="*.json" resources/
+```
+
+**If violations found**:
+- Stop cleanup process
+- Run `/security` to sanitize
+- Return to cleanup after security passes
+
+### 2. CODE CLEANUP (High Priority)
 
 #### A. Remove Obsolete Files
 - [ ] Identify and list obsolete files (old popup files, unused resources, deprecated code)
@@ -192,11 +214,21 @@ Next Steps:
 - Consider running test suite
 ```
 
+## Integration with Other Rules
+
+**Cleanup Workflow Order**:
+1. `/security` - Security audit FIRST (critical)
+2. `/cleanup` - Code cleanup and documentation
+3. `/update-profiles` - Update time-sensitive content (optional)
+4. Git commit and push
+
 ## Notes for Cline
 
+- **ALWAYS run `/security` before cleanup**
 - Always ask for confirmation before deleting files
 - Be conservative with refactoring - only if clearly beneficial
 - Focus on high-priority items first
 - If cleanup will take >30 minutes, break into phases
 - Document any decisions made during cleanup
 - If uncertain about whether code is obsolete, ask user
+- Security violations block cleanup - fix them first
