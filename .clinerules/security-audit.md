@@ -94,6 +94,39 @@ For bundle templates, use placeholders:
 }
 ```
 
+## AI-Specific Security Checks
+
+### Additional Scans for AI Projects
+
+Run these additional checks for AI/LLM-related security:
+
+```bash
+# 5. Check for API keys and tokens in code
+grep -r "sk-\|api_key\|API_KEY\|openai\|anthropic\|ANTHROPIC" --include="*.js" --include="*.json" --include="*.env" .
+
+# 6. Check for hardcoded URLs with sensitive parameters
+grep -r "password=\|token=\|key=\|secret=" --include="*.js" --include="*.json" .
+
+# 7. Check for LLM prompt injection patterns (if using AI features)
+grep -r "ignore previous\|forget instructions\|disregard\|new instructions" --include="*.js" --include="*.json" .
+
+# 8. Check for model configuration exposure
+grep -r "temperature\|max_tokens\|model.*gpt\|model.*claude" --include="*.json" .
+```
+
+**AI-Specific Zero Tolerance Items**:
+- ❌ OpenAI/Anthropic API keys (`sk-...`, `claude-...`)
+- ❌ Model endpoint URLs with embedded credentials
+- ❌ LLM system prompts containing sensitive company data
+- ❌ Training data or fine-tuning datasets with PII
+- ❌ Cached LLM responses containing customer information
+
+**SAFE for AI Projects** ✅:
+- Model names and versions (gpt-4, claude-3, etc.)
+- Public API endpoint documentation
+- Generic prompt templates without sensitive data
+- Model parameters (temperature, max_tokens) without keys
+
 ## Post-Sanitization Verification
 
 After removing sensitive data:

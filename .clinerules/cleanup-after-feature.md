@@ -94,7 +94,50 @@ function exampleFunction(paramName) {
 - [ ] Update IMPROVEMENTS.md or PROPOSED-IMPROVEMENTS.md if applicable
 - [ ] Add new features to TESTING-GUIDE.md if testing procedures needed
 
-#### D. Update .clinerules Documentation (If Workflow Changed)
+#### D. Update CHANGELOG.md (REQUIRED - Critical)
+
+**MANDATORY**: Update CHANGELOG.md with ALL changes before commit
+
+- [ ] Open CHANGELOG.md and move items from [Unreleased] to new version
+- [ ] Create version header: `## [X.Y.Z] - YYYY-MM-DD`
+- [ ] Categorize ALL changes into appropriate sections:
+  - **Added**: New features, capabilities, or functionality
+  - **Changed**: Modifications to existing features
+  - **Deprecated**: Features marked for future removal
+  - **Removed**: Deleted features or functionality
+  - **Fixed**: Bug fixes
+  - **Security**: Security improvements or fixes
+  - **Documentation**: Documentation updates
+- [ ] Use emojis and clear descriptions for readability
+- [ ] After updating CHANGELOG.md, sync summary to README.md "Version History"
+
+**Example CHANGELOG.md Entry**:
+```markdown
+## [1.4.0] - 2026-01-15
+### Added
+- 🎯 Environment favoriting system with star icons
+- 📋 Bulk import/export for environments (JSON format)
+- 🔍 Fuzzy search with highlighting
+
+### Changed
+- Enhanced search algorithm for better matching
+- Improved modal animations (200ms transitions)
+
+### Fixed
+- Environment switching bug in Edge browser
+- Search focus issue on modal open
+
+### Security
+- Added rate limiting for API calls (10 req/min)
+- Sanitized user input in search queries
+```
+
+**Then Update README.md**:
+- [ ] Add matching version section to README.md "Version History"
+- [ ] Keep it concise (3-5 major bullet points)
+- [ ] Link to CHANGELOG.md for full details
+
+#### E. Update .clinerules Documentation (If Workflow Changed)
 - [ ] Update security-audit.md if new security checks needed
 - [ ] Update profile-content-updater.md if profile structure changed
 - [ ] Update cleanup-after-feature.md if cleanup process changed
@@ -122,7 +165,44 @@ function exampleFunction(paramName) {
 - pt_BR (Portuguese - Brazil)
 - zh_CN (Chinese - Simplified)
 
-### 5. CODE QUALITY CHECKS (Medium Priority)
+### 5. TESTING & QA (REQUIRED Before Commit)
+
+#### A. Extension Load Test
+- [ ] Load unpacked extension in chrome://extensions/
+- [ ] Verify no console errors on load
+- [ ] Test on at least 1 SAP SuccessFactors domain
+- [ ] Verify extension icon appears in toolbar
+
+#### B. Feature Testing
+- [ ] Test new feature in isolation (works as intended)
+- [ ] Test feature integration with existing functionality
+- [ ] Test all keyboard shortcuts still work (if applicable)
+- [ ] Verify i18n strings display correctly in English
+- [ ] Test modal interactions (open/close/save/cancel)
+
+#### C. Cross-Environment Testing
+- [ ] Test in at least 2 different SF environments
+- [ ] Verify environment switching preserves current path
+- [ ] Test diagnostics copy functionality
+- [ ] Verify shortcuts navigate correctly
+
+#### D. Browser Compatibility
+- [ ] Test in Chrome (primary target)
+- [ ] Verify no breaking changes in Edge (Chromium)
+- [ ] Check responsive design at 400px width
+
+#### E. Performance Check
+- [ ] Extension loads in <1 second
+- [ ] No memory leaks (check chrome://inspect/#devices)
+- [ ] No console warnings in production
+- [ ] Storage operations complete quickly (<100ms)
+
+**If any tests fail**:
+- Fix issues before proceeding to commit
+- Re-test after fixes
+- Document any known limitations
+
+### 6. CODE QUALITY CHECKS (Medium Priority)
 
 #### A. Consistency Review
 - [ ] Check naming conventions (camelCase for functions, UPPER_CASE for constants)
@@ -142,7 +222,7 @@ function exampleFunction(paramName) {
 - [ ] Check for inefficient loops or operations
 - [ ] Ensure large operations are async
 
-### 6. GIT COMMIT (Required)
+### 7. GIT COMMIT (Required)
 
 #### A. Stage Changes
 ```bash
@@ -178,7 +258,7 @@ Testing:
 git commit -m "[message]"
 ```
 
-### 7. FINAL REPORT
+### 8. FINAL REPORT
 
 Provide user with:
 - [ ] List of files deleted
