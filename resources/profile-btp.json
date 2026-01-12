@@ -91,7 +91,7 @@
       "id": "note-btp-joule-prompts",
       "tags": ["ai", "joule", "prompts", "development"],
       "timestamp": 1736634200000,
-      "title": "🤖 Joule Prompts Library - BTP & AI Core"
+      "title": "Joule Prompts Library - BTP & AI Core"
     },
     {
       "content": "BTP Services Pricing (PUPM Model):\n\n=== Core Services ===\n• Cloud Foundry Runtime: $0.03/GB-hour\n• HANA Cloud: $3.50/GB-month\n• PostgreSQL: $0.50/GB-month\n\n=== AI Services ===\n• Generative AI Hub: $0.50 per 1000 API calls\n• Document Information Extraction: $0.40/page\n• AI Core (training): $2.00/GPU-hour\n\n=== Integration ===\n• Integration Suite: $500/tenant/month\n• API Management: $250/tenant/month\n\n=== Low-Code ===\n• SAP Build Apps: $10/user/month\n• SAP Build Process Automation: $25/bot/month\n\n💡 Cost Optimization Tips:\n• Use free tier for dev (200 AUs/month)\n• Scale HANA compute separately from storage\n• Use Cloud Foundry vs Kyma based on workload\n• Monitor with SAP Cloud ALM\n\nPricing Calculator:\nhttps://discovery-center.cloud.sap/estimator",
@@ -99,7 +99,7 @@
       "id": "note-btp-pricing",
       "tags": ["operations"],
       "timestamp": 1736633700000,
-      "title": "💰 BTP Services Pricing (2025)"
+      "title": "BTP Services Pricing (2025)"
     }
   ],
   "exportDate": "2026-01-11T23:59:00.000Z"

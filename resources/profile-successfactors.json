@@ -296,7 +296,7 @@
       "id": "note-sf-joule-prompts",
       "tags": ["ai", "joule", "prompts"],
       "timestamp": 1736634000000,
-      "title": "🤖 Joule Prompts Library - SuccessFactors"
+      "title": "Joule Prompts Library - SuccessFactors"
     },
     {
       "content": "Production Environment:\nhttps://your-company.sapsf.com\nCompany ID: YOUR_COMPANY_ID\n\nKey Contacts:\n- System Admin: admin@your-company.com\n- HR Admin: hradmin@your-company.com\n- Support: support@your-company.com",
@@ -328,7 +328,7 @@
       "id": "note-sf-essential-notes",
       "tags": ["admin"],
       "timestamp": 1736633900000,
-      "title": "📋 Essential SF SAP Notes"
+      "title": "Essential SF SAP Notes"
     }
   ],
   "exportDate": "2026-01-11T23:59:00.000Z"

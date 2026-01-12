@@ -612,7 +612,7 @@
   </div>
 
   <!-- Settings Modal -->
-  <div class="modal" id="settingsModal">
+  <div class="modal modal-large" id="settingsModal">
     <div class="modal-content">
       <div class="modal-header">
         <div class="modal-header-title">
@@ -631,46 +631,138 @@
         <button class="modal-close" id="closeSettingsModal">&times;</button>
       </div>
       <div class="modal-body">
-        <div class="settings-section">
-          <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary);">Configuration Management</h4>
-          <p style="font-size: 12px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 16px;">
-            Import or export your toolkit configuration (shortcuts, environments, notes).
+        <!-- Tab Navigation -->
+        <div class="settings-tabs">
+          <button class="settings-tab active" data-tab="quick-actions">⚡ Quick Actions</button>
+          <button class="settings-tab" data-tab="backup">📦 Import/Export</button>
+        </div>
+        
+        <!-- Tab 1: Quick Actions (Editable Text Fields) -->
+        <div class="settings-tab-content active" id="quick-actions-tab">
+          <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
+            Edit Quick Action names and paths, then click "Save All Changes" below.
           </p>
-          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-            <button class="btn btn-primary" id="importJsonBtn" style="flex: 1;">
+          <div id="qaEditableList">
+            <!-- Populated dynamically with editable text fields -->
+          </div>
+          <div class="qa-save-footer" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
+            <button class="btn btn-primary btn-block" id="saveAllQaBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              Save All Changes
+            </button>
+          </div>
+        </div>
+        
+        <!-- Tab 2: Import/Export -->
+        <div class="settings-tab-content" id="backup-tab">
+          <h4 style="margin: 0 0 8px 0; font-size: 14px;">Export Configuration</h4>
+          <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
+            Download all your environments, shortcuts, notes, and Quick Actions as JSON
+          </p>
+          <button class="btn btn-primary btn-block" id="exportAllBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Export All Data
+          </button>
+          
+          <div style="margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--border);">
+            <h4 style="margin: 0 0 8px 0; font-size: 14px;">Import Configuration</h4>
+            <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
+              Import previously exported JSON file
+            </p>
+            <button class="btn btn-secondary btn-block" id="importJsonBtn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                 <polyline points="7 10 12 15 17 10"/>
                 <line x1="12" y1="15" x2="12" y2="3"/>
               </svg>
-              Import JSON
+              Import JSON File
             </button>
-            <button class="btn btn-secondary" id="exportJsonBtn" style="flex: 1;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="17 8 12 3 7 8"/>
-                <line x1="12" y1="3" x2="12" y2="15"/>
-              </svg>
-              Export JSON
-            </button>
+            <input type="file" id="importFileInput" accept=".json" style="display: none;">
           </div>
-          <p style="font-size: 11px; color: var(--text-tertiary); margin-top: 8px;">
-            <a href="#" id="downloadTemplateLink" style="color: var(--accent-blue); text-decoration: none;">📥 Download template JSON</a>
-          </p>
-          <input type="file" id="importFileInput" accept=".json" style="display: none;">
+          
         </div>
-        
-        <!-- Display Mode Switcher - DISABLED (Side Panel Only)
-        <div class="settings-section" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-light);">
-          <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary);">Display Mode</h4>
-          <p style="font-size: 12px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 16px;">
-            This extension operates in side panel mode only.
-          </p>
-        </div>
-        -->
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" id="closeSettingsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Edit Modal -->
+  <div class="modal" id="editProfileModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="6" fill="url(#gradientModalProfile)"/>
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="gradientModalProfile" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0070F2"/>
+                <stop offset="1" stop-color="#0054A6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <h3 id="profileModalTitle">Create Profile</h3>
+        </div>
+        <button class="modal-close" id="closeProfileModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="profileForm">
+          <div class="form-group">
+            <label for="profileName">
+              Profile Name <span class="required-asterisk">*</span>
+            </label>
+            <input type="text" id="profileName" placeholder="e.g., Project Alpha" required>
+          </div>
+          <div class="form-group">
+            <label for="profileDesc">Description</label>
+            <textarea id="profileDesc" rows="2" placeholder="Brief description..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="profileIcon">Icon</label>
+            <select id="profileIcon">
+              <option value="💼">💼 Briefcase</option>
+              <option value="🎯">🎯 Target</option>
+              <option value="🚀">🚀 Rocket</option>
+              <option value="📦">📦 Package</option>
+              <option value="🔧">🔧 Wrench</option>
+              <option value="⚡">⚡ Lightning</option>
+              <option value="🌟">🌟 Star</option>
+              <option value="📊">📊 Chart</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="profileBase">Base Profile</label>
+            <select id="profileBase">
+              <option value="profile-global">Global</option>
+              <option value="profile-successfactors">SuccessFactors</option>
+              <option value="profile-s4hana">S/4HANA</option>
+              <option value="profile-btp">BTP & Integration</option>
+            </select>
+            <small style="color: var(--text-secondary); font-size: 11px; display: block; margin-top: 4px;">
+              Inherit Quick Actions from base profile
+            </small>
+          </div>
+          <div class="form-group checkbox" id="copyQuickActionsGroup" style="display: none;">
+            <label>
+              <input type="checkbox" id="profileCopyQuickActions" checked>
+              Copy Quick Actions from source profile
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelProfileBtn">Cancel</button>
+        <button class="btn btn-primary" id="saveProfileBtn">Save</button>
       </div>
     </div>
   </div>

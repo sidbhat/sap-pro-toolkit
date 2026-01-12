@@ -102,79 +102,56 @@ async function loadSettings() {
 }
 
 async function loadShortcuts() {
-  // Special handling for "All Profiles" mode
   if (currentProfile === 'profile-all') {
     let allShortcuts = [];
-    
-    // Load shortcuts from all profile files
+    // Aggregate from all other profiles
     for (const p of availableProfiles) {
-      if (p.file && p.id !== 'profile-all') {
+      if (p.id !== 'profile-all' && p.file) {
         const profileData = await loadProfileData(p.id);
-        const profileShortcuts = profileData.globalShortcuts || profileData.shortcuts || [];
-        allShortcuts.push(...profileShortcuts.map(s => ({ ...s, _source: p.name })));
+        allShortcuts.push(...(profileData.globalShortcuts || []), ...(profileData.shortcuts || []));
       }
     }
-    
-    // Remove duplicates based on URL
     shortcuts = removeDuplicates(allShortcuts, 'url');
-    renderShortcuts();
-    return;
+  } else {
+    // Load only the specific profile's data
+    const profileData = await loadProfileData(currentProfile);
+    shortcuts = profileData.globalShortcuts || profileData.shortcuts || [];
   }
-  
-  // Load from current profile's globalShortcuts
-  const profileData = await loadProfileData(currentProfile);
-  shortcuts = profileData.globalShortcuts || profileData.shortcuts || [];
-  
-  await chrome.storage.local.set({ shortcuts });
   renderShortcuts();
 }
 
 async function loadEnvironments() {
-  // Special handling for "All Profiles" mode
   if (currentProfile === 'profile-all') {
     let allEnvironments = [];
-    
-    // Load environments from all profile storage keys
+    // Aggregate from all other profiles
     for (const p of availableProfiles) {
-      if (p.file) {
+      if (p.id !== 'profile-all') {
         const storageKey = `environments_${p.id}`;
         const result = await chrome.storage.local.get(storageKey);
-        
         if (result[storageKey] && Array.isArray(result[storageKey])) {
-          allEnvironments.push(...result[storageKey].map(e => ({ ...e, _source: p.name })));
+          allEnvironments.push(...result[storageKey]);
+        } else if (p.file) {
+          const profileData = await loadProfileData(p.id);
+           if (profileData.environments && Array.isArray(profileData.environments)) {
+            allEnvironments.push(...profileData.environments);
+          }
         }
       }
     }
-    
-    // Remove duplicates
     environments = removeDuplicates(allEnvironments, 'hostname');
-    renderEnvironments();
-    return;
-  }
-  
-  // Load from current profile (profile-specific storage)
-  const storageKey = `environments_${currentProfile}`;
-  const result = await chrome.storage.local.get(storageKey);
-  
-  if (result[storageKey] && Array.isArray(result[storageKey]) && result[storageKey].length > 0) {
-    environments = result[storageKey];
   } else {
-    // Load default environments from current profile file
-    try {
+    // Load for the specific profile
+    const storageKey = `environments_${currentProfile}`;
+    const result = await chrome.storage.local.get(storageKey);
+
+    if (result[storageKey] && Array.isArray(result[storageKey])) {
+      environments = result[storageKey];
+    } else {
       const profileData = await loadProfileData(currentProfile);
-      
-      if (profileData.environments && Array.isArray(profileData.environments)) {
-        environments = profileData.environments;
-        await chrome.storage.local.set({ [storageKey]: environments });
-      } else {
-        environments = [];
-      }
-    } catch (error) {
-      console.error('[Environments] Failed to load default environments:', error);
-      environments = [];
+      environments = profileData.environments || [];
+      await chrome.storage.local.set({ [storageKey]: environments });
     }
   }
-  
   renderEnvironments();
 }
 
@@ -344,53 +321,32 @@ function updateDiagnosticsButton() {
 
 
 /**
- * Load profile data with Global base layer
- * Every profile (except "All Profiles") loads Global first, then merges profile-specific data
- * @param {string} profileId - The profile ID to load
- * @returns {Object} Merged profile data (Global + Profile-specific)
+ * Loads the data for a single, specified profile from its JSON file.
+ * This function does NOT merge with the global profile.
+ * @param {string} profileId - The profile ID to load.
+ * @returns {Object} The data for the specified profile.
  */
 async function loadProfileData(profileId) {
-  // Special case: "All Profiles" handled separately
-  if (profileId === 'profile-all') {
+  if (profileId === 'profile-all' || !profileId) {
     return { globalShortcuts: [], solutions: [], environments: [] };
   }
-  
+
   try {
-    // Step 1: Always load Global base layer first
-    const globalResponse = await fetch(chrome.runtime.getURL('resources/profile-global.json'));
-    const globalData = await globalResponse.json();
-    
-    // Step 2: If loading Global profile itself, return it
-    if (profileId === 'profile-global') {
-      return globalData;
-    }
-    
-    // Step 3: Load profile-specific data
     const profile = availableProfiles.find(p => p.id === profileId);
     if (!profile || !profile.file) {
-      return globalData; // Return just Global
+      // For custom profiles without a file or if profile not found
+      return { globalShortcuts: [], solutions: [], environments: [] };
     }
-    
+
     const profileResponse = await fetch(chrome.runtime.getURL(`resources/${profile.file}`));
+    if (!profileResponse.ok) {
+      throw new Error(`HTTP error! status: ${profileResponse.status}`);
+    }
     const profileData = await profileResponse.json();
-    
-    // Step 4: Merge Global + Profile data
-    const merged = {
-      globalShortcuts: [
-        ...(globalData.globalShortcuts || []),
-        ...(profileData.globalShortcuts || [])
-      ],
-      solutions: profileData.solutions || globalData.solutions || [],
-      environments: [
-        ...(globalData.environments || []),
-        ...(profileData.environments || [])
-      ]
-    };
-    
-    return merged;
-    
+    return profileData;
+
   } catch (error) {
-    console.error('[Profile] Failed to load profile data:', error);
+    console.error(`[Profile] Failed to load profile data for ${profileId}:`, error);
     return { globalShortcuts: [], solutions: [], environments: [] };
   }
 }
@@ -1252,11 +1208,6 @@ async function navigateToShortcut(url) {
 
 async function switchEnvironment(targetHostname, targetType) {
   try {
-    if (targetType === 'production' && settings.showConfirmationForProd) {
-      const confirmed = confirm('⚠️ You are about to switch to PRODUCTION.\n\nAre you sure?');
-      if (!confirmed) return;
-    }
-    
     // Update environment usage tracking
     const env = environments.find(e => e.hostname === targetHostname);
     if (env) {
@@ -1805,84 +1756,96 @@ async function copyNoteContent(id, btn) {
 }
 
 /**
- * Download note as a text file
- * @param {string} id - The note ID
+ * Render Quick Actions as editable text fields (SIMPLIFIED)
+ * Both name AND path are editable
+ * No onclick handlers - uses event delegation instead
  */
-async function downloadNote(id) {
-  // Block downloading in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to download notes', 'warning');
-    return;
-  }
-  
-  const note = notes.find(n => n.id === id);
-  if (!note) return;
+async function renderQuickActionsBySection(profileId) {
+  const listContainer = document.getElementById('qaEditableList');
+  if (!listContainer) return;
   
   try {
-    // Build file content with title and content
-    const fileContent = `${note.title}\n${'='.repeat(note.title.length)}\n\n${note.content || ''}`;
+    const storageKey = `solutions_${profileId}`;
+    const result = await chrome.storage.local.get(storageKey);
+    let solutionsData = result[storageKey];
     
-    // Create blob and download
-    const blob = new Blob([fileContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
+    if (!solutionsData) {
+      const profileData = await loadProfileData(profileId);
+      solutionsData = JSON.parse(JSON.stringify(profileData.solutions || []));
+    }
     
-    // Generate filename from note title (sanitized)
-    const sanitizedTitle = note.title
-      .replace(/[^a-z0-9]/gi, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '')
-      .toLowerCase()
-      .substring(0, 50);
+    if (!solutionsData || solutionsData.length === 0) {
+      listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-secondary);">No Quick Actions configured</div>';
+      return;
+    }
     
-    const timestamp = new Date().toISOString().split('T')[0];
-    const filename = `${sanitizedTitle}-${timestamp}.txt`;
+    // Render as simple editable list with BOTH name and path editable
+    listContainer.innerHTML = solutionsData.map(solution => {
+      const quickActions = solution.quickActions || [];
+      
+      return `
+        <div class="qa-solution-group" style="margin-bottom: 24px;">
+          <h4 style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">
+            ${solution.name || solution.id} (${quickActions.length})
+          </h4>
+          ${quickActions.length === 0 ? 
+            '<div style="padding: 12px; color: var(--text-secondary); font-size: 11px;">No Quick Actions</div>' :
+            quickActions.map(qa => `
+              <div class="qa-edit-row" data-qa-id="${qa.id}" data-solution-id="${solution.id}" style="margin-bottom: 12px;">
+                <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Name:</label>
+                <input 
+                  type="text" 
+                  class="qa-name-input" 
+                  value="${qa.name}" 
+                  data-original-name="${qa.name}"
+                  style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--bg-primary); color: var(--text-primary); margin-bottom: 8px;"
+                >
+                <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Path:</label>
+                <input 
+                  type="text" 
+                  class="qa-path-input" 
+                  value="${qa.path}" 
+                  data-original-path="${qa.path}"
+                  style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; background: var(--bg-primary); color: var(--text-primary); font-family: 'SF Mono', monospace;"
+                >
+              </div>
+            `).join('')
+          }
+        </div>
+      `;
+    }).join('');
     
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    
-    URL.revokeObjectURL(url);
-    showToast('Note downloaded ✓', 'success');
+    // No-op, event listeners removed for explicit save button
     
   } catch (error) {
-    console.error('Failed to download note:', error);
-    showToast('Failed to download note', 'error');
+    console.error('[Quick Actions Tab] Failed to load:', error);
+    listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--env-production);">Failed to load</div>';
   }
 }
 
 /**
- * Prettify/format note content
- * Cleans up formatting, organizes sections, formats URLs
+ * Prettify note content - format with consistent spacing and structure
  */
-function prettifyNote() {
+async function prettifyNote() {
   const contentInput = document.getElementById('noteContent');
   const counter = document.getElementById('noteContentCounter');
   
-  if (!contentInput) {
-    console.error('[Prettify] Content input not found');
-    return;
-  }
-  
-  let content = contentInput.value;
-  if (!content.trim()) {
-    showToast('No content to format', 'warning');
-    return;
-  }
+  if (!contentInput) return;
   
   try {
-    // 1. Normalize line endings
-    content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    let content = contentInput.value;
     
-    // 2. Remove excessive blank lines (more than 2 consecutive)
+    // 1. Normalize line endings
+    content = content.replace(/\r\n/g, '\n');
+    
+    // 2. Remove excessive blank lines (max 2 consecutive)
     content = content.replace(/\n{3,}/g, '\n\n');
     
-    // 3. Format section headers (lines ending with :)
+    // 3. Format key-value pairs
     content = content.split('\n').map(line => {
-      const trimmed = line.trim();
-      // If line ends with : and is short (likely a header), add blank line after
-      if (trimmed.endsWith(':') && trimmed.length < 50 && !trimmed.startsWith('http')) {
-        return trimmed + '\n';
+      // Format "Key: value" or "Key - value" patterns
+      if (/^[^:]+:\s*.+/.test(line)) {
+        return line.replace(/^([^:]+):\s*(.+)$/, '$1: $2');
       }
       return line;
     }).join('\n');
@@ -2123,6 +2086,37 @@ async function renderPopularNotes() {
 }
 
 /**
+ * Toggle popular notes section collapsed state
+ */
+async function togglePopularNotes() {
+  const section = document.getElementById('popularNotesSection');
+  const btn = document.getElementById('togglePopularNotes');
+  
+  if (!section || !btn) return;
+  
+  const isCollapsed = section.classList.contains('collapsed');
+  section.classList.toggle('collapsed');
+  
+  // Save collapsed state to storage
+  await chrome.storage.local.set({ popularNotesCollapsed: !isCollapsed });
+}
+
+/**
+ * Open a popular OSS Note by number
+ * @param {string} noteNumber - The OSS Note number to open
+ */
+async function openPopularOssNote(noteNumber) {
+  try {
+    const ossNoteUrl = `https://launchpad.support.sap.com/#/notes/${noteNumber}`;
+    await chrome.tabs.create({ url: ossNoteUrl });
+    showToast(`Opening OSS Note ${noteNumber} ✓`, 'success');
+  } catch (error) {
+    console.error('[Popular OSS Note] Failed to open:', error);
+    showToast('Failed to open OSS Note', 'error');
+  }
+}
+
+/**
  * Unified toggle pin function for environments, shortcuts, and notes
  * @param {string} id - The item ID
  * @param {string} type - The item type ('environment', 'shortcut', or 'note')
@@ -2326,12 +2320,819 @@ async function addOssNoteAsShortcut() {
 // ==================== SETTINGS ====================
 
 function openSettingsModal() {
-  document.getElementById('settingsModal').classList.add('active');
-  // loadDisplayModeSetting() removed - side panel mode only
+  const modal = document.getElementById('settingsModal');
+  modal.classList.add('active');
+  
+  // Initialize Settings UI
+  setupSettingsTabs();
+  loadQuickActionsTab();
+  loadProfilesTab();
 }
 
 function closeSettingsModal() {
   document.getElementById('settingsModal').classList.remove('active');
+}
+
+// ==================== SETTINGS - TAB SWITCHING ====================
+
+/**
+ * Setup tab switching in Settings modal
+ */
+function setupSettingsTabs() {
+  const tabButtons = document.querySelectorAll('.settings-tab');
+  const tabContents = document.querySelectorAll('.settings-tab-content');
+  
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetTab = btn.getAttribute('data-tab');
+      
+      // Update active tab button
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // Update active tab content
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+        if (content.id === `${targetTab}-tab`) {
+          content.classList.add('active');
+        }
+      });
+      
+      // Reload tab content
+      if (targetTab === 'quick-actions') {
+        loadQuickActionsTab();
+      } else if (targetTab === 'profiles') {
+        loadProfilesTab();
+      }
+    });
+  });
+}
+
+// ==================== SETTINGS - QUICK ACTIONS TAB ====================
+
+/**
+ * Load Quick Actions tab - shows ALL profiles' Quick Actions for editing
+ */
+async function loadQuickActionsTab() {
+  const container = document.getElementById('quick-actions-tab');
+  
+  // Update instructions
+  container.querySelector('p').innerHTML = 'Edit Quick Action names and paths, then click "Save All Changes" below.';
+  
+  // Render all profiles' Quick Actions
+  await renderAllProfilesQuickActions();
+}
+
+// ==================== SETTINGS - PROFILES TAB ====================
+
+/**
+ * Load Profiles tab with simple lists (STUB - Removed in simplification)
+ */
+async function loadProfilesTab() {
+  // No-op - Profiles tab removed in simplification
+  console.log('[Profiles Tab] Tab removed in Settings simplification');
+}
+
+/**
+ * Save all edited Quick Actions from the Settings tab.
+ * This function is connected to an explicit "Save" button.
+ */
+async function saveAllQuickActions() {
+  const profileId = currentProfile;
+  const listContainer = document.getElementById('qaEditableList');
+  if (!listContainer) return;
+
+  try {
+    const storageKey = `solutions_${profileId}`;
+    const result = await chrome.storage.local.get(storageKey);
+    let solutionsData = result[storageKey];
+
+    if (!solutionsData) {
+      const profileData = await loadProfileData(profileId);
+      solutionsData = JSON.parse(JSON.stringify(profileData.solutions || []));
+    }
+
+    let changesMade = 0;
+    listContainer.querySelectorAll('.qa-edit-row').forEach(row => {
+      const qaId = row.getAttribute('data-qa-id');
+      const solutionId = row.getAttribute('data-solution-id');
+      const nameInput = row.querySelector('.qa-name-input');
+      const pathInput = row.querySelector('.qa-path-input');
+
+      const solution = solutionsData.find(s => s.id === solutionId);
+      if (!solution) return;
+
+      const qa = solution.quickActions.find(q => q.id === qaId);
+      if (!qa) return;
+
+      const newName = nameInput.value.trim();
+      const newPath = pathInput.value.trim();
+
+      if (qa.name !== newName || qa.path !== newPath) {
+        qa.name = newName;
+        qa.path = newPath;
+        changesMade++;
+      }
+    });
+
+    if (changesMade > 0) {
+      await chrome.storage.local.set({ [storageKey]: solutionsData });
+      showToast(`${changesMade} Quick Action(s) saved ✓`, 'success');
+    } else {
+      showToast('No changes to save', 'info');
+    }
+  } catch (error) {
+    console.error('[Save All Quick Actions] Failed:', error);
+    showToast('Failed to save Quick Actions', 'error');
+  }
+}
+
+
+/**
+ * Render system profiles as simple list
+ */
+async function renderSystemProfilesList() {
+  const listDiv = document.getElementById('systemProfilesList');
+  if (!listDiv) return;
+  
+  const result = await chrome.storage.local.get('hiddenProfiles');
+  const hiddenProfiles = result.hiddenProfiles || [];
+  
+  const systemProfiles = availableProfiles.filter(p => 
+    p.type === 'system' && 
+    p.id !== 'profile-all' &&
+    !hiddenProfiles.includes(p.id)
+  );
+  
+  if (systemProfiles.length === 0) {
+    listDiv.innerHTML = '<div style="padding: 12px; color: var(--text-secondary); font-size: 12px;">No visible system profiles</div>';
+    return;
+  }
+  
+  listDiv.innerHTML = systemProfiles.map(profile => {
+    const isActive = profile.id === currentProfile;
+    return `
+      <div class="profile-list-item ${isActive ? 'active' : ''}">
+        <span class="profile-list-icon">${profile.icon || '📁'}</span>
+        <div class="profile-list-info">
+          <div class="profile-list-name">${profile.name}</div>
+          <div class="profile-list-desc">${profile.description || 'System profile'}</div>
+        </div>
+        <div class="profile-list-actions">
+          <button class="btn btn-sm" onclick="hideProfileInline('${profile.id}')" title="Hide">🙈</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/**
+ * Render custom profiles as simple list
+ */
+async function renderCustomProfilesList() {
+  const listDiv = document.getElementById('customProfilesList');
+  if (!listDiv) return;
+  
+  const customProfiles = availableProfiles.filter(p => p.type === 'custom');
+  
+  if (customProfiles.length === 0) {
+    listDiv.innerHTML = '<div style="padding: 12px; color: var(--text-secondary); font-size: 12px;">No custom profiles</div>';
+    return;
+  }
+  
+  listDiv.innerHTML = customProfiles.map(profile => {
+    const isActive = profile.id === currentProfile;
+    return `
+      <div class="profile-list-item ${isActive ? 'active' : ''}">
+        <span class="profile-list-icon">${profile.icon || '📁'}</span>
+        <div class="profile-list-info">
+          <div class="profile-list-name">${profile.name}</div>
+          <div class="profile-list-desc">Custom profile</div>
+        </div>
+        <div class="profile-list-actions">
+          <button class="btn btn-sm" onclick="editProfileInline('${profile.id}')" title="Edit">✏️</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteProfileInline('${profile.id}')" title="Delete">🗑️</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/**
+ * Render hidden profiles list
+ */
+async function renderHiddenProfilesList() {
+  const sectionDiv = document.getElementById('hiddenProfilesSection');
+  const listDiv = document.getElementById('hiddenProfilesList');
+  
+  if (!sectionDiv || !listDiv) return;
+  
+  const result = await chrome.storage.local.get('hiddenProfiles');
+  const hiddenProfileIds = result.hiddenProfiles || [];
+  
+  if (hiddenProfileIds.length === 0) {
+    sectionDiv.style.display = 'none';
+    return;
+  }
+  
+  sectionDiv.style.display = 'block';
+  
+  const hiddenProfiles = availableProfiles.filter(p => hiddenProfileIds.includes(p.id));
+  
+  listDiv.innerHTML = hiddenProfiles.map(profile => {
+    return `
+      <div class="profile-list-item">
+        <span class="profile-list-icon">${profile.icon || '📁'}</span>
+        <div class="profile-list-info">
+          <div class="profile-list-name">${profile.name}</div>
+          <div class="profile-list-desc">Hidden</div>
+        </div>
+        <div class="profile-list-actions">
+          <button class="btn btn-sm" onclick="unhideProfileInline('${profile.id}')" title="Show">👁️</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/**
+ * Hide profile inline
+ */
+async function hideProfileInline(profileId) {
+  try {
+    const result = await chrome.storage.local.get('hiddenProfiles');
+    const hiddenProfiles = result.hiddenProfiles || [];
+    
+    if (!hiddenProfiles.includes(profileId)) {
+      hiddenProfiles.push(profileId);
+    }
+    
+    await chrome.storage.local.set({ hiddenProfiles });
+    
+    if (currentProfile === profileId) {
+      await switchProfile('profile-global');
+    }
+    
+    await loadProfilesTab();
+    renderProfileMenu();
+    showToast('Profile hidden', 'success');
+  } catch (error) {
+    console.error('[Hide Profile] Failed:', error);
+    showToast('Failed to hide', 'error');
+  }
+}
+
+/**
+ * Unhide profile inline
+ */
+async function unhideProfileInline(profileId) {
+  try {
+    const result = await chrome.storage.local.get('hiddenProfiles');
+    let hiddenProfiles = result.hiddenProfiles || [];
+    
+    hiddenProfiles = hiddenProfiles.filter(id => id !== profileId);
+    
+    await chrome.storage.local.set({ hiddenProfiles });
+    
+    await loadProfilesTab();
+    renderProfileMenu();
+    showToast('Profile restored', 'success');
+  } catch (error) {
+    console.error('[Unhide Profile] Failed:', error);
+    showToast('Failed to restore', 'error');
+  }
+}
+
+/**
+ * Edit profile inline (simplified - just prompt for name)
+ */
+async function editProfileInline(profileId) {
+  try {
+    const result = await chrome.storage.local.get('customProfiles');
+    const customProfiles = result.customProfiles || {};
+    const profile = customProfiles[profileId];
+    
+    if (!profile) {
+      showToast('Profile not found', 'error');
+      return;
+    }
+    
+    const newName = prompt('Edit profile name:', profile.name);
+    if (newName && newName.trim()) {
+      profile.name = newName.trim();
+      await chrome.storage.local.set({ customProfiles });
+      
+      // Update availableProfiles
+      const idx = availableProfiles.findIndex(p => p.id === profileId);
+      if (idx >= 0) {
+        availableProfiles[idx].name = newName.trim();
+      }
+      
+      await loadProfilesTab();
+      renderProfileMenu();
+      showToast('Profile updated', 'success');
+    }
+  } catch (error) {
+    console.error('[Edit Profile] Failed:', error);
+    showToast('Failed to update', 'error');
+  }
+}
+
+/**
+ * Delete profile inline
+ */
+async function deleteProfileInline(profileId) {
+  if (!confirm('Delete this profile? All data will be removed.')) return;
+  
+  try {
+    const result = await chrome.storage.local.get('customProfiles');
+    const customProfiles = result.customProfiles || {};
+    
+    delete customProfiles[profileId];
+    await chrome.storage.local.set({ customProfiles });
+    
+    availableProfiles = availableProfiles.filter(p => p.id !== profileId);
+    
+    const keysToRemove = [`environments_${profileId}`, `solutions_${profileId}`];
+    await chrome.storage.local.remove(keysToRemove);
+    
+    if (currentProfile === profileId) {
+      await switchProfile('profile-global');
+    }
+    
+    await loadProfilesTab();
+    renderProfileMenu();
+    showToast('Profile deleted', 'success');
+  } catch (error) {
+    console.error('[Delete Profile] Failed:', error);
+    showToast('Failed to delete', 'error');
+  }
+}
+
+/**
+ * Create new profile (simplified - prompt for name only)
+ */
+async function createNewProfileInline() {
+  const name = prompt('Enter profile name:');
+  if (!name || !name.trim()) return;
+  
+  try {
+    const result = await chrome.storage.local.get('customProfiles');
+    const customProfiles = result.customProfiles || {};
+    
+    const newId = `custom-${name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
+    
+    customProfiles[newId] = {
+      id: newId,
+      name: name.trim(),
+      type: 'custom',
+      basedOn: 'profile-global',
+      created: new Date().toISOString()
+    };
+    
+    await chrome.storage.local.set({ customProfiles });
+    
+    availableProfiles.push({
+      id: newId,
+      name: name.trim(),
+      type: 'custom',
+      file: null
+    });
+    
+    await loadProfilesTab();
+    renderProfileMenu();
+    showToast(`Profile "${name.trim()}" created`, 'success');
+  } catch (error) {
+    console.error('[Create Profile] Failed:', error);
+    showToast('Failed to create', 'error');
+  }
+}
+
+/**
+ * Toggle hidden profiles visibility
+ */
+function toggleHiddenProfiles() {
+  const listDiv = document.getElementById('hiddenProfilesList');
+  const toggleBtn = document.getElementById('toggleHiddenProfiles');
+  
+  if (!listDiv || !toggleBtn) return;
+  
+  const isVisible = listDiv.style.display !== 'none';
+  
+  if (isVisible) {
+    listDiv.style.display = 'none';
+    toggleBtn.textContent = '👁️ Show Hidden Profiles';
+  } else {
+    listDiv.style.display = 'block';
+    toggleBtn.textContent = '👁️ Hide List';
+  }
+}
+
+/**
+ * Open Create Profile modal
+ */
+function openCreateProfileModal() {
+  const modal = document.getElementById('editProfileModal');
+  if (!modal) return;
+  
+  // Reset form
+  document.getElementById('profileName').value = '';
+  document.getElementById('profileDesc').value = '';
+  document.getElementById('profileIcon').value = '📁';
+  document.getElementById('profileBase').value = 'profile-global';
+  document.getElementById('profileCopyQuickActions').checked = false;
+  
+  // Set create mode
+  modal.removeAttribute('data-edit-id');
+  modal.setAttribute('data-mode', 'create');
+  
+  // Update modal title
+  document.querySelector('#editProfileModal .modal-header h3').textContent = 'Create Profile';
+  
+  modal.classList.add('active');
+}
+
+/**
+ * Edit custom profile
+ */
+async function editProfile(profileId) {
+  const modal = document.getElementById('editProfileModal');
+  if (!modal) return;
+  
+  try {
+    // Load custom profiles from storage
+    const result = await chrome.storage.local.get('customProfiles');
+    const customProfiles = result.customProfiles || {};
+    const profile = customProfiles[profileId];
+    
+    if (!profile) {
+      showToast('Profile not found', 'error');
+      return;
+    }
+    
+    // Populate form
+    document.getElementById('profileName').value = profile.name || '';
+    document.getElementById('profileDesc').value = profile.description || '';
+    document.getElementById('profileIcon').value = profile.icon || '📁';
+    document.getElementById('profileBase').value = profile.basedOn || 'profile-global';
+    document.getElementById('profileCopyQuickActions').checked = false; // Not applicable in edit mode
+    
+    // Set edit mode
+    modal.setAttribute('data-edit-id', profileId);
+    modal.setAttribute('data-mode', 'edit');
+    
+    // Update modal title
+    document.querySelector('#editProfileModal .modal-header h3').textContent = 'Edit Profile';
+    
+    modal.classList.add('active');
+    
+  } catch (error) {
+    console.error('[Edit Profile] Failed:', error);
+    showToast('Failed to load profile', 'error');
+  }
+}
+
+/**
+ * Duplicate profile (system or custom)
+ */
+async function duplicateProfile(profileId) {
+  const modal = document.getElementById('editProfileModal');
+  if (!modal) return;
+  
+  try {
+    const profile = availableProfiles.find(p => p.id === profileId);
+    if (!profile) {
+      showToast('Profile not found', 'error');
+      return;
+    }
+    
+    // Populate form with " (Copy)" suffix
+    document.getElementById('profileName').value = `${profile.name} (Copy)`;
+    document.getElementById('profileDesc').value = profile.description || '';
+    document.getElementById('profileIcon').value = profile.icon || '📁';
+    document.getElementById('profileBase').value = profileId;
+    document.getElementById('profileCopyQuickActions').checked = true;
+    
+    // Set duplicate mode
+    modal.removeAttribute('data-edit-id');
+    modal.setAttribute('data-mode', 'duplicate');
+    modal.setAttribute('data-source-profile', profileId);
+    
+    // Update modal title
+    document.querySelector('#editProfileModal .modal-header h3').textContent = 'Duplicate Profile';
+    
+    modal.classList.add('active');
+    
+  } catch (error) {
+    console.error('[Duplicate Profile] Failed:', error);
+    showToast('Failed to duplicate profile', 'error');
+  }
+}
+
+/**
+ * Delete custom profile
+ */
+async function deleteProfile(profileId) {
+  const confirmed = confirm('Delete this profile? All associated data will be removed.');
+  if (!confirmed) return;
+  
+  try {
+    // Load custom profiles
+    const result = await chrome.storage.local.get('customProfiles');
+    const customProfiles = result.customProfiles || {};
+    
+    // Remove profile
+    delete customProfiles[profileId];
+    
+    // Save updated profiles
+    await chrome.storage.local.set({ customProfiles });
+    
+    // Remove from available profiles list
+    availableProfiles = availableProfiles.filter(p => p.id !== profileId);
+    
+    // Remove associated data
+    const keysToRemove = [
+      `environments_${profileId}`,
+      `solutions_${profileId}`
+    ];
+    await chrome.storage.local.remove(keysToRemove);
+    
+    // Switch to Global if deleted current profile
+    if (currentProfile === profileId) {
+      await switchProfile('profile-global');
+    }
+    
+    // Reload grids
+    await loadProfilesManager();
+    renderProfileMenu();
+    
+    showToast('Profile deleted', 'success');
+    
+  } catch (error) {
+    console.error('[Delete Profile] Failed:', error);
+    showToast('Failed to delete profile', 'error');
+  }
+}
+
+/**
+ * Hide system profile
+ */
+async function hideProfile(profileId) {
+  try {
+    // Load hidden profiles list
+    const result = await chrome.storage.local.get('hiddenProfiles');
+    const hiddenProfiles = result.hiddenProfiles || [];
+    
+    // Add to hidden list
+    if (!hiddenProfiles.includes(profileId)) {
+      hiddenProfiles.push(profileId);
+    }
+    
+    // Save updated list
+    await chrome.storage.local.set({ hiddenProfiles });
+    
+    // Switch to Global if hiding current profile
+    if (currentProfile === profileId) {
+      await switchProfile('profile-global');
+    }
+    
+    // Reload grids and menu
+    await loadProfilesManager();
+    renderProfileMenu();
+    
+    showToast('Profile hidden', 'success');
+    
+  } catch (error) {
+    console.error('[Hide Profile] Failed:', error);
+    showToast('Failed to hide profile', 'error');
+  }
+}
+
+/**
+ * Unhide system profile
+ */
+async function unhideProfile(profileId) {
+  try {
+    // Load hidden profiles list
+    const result = await chrome.storage.local.get('hiddenProfiles');
+    let hiddenProfiles = result.hiddenProfiles || [];
+    
+    // Remove from hidden list
+    hiddenProfiles = hiddenProfiles.filter(id => id !== profileId);
+    
+    // Save updated list
+    await chrome.storage.local.set({ hiddenProfiles });
+    
+    // Reload grids and menu
+    await loadProfilesManager();
+    renderProfileMenu();
+    
+    showToast('Profile restored', 'success');
+    
+  } catch (error) {
+    console.error('[Unhide Profile] Failed:', error);
+    showToast('Failed to restore profile', 'error');
+  }
+}
+
+/**
+ * Save profile (create, edit, or duplicate)
+ */
+async function saveProfile() {
+  const modal = document.getElementById('editProfileModal');
+  const mode = modal.getAttribute('data-mode');
+  const editId = modal.getAttribute('data-edit-id');
+  const sourceProfile = modal.getAttribute('data-source-profile');
+  
+  const name = document.getElementById('profileName').value.trim();
+  const description = document.getElementById('profileDesc').value.trim();
+  const icon = document.getElementById('profileIcon').value || '📁';
+  const basedOn = document.getElementById('profileBase').value;
+  const copyQuickActions = document.getElementById('profileCopyQuickActions').checked;
+  
+  // Validation
+  if (!name) {
+    showToast('Profile name is required', 'warning');
+    return;
+  }
+  
+  try {
+    // Load custom profiles
+    const result = await chrome.storage.local.get('customProfiles');
+    const customProfiles = result.customProfiles || {};
+    
+    if (mode === 'create' || mode === 'duplicate') {
+      // Create new profile
+      const newId = `custom-${name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
+      
+      customProfiles[newId] = {
+        id: newId,
+        name,
+        description,
+        icon,
+        type: 'custom',
+        basedOn,
+        created: new Date().toISOString()
+      };
+      
+      // Copy Quick Actions if requested
+      if (copyQuickActions && (sourceProfile || basedOn)) {
+        const sourceId = sourceProfile || basedOn;
+        const sourceKey = `solutions_${sourceId}`;
+        const sourceResult = await chrome.storage.local.get(sourceKey);
+        
+        if (sourceResult[sourceKey]) {
+          const targetKey = `solutions_${newId}`;
+          await chrome.storage.local.set({ [targetKey]: sourceResult[sourceKey] });
+        }
+      }
+      
+      // Save custom profiles
+      await chrome.storage.local.set({ customProfiles });
+      
+      // Add to available profiles list
+      availableProfiles.push({
+        id: newId,
+        name,
+        type: 'custom',
+        file: null,
+        icon,
+        description
+      });
+      
+      showToast(`Profile "${name}" created ✓`, 'success');
+      
+      // Switch to new profile
+      await switchProfile(newId);
+      
+    } else if (mode === 'edit') {
+      // Edit existing profile
+      if (!editId || !customProfiles[editId]) {
+        showToast('Profile not found', 'error');
+        return;
+      }
+      
+      customProfiles[editId].name = name;
+      customProfiles[editId].description = description;
+      customProfiles[editId].icon = icon;
+      customProfiles[editId].basedOn = basedOn;
+      
+      // Save custom profiles
+      await chrome.storage.local.set({ customProfiles });
+      
+      // Update available profiles list
+      const profileIndex = availableProfiles.findIndex(p => p.id === editId);
+      if (profileIndex >= 0) {
+        availableProfiles[profileIndex].name = name;
+        availableProfiles[profileIndex].icon = icon;
+        availableProfiles[profileIndex].description = description;
+      }
+      
+      showToast('Profile updated ✓', 'success');
+      
+      // Update UI if editing current profile
+      if (currentProfile === editId) {
+        document.getElementById('currentProfileName').textContent = name;
+      }
+    }
+    
+    // Reload grids and menu
+    await loadProfilesManager();
+    renderProfileMenu();
+    
+    // Close modal
+    modal.classList.remove('active');
+    modal.removeAttribute('data-edit-id');
+    modal.removeAttribute('data-mode');
+    modal.removeAttribute('data-source-profile');
+    
+  } catch (error) {
+    console.error('[Save Profile] Failed:', error);
+    showToast('Failed to save profile', 'error');
+  }
+}
+
+function closeProfileModal() {
+  const modal = document.getElementById('editProfileModal');
+  modal.classList.remove('active');
+  modal.removeAttribute('data-edit-id');
+  modal.removeAttribute('data-mode');
+  modal.removeAttribute('data-source-profile');
+  document.getElementById('profileName').value = '';
+  document.getElementById('profileDesc').value = '';
+}
+
+// ==================== SETTINGS - EXPORT ====================
+
+/**
+ * Export configuration from Quick Actions tab
+ */
+async function exportConfigFromSettings() {
+  const profileSelect = document.getElementById('qaProfileSelect');
+  if (!profileSelect) {
+    await exportJsonToFile();
+    return;
+  }
+  
+  const profileId = profileSelect.value;
+  const profile = availableProfiles.find(p => p.id === profileId);
+  
+  if (!profile) {
+    showToast('Profile not found', 'error');
+    return;
+  }
+  
+  try {
+    // Load data for selected profile
+    const storageKey = `environments_${profileId}`;
+    const envResult = await chrome.storage.local.get(storageKey);
+    const profileEnvs = envResult[storageKey] || [];
+    
+    const solutionsKey = `solutions_${profileId}`;
+    const solutionsResult = await chrome.storage.local.get(solutionsKey);
+    let profileSolutions = solutionsResult[solutionsKey];
+    
+    if (!profileSolutions) {
+      const profileData = await loadProfileData(profileId);
+      profileSolutions = profileData.solutions || [];
+    }
+    
+    // Use current shortcuts and notes (global)
+    const exportData = {
+      version: '1.0',
+      profileType: 'custom',
+      profile: profileId,
+      profileName: profile.name,
+      basedOn: profileId.startsWith('custom-') ? 'profile-successfactors' : profileId,
+      shortcuts: shortcuts,
+      environments: profileEnvs,
+      notes: notes,
+      solutions: profileSolutions,
+      exportDate: new Date().toISOString(),
+      description: 'Custom profile export. To create a new profile, edit "profileName" field and re-import.'
+    };
+    
+    const jsonStr = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const timestamp = new Date().toISOString().split('T')[0];
+    const profileSlug = profile.name.toLowerCase().replace(/\s+/g, '-');
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sap-pro-toolkit-${profileSlug}-${timestamp}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    
+    const itemCount = shortcuts.length + profileEnvs.length + notes.length;
+    const qaCount = profileSolutions?.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0) || 0;
+    showToast(`Exported ${itemCount} items + ${qaCount} Quick Actions ✓`, 'success');
+    
+  } catch (error) {
+    console.error('[Export Config] Failed:', error);
+    showToast('Failed to export configuration', 'error');
+  }
 }
 
 async function importJsonFromFile() {
@@ -2646,22 +3447,25 @@ async function saveDisplayMode(mode) {
  * Loads saved states and sets up toggle handlers
  */
 async function initializeCollapsibleSections() {
-  // FORCE RESET: Clear any old collapsed states and default to expanded
-  const sectionStates = {
+  // Load saved section states from storage (default: all expanded)
+  const result = await chrome.storage.local.get('sectionStates');
+  const sectionStates = result.sectionStates || {
     environments: true,  // true = expanded
     shortcuts: true,
     notes: true
   };
   
-  // Save the reset states
-  await chrome.storage.local.set({ sectionStates });
-  
-  // Apply expanded state to all sections
+  // Apply saved states to all sections
   document.querySelectorAll('.section').forEach(section => {
     const sectionId = section.getAttribute('data-section');
     if (sectionId) {
-      // Force remove collapsed class - all sections should be expanded
-      section.classList.remove('collapsed');
+      const isExpanded = sectionStates[sectionId] !== false; // Default to expanded if not set
+      
+      if (isExpanded) {
+        section.classList.remove('collapsed');
+      } else {
+        section.classList.add('collapsed');
+      }
     }
   });
   
@@ -2815,14 +3619,19 @@ function setupEventListeners() {
   document.getElementById('settingsBtn')?.addEventListener('click', openSettingsModal);
   document.getElementById('closeSettingsModal')?.addEventListener('click', closeSettingsModal);
   document.getElementById('closeSettingsBtn')?.addEventListener('click', closeSettingsModal);
+
+  // Quick Actions save button
+  document.getElementById('saveAllQaBtn')?.addEventListener('click', saveAllQuickActions);
   
+  // New simplified Settings handlers
+  document.getElementById('newProfileBtn')?.addEventListener('click', createNewProfileInline);
+  document.getElementById('exportAllBtn')?.addEventListener('click', exportJsonToFile);
   document.getElementById('importJsonBtn')?.addEventListener('click', importJsonFromFile);
-  document.getElementById('exportJsonBtn')?.addEventListener('click', exportJsonToFile);
-  document.getElementById('downloadTemplateLink')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    downloadTemplate();
-  });
   document.getElementById('importFileInput')?.addEventListener('change', handleFileImport);
+  
+  // Legacy Profile modal handlers (still used for duplicate/edit with full form)
+  document.getElementById('closeProfileModal')?.addEventListener('click', closeProfileModal);
+  document.getElementById('saveProfileBtn')?.addEventListener('click', saveProfile);
   
   // Display mode event listeners removed - extension operates in side panel mode only
   
@@ -2921,72 +3730,177 @@ async function discoverProfiles() {
   renderProfileMenu();
 }
 
-/**
- * Load the active profile from storage
- * Defaults to profile-global if no profile is set
- */
 async function loadActiveProfile() {
-  const result = await chrome.storage.local.get({ 
-    activeProfile: 'profile-global'
-  });
+  const result = await chrome.storage.local.get({ activeProfile: 'profile-global' });
   currentProfile = result.activeProfile;
   
-  // Update UI to show current profile
   const profile = availableProfiles.find(p => p.id === currentProfile);
   if (profile) {
     document.getElementById('currentProfileName').textContent = profile.name;
   }
   
-  // Update read-only banner visibility
   updateReadOnlyBanner();
-  
-  // Check for new content in profile
-  await checkForNewContent();
 }
 
 /**
- * Check if profile JSON has new content since last viewed
- * Shows toast notification and blue dot badge for 7 days
+ * Render ALL profiles' Quick Actions as editable text fields
+ * Both name AND path are editable
+ * Shows all profiles together for bulk editing
  */
-async function checkForNewContent() {
+async function renderAllProfilesQuickActions() {
+  const listContainer = document.getElementById('qaEditableList');
+  if (!listContainer) return;
+  
   try {
-    const profileData = await loadProfileData(currentProfile);
-    if (!profileData.contentVersion && !profileData.lastUpdated) return;
+    const editableProfiles = availableProfiles.filter(p => p.id !== 'profile-all');
+    let allHTML = '';
     
-    // Get last viewed content version for this profile
-    const storageKey = `profileViewed_${currentProfile}`;
-    const result = await chrome.storage.local.get(storageKey);
-    const lastViewedVersion = result[storageKey];
-    
-    const currentVersion = profileData.contentVersion || profileData.lastUpdated;
-    
-    // Check if content is new
-    if (lastViewedVersion !== currentVersion) {
-      // Calculate days since update
-      let daysSinceUpdate = 0;
-      if (profileData.lastUpdated) {
-        const updateDate = new Date(profileData.lastUpdated);
-        const now = new Date();
-        daysSinceUpdate = Math.floor((now - updateDate) / (1000 * 60 * 60 * 24));
+    for (const profile of editableProfiles) {
+      const storageKey = `solutions_${profile.id}`;
+      const result = await chrome.storage.local.get(storageKey);
+      let solutionsData = result[storageKey];
+      
+      if (!solutionsData) {
+        const profileData = await loadProfileData(profile.id);
+        solutionsData = JSON.parse(JSON.stringify(profileData.solutions || []));
       }
       
-      // Show notification if updated within last 7 days
-      if (daysSinceUpdate <= 7) {
-        const profile = availableProfiles.find(p => p.id === currentProfile);
-        const message = `📋 ${profile?.name || 'Profile'} has new content!`;
+      if (!solutionsData || solutionsData.length === 0) continue;
+      
+      // Add profile header
+      allHTML += `
+        <div class="qa-profile-section" style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border);">
+          <h3 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px;">
+            ${profile.icon || '📁'} ${profile.name}
+          </h3>
+      `;
+      
+      // Add solutions for this profile
+      for (const solution of solutionsData) {
+        const quickActions = solution.quickActions || [];
         
-        showToast(message, 'info', 5000, async () => {
-          // Mark as viewed when clicked
-          await chrome.storage.local.set({ [storageKey]: currentVersion });
-          await displayProfileUpdateDate();
-        });
-        
-        // Add blue dot badge to profile button (handled in displayProfileUpdateDate)
+        allHTML += `
+          <div class="qa-solution-group" style="margin-bottom: 20px;">
+            <h4 style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px;">
+              ${solution.name || solution.id} (${quickActions.length})
+            </h4>
+            ${quickActions.length === 0 ? 
+              '<div style="padding: 12px; color: var(--text-secondary); font-size: 11px;">No Quick Actions</div>' :
+              quickActions.map(qa => `
+                <div class="qa-edit-row" data-qa-id="${qa.id}" data-solution-id="${solution.id}" data-profile-id="${profile.id}" style="margin-bottom: 12px;">
+                  <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Name:</label>
+                  <input 
+                    type="text" 
+                    class="qa-name-input" 
+                    value="${qa.name}" 
+                    data-original-name="${qa.name}"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--bg-primary); color: var(--text-primary); margin-bottom: 8px;"
+                  >
+                  <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Path:</label>
+                  <input 
+                    type="text" 
+                    class="qa-path-input" 
+                    value="${qa.path}" 
+                    data-original-path="${qa.path}"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; background: var(--bg-primary); color: var(--text-primary); font-family: 'SF Mono', monospace;"
+                  >
+                </div>
+              `).join('')
+            }
+          </div>
+        `;
       }
+      
+      allHTML += '</div>'; // Close profile section
+    }
+    
+    if (!allHTML) {
+      listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-secondary);">No Quick Actions configured</div>';
+    } else {
+      listContainer.innerHTML = allHTML;
     }
     
   } catch (error) {
-    console.error('[New Content Check] Failed:', error);
+    console.error('[Quick Actions Tab] Failed to load:', error);
+    listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--env-production);">Failed to load</div>';
+  }
+}
+
+/**
+ * Save all edited Quick Actions from ALL profiles in the Settings tab.
+ * This function is connected to an explicit "Save" button.
+ */
+async function saveAllQuickActions() {
+  const listContainer = document.getElementById('qaEditableList');
+  if (!listContainer) return;
+
+  try {
+    // Group changes by profile
+    const changesByProfile = {};
+    let totalChanges = 0;
+
+    listContainer.querySelectorAll('.qa-edit-row').forEach(row => {
+      const qaId = row.getAttribute('data-qa-id');
+      const solutionId = row.getAttribute('data-solution-id');
+      const profileId = row.getAttribute('data-profile-id');
+      const nameInput = row.querySelector('.qa-name-input');
+      const pathInput = row.querySelector('.qa-path-input');
+
+      const newName = nameInput.value.trim();
+      const newPath = pathInput.value.trim();
+      const originalName = nameInput.getAttribute('data-original-name');
+      const originalPath = pathInput.getAttribute('data-original-path');
+
+      // Check if changed
+      if (newName !== originalName || newPath !== originalPath) {
+        if (!changesByProfile[profileId]) {
+          changesByProfile[profileId] = [];
+        }
+        changesByProfile[profileId].push({ qaId, solutionId, newName, newPath });
+        totalChanges++;
+      }
+    });
+
+    if (totalChanges === 0) {
+      showToast('No changes to save', 'info');
+      return;
+    }
+
+    // Save changes for each profile
+    for (const profileId in changesByProfile) {
+      const storageKey = `solutions_${profileId}`;
+      const result = await chrome.storage.local.get(storageKey);
+      let solutionsData = result[storageKey];
+
+      if (!solutionsData) {
+        const profileData = await loadProfileData(profileId);
+        solutionsData = JSON.parse(JSON.stringify(profileData.solutions || []));
+      }
+
+      // Apply changes
+      for (const change of changesByProfile[profileId]) {
+        const solution = solutionsData.find(s => s.id === change.solutionId);
+        if (!solution) continue;
+
+        const qa = solution.quickActions.find(q => q.id === change.qaId);
+        if (!qa) continue;
+
+        qa.name = change.newName;
+        qa.path = change.newPath;
+      }
+
+      // Save to storage
+      await chrome.storage.local.set({ [storageKey]: solutionsData });
+    }
+
+    showToast(`${totalChanges} Quick Action(s) saved across ${Object.keys(changesByProfile).length} profile(s) ✓`, 'success');
+    
+    // Reload to reflect saved changes
+    await loadQuickActionsTab();
+
+  } catch (error) {
+    console.error('[Save All Quick Actions] Failed:', error);
+    showToast('Failed to save Quick Actions', 'error');
   }
 }
 
@@ -3002,11 +3916,18 @@ function updateReadOnlyBanner() {
   banner.style.display = isReadOnly ? 'flex' : 'none';
 }
 
-function renderProfileMenu() {
+async function renderProfileMenu() {
   const menu = document.getElementById('profileMenu');
   if (!menu) return;
   
-  menu.innerHTML = availableProfiles.map(profile => {
+  // Get hidden profiles list
+  const result = await chrome.storage.local.get('hiddenProfiles');
+  const hiddenProfiles = result.hiddenProfiles || [];
+  
+  // Filter out hidden profiles
+  const visibleProfiles = availableProfiles.filter(p => !hiddenProfiles.includes(p.id));
+  
+  menu.innerHTML = visibleProfiles.map(profile => {
     const isActive = profile.id === currentProfile;
     const icon = profile.icon || '📁';
     const description = profile.description || '';

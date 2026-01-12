@@ -91,7 +91,7 @@
       "id": "note-s4-joule-prompts",
       "tags": ["ai", "joule", "prompts", "finance"],
       "timestamp": 1736634100000,
-      "title": "🤖 Joule Prompts Library - S/4HANA Finance & ERP"
+      "title": "Joule Prompts Library - S/4HANA Finance & ERP"
     },
     {
       "content": "S/4HANA Cloud User License Ratios:\n\n1 Advanced User = 1 FUE\n5 Core Users = 1 FUE\n30 Self-Service Users = 1 FUE\nDeveloper = 1 FUE (Always)\n\nWhat Each Type Means:\n• Advanced User - Full access to all transactions\n• Core User - Limited to specific business processes\n• Self-Service User - Basic read/write (e.g., expense reports)\n• Developer - Full development and customization access\n\nExample Calculation:\n50 Advanced + 200 Core + 600 Self-Service + 10 Developers\n= 50 + 40 + 20 + 10\n= 120 FUE total\n\nKey for Sizing Projects:\nAlways calculate FUE during discovery to size licenses correctly.",
