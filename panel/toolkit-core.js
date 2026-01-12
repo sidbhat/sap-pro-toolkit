@@ -354,16 +354,31 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
       document.getElementById('globalSearch')?.focus();
     }
     
-    // Cmd/Ctrl + Shift + N → New shortcut (avoid Chrome's "New Window" conflict)
-    if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'N') {
+    // Cmd/Ctrl + J → New shortcut (changed from Cmd+Shift+N)
+    if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
       e.preventDefault();
       if (callbacks.addShortcut) callbacks.addShortcut();
+    }
+    
+    // Cmd/Ctrl + E → New environment
+    if ((e.metaKey || e.ctrlKey) && e.key === 'e') {
+      e.preventDefault();
+      if (callbacks.addEnvironment) callbacks.addEnvironment();
     }
     
     // Cmd/Ctrl + M → New note
     if ((e.metaKey || e.ctrlKey) && e.key === 'm') {
       e.preventDefault();
       if (callbacks.addNote) callbacks.addNote();
+    }
+    
+    // Cmd/Ctrl + Shift + 1/2/3 → Quick switch to environment 1/2/3
+    if ((e.metaKey || e.ctrlKey) && e.shiftKey && ['1', '2', '3'].includes(e.key)) {
+      e.preventDefault();
+      if (callbacks.quickSwitchEnv) {
+        const envIndex = parseInt(e.key) - 1;
+        callbacks.quickSwitchEnv(envIndex);
+      }
     }
     
     // Arrow key navigation through ALL rows (not in input/textarea/select)

@@ -80,24 +80,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function handleEnvironmentSwitch(request, tabId) {
   try {
-    const { targetHostname, preservePath, clearCache } = request;
+    const { targetHostname } = request;
     
     // Get current tab URL
     const tab = await chrome.tabs.get(tabId);
     const currentURL = new URL(tab.url);
     
-    // Step 1: Clear cookies if requested
-    if (clearCache) {
-      await clearCookiesForHostname(targetHostname);
-      console.log('[Environment Switch] Cleared cookies for:', targetHostname);
-    }
-    
-    // Step 2: Build new URL - ALWAYS navigate to root
+    // Build new URL - ALWAYS navigate to root
     const newURL = `https://${targetHostname}/`;
     
     console.log('[Environment Switch] Navigating to:', newURL);
     
-    // Step 3: Update tab
+    // Update tab
     await chrome.tabs.update(tabId, { url: newURL });
     
     console.log('[SAP Pro Toolkit] Environment switched:', currentURL.hostname, '→', targetHostname);
@@ -105,31 +99,6 @@ async function handleEnvironmentSwitch(request, tabId) {
     return { success: true };
   } catch (error) {
     console.error('[SAP Pro Toolkit] Environment switch error:', error);
-    throw error;
-  }
-}
-
-/**
- * Clear all cookies for a specific hostname
- * @param {string} hostname - The hostname to clear cookies for
- */
-async function clearCookiesForHostname(hostname) {
-  try {
-    // Get all cookies for this hostname
-    const url = `https://${hostname}`;
-    const cookies = await chrome.cookies.getAll({ url });
-    
-    // Delete each cookie
-    for (const cookie of cookies) {
-      await chrome.cookies.remove({
-        url: url,
-        name: cookie.name
-      });
-    }
-    
-    console.log(`[Environment Switch] Cleared ${cookies.length} cookies for ${hostname}`);
-  } catch (error) {
-    console.error('[Environment Switch] Failed to clear cookies:', error);
     throw error;
   }
 }

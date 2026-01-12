@@ -200,8 +200,10 @@ View everything across all profiles for comprehensive cross-solution visibility.
 ⌨️ KEYBOARD SHORTCUTS
 
 • Cmd/Ctrl+K: Focus search bar
-• Cmd/Ctrl+Shift+S: Open side panel
+• Cmd/Ctrl+J: Add new shortcut
+• Cmd/Ctrl+E: Add new environment
 • Cmd/Ctrl+M: Add new scratch note
+• Cmd/Ctrl+Shift+1/2: Quick switch to environments 1 or 2
 • Arrow keys: Navigate through items
 • Enter: Open selected item
 • Esc: Close modals
@@ -544,6 +546,7 @@ SAP Pro Toolkit is a comprehensive productivity extension for SAP professionals 
 Core Features:
 • Multi-SAP platform support (SuccessFactors HCM, S/4HANA ERP, BTP Platform)
 • Multi-environment management (Production, Preview, Sales, Sandbox)
+• Quick environment switching with keyboard shortcuts (Cmd+Shift+1/2)
 • Smart shortcuts system with SAP Fiori icon library
 • Color-coded note-taking for go-live checklists and troubleshooting
 • World clock footer for global team coordination (EST, CET, IST)

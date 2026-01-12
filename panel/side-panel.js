@@ -61,8 +61,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Setup enhanced keyboard shortcuts with callbacks
     setupEnhancedKeyboardShortcuts({
       addShortcut: addCurrentPageAsShortcut,
+      addEnvironment: openAddEnvironmentModal,
       addNote: openAddNoteModal,
-      filterContent: filterContent
+      filterContent: filterContent,
+      quickSwitchEnv: quickSwitchToEnvironment
     });
     
     // Initialize collapsible sections
@@ -499,12 +501,18 @@ async function renderEnvironments() {
     currentUrl = currentPageData.url;
   }
   
-  // Sort: Active environment first, then others
+  // Sort: Pinned first, then active, then others
   const sortedEnvs = [...environments].sort((a, b) => {
+    // Pinned environments always first
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    
+    // Within pinned or unpinned, active environment first
     const aIsActive = currentHostname && currentHostname === a.hostname;
     const bIsActive = currentHostname && currentHostname === b.hostname;
-    if (aIsActive) return -1;
-    if (bIsActive) return 1;
+    if (aIsActive && !bIsActive) return -1;
+    if (!aIsActive && bIsActive) return 1;
+    
     return 0;
   });
   
@@ -611,10 +619,35 @@ async function renderEnvironments() {
       line2HTML = `<div class="env-hostname">${env.hostname}</div>`;
     }
     
-    // Build line 3: Notes (if present)
+    // Build line 3: Notes or usage stats (if present)
     let line3HTML = '';
     if (env.notes) {
       line3HTML = `<div class="env-notes">${env.notes}</div>`;
+    } else if (env.lastAccessed && !isActive) {
+      // Show usage stats if no notes and not currently active
+      const daysSinceAccess = Math.floor((Date.now() - env.lastAccessed) / (1000 * 60 * 60 * 24));
+      const accessCount = env.accessCount || 0;
+      
+      let usageText = '';
+      if (daysSinceAccess === 0) {
+        usageText = `Used today`;
+      } else if (daysSinceAccess === 1) {
+        usageText = `Used yesterday`;
+      } else if (daysSinceAccess < 7) {
+        usageText = `Used ${daysSinceAccess} days ago`;
+      } else if (daysSinceAccess < 30) {
+        const weeks = Math.floor(daysSinceAccess / 7);
+        usageText = `Used ${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+      } else {
+        const months = Math.floor(daysSinceAccess / 30);
+        usageText = `Used ${months} ${months === 1 ? 'month' : 'months'} ago`;
+      }
+      
+      if (accessCount > 1) {
+        usageText += ` • ${accessCount} times`;
+      }
+      
+      line3HTML = `<div class="env-usage-stats">${usageText}</div>`;
     }
     
     // Check if we're in "All Profiles" mode (read-only)
@@ -629,6 +662,11 @@ async function renderEnvironments() {
           <div class="env-name">
             <span class="status-dot ${env.type} ${isActive ? 'active' : ''}">${iconHTML}</span>
             ${env.name}
+            <button class="pin-btn ${env.pinned ? 'pinned' : ''}" data-id="${env.id}" title="${env.pinned ? 'Unpin environment' : 'Pin environment to top'}" tabindex="0">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="${env.pinned ? '#F59E0B' : 'currentColor'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: ${env.pinned ? '1' : '0.3'}">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </button>
           </div>
           ${line2HTML}
           ${line3HTML}
@@ -699,6 +737,17 @@ function attachQuickActionBadgeHandlers(quickActions) {
 }
 
 function attachEnvironmentListeners() {
+  // Pin button
+  document.querySelectorAll('.env-row .pin-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-id');
+      const type = btn.getAttribute('data-type') || 'environment';
+      await togglePin(id, type);
+    });
+  });
+  
+  // Switch button
   document.querySelectorAll('.switch-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const hostname = btn.getAttribute('data-hostname');
@@ -731,7 +780,35 @@ function attachEnvironmentListeners() {
       el.setAttribute('title', el.textContent);
     }
   });
+}
+
+/**
+ * Toggle pin status for an environment
+ * Pinned environments appear at the top of the list
+ * @param {string} id - The environment ID
+ */
+async function togglePin(id) {
+  // Block pinning in "All Profiles" mode
+  if (currentProfile === 'profile-all') {
+    showToast('Switch to a specific profile to pin environments', 'warning');
+    return;
+  }
   
+  const env = environments.find(e => e.id === id);
+  if (!env) return;
+  
+  // Toggle pinned state
+  env.pinned = !env.pinned;
+  
+  // Save to storage
+  const storageKey = `environments_${currentProfile}`;
+  await chrome.storage.local.set({ [storageKey]: environments });
+  
+  // Re-render to show updated pin state and resort
+  renderEnvironments();
+  
+  const message = env.pinned ? 'Environment pinned ⭐' : 'Environment unpinned';
+  showToast(message, 'success');
 }
 
 // ==================== UI RENDERING - SHORTCUTS ====================
@@ -768,13 +845,20 @@ function renderShortcuts() {
     return;
   }
   
+  // Sort: Pinned first, then others
+  const sortedShortcuts = [...shortcuts].sort((a, b) => {
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    return 0;
+  });
+  
   // Check if we're in "All Profiles" mode (read-only)
   const isReadOnly = currentProfile === 'profile-all';
   const disabledClass = isReadOnly ? 'btn-disabled' : '';
   const editTitle = isReadOnly ? 'Switch to a specific profile to edit' : 'Edit';
   const deleteTitle = isReadOnly ? 'Switch to a specific profile to delete' : 'Delete';
   
-  tbody.innerHTML = shortcuts.map(shortcut => {
+  tbody.innerHTML = sortedShortcuts.map(shortcut => {
     const displayIcon = renderSAPIcon(shortcut.icon, 'shortcut', 16);
     const tagBadgesHTML = renderTagBadges(shortcut.tags);
     
@@ -785,7 +869,12 @@ function renderShortcuts() {
         </td>
         <td class="shortcut-name-cell">
           <div class="shortcut-name">
-            ${shortcut.name}
+            <span>${shortcut.name}</span>
+            <button class="pin-btn ${shortcut.pinned ? 'pinned' : ''}" data-id="${shortcut.id}" data-type="shortcut" title="${shortcut.pinned ? 'Unpin shortcut' : 'Pin shortcut to top'}" tabindex="0">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="${shortcut.pinned ? '#F59E0B' : 'currentColor'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: ${shortcut.pinned ? '1' : '0.3'}">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </button>
           </div>
           ${shortcut.notes ? `<div class="shortcut-notes">${shortcut.notes}</div>` : ''}
           ${tagBadgesHTML}
@@ -821,6 +910,16 @@ function renderShortcuts() {
 }
 
 function attachShortcutListeners() {
+  // Pin button
+  document.querySelectorAll('.shortcut-row .pin-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-id');
+      const type = btn.getAttribute('data-type');
+      await togglePin(id, type);
+    });
+  });
+  
   // Go button - navigate to shortcut
   document.querySelectorAll('.go-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -900,13 +999,20 @@ function renderNotes() {
     return;
   }
   
+  // Sort: Pinned first, then others
+  const sortedNotes = [...notes].sort((a, b) => {
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    return 0;
+  });
+  
   // Check if we're in "All Profiles" mode (read-only)
   const isReadOnly = currentProfile === 'profile-all';
   const disabledClass = isReadOnly ? 'btn-disabled' : '';
   const copyTitle = isReadOnly ? 'Switch to a specific profile to copy' : 'Copy note content';
   const deleteTitle = isReadOnly ? 'Switch to a specific profile to delete' : 'Delete';
   
-  tbody.innerHTML = notes.map(note => {
+  tbody.innerHTML = sortedNotes.map(note => {
     const contentPreview = note.content 
       ? (note.content.length > 60 ? note.content.substring(0, 60) + '...' : note.content)
       : '';
@@ -934,7 +1040,14 @@ function renderNotes() {
           <span class="note-icon">${displayIcon}</span>
         </td>
         <td class="note-content-cell">
-          <div class="note-title">${note.title}</div>
+          <div class="note-title">
+            <span>${note.title}</span>
+            <button class="pin-btn ${note.pinned ? 'pinned' : ''}" data-id="${note.id}" data-type="note" title="${note.pinned ? 'Unpin note' : 'Pin note to top'}" tabindex="0">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="${note.pinned ? '#F59E0B' : 'currentColor'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: ${note.pinned ? '1' : '0.3'}">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </button>
+          </div>
           ${contentPreview ? `<div class="note-preview">${contentPreview}</div>` : ''}
           ${tagBadgesHTML}
         </td>
@@ -964,6 +1077,16 @@ function renderNotes() {
 }
 
 function attachNoteListeners() {
+  // Pin button
+  document.querySelectorAll('.note-row .pin-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-id');
+      const type = btn.getAttribute('data-type');
+      await togglePin(id, type);
+    });
+  });
+  
   // Copy button
   document.querySelectorAll('.note-row .copy-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
@@ -1134,23 +1257,26 @@ async function switchEnvironment(targetHostname, targetType) {
       if (!confirmed) return;
     }
     
-    // Find environment to get credentials and clearCache settings
+    // Update environment usage tracking
     const env = environments.find(e => e.hostname === targetHostname);
-    const clearCache = env?.clearCache || false;
-    const credentials = env?.credentials || null;
+    if (env) {
+      env.lastAccessed = Date.now();
+      env.accessCount = (env.accessCount || 0) + 1;
+      
+      // Save updated tracking to storage
+      const storageKey = `environments_${currentProfile}`;
+      await chrome.storage.local.set({ [storageKey]: environments });
+    }
     
-    // Send message to background script with credentials
+    // Send message to background script
     const response = await chrome.runtime.sendMessage({
       action: 'switchEnvironment',
       targetHostname: targetHostname,
-      preservePath: true,
-      clearCache: clearCache,
-      credentials: credentials
+      preservePath: true
     });
     
     if (response.success) {
-      const loginMsg = credentials?.enabled ? ' (auto-login enabled)' : '';
-      showToast(`Switching to ${targetHostname}...${loginMsg}`, 'success');
+      showToast(`Switching to ${targetHostname}...`, 'success');
     } else {
       showToast('Failed to switch environment', 'error');
     }
@@ -1158,6 +1284,26 @@ async function switchEnvironment(targetHostname, targetType) {
     console.error('Environment switch error:', error);
     showToast('Failed to switch environment', 'error');
   }
+}
+
+/**
+ * Quick switch to environment by index (0-based)
+ * Used by Cmd+Shift+1/2/3 keyboard shortcuts
+ * @param {number} envIndex - Environment index (0 = first, 1 = second, 2 = third)
+ */
+async function quickSwitchToEnvironment(envIndex) {
+  if (envIndex < 0 || envIndex >= environments.length) {
+    showToast(`No environment at position ${envIndex + 1}`, 'warning');
+    return;
+  }
+  
+  const env = environments[envIndex];
+  if (!env) {
+    showToast(`No environment at position ${envIndex + 1}`, 'warning');
+    return;
+  }
+  
+  await switchEnvironment(env.hostname, env.type);
 }
 
 // ==================== CRUD - ENVIRONMENTS ====================
@@ -1186,59 +1332,7 @@ function openAddEnvironmentModal() {
     updateCompanyIdFieldVisibility(currentPageData.solutionType);
   }
   
-  // Reset credential section to collapsed state
-  resetCredentialSection();
-  
   modal.classList.add('active');
-}
-
-/**
- * Reset credential section to default collapsed state
- * Clears all credential fields and collapses the section
- */
-function resetCredentialSection() {
-  const credentialSection = document.querySelector('.credential-section');
-  const credentialContent = document.getElementById('credentialSectionContent');
-  const credentialsEnabled = document.getElementById('credentialsEnabled');
-  const credentialFields = document.getElementById('credentialFields');
-  
-  // Collapse the section
-  if (credentialSection) {
-    credentialSection.classList.add('collapsed');
-  }
-  if (credentialContent) {
-    credentialContent.style.display = 'none';
-  }
-  
-  // Reset credential fields
-  if (credentialFields) credentialFields.style.display = 'none';
-  if (credentialsEnabled) credentialsEnabled.checked = false;
-  
-  // Clear input values
-  document.getElementById('credentialUsername').value = '';
-  document.getElementById('credentialPassword').value = '';
-  document.getElementById('credentialCompanyId').value = '';
-  document.getElementById('clearCache').checked = false;
-  
-  // Reset password visibility
-  const passwordInput = document.getElementById('credentialPassword');
-  if (passwordInput) passwordInput.type = 'password';
-}
-
-/**
- * Update company ID field visibility based on solution type
- * Only show for SuccessFactors environments
- * @param {string} solutionType - The solution type (successfactors, s4hana, btp, etc.)
- */
-function updateCompanyIdFieldVisibility(solutionType) {
-  const companyIdField = document.getElementById('companyIdField');
-  if (!companyIdField) return;
-  
-  // Detect if hostname contains successfactors domains
-  const isSuccessFactors = solutionType === 'successfactors' || 
-                          solutionType === 'ibp'; // IBP also uses SF login
-  
-  companyIdField.style.display = isSuccessFactors ? 'block' : 'none';
 }
 
 function closeAddEnvironmentModal() {
@@ -1258,85 +1352,10 @@ async function editEnvironment(id) {
   document.getElementById('envHostname').value = env.hostname;
   document.getElementById('envNotes').value = env.notes || '';
   
-  // Detect solution type and update company ID field visibility
-  const solutionType = detectSolutionTypeFromHostname(env.hostname);
-  updateCompanyIdFieldVisibility(solutionType);
-  
-  // Load credentials if they exist
-  if (env.credentials && env.credentials.enabled) {
-    // Expand credential section
-    const credentialSection = document.querySelector('.credential-section');
-    const credentialContent = document.getElementById('credentialSectionContent');
-    if (credentialSection) credentialSection.classList.remove('collapsed');
-    if (credentialContent) credentialContent.style.display = 'block';
-    
-    // Enable credentials checkbox
-    document.getElementById('credentialsEnabled').checked = true;
-    
-    // Show credential fields
-    document.getElementById('credentialFields').style.display = 'block';
-    
-    // Decrypt and populate username
-    if (env.credentials.username) {
-      try {
-        const decryptedUsername = await cryptoUtils.decryptUsername(env.credentials.username);
-        document.getElementById('credentialUsername').value = decryptedUsername;
-      } catch (error) {
-        console.error('[Credentials] Failed to decrypt username:', error);
-        showToast('Failed to decrypt username', 'error');
-      }
-    }
-    
-    // Decrypt and populate password
-    if (env.credentials.password) {
-      try {
-        const decryptedPassword = await cryptoUtils.decryptPassword(env.credentials.password);
-        document.getElementById('credentialPassword').value = decryptedPassword;
-      } catch (error) {
-        console.error('[Credentials] Failed to decrypt password:', error);
-        showToast('Failed to decrypt password', 'error');
-      }
-    }
-    
-    // Populate company ID (stored in plaintext)
-    if (env.credentials.companyId) {
-      document.getElementById('credentialCompanyId').value = env.credentials.companyId;
-    }
-    
-    // Populate clearCache checkbox
-    document.getElementById('clearCache').checked = env.clearCache || false;
-  } else {
-    // No credentials - keep section collapsed
-    resetCredentialSection();
-  }
-  
   document.getElementById('addEnvModal').setAttribute('data-edit-id', id);
   document.querySelector('#addEnvModal .modal-header h3').textContent = 'Edit Environment';
   
-  // Open modal WITHOUT calling openAddEnvironmentModal() to avoid resetting credential section
-  const modal = document.getElementById('addEnvModal');
-  modal.classList.add('active');
-}
-
-/**
- * Detect solution type from hostname
- * @param {string} hostname - The hostname to analyze
- * @returns {string} Solution type (successfactors, s4hana, btp, ibp, unknown)
- */
-function detectSolutionTypeFromHostname(hostname) {
-  if (hostname.includes('sapsf.') || hostname.includes('successfactors') || hostname.includes('hr.cloud.sap')) {
-    return 'successfactors';
-  }
-  if (hostname.includes('s4hana') || hostname.includes('s4h')) {
-    return 's4hana';
-  }
-  if (hostname.includes('hana.ondemand') || hostname.includes('cfapps') || hostname.includes('build.cloud.sap')) {
-    return 'btp';
-  }
-  if (hostname.includes('ibp') || hostname.includes('scmibp')) {
-    return 'ibp';
-  }
-  return 'unknown';
+  openAddEnvironmentModal();
 }
 
 async function deleteEnvironment(id) {
@@ -1427,47 +1446,6 @@ async function saveEnvironment() {
   // Get notes field
   const notes = document.getElementById('envNotes').value.trim();
   
-  // Get clearCache checkbox (independent of credentials)
-  const clearCache = document.getElementById('clearCache').checked;
-  
-  // Handle credentials ONLY if enabled
-  let credentials = null;
-  const credentialsEnabled = document.getElementById('credentialsEnabled').checked;
-  
-  if (credentialsEnabled) {
-    const username = document.getElementById('credentialUsername').value.trim();
-    const password = document.getElementById('credentialPassword').value.trim();
-    const companyId = document.getElementById('credentialCompanyId').value.trim();
-    
-    // Validate: If credentials enabled, username and password are required
-    if (!username || !password) {
-      showToast('Username and password are required when auto-login is enabled', 'warning');
-      if (!username) document.getElementById('credentialUsername').focus();
-      else document.getElementById('credentialPassword').focus();
-      return;
-    }
-    
-    try {
-      // Encrypt username and password
-      const encryptedUsername = await cryptoUtils.encryptUsername(username);
-      const encryptedPassword = await cryptoUtils.encryptPassword(password);
-      
-      credentials = {
-        enabled: true,
-        username: encryptedUsername,
-        password: encryptedPassword,
-        companyId: companyId || null
-      };
-      
-      console.log('[Credentials] Encrypted and stored credentials for environment');
-      
-    } catch (error) {
-      console.error('[Credentials] Encryption failed:', error);
-      showToast('Failed to encrypt credentials. Please try again.', 'error');
-      return;
-    }
-  }
-  
   // Build environment object
   const modal = document.getElementById('addEnvModal');
   const editId = modal.getAttribute('data-edit-id');
@@ -1477,9 +1455,7 @@ async function saveEnvironment() {
     name,
     type,
     hostname,
-    notes,
-    credentials,
-    clearCache
+    notes
   };
   
   try {
@@ -2147,32 +2123,58 @@ async function renderPopularNotes() {
 }
 
 /**
- * Open a popular OSS note in browser
- * @param {string} noteNumber - The OSS note number to open
+ * Unified toggle pin function for environments, shortcuts, and notes
+ * @param {string} id - The item ID
+ * @param {string} type - The item type ('environment', 'shortcut', or 'note')
  */
-async function openPopularOssNote(noteNumber) {
-  try {
-    const ossNoteUrl = `https://launchpad.support.sap.com/#/notes/${noteNumber}`;
-    await chrome.tabs.create({ url: ossNoteUrl });
-    showToast(`Opening OSS Note ${noteNumber} ✓`, 'success');
-  } catch (error) {
-    console.error('[Popular OSS Note] Failed to open:', error);
-    showToast('Failed to open OSS Note', 'error');
+async function togglePin(id, type = 'environment') {
+  // Block pinning in "All Profiles" mode
+  if (currentProfile === 'profile-all') {
+    showToast('Switch to a specific profile to pin items', 'warning');
+    return;
   }
-}
-
-/**
- * Toggle popular notes section collapsed state
- */
-function togglePopularNotes() {
-  const section = document.getElementById('popularNotesSection');
-  if (!section) return;
   
-  section.classList.toggle('collapsed');
+  let item, collection, storageKey, renderFunction, itemLabel;
   
-  // Save state to storage
-  const isCollapsed = section.classList.contains('collapsed');
-  chrome.storage.local.set({ popularNotesCollapsed: isCollapsed });
+  if (type === 'environment') {
+    item = environments.find(e => e.id === id);
+    collection = environments;
+    storageKey = `environments_${currentProfile}`;
+    renderFunction = renderEnvironments;
+    itemLabel = 'Environment';
+  } else if (type === 'shortcut') {
+    item = shortcuts.find(s => s.id === id);
+    collection = shortcuts;
+    storageKey = 'shortcuts';
+    renderFunction = renderShortcuts;
+    itemLabel = 'Shortcut';
+  } else if (type === 'note') {
+    item = notes.find(n => n.id === id);
+    collection = notes;
+    storageKey = 'notes';
+    renderFunction = renderNotes;
+    itemLabel = 'Note';
+  } else {
+    console.error('[Pin] Unknown type:', type);
+    return;
+  }
+  
+  if (!item) {
+    console.error('[Pin] Item not found:', id, type);
+    return;
+  }
+  
+  // Toggle pinned state
+  item.pinned = !item.pinned;
+  
+  // Save to storage
+  await chrome.storage.local.set({ [storageKey]: collection });
+  
+  // Re-render to show updated pin state and resort
+  renderFunction();
+  
+  const message = item.pinned ? `${itemLabel} pinned ⭐` : `${itemLabel} unpinned`;
+  showToast(message, 'success');
 }
 
 /**
@@ -2737,59 +2739,6 @@ function setupEventListeners() {
     }
   });
   
-  // === CREDENTIAL SECTION EVENT LISTENERS ===
-  
-  // 1. Toggle credential section collapse/expand
-  const toggleCredentialBtn = document.getElementById('toggleCredentialSection');
-  if (toggleCredentialBtn) {
-    toggleCredentialBtn.addEventListener('click', () => {
-      const credentialSection = document.querySelector('.credential-section');
-      const credentialContent = document.getElementById('credentialSectionContent');
-      
-      if (credentialSection && credentialContent) {
-        const isCollapsed = credentialSection.classList.contains('collapsed');
-        
-        if (isCollapsed) {
-          // Expand
-          credentialSection.classList.remove('collapsed');
-          credentialContent.style.display = 'block';
-        } else {
-          // Collapse
-          credentialSection.classList.add('collapsed');
-          credentialContent.style.display = 'none';
-        }
-      }
-    });
-  }
-  
-  // 2. Credentials enabled checkbox - show/hide credential fields
-  const credentialsEnabled = document.getElementById('credentialsEnabled');
-  if (credentialsEnabled) {
-    credentialsEnabled.addEventListener('change', (e) => {
-      const credentialFields = document.getElementById('credentialFields');
-      if (credentialFields) {
-        credentialFields.style.display = e.target.checked ? 'block' : 'none';
-      }
-    });
-  }
-  
-  // 3. Password visibility toggle button
-  const togglePasswordBtn = document.getElementById('togglePasswordVisibility');
-  const passwordInput = document.getElementById('credentialPassword');
-  if (togglePasswordBtn && passwordInput) {
-    togglePasswordBtn.addEventListener('click', () => {
-      const isPassword = passwordInput.type === 'password';
-      passwordInput.type = isPassword ? 'text' : 'password';
-      
-      // Update button icon (optional - for better UX)
-      const icon = togglePasswordBtn.querySelector('svg use');
-      if (icon) {
-        const iconHref = isPassword ? '#eye-off' : '#eye';
-        icon.setAttribute('href', iconHref);
-      }
-    });
-  }
-  
   // Global click handler to close all dropdowns when clicking outside
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.kebab-btn') && !e.target.closest('.dropdown-menu')) {
@@ -2990,6 +2939,55 @@ async function loadActiveProfile() {
   
   // Update read-only banner visibility
   updateReadOnlyBanner();
+  
+  // Check for new content in profile
+  await checkForNewContent();
+}
+
+/**
+ * Check if profile JSON has new content since last viewed
+ * Shows toast notification and blue dot badge for 7 days
+ */
+async function checkForNewContent() {
+  try {
+    const profileData = await loadProfileData(currentProfile);
+    if (!profileData.contentVersion && !profileData.lastUpdated) return;
+    
+    // Get last viewed content version for this profile
+    const storageKey = `profileViewed_${currentProfile}`;
+    const result = await chrome.storage.local.get(storageKey);
+    const lastViewedVersion = result[storageKey];
+    
+    const currentVersion = profileData.contentVersion || profileData.lastUpdated;
+    
+    // Check if content is new
+    if (lastViewedVersion !== currentVersion) {
+      // Calculate days since update
+      let daysSinceUpdate = 0;
+      if (profileData.lastUpdated) {
+        const updateDate = new Date(profileData.lastUpdated);
+        const now = new Date();
+        daysSinceUpdate = Math.floor((now - updateDate) / (1000 * 60 * 60 * 24));
+      }
+      
+      // Show notification if updated within last 7 days
+      if (daysSinceUpdate <= 7) {
+        const profile = availableProfiles.find(p => p.id === currentProfile);
+        const message = `📋 ${profile?.name || 'Profile'} has new content!`;
+        
+        showToast(message, 'info', 5000, async () => {
+          // Mark as viewed when clicked
+          await chrome.storage.local.set({ [storageKey]: currentVersion });
+          await displayProfileUpdateDate();
+        });
+        
+        // Add blue dot badge to profile button (handled in displayProfileUpdateDate)
+      }
+    }
+    
+  } catch (error) {
+    console.error('[New Content Check] Failed:', error);
+  }
 }
 
 /**
