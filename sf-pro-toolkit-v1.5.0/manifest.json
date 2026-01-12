@@ -9,8 +9,7 @@
     "storage",
     "tabs",
     "activeTab",
-    "sidePanel",
-    "cookies"
+    "sidePanel"
   ],
   
   "host_permissions": [

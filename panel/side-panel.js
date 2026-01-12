@@ -635,15 +635,13 @@ async function renderEnvironments() {
         </td>
         <td class="env-actions-cell">
           <div class="table-actions">
-            ${!isActive ? `
-              <button class="icon-btn primary switch-btn" data-hostname="${env.hostname}" data-type="${env.type}" title="Switch to this environment">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="23 4 23 10 17 10"/>
-                  <polyline points="1 20 1 14 7 14"/>
-                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-                </svg>
-              </button>
-            ` : ''}
+            <button class="icon-btn primary switch-btn" data-hostname="${env.hostname}" data-type="${env.type}" title="${isActive ? 'Reload this environment' : 'Switch to this environment'}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+            </button>
             <button class="icon-btn edit-btn ${disabledClass}" data-id="${env.id}" title="${editTitle}" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -1136,18 +1134,26 @@ async function switchEnvironment(targetHostname, targetType) {
       if (!confirmed) return;
     }
     
-    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+    // Find environment to get credentials and clearCache settings
+    const env = environments.find(e => e.hostname === targetHostname);
+    const clearCache = env?.clearCache || false;
+    const credentials = env?.credentials || null;
     
-    let newURL;
-    if (tab && isSFPage(tab.url)) {
-      const currentURL = new URL(tab.url);
-      newURL = currentURL.href.replace(currentURL.hostname, targetHostname);
+    // Send message to background script with credentials
+    const response = await chrome.runtime.sendMessage({
+      action: 'switchEnvironment',
+      targetHostname: targetHostname,
+      preservePath: true,
+      clearCache: clearCache,
+      credentials: credentials
+    });
+    
+    if (response.success) {
+      const loginMsg = credentials?.enabled ? ' (auto-login enabled)' : '';
+      showToast(`Switching to ${targetHostname}...${loginMsg}`, 'success');
     } else {
-      newURL = `https://${targetHostname}/`;
+      showToast('Failed to switch environment', 'error');
     }
-    
-    await chrome.tabs.update(tab.id, { url: newURL });
-    showToast(`Switching to ${targetHostname}...`, 'success');
   } catch (error) {
     console.error('Environment switch error:', error);
     showToast('Failed to switch environment', 'error');
@@ -1175,9 +1181,64 @@ function openAddEnvironmentModal() {
       suggestedName += ` ${currentPageData.datacenter}`;
     }
     document.getElementById('envName').value = suggestedName.trim();
+    
+    // Set hostname type for company ID field visibility
+    updateCompanyIdFieldVisibility(currentPageData.solutionType);
   }
   
+  // Reset credential section to collapsed state
+  resetCredentialSection();
+  
   modal.classList.add('active');
+}
+
+/**
+ * Reset credential section to default collapsed state
+ * Clears all credential fields and collapses the section
+ */
+function resetCredentialSection() {
+  const credentialSection = document.querySelector('.credential-section');
+  const credentialContent = document.getElementById('credentialSectionContent');
+  const credentialsEnabled = document.getElementById('credentialsEnabled');
+  const credentialFields = document.getElementById('credentialFields');
+  
+  // Collapse the section
+  if (credentialSection) {
+    credentialSection.classList.add('collapsed');
+  }
+  if (credentialContent) {
+    credentialContent.style.display = 'none';
+  }
+  
+  // Reset credential fields
+  if (credentialFields) credentialFields.style.display = 'none';
+  if (credentialsEnabled) credentialsEnabled.checked = false;
+  
+  // Clear input values
+  document.getElementById('credentialUsername').value = '';
+  document.getElementById('credentialPassword').value = '';
+  document.getElementById('credentialCompanyId').value = '';
+  document.getElementById('clearCache').checked = false;
+  
+  // Reset password visibility
+  const passwordInput = document.getElementById('credentialPassword');
+  if (passwordInput) passwordInput.type = 'password';
+}
+
+/**
+ * Update company ID field visibility based on solution type
+ * Only show for SuccessFactors environments
+ * @param {string} solutionType - The solution type (successfactors, s4hana, btp, etc.)
+ */
+function updateCompanyIdFieldVisibility(solutionType) {
+  const companyIdField = document.getElementById('companyIdField');
+  if (!companyIdField) return;
+  
+  // Detect if hostname contains successfactors domains
+  const isSuccessFactors = solutionType === 'successfactors' || 
+                          solutionType === 'ibp'; // IBP also uses SF login
+  
+  companyIdField.style.display = isSuccessFactors ? 'block' : 'none';
 }
 
 function closeAddEnvironmentModal() {
@@ -1188,7 +1249,7 @@ function closeAddEnvironmentModal() {
   document.querySelector('#addEnvModal .modal-header h3').textContent = 'Add Environment';
 }
 
-function editEnvironment(id) {
+async function editEnvironment(id) {
   const env = environments.find(e => e.id === id);
   if (!env) return;
   
@@ -1196,10 +1257,86 @@ function editEnvironment(id) {
   document.getElementById('envType').value = env.type;
   document.getElementById('envHostname').value = env.hostname;
   document.getElementById('envNotes').value = env.notes || '';
+  
+  // Detect solution type and update company ID field visibility
+  const solutionType = detectSolutionTypeFromHostname(env.hostname);
+  updateCompanyIdFieldVisibility(solutionType);
+  
+  // Load credentials if they exist
+  if (env.credentials && env.credentials.enabled) {
+    // Expand credential section
+    const credentialSection = document.querySelector('.credential-section');
+    const credentialContent = document.getElementById('credentialSectionContent');
+    if (credentialSection) credentialSection.classList.remove('collapsed');
+    if (credentialContent) credentialContent.style.display = 'block';
+    
+    // Enable credentials checkbox
+    document.getElementById('credentialsEnabled').checked = true;
+    
+    // Show credential fields
+    document.getElementById('credentialFields').style.display = 'block';
+    
+    // Decrypt and populate username
+    if (env.credentials.username) {
+      try {
+        const decryptedUsername = await cryptoUtils.decryptUsername(env.credentials.username);
+        document.getElementById('credentialUsername').value = decryptedUsername;
+      } catch (error) {
+        console.error('[Credentials] Failed to decrypt username:', error);
+        showToast('Failed to decrypt username', 'error');
+      }
+    }
+    
+    // Decrypt and populate password
+    if (env.credentials.password) {
+      try {
+        const decryptedPassword = await cryptoUtils.decryptPassword(env.credentials.password);
+        document.getElementById('credentialPassword').value = decryptedPassword;
+      } catch (error) {
+        console.error('[Credentials] Failed to decrypt password:', error);
+        showToast('Failed to decrypt password', 'error');
+      }
+    }
+    
+    // Populate company ID (stored in plaintext)
+    if (env.credentials.companyId) {
+      document.getElementById('credentialCompanyId').value = env.credentials.companyId;
+    }
+    
+    // Populate clearCache checkbox
+    document.getElementById('clearCache').checked = env.clearCache || false;
+  } else {
+    // No credentials - keep section collapsed
+    resetCredentialSection();
+  }
+  
   document.getElementById('addEnvModal').setAttribute('data-edit-id', id);
   document.querySelector('#addEnvModal .modal-header h3').textContent = 'Edit Environment';
   
-  openAddEnvironmentModal();
+  // Open modal WITHOUT calling openAddEnvironmentModal() to avoid resetting credential section
+  const modal = document.getElementById('addEnvModal');
+  modal.classList.add('active');
+}
+
+/**
+ * Detect solution type from hostname
+ * @param {string} hostname - The hostname to analyze
+ * @returns {string} Solution type (successfactors, s4hana, btp, ibp, unknown)
+ */
+function detectSolutionTypeFromHostname(hostname) {
+  if (hostname.includes('sapsf.') || hostname.includes('successfactors') || hostname.includes('hr.cloud.sap')) {
+    return 'successfactors';
+  }
+  if (hostname.includes('s4hana') || hostname.includes('s4h')) {
+    return 's4hana';
+  }
+  if (hostname.includes('hana.ondemand') || hostname.includes('cfapps') || hostname.includes('build.cloud.sap')) {
+    return 'btp';
+  }
+  if (hostname.includes('ibp') || hostname.includes('scmibp')) {
+    return 'ibp';
+  }
+  return 'unknown';
 }
 
 async function deleteEnvironment(id) {
@@ -1253,7 +1390,6 @@ async function saveEnvironment() {
   hostname = hostname.replace(/^https?:\/\//, '');
   
   // Validation 3: Split hostname from path/params/hash for domain validation only
-  // Extract just the domain part before any path, query, or hash
   let hostnameOnly = hostname.split('/')[0].split('?')[0].split('#')[0];
   
   // Validation 4: Check for valid hostname format (no spaces in hostname part)
@@ -1271,14 +1407,10 @@ async function saveEnvironment() {
   
   // Validation 5: Check for valid SAP domain (SuccessFactors, S/4HANA, BTP, IBP)
   const sapDomains = [
-    // SuccessFactors
     'hr.cloud.sap', 'sapsf.com', 'sapsf.cn', 'sapcloud.cn',
     'successfactors.eu', 'sapsf.eu', 'successfactors.com',
-    // S/4HANA
     's4hana.ondemand.com', 's4hana.cloud.sap',
-    // BTP
     'hana.ondemand.com', 'cfapps', 'build.cloud.sap',
-    // IBP
     'ibp.cloud.sap', 'scmibp.ondemand.com', 'ibplanning'
   ];
   const isValidSAPHostname = sapDomains.some(domain => hostnameOnly.includes(domain));
@@ -1295,19 +1427,69 @@ async function saveEnvironment() {
   // Get notes field
   const notes = document.getElementById('envNotes').value.trim();
   
-  // Save environment
+  // Get clearCache checkbox (independent of credentials)
+  const clearCache = document.getElementById('clearCache').checked;
+  
+  // Handle credentials ONLY if enabled
+  let credentials = null;
+  const credentialsEnabled = document.getElementById('credentialsEnabled').checked;
+  
+  if (credentialsEnabled) {
+    const username = document.getElementById('credentialUsername').value.trim();
+    const password = document.getElementById('credentialPassword').value.trim();
+    const companyId = document.getElementById('credentialCompanyId').value.trim();
+    
+    // Validate: If credentials enabled, username and password are required
+    if (!username || !password) {
+      showToast('Username and password are required when auto-login is enabled', 'warning');
+      if (!username) document.getElementById('credentialUsername').focus();
+      else document.getElementById('credentialPassword').focus();
+      return;
+    }
+    
+    try {
+      // Encrypt username and password
+      const encryptedUsername = await cryptoUtils.encryptUsername(username);
+      const encryptedPassword = await cryptoUtils.encryptPassword(password);
+      
+      credentials = {
+        enabled: true,
+        username: encryptedUsername,
+        password: encryptedPassword,
+        companyId: companyId || null
+      };
+      
+      console.log('[Credentials] Encrypted and stored credentials for environment');
+      
+    } catch (error) {
+      console.error('[Credentials] Encryption failed:', error);
+      showToast('Failed to encrypt credentials. Please try again.', 'error');
+      return;
+    }
+  }
+  
+  // Build environment object
   const modal = document.getElementById('addEnvModal');
   const editId = modal.getAttribute('data-edit-id');
+  
+  const envObject = {
+    id: editId || `env-${Date.now()}`,
+    name,
+    type,
+    hostname,
+    notes,
+    credentials,
+    clearCache
+  };
   
   try {
     if (editId) {
       environments = environments.filter(e => e.id !== editId);
-      environments.push({ id: editId, name, type, hostname, notes });
+      environments.push(envObject);
       showToast('Environment updated ✓', 'success');
       modal.removeAttribute('data-edit-id');
     } else {
-      const newEnv = { id: `env-${Date.now()}`, name, type, hostname, notes };
-      environments.push(newEnv);
+      environments.push(envObject);
       showToast('Environment saved ✓', 'success');
     }
     
@@ -2554,6 +2736,59 @@ function setupEventListeners() {
       filterByTag(tag);
     }
   });
+  
+  // === CREDENTIAL SECTION EVENT LISTENERS ===
+  
+  // 1. Toggle credential section collapse/expand
+  const toggleCredentialBtn = document.getElementById('toggleCredentialSection');
+  if (toggleCredentialBtn) {
+    toggleCredentialBtn.addEventListener('click', () => {
+      const credentialSection = document.querySelector('.credential-section');
+      const credentialContent = document.getElementById('credentialSectionContent');
+      
+      if (credentialSection && credentialContent) {
+        const isCollapsed = credentialSection.classList.contains('collapsed');
+        
+        if (isCollapsed) {
+          // Expand
+          credentialSection.classList.remove('collapsed');
+          credentialContent.style.display = 'block';
+        } else {
+          // Collapse
+          credentialSection.classList.add('collapsed');
+          credentialContent.style.display = 'none';
+        }
+      }
+    });
+  }
+  
+  // 2. Credentials enabled checkbox - show/hide credential fields
+  const credentialsEnabled = document.getElementById('credentialsEnabled');
+  if (credentialsEnabled) {
+    credentialsEnabled.addEventListener('change', (e) => {
+      const credentialFields = document.getElementById('credentialFields');
+      if (credentialFields) {
+        credentialFields.style.display = e.target.checked ? 'block' : 'none';
+      }
+    });
+  }
+  
+  // 3. Password visibility toggle button
+  const togglePasswordBtn = document.getElementById('togglePasswordVisibility');
+  const passwordInput = document.getElementById('credentialPassword');
+  if (togglePasswordBtn && passwordInput) {
+    togglePasswordBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      
+      // Update button icon (optional - for better UX)
+      const icon = togglePasswordBtn.querySelector('svg use');
+      if (icon) {
+        const iconHref = isPassword ? '#eye-off' : '#eye';
+        icon.setAttribute('href', iconHref);
+      }
+    });
+  }
   
   // Global click handler to close all dropdowns when clicking outside
   document.addEventListener('click', (e) => {

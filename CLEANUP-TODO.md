@@ -3,12 +3,12 @@ Quick reference for immediate cleanup tasks
 
 ## 🔥 Critical (Do Now)
 
-### 1. Fix Broken File References
+### 1. Fix Broken File References -- display toggle is needed
 - [ ] `background/background.js` line 18: Remove reference to `popup/popup-redesign.html`
 - [ ] `content/content.js` line 307: Create `content/dark.css` OR remove dark mode feature
 - [ ] Decision: Keep or remove entire display mode toggle system?
 
-### 2. Remove Dead Code - Visual Indicators
+### 2. Remove Dead Code - Visual Indicators -- yes to this 
 - [ ] `content/content.js` lines 224-305: Remove unused functions:
   - `injectVisualIndicators()`
   - `injectBorder()`
@@ -19,15 +19,15 @@ Quick reference for immediate cleanup tasks
 
 ### 3. UX - "All Profiles" Mode
 - [ ] Add visible banner when in "All Profiles" mode
-- [ ] Example: "📘 Viewing all profiles (read-only mode)"
-- [ ] Make disabled state more obvious (not just title attribute)
+- [ ] Example: "📘 Viewing all profiles (read-only mode)" yes 
+- [ ] Make disabled state more obvious (not just title attribute)yes
 
 ---
 
 ## ⚠️ Important (This Week)
 
 ### 4. Documentation Updates
-- [ ] Update `IMPLEMENTATION-STATUS.md`:
+- [ ] Update `IMPLEMENTATION-STATUS.md`: yes
   - Remove "popup mode" references
   - Add Popular OSS Notes feature
   - Add Custom profiles feature
@@ -37,7 +37,7 @@ Quick reference for immediate cleanup tasks
   - Complete keyboard shortcuts section
   - Add "All Profiles" mode explanation
 
-### 5. Code Quality
+### 5. Code Quality yes
 - [ ] Review 80+ `console.log` statements:
   - Keep: errors, initialization, important state changes
   - Remove: debug logs like `[DEBUG]`, `shortcuts.length`, etc.
@@ -47,7 +47,7 @@ Quick reference for immediate cleanup tasks
   - `deleteNote()` line 2448
   - `buildQuickActionUrl()` in toolkit-core.js
 
-### 6. Add JSDoc Comments
+### 6. Add JSDoc Comments yes
 Priority functions to document:
 - [ ] `background.js`: All message handlers
 - [ ] `content.js`: Detection functions (`detectEnvironmentFromURL`, `detectEnvironmentHeuristic`)
@@ -56,14 +56,13 @@ Priority functions to document:
 
 ---
 
-## 📝 Medium Priority (Next Sprint)
 
-### 7. Consolidate Duplicate Code
+### 7. Consolidate Duplicate Code ------ yes to all
 - [ ] Move `isSFPage()` detection to toolkit-core.js (currently in 3 files)
 - [ ] Remove duplicate toast implementation from side-panel.js (use toolkit-core version)
 - [ ] Use `extractAllUrlParameters()` consistently instead of inline parsing
 
-### 8. UX Improvements
+### 8. UX Improvements -- yes
 - [ ] Add 500ms debounce to icon suggestions (lines 3089-3165 in side-panel.js)
 - [ ] Add loading indicators:
   - Profile switching
@@ -71,7 +70,7 @@ Priority functions to document:
   - Quick Action navigation
 - [ ] Improve character counter message (line 2594)
 
-### 9. i18n Hardcoded Strings
+### 9. i18n Hardcoded Strings ---- fix all of these
 Move to `_locales/en/messages.json`:
 - [ ] Line 1272: Profile switch suggestion toast
 - [ ] Line 2070: Delete environment confirmation
@@ -81,9 +80,8 @@ Move to `_locales/en/messages.json`:
 
 ---
 
-## 🎨 Nice to Have (Future)
 
-### 10. File Organization
+### 10. File Organization -- do these NOW
 - [ ] Consider renaming `/popup` directory to `/panel` or `/src`
 - [ ] Split `side-panel.css` into modules:
   - `base.css`
@@ -91,12 +89,12 @@ Move to `_locales/en/messages.json`:
   - `sections.css`
   - `themes.css`
 
-### 11. Performance
+### 11. Performance --- SKIP THIS
 - [ ] Add loading indicator for "All Profiles" mode
 - [ ] Consider code splitting for `sap-icon-library.js` (~2000 lines)
 - [ ] Optimize tab change listener (only re-render if data changed)
 
-### 12. Testing
+### 12. Testing -- SKIP 
 - [ ] Add unit tests for:
   - URL building functions
   - Environment detection logic
@@ -105,7 +103,7 @@ Move to `_locales/en/messages.json`:
 
 ---
 
-## 📋 Quick Wins (< 30 min each)
+## 📋 Quick Wins (< 30 min each) -- NO TO ALL
 
 - [ ] Extract magic numbers to constants:
   - `5000` (character warning threshold)
@@ -119,37 +117,30 @@ Move to `_locales/en/messages.json`:
 
 ---
 
-## 🎯 Decision Points Needed
-
-1. **Visual Indicators Feature**
+1. **Visual Indicators Feature** >> REMOVE
    - [ ] Decision: Remove completely OR keep with feature flag?
    - Current: ~150 lines of commented-out code
 
-2. **Dark Mode in Content Script**
+2. **Dark Mode in Content Script** >>> REMOVE
    - [ ] Decision: Implement fully OR remove feature?
    - Current: Broken (references non-existent CSS file)
 
-3. **Display Mode Toggle**
+3. **Display Mode Toggle** SIDE PANEL CODE STAYS REMOVE ALL ELSE
    - [ ] Decision: Remove system entirely?
    - Current: Extension is side-panel only, but code remains
 
-4. **Character Counter Limit**
+4. **Character Counter Limit** NO
    - [ ] Decision: Remove 5000 char warning OR keep with better message?
    - Current: Arbitrary soft limit may confuse users
 
 ---
 
-## ✅ Completed Items
-_(Move items here as you complete them)_
-
----
-
 ## 📞 Questions for Product Owner
 
-1. Should visual indicators feature be kept for future use?
-2. Is dark mode in content script a required feature?
-3. Priority: Performance optimization vs. new features?
-4. Timeline for translation review (9 languages)?
+1. Should visual indicators feature be kept for future use? NO
+2. Is dark mode in content script a required feature? NO FOR POPUP
+3. Priority: Performance optimization vs. new features? performance
+4. Timeline for translation review (9 languages)? RIGHT NOW
 
 ---
 

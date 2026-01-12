@@ -1333,13 +1333,6 @@ body {
 
 /* ==================== FORMS ==================== */
 
-/* Required field asterisk styling */
-[data-i18n="required"] {
-  color: var(--env-production);
-  font-weight: 700;
-  margin-left: 2px;
-}
-
 .form-group {
   margin-bottom: var(--space-lg);
 }
@@ -1354,15 +1347,6 @@ body {
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: var(--space-sm);
-}
-
-/* Labels with character counters use flex layout */
-.form-group label:has(.char-counter) {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
 }
 
 .form-group input,
@@ -2245,33 +2229,16 @@ textarea:valid:not(:placeholder-shown) {
   border-color: var(--env-preview);
 }
 
-/* ==================== CREDENTIAL SECTION COLLAPSIBLE ==================== */
-
-.credential-section-header {
-  user-select: none;
-  transition: all 0.2s ease;
-}
-
-.credential-section-header:hover {
-  opacity: 0.8;
-}
-
-.credential-section.collapsed .section-toggle-icon {
-  transform: rotate(-90deg);
-}
-
-#credentialSectionContent {
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-#credentialSectionContent.collapsed {
-  max-height: 0;
-  opacity: 0;
-  margin-bottom: 0;
-}
-
 /* ==================== FORM IMPROVEMENTS ==================== */
+
+/* Better label layout with counters */
+.form-group label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
 
 /* Prevent form elements from breaking layout */
 .form-group input,

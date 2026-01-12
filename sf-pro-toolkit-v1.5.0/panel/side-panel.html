@@ -381,99 +381,6 @@
             </label>
             <textarea id="envNotes" rows="2" placeholder="e.g., Test users, credentials, special configuration..."></textarea>
           </div>
-
-          <!-- Auto-Login Credentials Section - Collapsible -->
-          <div class="credential-section" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-light);">
-            <div class="credential-section-header" id="credentialSectionHeader" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 12px;">
-              <h4 style="font-size: 13px; font-weight: 600; margin: 0; color: var(--text-primary);">
-                🔐 Auto-Login Credentials (Optional)
-              </h4>
-              <button type="button" class="section-toggle-btn" id="toggleCredentialSection" style="background: transparent; border: none; padding: 4px; cursor: pointer;">
-                <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-              </button>
-            </div>
-            
-            <div id="credentialSectionContent" style="display: none;">
-              <p style="font-size: 11px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 16px;">
-                Securely store credentials for automatic login. All passwords are encrypted using AES-256-GCM.
-              </p>
-              
-              <div class="form-group">
-                <label style="display: block;">
-                  <input type="checkbox" id="credentialsEnabled" style="margin-right: 8px; cursor: pointer;">
-                  <span>Enable auto-login for this environment</span>
-                </label>
-              </div>
-
-              <div id="credentialFields" style="display: none;">
-                <div class="form-group">
-                  <label for="credentialUsername">
-                    <span>Username <span style="color: var(--env-production);">*</span></span>
-                    <span class="char-counter" id="credentialUsernameCounter">0/255</span>
-                  </label>
-                  <input type="text" id="credentialUsername" autocomplete="off" placeholder="user@company.com">
-                </div>
-
-                <div class="form-group">
-                  <label for="credentialPassword">
-                    <span>Password <span style="color: var(--env-production);">*</span></span>
-                  </label>
-                <div style="position: relative; display: flex; gap: 4px;">
-                  <input 
-                    type="password" 
-                    id="credentialPassword" 
-                    autocomplete="off" 
-                    placeholder="••••••••"
-                    style="flex: 1; padding-right: 40px;"
-                  >
-                  <button 
-                    type="button" 
-                    id="togglePasswordVisibility" 
-                    class="icon-btn" 
-                    title="Show/Hide Password"
-                    style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; padding: 4px;"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-                <!-- SuccessFactors Only: Company ID Field -->
-                <div class="form-group" id="companyIdField" style="display: none;">
-                  <label for="credentialCompanyId">
-                    <span>Company ID (optional)</span>
-                    <span class="char-counter" id="credentialCompanyIdCounter">0/100</span>
-                  </label>
-                  <input type="text" id="credentialCompanyId" autocomplete="off" placeholder="Leave empty if in URL">
-                  <small style="font-size: 11px; color: var(--text-tertiary); display: block; margin-top: 4px;">
-                    Only needed if company ID is not in the environment URL
-                  </small>
-                </div>
-
-                <div class="form-group">
-                  <label style="display: block;">
-                    <input type="checkbox" id="clearCache" style="margin-right: 8px; cursor: pointer;">
-                    <span>Clear cache & force fresh login</span>
-                  </label>
-                  <small style="font-size: 11px; color: var(--text-tertiary); display: block; margin-top: 4px; margin-left: 24px;">
-                    Clears session cookies before login (useful for S/4HANA, BTP)
-                  </small>
-                </div>
-
-                <div style="background: var(--bg-secondary); border-left: 3px solid var(--accent-blue); padding: 12px; border-radius: 4px; margin-top: 12px;">
-                  <p style="font-size: 11px; line-height: 1.6; color: var(--text-secondary); margin: 0;">
-                    <strong style="color: var(--text-primary);">🔒 Security:</strong> Passwords are encrypted using AES-256-GCM and stored locally. 
-                    Keys are bound to your browser.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
         </form>
       </div>
       <div class="modal-footer">
@@ -885,7 +792,6 @@
     </div>
   </div>
 
-  <script src="crypto-utils.js"></script>
   <script src="sap-icon-library.js"></script>
   <script src="validation.js"></script>
   <script src="toolkit-core.js"></script>

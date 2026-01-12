@@ -45,40 +45,59 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'switchEnvironment') {
-    handleEnvironmentSwitch(request, sender.tab.id)
+    // Get tab ID from sender.tab if available (content script), otherwise query active tab (side panel)
+    const getTabId = async () => {
+      if (sender.tab?.id) {
+        return sender.tab.id;
+      }
+      // Message from side panel - get active tab
+      const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+      return tab?.id;
+    };
+    
+    getTabId()
+      .then(tabId => handleEnvironmentSwitch(request, tabId))
       .then(() => sendResponse({ success: true }))
       .catch((error) => sendResponse({ success: false, error: error.message }));
     return true; // Keep channel open for async response
   }
   
   if (request.action === 'updateBadge') {
-    updateBadge(request.envType, sender.tab.id);
-    sendResponse({ success: true });
+    // Get tab ID from sender.tab if available, otherwise use request.tabId
+    const tabId = sender.tab?.id || request.tabId;
+    if (tabId) {
+      updateBadge(request.envType, tabId);
+      sendResponse({ success: true });
+    } else {
+      sendResponse({ success: false, error: 'No tab ID available' });
+    }
     return true;
   }
+  
 });
 
 // ==================== ENVIRONMENT SWITCHING ====================
 
 async function handleEnvironmentSwitch(request, tabId) {
   try {
-    const { targetHostname, preservePath } = request;
+    const { targetHostname, preservePath, clearCache } = request;
     
     // Get current tab URL
     const tab = await chrome.tabs.get(tabId);
     const currentURL = new URL(tab.url);
     
-    // Build new URL
-    let newURL;
-    if (preservePath) {
-      // Preserve path, query, and hash
-      newURL = currentURL.href.replace(currentURL.hostname, targetHostname);
-    } else {
-      // Just switch hostname to root
-      newURL = `${currentURL.protocol}//${targetHostname}/`;
+    // Step 1: Clear cookies if requested
+    if (clearCache) {
+      await clearCookiesForHostname(targetHostname);
+      console.log('[Environment Switch] Cleared cookies for:', targetHostname);
     }
     
-    // Update tab
+    // Step 2: Build new URL - ALWAYS navigate to root
+    const newURL = `https://${targetHostname}/`;
+    
+    console.log('[Environment Switch] Navigating to:', newURL);
+    
+    // Step 3: Update tab
     await chrome.tabs.update(tabId, { url: newURL });
     
     console.log('[SAP Pro Toolkit] Environment switched:', currentURL.hostname, '→', targetHostname);
@@ -86,6 +105,31 @@ async function handleEnvironmentSwitch(request, tabId) {
     return { success: true };
   } catch (error) {
     console.error('[SAP Pro Toolkit] Environment switch error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Clear all cookies for a specific hostname
+ * @param {string} hostname - The hostname to clear cookies for
+ */
+async function clearCookiesForHostname(hostname) {
+  try {
+    // Get all cookies for this hostname
+    const url = `https://${hostname}`;
+    const cookies = await chrome.cookies.getAll({ url });
+    
+    // Delete each cookie
+    for (const cookie of cookies) {
+      await chrome.cookies.remove({
+        url: url,
+        name: cookie.name
+      });
+    }
+    
+    console.log(`[Environment Switch] Cleared ${cookies.length} cookies for ${hostname}`);
+  } catch (error) {
+    console.error('[Environment Switch] Failed to clear cookies:', error);
     throw error;
   }
 }
@@ -146,6 +190,7 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   }
 });
 
+
 // ==================== UTILITY FUNCTIONS ====================
 
 /**
@@ -158,6 +203,55 @@ function isSFPage(url) {
   const sfDomains = ['hr.cloud.sap', 'sapsf.com', 'sapsf.cn', 'sapcloud.cn', 
                       'successfactors.eu', 'sapsf.eu', 'successfactors.com'];
   return sfDomains.some(domain => url.includes(domain));
+}
+
+/**
+ * Check if two hostnames belong to the same SAP solution type
+ * Only preserve paths when switching within the same solution (e.g., SF prod → SF sales)
+ * @param {string} hostname1 - First hostname
+ * @param {string} hostname2 - Second hostname
+ * @returns {boolean} True if both belong to same solution type
+ */
+function areSameSolutionType(hostname1, hostname2) {
+  const getSolutionType = (hostname) => {
+    // SuccessFactors domains
+    if (hostname.includes('hr.cloud.sap') || 
+        hostname.includes('sapsf.') || 
+        hostname.includes('successfactors') ||
+        hostname.includes('sapcloud.cn')) {
+      return 'successfactors';
+    }
+    
+    // S/4HANA domains
+    if (hostname.includes('s4hana') || hostname.includes('s4h')) {
+      return 's4hana';
+    }
+    
+    // BTP domains
+    if (hostname.includes('hana.ondemand') || 
+        hostname.includes('cfapps') || 
+        hostname.includes('build.cloud.sap')) {
+      return 'btp';
+    }
+    
+    // IBP domains (similar to SF)
+    if (hostname.includes('ibp') || hostname.includes('scmibp')) {
+      return 'ibp';
+    }
+    
+    return 'other';
+  };
+  
+  const type1 = getSolutionType(hostname1);
+  const type2 = getSolutionType(hostname2);
+  
+  // IBP and SuccessFactors can share paths (same login system)
+  if ((type1 === 'successfactors' && type2 === 'ibp') || 
+      (type1 === 'ibp' && type2 === 'successfactors')) {
+    return true;
+  }
+  
+  return type1 === type2 && type1 !== 'other';
 }
 
 // ==================== KEEP ALIVE (Manifest V3) ====================

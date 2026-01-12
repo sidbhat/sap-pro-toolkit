@@ -27,14 +27,24 @@ The extension automatically:
 - Displays country flags next to datacenter regions
 - Translates all UI labels, tooltips, and placeholders
 
-### 1️⃣ Switch Between Environments
+### 1️⃣ Switch Between Environments (with Auto-Login)
 Save multiple SF instances (Production, Preview, Sales, Sandbox) and quickly switch between them without manually changing URLs. The extension intelligently preserves your current page path when switching environments.
 
+**NEW: Optional Auto-Login** 🔐
+- Securely store credentials per environment (AES-256-GCM encrypted)
+- Automatic login when switching environments
+- Support for SuccessFactors two-step login flow
+- Company ID management for SF environments
+- Clear cache & force fresh login option
+- SSO/OAuth detection with graceful fallback
+
 **Key Benefits:**
-- ⚡ Instant environment switching
+- ⚡ Instant environment switching with auto-login
 - 🔒 Production confirmation prompts
 - 🎯 Automatic datacenter detection
 - 📍 Path preservation across switches
+- 🔐 Enterprise-grade encryption (AES-256-GCM)
+- 🎫 Multi-step login support (SF username → password flow)
 
 ### 2️⃣ Navigate with Shortcuts
 Quick access to frequently-used SuccessFactors pages and documentation. Pre-loaded with essential shortcuts including Admin Center, RBP, Provisioning, and What's New resources.
@@ -137,6 +147,8 @@ Generate comprehensive diagnostic reports for troubleshooting and support ticket
 - `storage` - Save environments, shortcuts, and notes
 - `tabs` - Detect current page and switch environments
 - `activeTab` - Access current tab information
+- `sidePanel` - Display extension in Chrome side panel
+- `cookies` - Clear session cookies for fresh logins (auto-login feature)
 
 **Internationalization:**
 - 10 languages supported with automatic detection
@@ -155,7 +167,20 @@ Generate comprehensive diagnostic reports for troubleshooting and support ticket
 
 ## 📋 Version History
 
-### v1.3.0 (Latest)
+### v1.6.0 (In Development)
+- 🔐 **NEW**: Auto-login feature with AES-256-GCM encryption
+  - Optional credential storage per environment
+  - Automatic login when switching environments
+  - SuccessFactors two-step login support (username → continue → password)
+  - Company ID management for SF environments
+  - Cookie clearing for fresh logins
+  - SSO/OAuth detection with graceful fallback
+  - Password visibility toggle (eye icon)
+  - Support for SF, S/4HANA, and BTP environments
+- 📚 **NEW**: Comprehensive security documentation (AUTO-LOGIN-SECURITY.md)
+- 🧪 **NEW**: Detailed testing guide (AUTO-LOGIN-TESTING-GUIDE.md)
+
+### v1.3.0
 - 🌍 **NEW**: Internationalization (i18n) support for 10 languages
 - 📝 **NEW**: Personal Notes feature with color-coded organization
 - 🎨 **NEW**: Simplified icon selector without descriptions
@@ -196,7 +221,22 @@ Click the help button (❓) in the extension header to view detailed feature des
 A: All your saved environments and custom shortcuts are preserved during updates.
 
 **Q: Can I use this extension on non-SF pages?**  
-A: The extension only activates on SAP SuccessFactors pages. On other pages, it remains dormant.
+A: The extension supports SuccessFactors, S/4HANA, BTP, and IBP environments. It remains dormant on non-SAP pages.
+
+**Q: Is the auto-login feature secure?**  
+A: Yes. Credentials are encrypted using AES-256-GCM (industry-standard encryption) before storage. See AUTO-LOGIN-SECURITY.md for detailed security architecture.
+
+**Q: How do I enable auto-login?**  
+A: Edit an environment, check "Enable auto-login", enter your username/password, and save. When switching to that environment, the extension will automatically log you in.
+
+**Q: Does auto-login work with SSO/OAuth?**  
+A: No. The extension detects SSO redirects and notifies you to log in manually. OAuth flows cannot be automated for security reasons.
+
+**Q: Can auto-login bypass multi-factor authentication (MFA)?**  
+A: No. If MFA is enabled, you'll still need to complete the MFA step manually after the extension fills username/password.
+
+**Q: Should I use auto-login for Production environments?**  
+A: We recommend using auto-login for Preview, Sales, or Sandbox environments only. For Production, consider manual login for added security.
 
 **Q: How do I report bugs?**  
 A: Copy your system diagnostics and contact the development team with details.
@@ -228,11 +268,18 @@ Boost your productivity with keyboard shortcuts:
 
 ## 🎯 Roadmap
 
+Completed enhancements:
+- ✅ Auto-login with encrypted credential storage
+- ✅ Multi-step login support (SF two-step flow)
+- ✅ Cookie clearing for fresh logins
+
 Future enhancements under consideration:
 - Environment favorites/pinning
 - Bulk environment import/export
 - Note categories and tags
 - Enhanced datacenter information display
+- Biometric authentication for credential access
+- Audit logging for auto-login usage
 
 ---
 

@@ -1,0 +1,106 @@
+{
+  "version": "2.0",
+  "solutions": [
+    {
+      "id": "s4hana",
+      "name": "SAP S/4HANA Cloud",
+      "patterns": ["s4hana.ondemand.com", "s4hana.cloud.sap"],
+      "quickActions": [
+        {
+          "id": "s4-procurement-overview",
+          "name": "Procurement Overview",
+          "path": "/ui#ProcurementOverview-display",
+          "icon": "🛒",
+          "description": "Buyer cockpit with KPIs",
+          "category": "Procurement"
+        },
+        {
+          "id": "s4-monitor-po",
+          "name": "Monitor Purchase Order Items",
+          "path": "/ui#PurchaseOrder-monitor",
+          "icon": "📦",
+          "description": "Analytical list page for PO items",
+          "category": "Procurement"
+        },
+        {
+          "id": "s4-sales-fulfillment",
+          "name": "Sales Order Fulfillment Monitor",
+          "path": "/ui#SalesOrder-monitor",
+          "icon": "📊",
+          "description": "Monitor sales order issues and blocks",
+          "category": "Sales"
+        },
+        {
+          "id": "s4-cash-flow",
+          "name": "Cash Flow Analysis",
+          "path": "/ui#CashFlow-analyze",
+          "icon": "💰",
+          "description": "Interactive cash flow visualization",
+          "category": "Finance"
+        },
+        {
+          "id": "s4-financial-statements",
+          "name": "Display Financial Statements",
+          "path": "/ui#FinancialStatement-display",
+          "icon": "📈",
+          "description": "Balance sheet and P&L reports",
+          "category": "Finance"
+        }
+      ]
+    }
+  ],
+  "globalShortcuts": [
+    {
+      "icon": "3",
+      "id": "shortcut-s4-fiori-apps",
+      "name": "Fiori Apps Library",
+      "notes": "Essential for finding the Technical Catalog and Role for any app.",
+      "tags": ["technical"],
+      "url": "https://fioriappslibrary.hana.ondemand.com/sap/fix/externalViewer/"
+    },
+    {
+      "icon": "4",
+      "id": "shortcut-s4-api-hub",
+      "name": "API Business Hub",
+      "notes": "The whitelist of allowed APIs for Clean Core.",
+      "tags": ["technical"],
+      "url": "https://api.sap.com"
+    },
+    {
+      "icon": "0",
+      "id": "shortcut-s4-process-nav",
+      "name": "Process Navigator (Best Practice)",
+      "notes": "Find Scope Items (e.g., J58) and Process Flows here.",
+      "tags": ["operations"],
+      "url": "https://me.sap.com/processnavigator"
+    },
+    {
+      "icon": "7",
+      "id": "shortcut-s4-extensibility",
+      "name": "Extensibility Explorer",
+      "notes": "Sample code for BAdIs and Side-by-Side extensions.",
+      "tags": ["technical"],
+      "url": "https://sap.com/extends4"
+    }
+  ],
+  "environments": [],
+  "notes": [
+    {
+      "content": "=== Financial Analysis ===\n• \"Summarize this month's P&L for Company Code 1000 and highlight the top 5 variances vs budget by cost center. Explain the main drivers in business language.\"\n\n• \"Compare Q1 2025 actuals vs plan for revenue and EBITDA by segment. Flag any deviations greater than 10% and propose likely reasons based on available data.\"\n\n=== Cash Flow & Collections ===\n• \"Forecast 13-week cash flow for our US entity based on open AR/AP and historical patterns. Highlight weeks with potential shortfalls.\"\n\n• \"List customers with overdue receivables > 60 days and highest risk. Propose prioritized collection actions and draft email templates for top 10 accounts.\"\n\n• \"Analyze our DSO trend for the last 12 months and suggest process changes to reduce DSO by 5 days.\"\n\n=== Period Close & Reconciliation ===\n• \"Show me an overview of period-end close status for Company Code 1000 for March 2025 and list tasks at risk of delay.\"\n\n• \"Identify the top 20 open items blocking GR/IR clearing and suggest how to resolve them, including which business users to involve.\"\n\n=== Accounts Payable ===\n• \"Create a draft supplier invoice from this purchase order and attached PDF and route it for approval according to our workflow.\"\n\n• \"Identify suppliers with frequent invoice blocking reasons (price variance, quantity variance, missing PO) and recommend preventive actions.\"\n\n=== Profitability Analysis ===\n• \"Analyze gross margin by product group for the last quarter and show the 10 products with the largest margin erosion vs last year. Provide hypotheses.\"\n\n• \"For Customer X, show revenue, margin, open orders, and open disputes for the last 12 months and classify the customer's profitability.\"\n\n=== Planning & Forecasting ===\n• \"Generate a rolling 12-month revenue and OPEX forecast using the last 24 months of data and current open orders. Present best, base, and worst-case scenarios.\"\n\n• \"Simulate a 5% increase in raw material costs and show the impact on contribution margin by product line.\"\n\n=== Compliance & Audit ===\n• \"Identify unusual journal postings in the last quarter (e.g., large manual entries, postings outside business hours) and group them by risk indicator.\"\n\n• \"List key SoD (segregation of duties) violations detected in finance-related roles and propose mitigation options.\"\n\n=== Natural Language Navigation ===\n• \"Explain the difference between margins in the P&L and contribution margin in CO-PA for my company in simple terms.\"\n\n• \"Guide me step-by-step through posting an accrual for marketing expenses in S/4HANA Cloud.\"\n\n=== Cross-Functional Scenarios ===\n• \"For materials with negative margin in the last 3 months, combine finance and supply chain data to show purchase prices, selling prices, and stock levels, and suggest corrective actions.\"",
+      "icon": "ai",
+      "id": "note-s4-joule-prompts",
+      "tags": ["ai", "joule", "prompts", "finance"],
+      "timestamp": 1736634100000,
+      "title": "🤖 Joule Prompts Library - S/4HANA Finance & ERP"
+    },
+    {
+      "content": "S/4HANA Cloud User License Ratios:\n\n1 Advanced User = 1 FUE\n5 Core Users = 1 FUE\n30 Self-Service Users = 1 FUE\nDeveloper = 1 FUE (Always)\n\nWhat Each Type Means:\n• Advanced User - Full access to all transactions\n• Core User - Limited to specific business processes\n• Self-Service User - Basic read/write (e.g., expense reports)\n• Developer - Full development and customization access\n\nExample Calculation:\n50 Advanced + 200 Core + 600 Self-Service + 10 Developers\n= 50 + 40 + 20 + 10\n= 120 FUE total\n\nKey for Sizing Projects:\nAlways calculate FUE during discovery to size licenses correctly.",
+      "icon": "0",
+      "id": "note-s4-fue-ratios",
+      "tags": ["operations"],
+      "timestamp": 1736633640000,
+      "title": "S/4HANA FUE Ratios"
+    }
+  ],
+  "exportDate": "2026-01-11T23:59:00.000Z"
+}

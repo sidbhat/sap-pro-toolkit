@@ -11,6 +11,7 @@ let currentEnvironment = null;
 
 (async function init() {
   try {
+    console.log('[SAP Pro Toolkit] Content script initializing...');
     await loadDatacenterDB();
     injectHelperScript();
     setupMessageListeners();
@@ -22,6 +23,7 @@ let currentEnvironment = null;
     // Wait for SF page data (enhanced detection)
     listenForPageData();
     
+    console.log('[SAP Pro Toolkit] Content script initialized');
   } catch (error) {
     console.error('[SAP Pro Toolkit] Initialization error:', error);
   }
@@ -79,7 +81,6 @@ function listenForPageData() {
       
       console.log('[SAP Pro Toolkit] Looking up hostname:', hostname);
       console.log('[SAP Pro Toolkit] Company ID:', sfData.companyId);
-      console.log('[SAP Pro Toolkit] datacenterDB loaded?', datacenterDB ? 'YES' : 'NO', 'Entries:', datacenterDB?.length);
       
       // Look up datacenter info - prioritize csd_hostname, then old_hostname, then sales_hostname
       let dcEntry = datacenterDB?.find(dc => dc.csd_hostname === hostname);
@@ -89,12 +90,6 @@ function listenForPageData() {
       if (!dcEntry) {
         dcEntry = datacenterDB?.find(dc => dc.sales_hostname === hostname);
       }
-      
-      if (dcEntry) {
-        console.log('[SAP Pro Toolkit] MATCH FOUND in DC entry:', dcEntry);
-      }
-      
-      console.log('[SAP Pro Toolkit] DC Entry found:', dcEntry ? 'YES' : 'NO', dcEntry);
       
       // Extract relevant information including all user fields
       pageData = {
@@ -216,8 +211,6 @@ function detectEnvironmentHeuristic(hostname) {
   // Default to production for standard hostnames
   return 'production';
 }
-
-
 
 // ==================== UTILITY ====================
 
