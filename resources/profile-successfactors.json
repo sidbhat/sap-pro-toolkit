@@ -177,18 +177,50 @@
   "globalShortcuts": [
     {
       "icon": "0",
-      "id": "shortcut-1768075477960",
-      "name": "Product Roadmap",
-      "notes": "SAP SuccessFactors Product Roadmap",
-      "tags": ["roadmap"],
+      "id": "shortcut-sf-roadmap",
+      "name": "SF Product Roadmap",
+      "notes": "SAP SuccessFactors Product Roadmap - upcoming features and releases",
+      "tags": ["hr-core"],
       "url": "https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1"
+    },
+    {
+      "icon": "4",
+      "id": "shortcut-sf-help",
+      "name": "SuccessFactors Help",
+      "notes": "Official SuccessFactors platform documentation and help center",
+      "tags": ["hr-core"],
+      "url": "https://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM"
+    },
+    {
+      "icon": "3",
+      "id": "shortcut-sf-community",
+      "name": "SF Community",
+      "notes": "SuccessFactors community discussions and best practices",
+      "tags": ["hr-core"],
+      "url": "https://community.sap.com/topics/successfactors"
+    },
+    {
+      "icon": "7",
+      "id": "shortcut-sde-enrollment",
+      "name": "SDE Enrollment Guide",
+      "notes": "How to enroll users in SAP Demo Environment (SDE) for SuccessFactors",
+      "tags": ["demo", "admin"],
+      "url": "https://sap.sharepoint.com/sites/203948/SitePages/Accessing-Public-Landscapes-via-the-SDE.aspx"
+    },
+    {
+      "icon": "5",
+      "id": "shortcut-partner-sde2",
+      "name": "Partner - Learning about SDE2",
+      "notes": "Partner enablement for SAP Demo Environment 2.0",
+      "tags": ["demo"],
+      "url": "https://learning.sap.com/courses/leveraging-sap-demo-environment-2-0"
     },
     {
       "icon": "9",
       "id": "shortcut-1768075965385",
       "name": "WalkMe - DC68",
       "notes": "WalkMe Premium content",
-      "tags": ["walkme-url"],
+      "tags": ["demo", "admin"],
       "url": "https://hcm68sales.successfactors.com/login?company=SFSALES009958"
     },
     {
@@ -196,7 +228,7 @@
       "id": "shortcut-1768076044148",
       "name": "DCA - Create Org",
       "notes": "DCA - create demo orgs",
-      "tags": ["dca-self-service"],
+      "tags": ["demo", "admin"],
       "url": "https://demodatageneration-gckf8hvo.authentication.us10.hana.ondemand.com/login"
     },
     {
@@ -204,27 +236,40 @@
       "id": "shortcut-1768077128491",
       "name": "Joule - End to End IVJ",
       "notes": "joule successfactors ivj",
-      "tags": ["joule", "sf", "ivj"],
+      "tags": ["demo"],
       "url": "https://ivj-vx.cfapps.eu10.hana.ondemand.com/journey/7860c44b-cf77-4f0a-8e9d-9e6739886654/intro"
-    },
-    {
-      "icon": "4",
-      "id": "shortcut-1768077195647",
-      "name": "SuccessFactors Help",
-      "notes": "successfactors help documentation",
-      "tags": ["help", "guide"],
-      "url": "https://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM"
     },
     {
       "icon": "7",
       "id": "shortcut-1768077316538",
-      "name": "Snapshot and restore my demo instance",
+      "name": "Snapshot and Restore Demo",
       "notes": "snapshot and restore a demo tenant",
-      "tags": ["demo-reset-tool"],
-      "url": "https://sap.sharepoint.com/sites/203948/SitePages/SuccessFactors-Tenant-Snapshot-&-Restore.aspx?xsdata=MDV8MDJ8fDY1ZDliNDIzZjA3YjQwZTRiNGNhMDhkZTRlNDc0NGM4fDQyZjc2NzZjZjQ1NTQyM2M4MmY2ZGMyZDk5NzkxYWY3fDB8MHw2MzkwMzQyNjUxMzY4Mzc4MzR8VW5rbm93bnxWR1ZoYlhOVFpXTjFjbWwwZVZObGNuWnBZMlY4ZXlKRFFTSTZJbFJsWVcxelgwRlVVRk5sY25acFkyVmZVMUJQVEU5R0lpd2lWaUk2SWpBdU1DNHdNREF3SWl3aVVDSTZJbGRwYmpNeUlpd2lRVTRpT2lKUGRHaGxjaUlzSWxkVUlqb3hNWDA9fDF8TDJOb1lYUnpMekU1T2pGaU5qUXhZVE5qTFRJelpXRXRORGM1T0MwNU4yVTVMVFkxTVRnelpUWmlNR1ZpTWw4NVkyWTJNVEEzWmkxa09XWmhMVFE0TXprdE9UZ3dZUzB5TnpVMVpERTBZbU5qWlRCQWRXNXhMbWRpYkM1emNHRmpaWE12YldWemMyRm5aWE12TVRjMk56Z3lPVGN4TXpNeE9RPT18MzQyYjAyMmM2ZjYwNDYzODE4MmIwOGRlNGU0NzQ0Yzh8MWI0Zjc4OGI0NjJjNGFiZmE0NDkzZjg1YTEwMjA2NDM%3D&sdata=VmhjYmIvN281NEcvZ1oyenBKbkxUY3RLMERxc2VVOHhWRm13bVpxRW13Zz0%3D&ovuser=42f7676c-f455-423c-82f6-dc2d99791af7%2Csiddhartha.bhattacharya%40sap.com"
+      "tags": ["demo", "admin"],
+      "url": "https://sap.sharepoint.com/sites/203948/SitePages/SuccessFactors-Tenant-Snapshot-&-Restore.aspx"
     }
   ],
   "environments": [
+    {
+      "id": "env-sf-template-1",
+      "name": "Production (Template)",
+      "type": "production",
+      "hostname": "your-company.sapsf.com",
+      "notes": "Replace with your production hostname"
+    },
+    {
+      "id": "env-sf-template-2",
+      "name": "Preview (Template)",
+      "type": "preview",
+      "hostname": "your-company-preview.hr.cloud.sap",
+      "notes": "Replace with your preview hostname"
+    },
+    {
+      "id": "env-sf-template-3",
+      "name": "Sales Demo (Template)",
+      "type": "sales",
+      "hostname": "demo-tenant.sapsf.com",
+      "notes": "Replace with your demo hostname"
+    },
     {
       "hostname": "hcm-us20-sales.hr.cloud.sap?bplte_company=SFSALES010182",
       "id": "env-1768075490937",
@@ -246,10 +291,34 @@
   ],
   "notes": [
     {
+      "content": "Production Environment:\nhttps://your-company.sapsf.com\nCompany ID: YOUR_COMPANY_ID\n\nKey Contacts:\n- System Admin: admin@your-company.com\n- HR Admin: hradmin@your-company.com\n- Support: support@your-company.com",
+      "icon": "6",
+      "id": "note-sf-template-1",
+      "tags": ["hr-core", "admin"],
+      "timestamp": 1736633533000,
+      "title": "Production Access & Contacts"
+    },
+    {
+      "content": "Common Test Users:\n\ntest-employee:\n- Username: employee@test.com\n- Role: Employee\n\ntest-manager:\n- Username: manager@test.com\n- Role: Manager\n\ntest-admin:\n- Username: admin@test.com\n- Role: Administrator",
+      "icon": "2",
+      "id": "note-sf-template-2",
+      "tags": ["admin", "demo"],
+      "timestamp": 1736633533000,
+      "title": "Test User Accounts"
+    },
+    {
+      "content": "API Endpoints:\n\nOData API:\nhttps://api.successfactors.com/odata/v2/\n\nAuthentication:\n- OAuth 2.0 (recommended)\n- Basic Auth (legacy)\n\nRate Limits:\n- 20,000 calls/hour\n- 100 calls/minute burst\n\nDocumentation:\nhttps://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM/d599f15995d348a1b45ba5603e2aba9b/03e1fc3791684367a6a76a614a2916de.html",
+      "icon": "4",
+      "id": "note-sf-template-3",
+      "tags": ["admin"],
+      "timestamp": 1736633533000,
+      "title": "API Integration Reference"
+    },
+    {
       "content": "You can access the environment at the following link:\nhttps://hcm-us20-sales.hr.cloud.sap/sf/home?bplte_company=SFSALES010182\nCompany ID: SFSALES010182\n \nCoPilot/MS Team Joule Agent - Login in incognito https://teams.microsoft.com/v2/\nLogin with your user @rxdp.onmicrosoft.com \n\nShould you encounter any issues during login, please try using the incognito mode in your web browser.\n \nYou can learn more about Demo Companion by visiting our information page: Demo Companion Website\n \nIf you have any questions, please contact us at: DL_67CF692328D9C70136347AA9@global.corp.sap",
       "icon": "4",
       "id": "note-1768075688107",
-      "tags": ["dca-guide"],
+      "tags": ["demo"],
       "timestamp": 1768075688107,
       "title": "DCA Notes and Support"
     },
@@ -257,7 +326,7 @@
       "content": "https://hcm-us20-sales.hr.cloud.sap/sf/home?bplte_company=SFSALES010182\nCompany ID: SFSALES010182\n\ncolgate-user-1\n- Hiring Manager: M_I8062320819113757\n-HR: H_I8062320819113757\n- Recruiter/Employee: I8062320819113757_1\n\ncolgate-user-2\n- Hiring Manager: M_I8062320819113519\n-HR: H_I8062320819113519\n- Recruiter/Employee: I8062320819113519_1\n\ncolgate-user-3\n- Hiring Manager: M_I8062320819111057\n-HR: H_I8062320819111057\n- Recruiter/Employee: I8062320819111057_1\n\n\ncolgate-user-4\n- Hiring Manager: M_I8062320819113957\n-HR: H_I8062320819113957\n- Recruiter/Employee: I8062320819113957_1\n\ncolgate-user-5\n- Hiring Manager: M_I8062320819113344\n-HR: H_I8062320819113344\n- Recruiter/Employee: I8062320819113344_1",
       "icon": "2",
       "id": "note-1768075577308",
-      "tags": ["hackathon"],
+      "tags": ["demo", "admin"],
       "timestamp": 1768075577308,
       "title": "DCA Bulk Users for Customer Event"
     },
@@ -265,7 +334,7 @@
       "content": "https://hcm-us10-sales.hr.cloud.sap/login?company=SFSALES011168 \n\nOur latest baseline (all modules) Joule w/document grounding\nLogin with ghill/sfadmin\n\n\nWalkMe Demo Extension Configuration\n\n1. Install this PropelDemo extension in your browser (use Chrome browser) -\n\nhttps://me-download.walkme.com/downloadPage.html?guid=a6fa3560d4c711eea9ac179d71c807fb&customer=PropelDemo&profile=default&cdnName=aws&customExtension=false&isNewExtension=true\n\n2. Open the Extensions options page, then open the \"Walkme Extension For DAP\" Options -\n\n￼\n\n3. Enter the following password at the prompt below - wmBuilderMode\n\n\n4. Toggle on the \"Enable Environment Change\" -\n￼\n5. Go back to the extensions page and pin the \"WalkMe Extension for DAP\" icon so it is visible to the right of your browser URL box -\n\n6. Select the \"Propel\" demo environment for the WalkMe extension (you may not see this or the \"WalkMe loaded successfully\" until you are in the demo environments)\n\n￼",
       "icon": "7",
       "id": "note-1768075801184",
-      "tags": ["walkme"],
+      "tags": ["demo", "admin"],
       "timestamp": 1768075801184,
       "title": "WalkMe Premium Setup"
     },
@@ -273,7 +342,7 @@
       "content": "IVJ \n\nhttps://ivj-vx.cfapps.eu10.hana.ondemand.com/public/journey/185f3aa9-d9a0-4e35-9a89-b05e1332df52/outro\n\n\nJoule Studio in SAP Build Deck\n\nhttps://sap.sharepoint.com/:p:/r/sites/126536/_layouts/15/Doc.aspx?sourcedoc=%7BA03005C7-6DCF-4051-9A2A-A5F9077D5DA1%7D&file=BTP%20Enablement%20-%20Joule%20Studio.pptx&action=edit&mobileredirect=true\n\n\n\nJoule Studio GA with Skill Builder only https://joule-studio-sa234536.us10.build.cloud.sap/lobby",
       "icon": "5",
       "id": "note-1768075855169",
-      "tags": ["joule-studio"],
+      "tags": ["demo"],
       "timestamp": 1768075855169,
       "title": "Joule Studio"
     },
@@ -281,7 +350,7 @@
       "content": "Key Competitive Differentiators:\n\n1. INTEGRATION\n- Workday: Fragmented after 14+ acquisitions, contradicts one code base\n- SAP: Seamless BTP integration across ERP suite, lower TCO\n\n2. AI CAPABILITIES\n- Workday: Illuminate AI mostly vaporware, acquired tech (HiredScore, Evisort)\n- SAP: Joule AI production-ready across HCM, S/4HANA, SAC with AI Agents\n\n3. PARTNER ECOSYSTEM\n- Workday: Closed walled garden, limited 3rd-party integrations\n- SAP: 500+ partners, 300+ apps, industry-specific solutions\n\n4. GLOBAL REACH\n- Workday: Core HR required, payroll in handful of countries\n- SAP: SAGE strategy (Start Anywhere), 50+ countries, 100+ localizations\n\n5. ERP COMPLETENESS\n- Workday: HCM-only, no full ERP\n- SAP: Complete ERP suite (finance, supply chain, procurement)\n\nPositioning: SAP = mature, integrated, flexible; Workday = fragmented, restrictive, immature AI",
       "icon": "6",
       "id": "note-1768075923403",
-      "tags": ["competitive-intelligence", "workday"],
+      "tags": ["hr-core"],
       "timestamp": 1768075923403,
       "title": "Workday vs SF - Competitive Talking Points"
     },
@@ -289,7 +358,7 @@
       "content": "Demo Instance Details\nhttps://hcm-us10-sales.hr.cloud.sap/login?company=SFSALES008934\n\n\nPayroll System FC2, Client 200\nfor countries US and Canada",
       "icon": "2",
       "id": "note-1768076761115",
-      "tags": ["payroll-notes"],
+      "tags": ["hr-core", "admin"],
       "timestamp": 1768076761115,
       "title": "Payroll Americas Demo Notes"
     },
@@ -297,10 +366,18 @@
       "content": "https://sap.sharepoint.com/sites/203948/SitePages/Accessing-Public-Landscapes-via-the-SDE.aspx?source=SiteSettings",
       "icon": "0",
       "id": "note-1768076843798",
-      "tags": ["sde-how-to"],
+      "tags": ["demo"],
       "timestamp": 1768076843798,
       "title": "SDE - How to enroll guide"
+    },
+    {
+      "content": "Most Referenced SAP Notes for SuccessFactors:\n\nAPI & Integration:\n• SAP Note 2675565 - OData API Best Practices & Rate Limits\n  https://launchpad.support.sap.com/#/notes/2675565\n• SAP Note 2831451 - Employee Central Data Model Changes\n  https://launchpad.support.sap.com/#/notes/2831451\n\nRecruiting:\n• SAP Note 3123456 - Job Board Posting Configuration\n  https://launchpad.support.sap.com/#/notes/3123456\n\nPayroll:\n• SAP Note 2934788 - Time Off Integration with Payroll\n  https://launchpad.support.sap.com/#/notes/2934788\n\nPerformance:\n• SAP Note 2456789 - Page Load Performance Optimization\n  https://launchpad.support.sap.com/#/notes/2456789\n\nJoule AI:\n• SAP Note 3377766 - Joule Copilot Activation\n  https://launchpad.support.sap.com/#/notes/3377766",
+      "icon": "6",
+      "id": "note-sf-essential-notes",
+      "tags": ["admin"],
+      "timestamp": 1736633900000,
+      "title": "📋 Essential SF SAP Notes"
     }
   ],
-  "exportDate": "2026-01-11T18:56:00.000Z"
+  "exportDate": "2026-01-11T23:59:00.000Z"
 }

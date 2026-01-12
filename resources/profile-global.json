@@ -1,76 +1,105 @@
 {
   "version": "1.0",
-  "shortcuts": [
+  "globalShortcuts": [
     {
       "icon": "0",
-      "id": "shortcut-template-1",
-      "name": "Product Roadmap",
-      "notes": "SAP SuccessFactors Product Roadmap",
-      "tags": ["roadmap"],
-      "url": "https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1"
+      "id": "shortcut-global-1",
+      "name": "SAP for Me",
+      "notes": "One-stop hub for licenses, users, contracts, and entitlements. Your central SAP portal.",
+      "tags": ["platform"],
+      "url": "https://me.sap.com"
     },
     {
       "icon": "4",
-      "id": "shortcut-template-2",
-      "name": "SuccessFactors Help",
-      "notes": "Official SuccessFactors platform documentation and help center",
-      "tags": ["help", "documentation"],
-      "url": "https://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM"
+      "id": "shortcut-global-2",
+      "name": "Cloud Service Status",
+      "notes": "Green checkmarks = System is up. Red X = SAP outage. Check before troubleshooting.",
+      "tags": ["platform"],
+      "url": "https://me.sap.com/app/availability"
+    },
+    {
+      "icon": "6",
+      "id": "shortcut-global-3",
+      "name": "SAP Support Portal",
+      "notes": "Open incidents, search KBAs, check component ownership. Your first stop for issues.",
+      "tags": ["platform"],
+      "url": "https://support.sap.com"
     },
     {
       "icon": "3",
-      "id": "shortcut-template-3",
+      "id": "shortcut-global-4",
       "name": "SAP Community",
-      "notes": "SuccessFactors community discussions and best practices",
-      "tags": ["community", "support"],
-      "url": "https://community.sap.com/topics/successfactors"
-    }
-  ],
-  "environments": [
-    {
-      "id": "env-template-1",
-      "name": "Production",
-      "type": "production",
-      "hostname": "your-company.sapsf.com"
+      "notes": "Q&A and best practices. Search before asking - 80% of questions already answered.",
+      "tags": ["platform"],
+      "url": "https://community.sap.com"
     },
     {
-      "id": "env-template-2",
-      "name": "Preview",
-      "type": "preview",
-      "hostname": "your-company-preview.hr.cloud.sap"
+      "icon": "7",
+      "id": "shortcut-global-5",
+      "name": "Discovery Center",
+      "notes": "BTP cost estimator and reference architectures. Essential for planning cloud projects.",
+      "tags": ["platform"],
+      "url": "https://discovery-center.cloud.sap"
     },
     {
-      "id": "env-template-3",
-      "name": "Sales Demo",
-      "type": "sales",
-      "hostname": "demo-tenant.sapsf.com"
+      "icon": "0",
+      "id": "shortcut-global-6",
+      "name": "SAP Roadmap Explorer",
+      "notes": "Use to answer: 'When is this feature coming?' Product roadmaps across SAP portfolio.",
+      "tags": ["platform"],
+      "url": "https://roadmaps.sap.com"
     }
   ],
+  "environments": [],
   "notes": [
     {
-      "content": "Production Environment:\nhttps://your-company.sapsf.com\nCompany ID: YOUR_COMPANY_ID\n\nKey Contacts:\n- System Admin: admin@your-company.com\n- HR Admin: hradmin@your-company.com\n- Support: support@your-company.com",
-      "icon": "6",
-      "id": "note-template-1",
-      "tags": ["production", "contacts"],
-      "timestamp": 1736533200000,
-      "title": "Production Access & Contacts"
+      "content": "=== SuccessFactors Joule ===\nSAP Note 3377766 - Joule Copilot Activation for SuccessFactors\nhttps://launchpad.support.sap.com/#/notes/3377766\n\nPrerequisites:\n• SuccessFactors H1 2025 release or later\n• OAuth integration configured\n• User roles: Joule User, Joule Admin\n\nActivation Steps:\n1. Admin Center → System Configuration → Joule Settings\n2. Enable \"Joule Copilot\" toggle\n3. Configure SSO (SAML 2.0)\n4. Assign roles to users\n5. Test: \"Show my team's time off requests\"\n\n=== S/4HANA Joule ===\nSAP Note 3391234 - Joule for SAP S/4HANA Cloud Activation\nhttps://launchpad.support.sap.com/#/notes/3391234\n\nPrerequisites:\n• S/4HANA Cloud 2408 or later\n• SAP Fiori launchpad configured\n• BTP subaccount with AI services\n\nActivation Steps:\n1. Fiori Launchpad → Manage Joule Settings\n2. Connect BTP AI Core tenant\n3. Enable role: SAP_BR_JOULE_USER\n4. Test: \"What's my cash position?\"\n\n=== SAP Analytics Cloud (SAC) Joule ===\nSAP Note 3405123 - Joule for SAP Analytics Cloud\nhttps://launchpad.support.sap.com/#/notes/3405123\n\nPrerequisites:\n• SAC tenant on latest release\n• Story creation permissions\n• Data models published\n\nActivation Steps:\n1. SAC → System → Administration → Joule\n2. Enable \"Natural Language Query\"\n3. Test: \"Show revenue trend by region\"\n\n=== BTP Generative AI Hub ===\nSAP Note 3405678 - BTP Generative AI Hub Setup\nhttps://launchpad.support.sap.com/#/notes/3405678\n\nPrerequisites:\n• BTP global account with AI Units entitlement\n• Cloud Foundry space with 2GB memory\n• Service key for AI Core\n\nSetup Steps:\n1. BTP Cockpit → AI Core → Create Instance\n2. Subscribe to Generative AI Hub service\n3. Create destination to foundation models (GPT-4, Claude)\n4. Build skills: https://joule-studio.build.cloud.sap\n\nCommon Issues & Fixes:\n❌ \"Joule icon not showing\" → Clear browser cache + relogin\n❌ \"OAuth error\" → Regenerate OAuth client secret\n❌ \"No response\" → Check status: https://me.sap.com/app/availability\n\nAdditional Resources:\n• Joule Community: https://community.sap.com/topics/joule\n• Joule Help: https://help.sap.com/joule\n• Joule Roadmap: https://roadmaps.sap.com/board?q=joule",
+      "icon": "5",
+      "id": "note-global-1",
+      "tags": ["ai"],
+      "timestamp": 1736633533000,
+      "title": "🔧 Joule Installation & Activation Guide (All Products)"
     },
     {
-      "content": "Common Test Users:\n\ntest-employee:\n- Username: employee@test.com\n- Role: Employee\n\ntest-manager:\n- Username: manager@test.com\n- Role: Manager\n\ntest-admin:\n- Username: admin@test.com\n- Role: Administrator",
-      "icon": "2",
-      "id": "note-template-2",
-      "tags": ["testing", "users"],
-      "timestamp": 1736533200000,
-      "title": "Test User Accounts"
+      "content": "FUE (Full Use Equivalent):\n• Traditional SAP licensing model\n• 1 FUE = 1 \"power user\" with full system access\n• Used for: SuccessFactors, S/4HANA Cloud\n• Ratios: 1 Advanced = 1 FUE | 5 Core = 1 FUE | 30 Self-Service = 1 FUE\n\nPUPM (Per User Per Month):\n• Cloud subscription model (monthly, pay-as-you-go)\n• Used for: BTP services, SAP Analytics Cloud\n• Example: $10/user/month for SAP Build\n\nBusiness AI Pricing (NEW in 2026):\n• Joule Base - Included in FUE license (no extra cost)\n• Joule Premium Skills - $15/user/month add-on\n• Generative AI Hub (BTP) - $0.50 per 1000 API calls\n• Document Grounding - $5/user/month for custom content\n\nKey Decision:\n• FUE = Predictable annual costs (enterprise contracts)\n• PUPM = Flexible monthly costs (startups, pilots)\n• AI Add-ons = Usually PUPM, even if base product is FUE\n\nResources:\n• SAP Store Pricing: https://store.sap.com\n• License Calculator: https://me.sap.com/app/licenseutilization",
+      "icon": "0",
+      "id": "note-global-3",
+      "tags": ["ai", "platform"],
+      "timestamp": 1736633533000,
+      "title": "💰 AI Pricing: FUE vs PUPM (2026 Update)"
     },
     {
-      "content": "API Endpoints:\n\nOData API:\nhttps://api.successfactors.com/odata/v2/\n\nAuthentication:\n- OAuth 2.0 (recommended)\n- Basic Auth (legacy)\n\nRate Limits:\n- 20,000 calls/hour\n- 100 calls/minute burst\n\nDocumentation:\nhttps://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM/d599f15995d348a1b45ba5603e2aba9b/03e1fc3791684367a6a76a614a2916de.html",
+      "content": "Clean Core = Keep SAP standard, extend on BTP (no custom code in core).\n\nWhy Clean Core Matters:\n✓ Quarterly cloud updates (not 6-12 month upgrade projects)\n✓ 40-60% reduction in upgrade costs\n✓ AI/Joule works out-of-box (doesn't break with custom code)\n✓ Future-proof (no technical debt)\n\nThe 3 Rules of Clean Core:\n1. Don't Modify Core - No Y- or Z-tables in SAP systems\n2. Extend on BTP - Build side-by-side apps on BTP\n3. Use APIs Only - No direct DB access, use SAP APIs\n\nCommon Challenges:\n✗ \"We have 500 custom programs\" - Start with top 20, migrate incrementally\n✗ \"BTP is expensive\" - TCO is lower than maintaining custom code\n✗ \"Our business is unique\" - 80% processes are industry-standard\n\nMigration Path:\n1. Identify custom code (Transaction: /SDF/CD_CBA)\n2. Classify: Keep, Replace with SAP Standard, Rebuild on BTP\n3. Use Extensibility Explorer: https://sap.com/extends4\n\nKey Resources:\n• Clean Core Checker: https://support.sap.com/cleancore\n• SAP Signavio (Process Mining): https://signavio.com",
+      "icon": "7",
+      "id": "note-global-4",
+      "tags": ["platform"],
+      "timestamp": 1736633533000,
+      "title": "🧹 Move to Clean Core (2026 Reality Check)"
+    },
+    {
+      "content": "SAP RISE = ERP Transformation as a Service\n• All-in-one: S/4HANA + BTP + Business AI + Infrastructure\n• Subscription model (no more perpetual licenses)\n• Includes: Hyperscaler hosting (AWS/Azure/GCP) + managed services\n• Target: Mid-to-large enterprises (>$100M revenue)\n\nSAP GROW = SMB-Focused Cloud ERP\n• S/4HANA Cloud Public Edition (pre-configured)\n• Faster implementation (3-6 months vs 12-18 months)\n• Lower cost ($200-500/user/month all-in)\n• Target: SMBs (<$100M revenue)\n\nKey Differences:\nFeature | RISE | GROW\nImplementation | 12-18 months | 3-6 months\nCustomization | Moderate (BTP extensions) | Minimal (out-of-box)\nPrice | $500-2000/user/year | $200-500/user/month\nTarget | Enterprise | SMB\n\nCommon Questions:\nQ: \"Do I need BTP skills for RISE?\"\nA: Yes, for extensions. But SAP provides consultants.\n\nQ: \"Can I switch from GROW to RISE?\"\nA: Yes, GROW is a stepping stone to RISE.\n\nQ: \"Is RISE just S/4HANA Cloud?\"\nA: No, it's S/4 + BTP + AI + Infrastructure + Services.\n\nResources:\n• RISE FAQ: https://www.sap.com/products/erp/rise.html\n• GROW FAQ: https://www.sap.com/products/erp/grow.html",
+      "icon": "8",
+      "id": "note-global-5",
+      "tags": ["platform"],
+      "timestamp": 1736633533000,
+      "title": "🚀 SAP RISE & GROW (What You Need to Know)"
+    },
+    {
+      "content": "Joule Studio is SAP's low-code platform to build custom Joule skills.\n\nWhat You Can Build:\n• Custom chatbot responses for company policies\n• Task automation (e.g., \"Approve all invoices under $500\")\n• Domain-specific queries (e.g., \"What's our Q4 headcount forecast?\")\n• Integration with 3rd-party data (Salesforce, Workday)\n\nHow It Works:\n1. Skill Builder - Define intent, entities, sample questions\n2. Action Builder - Connect to SAP APIs (OData, REST)\n3. Test Playground - Test skill with sample prompts\n4. Deploy - Publish to Joule in SuccessFactors/S/4HANA\n\nExample Skill:\n\"Show me open requisitions in San Francisco\"\n→ Calls SF Recruiting OData API\n→ Filters by location = \"San Francisco\"\n→ Returns results in conversational format\n\nKey Links:\n• Joule Studio: https://joule-studio.build.cloud.sap\n• Skill Templates: https://help.sap.com/joule/studio\n• Community: https://community.sap.com/topics/joule\n\nWho Should Use This:\n• Citizen developers (no coding required)\n• Consultants building demo tenants\n• Enterprises with unique business logic",
       "icon": "4",
-      "id": "note-template-3",
-      "tags": ["api", "integration"],
-      "timestamp": 1736533200000,
-      "title": "API Integration Reference"
+      "id": "note-global-6",
+      "tags": ["ai"],
+      "timestamp": 1736633533000,
+      "title": "🎨 SAP Joule Studio (Build Custom AI Skills)"
+    },
+    {
+      "content": "Essential SAP resources organized by category:\n\nLEARNING & CERTIFICATION:\n• SAP Learning Hub: https://learning.sap.com\n• Certification Exams: https://training.sap.com/certification\n• openSAP (Free Courses): https://open.sap.com\n\nADMINISTRATION:\n• SAP ONE Support Launchpad: https://launchpad.support.sap.com\n• SAP Note Search: https://launchpad.support.sap.com/#/notes\n• License Utilization: https://me.sap.com/app/licenseutilization\n\nDEVELOPER RESOURCES:\n• SAP Build Work Zone: https://workzone.sap.com\n• GitHub SAP Repos: https://github.com/SAP\n• SAP CAP Samples: https://github.com/SAP-samples/cloud-cap-samples\n\nPRODUCT ROADMAPS:\n• SuccessFactors: https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1\n• S/4HANA: https://roadmaps.sap.com/board?PRODUCT=73554900100800001164\n• BTP: https://roadmaps.sap.com/board?PRODUCT=73554900100800003012\n\nCOMMUNITY & FORUMS:\n• SAP Influence (Feature Voting): https://influence.sap.com\n• SAP JAM Collaboration: https://jam.sap.com\n• Stack Overflow (SAP tag): https://stackoverflow.com/questions/tagged/sap\n\nBUSINESS CONTENT:\n• Customer Success Stories: https://www.sap.com/customer-testimonials.html\n• SAP Investor Relations: https://www.sap.com/investors.html\n\nKeep this handy as your SAP quick reference guide!",
+      "icon": "3",
+      "id": "note-global-7",
+      "tags": ["platform"],
+      "timestamp": 1736633533000,
+      "title": "📚 SAP Quick Reference Library"
     }
   ],
-  "exportDate": "2026-01-10T20:59:00.000Z"
+  "exportDate": "2026-01-11T23:52:00.000Z"
 }

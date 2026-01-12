@@ -81,20 +81,37 @@ const COUNTRY_FLAGS = {
   'NL': '🇳🇱', 'BR': '🇧🇷', 'AU': '🇦🇺', 'CH': '🇨🇭', 'IN': '🇮🇳'
 };
 
-const SHORTCUT_ICONS = ['🗺️', '⚙️', '🔐', '👥', '📊', '🛠️', '📝', '🎯', '📄', '🔗'];
-const NOTE_ICONS = ['📝', '🔑', '🆔', '🔗', '⚙️', '📋', '💡', '📌'];
-
 // ==================== ICON HELPER ====================
 
-function getIcon(iconValue, iconArray, defaultIndex = 0) {
-  if (typeof iconValue === 'number' || !isNaN(iconValue)) {
-    const index = parseInt(iconValue);
-    return iconArray[index] !== undefined ? iconArray[index] : iconArray[defaultIndex];
+
+/**
+ * Render SAP icon as SVG (new system)
+ */
+function renderSAPIcon(iconValue, iconType = 'shortcut', size = 16) {
+  if (typeof window.SAPIconLibrary === 'undefined') {
+    console.error('[Icon] SAPIconLibrary not loaded!');
+    // Fallback to emoji if library not loaded
+    const fallbackEmojis = {
+      'shortcut': '🗺️',
+      'note': '📝',
+      'environment': '🌐'
+    };
+    return `<span style="font-size: ${size}px;">${fallbackEmojis[iconType] || '📌'}</span>`;
   }
-  if (typeof iconValue === 'string' && iconValue.length > 0) {
-    return iconValue;
+  
+  const icon = window.SAPIconLibrary.getIconByValue(iconValue, iconType);
+  return window.SAPIconLibrary.renderIconSVG(icon, size);
+}
+
+/**
+ * Suggest icon based on content (new feature)
+ */
+function suggestIconForContent(name, notes, tags, iconType = 'shortcut') {
+  if (typeof window.SAPIconLibrary === 'undefined') {
+    return iconType === 'note' ? '0' : '8'; // Default indices
   }
-  return iconArray[defaultIndex];
+  
+  return window.SAPIconLibrary.suggestIcon(name, notes, tags, iconType);
 }
 
 // ==================== ENVIRONMENT DETECTION ====================
@@ -454,16 +471,38 @@ function updatePlatformSpecificUI() {
 
 // ==================== TOAST NOTIFICATIONS ====================
 
-function showToast(message, type = 'info') {
+function showToast(message, type = 'info', duration = 3000, onClickCallback = null) {
   const toast = document.getElementById('toast');
   if (!toast) return;
   
   toast.textContent = message;
   toast.className = `toast toast-${type} active`;
   
-  setTimeout(() => {
-    toast.classList.remove('active');
-  }, 3000);
+  // Add clickable styling if callback provided
+  if (onClickCallback) {
+    toast.style.cursor = 'pointer';
+    
+    // Remove any existing click handlers
+    const newToast = toast.cloneNode(true);
+    toast.parentNode.replaceChild(newToast, toast);
+    
+    // Add click handler
+    newToast.addEventListener('click', () => {
+      onClickCallback();
+      newToast.classList.remove('active');
+    });
+    
+    // Auto-hide after duration
+    setTimeout(() => {
+      newToast.classList.remove('active');
+      newToast.style.cursor = '';
+    }, duration);
+  } else {
+    toast.style.cursor = '';
+    setTimeout(() => {
+      toast.classList.remove('active');
+    }, duration);
+  }
 }
 
 // ==================== DIAGNOSTICS ====================
@@ -527,12 +566,6 @@ API Endpoint:    ${env.apiHostname || 'N/A'}
 USER INFORMATION
 ───────────────────────────────────────
 ${userInfo}
-TOOLKIT DATA
-───────────────────────────────────────
-Saved Environments: ${data.environments}
-Shortcuts:          ${data.shortcuts}
-Notes:              ${data.notes}
-
 TECHNICAL DETAILS
 ───────────────────────────────────────
 Browser:         ${data.browser}

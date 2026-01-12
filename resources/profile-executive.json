@@ -1,0 +1,42 @@
+{
+  "version": "2.0",
+  "solutions": [],
+  "globalShortcuts": [
+    {
+      "icon": "5",
+      "id": "shortcut-exec-trust",
+      "name": "Customer Trust Center",
+      "notes": "Compliance papers (SOC2, ISO) for the security team.",
+      "tags": ["compliance"],
+      "url": "https://www.sap.com/about/trust-center.html"
+    },
+    {
+      "icon": "0",
+      "id": "shortcut-exec-signavio",
+      "name": "Signavio Process Transformation",
+      "notes": "High-level process maps and value analysis.",
+      "tags": ["strategy"],
+      "url": "https://editor.signavio.com"
+    },
+    {
+      "icon": "6",
+      "id": "shortcut-exec-investors",
+      "name": "SAP Stock & Investor Relations",
+      "notes": "Quarterly results and strategic direction.",
+      "tags": ["strategy"],
+      "url": "https://www.sap.com/investors.html"
+    }
+  ],
+  "environments": [],
+  "notes": [
+    {
+      "content": "SAP Value Pillars for Executive Conversations:\n\n**1. Clean Core = Lower Upgrade Costs**\n• Traditional: 6-12 month upgrade projects\n• Clean Core: Quarterly updates, zero downtime\n• ROI: 40-60% reduction in upgrade costs\n\n**2. Business AI = 30% Efficiency Gain in HR/Finance**\n• Joule AI for process automation\n• Predictive analytics for demand planning\n• Real-world: 30-40% time saved on routine tasks\n\n**3. BTP = Innovation without Technical Debt**\n• Extend vs. Modify (no more custom code in core)\n• Side-by-side extensions on BTP\n• Future-proof: upgrades don't break extensions\n\n**4. Industry Cloud = Pre-configured Best Practices**\n• 80% of processes out-of-the-box\n• Reduce implementation time by 40%\n• Proven templates from 400K+ customers\n\n**Key Metrics to Highlight:**\n• 300+ million cloud users worldwide\n• 87% of global commerce touches SAP systems\n• 25+ years of cloud innovation\n• #1 in ERP, HCM, SCM market share\n\n**Competitive Positioning:**\n• vs. Oracle: More innovative (AI-first), better UX\n• vs. Workday: Complete ERP suite, global reach\n• vs. Salesforce: Enterprise-grade security, compliance",
+      "icon": "6",
+      "id": "note-exec-value-pitch",
+      "tags": ["strategy"],
+      "timestamp": 1736633700000,
+      "title": "Value Pitch Script"
+    }
+  ],
+  "exportDate": "2026-01-11T23:59:00.000Z"
+}

@@ -90,10 +90,15 @@
     </div>
 
     <!-- Environments Section -->
-    <section class="section">
+    <section class="section" data-section="environments">
       <div class="section-header">
+        <button class="section-toggle-btn" data-section="environments" title="Collapse section">
+          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
         <div>
-          <h2 class="section-title">ENVIRONMENTS</h2>
+          <h2 class="section-title">ENVIRONMENTS <span class="section-count"></span></h2>
           <p class="section-desc">Switch between Production, Preview, Sales, and Sandbox instances</p>
         </div>
         <button class="btn-add" id="addEnvBtn" data-title="Add Environment">
@@ -104,44 +109,46 @@
         </button>
       </div>
       
-      <div class="table-container">
-        <table class="data-table" id="environmentsTable">
-          <tbody id="environmentList">
-            <tr class="empty-row">
-              <td colspan="4">
-                <div class="empty-state">
-                  <p>No saved environments</p>
-                  <button class="btn btn-secondary btn-sm" id="addEnvBtnInline">+ Add Current Instance</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="section-content">
+        <div class="table-container">
+          <table class="data-table" id="environmentsTable">
+            <tbody id="environmentList">
+              <tr class="empty-row">
+                <td colspan="4">
+                  <div class="empty-state">
+                    <p>No saved environments</p>
+                    <button class="btn btn-secondary btn-sm" id="addEnvBtnInline">+ Add Current Instance</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
     <!-- Combined Shortcuts & Notes Section -->
-    <section class="section">
+    <section class="section" data-section="shortcuts">
       <div class="section-header">
+        <button class="section-toggle-btn" data-section="shortcuts" title="Collapse section">
+          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
         <div>
-          <h2 class="section-title">SHORTCUTS & NOTES</h2>
+          <h2 class="section-title">SHORTCUTS <span class="section-count"></span></h2>
           <p class="section-desc">External links and reference information</p>
         </div>
+        <button class="btn-add" id="addShortcutBtn" data-title="Add Shortcut" title="Add Shortcut" style="width: 32px; height: 32px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
       </div>
       
-      <!-- Shortcuts Subsection -->
-      <div style="margin-bottom: 16px;">
-        <div class="section-header" style="margin-bottom: 8px;">
-          <div>
-            <h3 style="font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: var(--text-tertiary); margin-bottom: 2px;">SHORTCUTS</h3>
-          </div>
-          <button class="btn-add" id="addShortcutBtn" data-title="Add Shortcut" title="Add Shortcut" style="width: 28px; height: 28px;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="12" y1="5" x2="12" y2="19"/>
-              <line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-          </button>
-        </div>
+      <!-- Shortcuts Content -->
+      <div class="section-content">
         <div class="table-container">
           <table class="data-table" id="shortcutsTable">
             <tbody id="shortcutsList">
@@ -157,20 +164,102 @@
           </table>
         </div>
       </div>
+    </section>
 
-      <!-- Notes Subsection -->
-      <div>
-        <div class="section-header" style="margin-bottom: 8px;">
-          <div>
-            <h3 style="font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: var(--text-tertiary); margin-bottom: 2px;">SCRATCH NOTES</h3>
-          </div>
-          <button class="btn-add" id="addNoteBtn" data-title="Add Note" title="Add Note" style="width: 28px; height: 28px;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <!-- Notes Section -->
+    <section class="section" data-section="notes">
+      <div class="section-header">
+        <button class="section-toggle-btn" data-section="notes" title="Collapse section">
+          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div>
+          <h2 class="section-title">SCRATCH NOTES <span class="section-count"></span></h2>
+          <p class="section-desc">Store temporary IDs, URLs, and reference information</p>
+        </div>
+        <div class="section-header-actions">
+          <button class="btn btn-accent btn-sm" id="ossNoteBtn" title="Search OSS Note" style="padding: 6px 10px; font-size: 12px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            OSS Note
+          </button>
+          <button class="btn-add" id="addNoteBtn" data-title="Add Note" title="Add Note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="12" y1="5" x2="12" y2="19"/>
               <line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
           </button>
         </div>
+      </div>
+      
+      <!-- OSS Note Search Form (Hidden by default) -->
+      <div id="ossNoteSearchForm" class="oss-search-form" style="display: none;">
+        <div class="oss-search-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <span>Search SAP OSS Note</span>
+        </div>
+        
+        <!-- Popular Notes Section -->
+        <div class="popular-notes-section" id="popularNotesSection">
+          <div class="popular-notes-header">
+            <span class="popular-notes-title">🔥 Popular Notes</span>
+            <button class="toggle-popular-btn" id="togglePopularNotes" type="button" title="Toggle popular notes">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+          </div>
+          <div class="popular-notes-grid" id="popularNotesGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+        
+        <input 
+          type="text" 
+          id="ossNoteInputInline" 
+          placeholder="Enter OSS Note number (e.g., 3123456)"
+          class="oss-search-input"
+        >
+        <div class="oss-search-actions">
+          <button class="btn btn-primary btn-sm" id="openOssNoteInlineBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Open
+          </button>
+          <button class="btn btn-secondary btn-sm" id="copyOssUrlBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy URL
+          </button>
+          <button class="btn btn-secondary btn-sm" id="addOssShortcutBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add Shortcut
+          </button>
+          <button class="icon-btn" id="closeOssSearchBtn" title="Close" style="margin-left: auto;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Notes Content -->
+      <div class="section-content">
         <div class="table-container">
           <table class="data-table" id="notesTable">
             <tbody id="notesList">
@@ -239,7 +328,10 @@
       <div class="modal-body">
         <form id="addEnvForm">
           <div class="form-group">
-            <label for="envName"><span data-i18n="environmentName">Environment Name</span> <span data-i18n="required">*</span></label>
+            <label for="envName">
+              <span data-i18n="environmentName">Environment Name</span> <span data-i18n="required">*</span>
+              <span class="char-counter" id="envNameCounter">0/100</span>
+            </label>
             <input type="text" id="envName" data-i18n-placeholder="environmentNamePlaceholder" placeholder="e.g., Production DC68" required>
           </div>
           <div class="form-group">
@@ -252,11 +344,20 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="envHostname"><span data-i18n="hostname">Hostname</span> <span data-i18n="required">*</span></label>
-            <input type="text" id="envHostname" data-i18n-placeholder="hostnamePlaceholder" placeholder="e.g., hcm-us20.hr.cloud.sap" required>
+            <label for="envHostname">
+              <span data-i18n="hostname">Hostname</span> <span data-i18n="required">*</span>
+              <span class="char-counter" id="envHostnameCounter">0/255</span>
+            </label>
+            <input type="text" id="envHostname" data-i18n-placeholder="hostnamePlaceholder" placeholder="hcm-us20.hr.cloud.sap" required>
+            <small style="color: var(--text-secondary); font-size: 11px; display: block; margin-top: 4px;">
+              Enter SAP hostname without https:// (e.g., hcm-us20.hr.cloud.sap)
+            </small>
           </div>
           <div class="form-group">
-            <label for="envNotes">Notes (optional)</label>
+            <label for="envNotes">
+              Notes (optional)
+              <span class="char-counter" id="envNotesCounter">0/500</span>
+            </label>
             <textarea id="envNotes" rows="2" placeholder="e.g., Test users, credentials, special configuration..."></textarea>
           </div>
         </form>
@@ -290,22 +391,34 @@
       <div class="modal-body">
         <form id="addShortcutForm">
           <div class="form-group">
-            <label for="shortcutName"><span data-i18n="shortcutName">Name</span> *</label>
+            <label for="shortcutName">
+              <span data-i18n="shortcutName">Name</span> *
+              <span class="char-counter" id="shortcutNameCounter">0/100</span>
+            </label>
             <input type="text" id="shortcutName" placeholder="e.g., Admin Center" required>
           </div>
           <div class="form-group">
-            <label for="shortcutPath"><span data-i18n="shortcutUrl">URL</span> *</label>
+            <label for="shortcutPath">
+              <span data-i18n="shortcutUrl">URL</span> *
+              <span class="char-counter" id="shortcutPathCounter">0/2000</span>
+            </label>
             <input type="text" id="shortcutPath" placeholder="e.g., https://roadmaps.sap.com/..." required>
             <small style="color: var(--text-secondary); font-size: 11px; display: block; margin-top: 4px;">
               Enter full URL starting with https:// (external links only)
             </small>
           </div>
           <div class="form-group">
-            <label for="shortcutNotes">Notes</label>
+            <label for="shortcutNotes">
+              Notes
+              <span class="char-counter" id="shortcutNotesCounter">0/500</span>
+            </label>
             <input type="text" id="shortcutNotes" placeholder="Optional description">
           </div>
           <div class="form-group">
-            <label for="shortcutTags">Tags (comma-separated)</label>
+            <label for="shortcutTags">
+              Tags (comma-separated)
+              <span class="char-counter" id="shortcutTagsCounter">0/300</span>
+            </label>
             <input type="text" id="shortcutTags" placeholder="e.g., SuccessFactors, Admin, Configuration">
             <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
               Use tags to organize and search shortcuts
@@ -314,17 +427,48 @@
           <div class="form-group">
             <label for="shortcutIcon">Icon</label>
             <select id="shortcutIcon">
-              <option value="0">🗺️ Map</option>
-              <option value="1">⚙️ Settings</option>
-              <option value="2">🔐 Security</option>
-              <option value="3">👥 People</option>
-              <option value="4">📊 Analytics</option>
-              <option value="5">🛠️ Tools</option>
-              <option value="6">📝 Document</option>
-              <option value="7">🎯 Target</option>
-              <option value="8">📄 Page</option>
-              <option value="9">🔗 Link</option>
+              <optgroup label="📚 Documentation & Learning">
+                <option value="map">🗺️ Map/Roadmap</option>
+                <option value="document">📝 Document</option>
+                <option value="page">📄 Page</option>
+                <option value="learning">📚 Learning</option>
+                <option value="training">🎓 Training</option>
+                <option value="demo">🎪 Demo/Walkthrough</option>
+              </optgroup>
+              <optgroup label="⚙️ Administration">
+                <option value="settings">⚙️ Settings</option>
+                <option value="security">🔐 Security</option>
+                <option value="credentials">🔑 Credentials</option>
+                <option value="tools">🛠️ Tools</option>
+              </optgroup>
+              <optgroup label="💰 Business">
+                <option value="pricing">💰 Pricing/Cost</option>
+                <option value="analytics">📊 Analytics</option>
+                <option value="target">🎯 Target/Goal</option>
+                <option value="company">🏢 Company/Customer</option>
+              </optgroup>
+              <optgroup label="🌐 Navigation">
+                <option value="link">🔗 Link</option>
+                <option value="external">🌐 External Link</option>
+                <option value="preview-eye">👁️ Preview</option>
+                <option value="datacenter">🌍 Datacenter/Region</option>
+              </optgroup>
+              <optgroup label="🔔 System & Technology">
+                <option value="alert">🔔 Alert/Notification</option>
+                <option value="success">✅ Success/Verified</option>
+                <option value="warning">⚠️ Warning</option>
+                <option value="sync">🔄 Sync/Restore</option>
+                <option value="ai">🤖 AI/Joule</option>
+                <option value="package">📦 Package/Module</option>
+              </optgroup>
+              <optgroup label="👥 People">
+                <option value="people">👥 People/Teams</option>
+              </optgroup>
             </select>
+            <small id="iconSuggestion" class="icon-suggestion" style="display: none; font-size: 10px; color: var(--accent-blue); margin-top: 4px;">
+              💡 Suggested: <strong id="suggestedShortcutIconName"></strong>
+              <button type="button" class="btn-link" id="acceptShortcutSuggestion" style="margin-left: 8px; font-size: 10px;">Use this</button>
+            </small>
           </div>
         </form>
       </div>
@@ -357,15 +501,27 @@
       <div class="modal-body">
         <form id="addNoteForm">
           <div class="form-group">
-            <label for="noteTitle">Title *</label>
+            <label for="noteTitle">
+              Title *
+              <span class="char-counter" id="noteTitleCounter">0/100</span>
+            </label>
             <input type="text" id="noteTitle" placeholder="e.g., Test User IDs" required>
           </div>
           <div class="form-group">
-            <label for="noteContent">Content</label>
+            <label for="noteContent">
+              Content
+              <span class="char-counter" id="noteContentCounter">0</span>
+            </label>
             <textarea id="noteContent" rows="6" placeholder="Paste IDs, URLs, configs..."></textarea>
+            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
+              No character limit. Soft warning at 5000+ characters.
+            </small>
           </div>
           <div class="form-group">
-            <label for="noteTags">Tags (comma-separated)</label>
+            <label for="noteTags">
+              Tags (comma-separated)
+              <span class="char-counter" id="noteTagsCounter">0/300</span>
+            </label>
             <input type="text" id="noteTags" placeholder="e.g., Testing, Configuration, User-IDs">
             <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
               Use tags to organize and search notes
@@ -374,20 +530,62 @@
           <div class="form-group">
             <label for="noteIcon">Icon</label>
             <select id="noteIcon">
-              <option value="0">📝 Note</option>
-              <option value="1">🔑 Key</option>
-              <option value="2">🆔 ID</option>
-              <option value="3">🔗 Link</option>
-              <option value="4">⚙️ Settings</option>
-              <option value="5">📋 Clipboard</option>
-              <option value="6">💡 Idea</option>
-              <option value="7">📌 Pin</option>
+              <optgroup label="📝 General Notes">
+                <option value="note">📝 Note</option>
+                <option value="clipboard">📋 Clipboard</option>
+                <option value="pin">📌 Pin</option>
+                <option value="bookmark">🔖 Bookmark</option>
+              </optgroup>
+              <optgroup label="🔐 Credentials & Security">
+                <option value="key">🔑 Key/Password</option>
+                <option value="id">🆔 User ID</option>
+                <option value="lock">🔒 Security</option>
+              </optgroup>
+              <optgroup label="🔗 Links & References">
+                <option value="link">🔗 Link/URL</option>
+                <option value="world">🌐 Web Resource</option>
+                <option value="file">📄 File/Document</option>
+              </optgroup>
+              <optgroup label="⚙️ Configuration">
+                <option value="settings">⚙️ Settings</option>
+                <option value="code">💻 Code/Script</option>
+                <option value="terminal">⌨️ Command/Terminal</option>
+              </optgroup>
+              <optgroup label="💡 Ideas & Planning">
+                <option value="idea">💡 Idea</option>
+                <option value="question">❓ Question</option>
+                <option value="checklist">✅ Checklist/Todo</option>
+              </optgroup>
+              <optgroup label="⚠️ Important">
+                <option value="warning">⚠️ Warning</option>
+                <option value="alert">🚨 Alert/Critical</option>
+                <option value="flag">🚩 Flag/Follow-up</option>
+              </optgroup>
             </select>
+            <small id="noteIconSuggestion" class="icon-suggestion" style="display: none; font-size: 10px; color: var(--accent-blue); margin-top: 4px;">
+              💡 Suggested: <strong id="suggestedNoteIconName"></strong>
+              <button type="button" class="btn-link" id="acceptNoteSuggestion" style="margin-left: 8px; font-size: 10px;">Use this</button>
+            </small>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" id="cancelAddNoteBtn">Cancel</button>
+        <button class="btn btn-secondary" id="prettifyNoteBtn" title="Format note content">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Format
+        </button>
+        <button class="btn btn-secondary" id="downloadNoteBtn" title="Download note as text file" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download
+        </button>
         <button class="btn btn-primary" id="saveNoteBtn">Save</button>
       </div>
     </div>
@@ -574,6 +772,8 @@
     </div>
   </div>
 
+  <script src="sap-icon-library.js"></script>
+  <script src="validation.js"></script>
   <script src="toolkit-core.js"></script>
   <script src="side-panel.js"></script>
 </body>

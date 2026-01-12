@@ -19,7 +19,16 @@
     "https://*.sapcloud.cn/*",
     "https://*.successfactors.eu/*",
     "https://*.sapsf.eu/*",
-    "https://*.successfactors.com/*"
+    "https://*.successfactors.com/*",
+    "https://*.s4hana.ondemand.com/*",
+    "https://*.s4hana.cloud.sap/*",
+    "https://*.hana.ondemand.com/*",
+    "https://*.cfapps.us10.hana.ondemand.com/*",
+    "https://*.cfapps.eu10.hana.ondemand.com/*",
+    "https://*.cfapps.ap21.hana.ondemand.com/*",
+    "https://*.build.cloud.sap/*",
+    "https://*.ibp.cloud.sap/*",
+    "https://*.scmibp.ondemand.com/*"
   ],
   
   "action": {
@@ -44,7 +53,16 @@
         "https://*.sapcloud.cn/*",
         "https://*.successfactors.eu/*",
         "https://*.sapsf.eu/*",
-        "https://*.successfactors.com/*"
+        "https://*.successfactors.com/*",
+        "https://*.s4hana.ondemand.com/*",
+        "https://*.s4hana.cloud.sap/*",
+        "https://*.hana.ondemand.com/*",
+        "https://*.cfapps.us10.hana.ondemand.com/*",
+        "https://*.cfapps.eu10.hana.ondemand.com/*",
+        "https://*.cfapps.ap21.hana.ondemand.com/*",
+        "https://*.build.cloud.sap/*",
+        "https://*.ibp.cloud.sap/*",
+        "https://*.scmibp.ondemand.com/*"
       ],
       "js": ["content/content.js"],
       "css": ["content/indicators.css"],
@@ -62,7 +80,10 @@
         "content/injected.js",
         "resources/dc.json",
         "resources/profile-global.json",
-        "resources/profile-successfactors.json"
+        "resources/profile-successfactors.json",
+        "resources/profile-s4hana.json",
+        "resources/profile-btp.json",
+        "resources/profile-executive.json"
       ],
       "matches": ["<all_urls>"]
     }
