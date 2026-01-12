@@ -177,8 +177,28 @@ Generate comprehensive diagnostic reports for troubleshooting and support ticket
   - SSO/OAuth detection with graceful fallback
   - Password visibility toggle (eye icon)
   - Support for SF, S/4HANA, and BTP environments
+- ⭐ **NEW**: Universal pin/favorite system
+  - Pin environments, shortcuts, and notes to the top
+  - Star icons with visual states (gray when unpinned, gold when pinned)
+  - One-click pin/unpin functionality
+  - Pinned items automatically sort to top of lists
+- ⌨️ **NEW**: Enhanced keyboard shortcuts
+  - `Cmd+J` to add new shortcut (changed from Cmd+Shift+N)
+  - `Cmd+E` to add new environment
+  - `Cmd+Shift+1/2/3` for quick environment switching
+  - All shortcuts now work reliably via document listeners
+- 📊 **NEW**: Environment usage tracking
+  - Last accessed timestamp for each environment
+  - Access count tracking
+  - Helps identify frequently-used environments
+- 🔔 **NEW**: New content notifications
+  - Toast notifications when new notes/shortcuts added
+  - Asterisk indicators for profile updates
 - 📚 **NEW**: Comprehensive security documentation (AUTO-LOGIN-SECURITY.md)
 - 🧪 **NEW**: Detailed testing guide (AUTO-LOGIN-TESTING-GUIDE.md)
+- 🐛 **FIXED**: Keyboard shortcuts not working (removed conflicting manifest.json commands)
+- 🐛 **FIXED**: Pin buttons not visible (CSS overflow issues resolved)
+- 🐛 **FIXED**: Footer overlapping content (increased padding)
 
 ### v1.3.0
 - 🌍 **NEW**: Internationalization (i18n) support for 10 languages
@@ -257,8 +277,10 @@ Boost your productivity with keyboard shortcuts:
 | Shortcut | Action |
 |----------|--------|
 | `Cmd+K` (Mac) / `Ctrl+K` (Windows) | Focus search bar |
-| `Cmd+Shift+N` (Mac) / `Ctrl+Shift+N` (Windows) | Add new shortcut |
+| `Cmd+J` (Mac) / `Ctrl+J` (Windows) | Add new shortcut |
+| `Cmd+E` (Mac) / `Ctrl+E` (Windows) | Add new environment |
 | `Cmd+M` (Mac) / `Ctrl+M` (Windows) | Add new note |
+| `Cmd+Shift+1/2/3` (Mac) / `Ctrl+Shift+1/2/3` (Windows) | Quick switch to environment 1/2/3 |
 | `↑` `↓` Arrow keys | Navigate items |
 | `Tab` | Navigate buttons |
 | `Enter` | Open selected item |
@@ -272,14 +294,17 @@ Completed enhancements:
 - ✅ Auto-login with encrypted credential storage
 - ✅ Multi-step login support (SF two-step flow)
 - ✅ Cookie clearing for fresh logins
+- ✅ Environment/shortcut/note pinning with favorites
+- ✅ Quick environment switching (Cmd+Shift+1/2/3)
+- ✅ Keyboard shortcuts for all major actions
 
 Future enhancements under consideration:
-- Environment favorites/pinning
 - Bulk environment import/export
 - Note categories and tags
 - Enhanced datacenter information display
 - Biometric authentication for credential access
 - Audit logging for auto-login usage
+- Environment usage analytics
 
 ---
 

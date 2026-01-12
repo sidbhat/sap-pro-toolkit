@@ -17,6 +17,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.0] - 2026-01-12
+### Added
+- ⭐ **Universal Pin/Favorite System**: Pin any item to top of lists
+  - Works across environments, shortcuts, and notes
+  - Star icons with visual states (gray when unpinned, gold ⭐ when pinned)
+  - One-click pin/unpin functionality with animation
+  - Pinned items automatically sort to top
+  - Unified `togglePin(id, type)` function handles all three types
+  - Toast notifications confirm pin/unpin actions
+- ⌨️ **Enhanced Keyboard Shortcuts**: More productive hotkeys
+  - `Cmd/Ctrl+J`: Add new shortcut (changed from Cmd+Shift+N)
+  - `Cmd/Ctrl+E`: Add new environment
+  - `Cmd/Ctrl+Shift+1/2/3`: Quick switch to environments 1/2/3
+  - All shortcuts now work reliably via document listeners
+- 📊 **Environment Usage Tracking**: Smart analytics for environments
+  - `lastAccessed` timestamp for each environment
+  - `accessCount` tracking (increments on switch)
+  - Helps identify frequently-used environments
+- 🔔 **New Content Notifications**: Visual indicators for updates
+  - Toast notifications when new notes/shortcuts added
+  - Asterisk (*) indicators for profile updates
+  - Shows when profile content has been refreshed
+
+### Changed
+- **Keyboard Shortcut Architecture**: Removed Chrome commands API in favor of document listeners
+  - Deleted entire `commands` section from manifest.json
+  - Removed `chrome.commands.onCommand` listener from background.js
+  - Removed `handleKeyboardCommand()` and message relay from side-panel.js
+  - Now using ONLY toolkit-core.js document event listeners (more reliable)
+- **CSS Overflow Handling**: Fixed pin button visibility
+  - Parent containers use `overflow: visible` instead of `hidden`
+  - Child text elements handle truncation with `overflow: hidden; text-overflow: ellipsis`
+  - Applied to `.env-name`, `.shortcut-name`, `.note-title`
+- **Footer Spacing**: Increased padding to prevent content overlap
+  - Changed `.side-panel-container` padding-bottom from 80px to 140px
+  - Accommodates expanded world clock footer
+
+### Fixed
+- 🐛 **CRITICAL: Keyboard Shortcuts Not Working**: Resolved Chrome commands API conflict
+  - Manifest.json commands were conflicting with toolkit-core.js document listeners
+  - Removed manifest commands entirely - all shortcuts now work reliably
+- 🐛 **Pin Buttons Not Visible**: CSS overflow clipping star icons
+  - Fixed parent container overflow settings
+  - Pin buttons now visible and clickable
+- 🐛 **Footer Overlapping Content**: World clock cutting off page bottom
+  - Increased container padding-bottom by 60px
+- 🐛 **Chrome Manifest Error**: Exceeded 4 shortcut limit
+  - Removed all Chrome command shortcuts from manifest.json
+  - Now handle shortcuts via JavaScript only
+
+### Security
+- ✅ Passed 18-check security audit before commit
+- ✅ No credential leaks, customer data, or content violations
+- ✅ All innerHTML usage validated as safe (template literals only)
+- ✅ Profile-successfactors.json remains in .gitignore (SAP-internal)
+
+### Documentation
+- Updated README.md with new features and keyboard shortcuts table
+- Updated panel/side-panel.html help modal with pin feature documentation
+- All features tested and verified working
+
+### Technical
+- Removed 56 lines of obsolete keyboard command code
+- Added unified `togglePin(id, type)` function replacing environment-only version
+- Added pin button HTML/CSS to shortcuts and notes sections
+- Sorting logic: `pinned` items first (via array sort comparing boolean flags)
+- Star SVG with dynamic fill/opacity based on pin state
+
+---
+
 ## [1.5.0] - 2026-01-11
 ### Added
 - 🌐 **World Clock Footer**: Real-time timezone display for global SAP teams
