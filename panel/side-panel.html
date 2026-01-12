@@ -187,21 +187,19 @@
           <h2 class="section-title">SCRATCH NOTES <span class="section-count"></span></h2>
           <p class="section-desc">Store temporary IDs, URLs, and reference information</p>
         </div>
-        <div class="section-header-actions">
-          <button class="btn btn-accent btn-sm" id="ossNoteBtn" title="Search OSS Note" style="padding: 6px 10px; font-size: 12px;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/>
-              <path d="m21 21-4.35-4.35"/>
-            </svg>
-            OSS Note
-          </button>
-          <button class="btn-add" id="addNoteBtn" data-title="Add Note" title="Add Note">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="12" y1="5" x2="12" y2="19"/>
-              <line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-          </button>
-        </div>
+        <button class="btn btn-accent btn-sm" id="ossNoteBtn" title="Search OSS Note" style="padding: 6px 10px; font-size: 12px; margin-right: 8px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          OSS Note
+        </button>
+        <button class="btn-add" id="addNoteBtn" data-title="Add Note" title="Add Note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
       </div>
       
       <!-- OSS Note Search Form (Hidden by default) -->
@@ -350,13 +348,15 @@
         <form id="addEnvForm">
           <div class="form-group">
             <label for="envName">
-              <span data-i18n="environmentName">Environment Name</span> <span data-i18n="required">*</span>
+              <span data-i18n="environmentName">Environment Name</span> <span class="required-asterisk">*</span>
               <span class="char-counter" id="envNameCounter">0/100</span>
             </label>
             <input type="text" id="envName" data-i18n-placeholder="environmentNamePlaceholder" placeholder="e.g., Production DC68" required>
           </div>
           <div class="form-group">
-            <label for="envType"><span data-i18n="environmentType">Environment Type</span> <span data-i18n="required">*</span></label>
+            <label for="envType">
+              <span data-i18n="environmentType">Environment Type</span> <span class="required-asterisk">*</span>
+            </label>
             <select id="envType" required>
               <option value="production">🔴 Production</option>
               <option value="preview">🟢 Preview</option>
@@ -366,7 +366,7 @@
           </div>
           <div class="form-group">
             <label for="envHostname">
-              <span data-i18n="hostname">Hostname</span> <span data-i18n="required">*</span>
+              <span data-i18n="hostname">Hostname</span> <span class="required-asterisk">*</span>
               <span class="char-counter" id="envHostnameCounter">0/255</span>
             </label>
             <input type="text" id="envHostname" data-i18n-placeholder="hostnamePlaceholder" placeholder="hcm-us20.hr.cloud.sap" required>
@@ -413,14 +413,14 @@
         <form id="addShortcutForm">
           <div class="form-group">
             <label for="shortcutName">
-              <span data-i18n="shortcutName">Name</span> *
+              <span data-i18n="shortcutName">Name</span> <span class="required-asterisk">*</span>
               <span class="char-counter" id="shortcutNameCounter">0/100</span>
             </label>
             <input type="text" id="shortcutName" placeholder="e.g., Admin Center" required>
           </div>
           <div class="form-group">
             <label for="shortcutPath">
-              <span data-i18n="shortcutUrl">URL</span> *
+              <span data-i18n="shortcutUrl">URL</span> <span class="required-asterisk">*</span>
               <span class="char-counter" id="shortcutPathCounter">0/2000</span>
             </label>
             <input type="text" id="shortcutPath" placeholder="e.g., https://roadmaps.sap.com/..." required>
@@ -523,7 +523,7 @@
         <form id="addNoteForm">
           <div class="form-group">
             <label for="noteTitle">
-              Title *
+              <span>Title</span> <span class="required-asterisk">*</span>
               <span class="char-counter" id="noteTitleCounter">0/100</span>
             </label>
             <input type="text" id="noteTitle" placeholder="e.g., Test User IDs" required>
