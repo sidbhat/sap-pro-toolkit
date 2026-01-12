@@ -29,6 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `npm run version:bump:patch|minor|major` - Bump version and sync files
   - Auto-generated INSTALL.md in dist/ with setup instructions
   - Colored terminal output with build summary and file counts
+- 🚀 **S/4HANA Go-Live & Cutover Profile**: Comprehensive go-live support for ERP implementations
+  - 10 critical T-Code shortcuts (SM21, SM37, ST04, ST22, ST03N, SXI_MONITOR, STMS, SU01, SM35)
+  - 9 detailed guides: Go-live checklist, critical T-Codes, data migration validation, incident response, interface monitoring, performance baseline, SAP Notes
+  - 🔥 2 Hot Community Posts notes with top SAP Community articles on go-live strategy and technical monitoring
+  - Cutover runbook template (Pre-48h, Cutover Weekend, Go-Live Day, Hypercare Week 1)
+  - BASIS troubleshooting guides (P1-P4 severity with T-Code resolution steps)
+  - Real-world lessons learned and best practices
 - 🔒 **Enhanced .gitignore**: Added `.cache/` pattern for build caches
 
 ### Changed
@@ -38,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Build system integrated with security audit workflow
 - Version management now automated with sync scripts
+- Global chrome-store-build.md rule created for automated builds across all projects
 
 ---
 
