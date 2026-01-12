@@ -19,6 +19,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { minify } = require('terser');
 
 // ANSI color codes for terminal output
 const colors = {
@@ -87,6 +88,88 @@ function copyFile(src, dest) {
 }
 
 /**
+ * Minify JavaScript file using Terser
+ */
+async function minifyJSFile(filePath) {
+  const code = fs.readFileSync(filePath, 'utf8');
+  
+  try {
+    const result = await minify(code, {
+      compress: {
+        dead_code: true,
+        drop_console: false, // Keep console logs for debugging
+        drop_debugger: true,
+        pure_funcs: ['console.debug']
+      },
+      mangle: {
+        toplevel: false, // Don't mangle top-level names (for debugging)
+        reserved: [] // Reserved names that shouldn't be mangled
+      },
+      format: {
+        comments: false, // Remove comments
+        beautify: false
+      }
+    });
+
+    if (result.code) {
+      fs.writeFileSync(filePath, result.code);
+      return true;
+    }
+  } catch (error) {
+    console.error(`  ${colors.red}✗${colors.reset} Failed to minify ${path.basename(filePath)}: ${error.message}`);
+    return false;
+  }
+  
+  return false;
+}
+
+/**
+ * Minify all JavaScript files in dist/
+ */
+async function minifyAllJS() {
+  const jsFiles = [
+    'background/background.js',
+    'panel/side-panel.js',
+    'panel/toolkit-core.js',
+    'panel/sap-icon-library.js',
+    'panel/validation.js',
+    'content/content.js',
+    'content/injected.js'
+  ];
+
+  console.log(`\n${colors.bright}Minifying JavaScript files:${colors.reset}`);
+  
+  let minified = 0;
+  let originalSize = 0;
+  let minifiedSize = 0;
+
+  for (const file of jsFiles) {
+    const filePath = path.join(BUILD_DIR, file);
+    if (fs.existsSync(filePath)) {
+      const beforeSize = fs.statSync(filePath).size;
+      const success = await minifyJSFile(filePath);
+      
+      if (success) {
+        const afterSize = fs.statSync(filePath).size;
+        const reduction = ((beforeSize - afterSize) / beforeSize * 100).toFixed(1);
+        console.log(`  ${colors.green}✓${colors.reset} ${file} (${(beforeSize/1024).toFixed(1)}KB → ${(afterSize/1024).toFixed(1)}KB, -${reduction}%)`);
+        
+        minified++;
+        originalSize += beforeSize;
+        minifiedSize += afterSize;
+      }
+    }
+  }
+
+  const totalReduction = ((originalSize - minifiedSize) / originalSize * 100).toFixed(1);
+  console.log(`\n${colors.bright}Minification Summary:${colors.reset}`);
+  console.log(`  Files minified: ${minified}/${jsFiles.length}`);
+  console.log(`  Original size:  ${(originalSize/1024).toFixed(1)}KB`);
+  console.log(`  Minified size:  ${(minifiedSize/1024).toFixed(1)}KB`);
+  console.log(`  Space saved:    ${((originalSize - minifiedSize)/1024).toFixed(1)}KB (${totalReduction}% reduction)`);
+}
+
+/**
  * Create INSTALL.md guide in dist/
  */
 function createInstallGuide() {
@@ -147,7 +230,7 @@ Version: ${require('../package.json').version}
 /**
  * Main build function
  */
-function build() {
+async function build() {
   console.log(`${colors.bright}${colors.blue}SF Pro Toolkit - Build Script${colors.reset}\n`);
 
   // Clean existing build
@@ -191,6 +274,9 @@ function build() {
   createInstallGuide();
   console.log(`  ${colors.green}✓${colors.reset} INSTALL.md`);
 
+  // Minify JavaScript files
+  await minifyAllJS();
+
   // Build summary
   const manifest = JSON.parse(fs.readFileSync(path.join(BUILD_DIR, 'manifest.json'), 'utf8'));
   console.log(`\n${colors.bright}${colors.green}Build Complete!${colors.reset}`);
@@ -208,9 +294,11 @@ function build() {
 }
 
 // Run build
-try {
-  build();
-} catch (error) {
-  console.error(`${colors.red}Build failed:${colors.reset}`, error.message);
-  process.exit(1);
-}
+(async () => {
+  try {
+    await build();
+  } catch (error) {
+    console.error(`${colors.red}Build failed:${colors.reset}`, error.message);
+    process.exit(1);
+  }
+})();
