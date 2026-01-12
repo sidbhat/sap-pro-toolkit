@@ -288,27 +288,39 @@
 
     <!-- Sticky Footer -->
     <footer class="sticky-footer">
-      <button class="footer-btn" id="footerSettingsBtn" title="Settings">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"/>
-        </svg>
-        <span class="footer-btn-label">Settings</span>
-      </button>
-      <button class="footer-btn" id="footerDiagnosticsBtn" title="Diagnostics">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="16" x2="12" y2="12"/>
-          <line x1="12" y1="8" x2="12.01" y2="8"/>
-        </svg>
-        <span class="footer-btn-label">Diagnostics</span>
-      </button>
-      <button class="footer-btn" id="footerThemeBtn" title="Toggle Theme" data-theme-active="false">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-        <span class="footer-btn-label">Theme</span>
-      </button>
+      <div class="footer-top-row">
+        <button class="footer-btn" id="footerSettingsBtn" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"/>
+          </svg>
+          <span class="footer-btn-label">Settings</span>
+        </button>
+        <button class="footer-btn" id="footerDiagnosticsBtn" title="Diagnostics">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          <span class="footer-btn-label">Diagnostics</span>
+        </button>
+        <button class="footer-btn" id="footerThemeBtn" title="Toggle Theme" data-theme-active="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <span class="footer-btn-label">Theme</span>
+        </button>
+      </div>
+      
+      <!-- World Clock & Metadata -->
+      <div class="footer-bottom-row">
+        <div class="footer-metadata" id="footerMetadata">
+          <span class="profile-update-date" id="profileUpdateDate" title="Profile content last updated"></span>
+        </div>
+        <div class="world-clock" id="worldClock" title="Click to configure timezones">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
     </footer>
 
     <!-- Toast Notification -->

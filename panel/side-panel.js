@@ -68,6 +68,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize collapsible sections
     await initializeCollapsibleSections();
     
+    // Initialize world clock and content date
+    await initializeWorldClock();
+    await displayProfileUpdateDate();
+    
     updatePlatformSpecificUI();
     
     // Listen for tab changes to update UI
@@ -2711,7 +2715,8 @@ async function discoverProfiles() {
     { id: 'profile-successfactors', name: 'SuccessFactors', icon: '👥', description: 'HR/HCM consultants & admins', file: 'profile-successfactors.json', type: 'system' },
     { id: 'profile-s4hana', name: 'S/4HANA', icon: '🏭', description: 'Clean Core & functional architects', file: 'profile-s4hana.json', type: 'system' },
     { id: 'profile-btp', name: 'BTP & Integration', icon: '🔧', description: 'Developers & technical architects', file: 'profile-btp.json', type: 'system' },
-    { id: 'profile-executive', name: 'Executive & Sales', icon: '👔', description: 'CIOs, CTOs, presales engineers', file: 'profile-executive.json', type: 'system' }
+    { id: 'profile-executive', name: 'Executive & Sales', icon: '👔', description: 'CIOs, CTOs, presales engineers', file: 'profile-executive.json', type: 'system' },
+    { id: 'profile-golive', name: 'Go-Live & Cutover', icon: '🚀', description: 'S/4HANA implementation go-live events and cutover activities', file: 'profile-golive.json', type: 'system' }
   ];
   
   // Load custom profiles from storage
@@ -2930,6 +2935,135 @@ function setupShortcutIconAutoSuggestion() {
   iconSelect.addEventListener('change', () => {
     suggestionEl.style.display = 'none';
   });
+}
+
+// ==================== WORLD CLOCK & CONTENT DATE ====================
+
+/**
+ * Default timezone configuration for world clock
+ * Represents 3 key SAP regions: Americas, Europe, Asia-Pacific
+ */
+const DEFAULT_TIMEZONES = [
+  { id: 'america', name: 'EST', timezone: 'America/New_York', flag: '🇺🇸' },
+  { id: 'europe', name: 'CET', timezone: 'Europe/Berlin', flag: '🇩🇪' },
+  { id: 'asia', name: 'IST', timezone: 'Asia/Kolkata', flag: '🇮🇳' }
+];
+
+let worldClockInterval = null;
+
+/**
+ * Initialize world clock on page load
+ * Loads timezone preferences from storage (defaults to EST, CET, IST)
+ * Renders initial state and starts 1-minute update interval
+ */
+async function initializeWorldClock() {
+  try {
+    // Load timezone preferences (future: allow user customization)
+    const result = await chrome.storage.local.get({ worldClockTimezones: DEFAULT_TIMEZONES });
+    const timezones = result.worldClockTimezones;
+    
+    // Render initial clock state
+    updateWorldClock(timezones);
+    
+    // Start 1-minute update interval
+    worldClockInterval = setInterval(() => {
+      updateWorldClock(timezones);
+    }, 60000); // Update every 60 seconds
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (worldClockInterval) {
+        clearInterval(worldClockInterval);
+      }
+    });
+    
+    console.log('[World Clock] Initialized with timezones:', timezones.map(tz => tz.name).join(', '));
+    
+  } catch (error) {
+    console.error('[World Clock] Initialization failed:', error);
+  }
+}
+
+/**
+ * Update world clock display with current times in all configured timezones
+ * @param {Array} timezones - Array of timezone configuration objects
+ */
+function updateWorldClock(timezones = DEFAULT_TIMEZONES) {
+  const clockDiv = document.getElementById('worldClock');
+  if (!clockDiv) return;
+  
+  try {
+    const now = new Date();
+    const timeStrings = timezones.map(tz => {
+      // Format time for timezone
+      const timeStr = now.toLocaleTimeString('en-US', {
+        timeZone: tz.timezone,
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      
+      // Get timezone abbreviation (EST, CET, IST)
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: tz.timezone,
+        timeZoneName: 'short'
+      });
+      const parts = formatter.formatToParts(now);
+      const tzAbbr = parts.find(part => part.type === 'timeZoneName')?.value || tz.name;
+      
+      return `<span class="timezone-item" title="${tz.timezone}">
+        <span class="timezone-flag">${tz.flag}</span>
+        <span class="timezone-abbr">${tzAbbr}</span>
+        <span class="timezone-time">${timeStr}</span>
+      </span>`;
+    });
+    
+    clockDiv.innerHTML = timeStrings.join('');
+    
+  } catch (error) {
+    console.error('[World Clock] Update failed:', error);
+    clockDiv.innerHTML = '<span style="font-size: 9px; opacity: 0.5;">Clock error</span>';
+  }
+}
+
+/**
+ * Display profile content update date from current profile JSON
+ * Reads lastUpdated or contentVersion field and displays in footer
+ */
+async function displayProfileUpdateDate() {
+  const dateSpan = document.getElementById('profileUpdateDate');
+  if (!dateSpan) return;
+  
+  try {
+    // Load current profile data to get lastUpdated field
+    const profileData = await loadProfileData(currentProfile);
+    
+    if (profileData.lastUpdated) {
+      // Parse date and format as "Updated: Mon DD"
+      const date = new Date(profileData.lastUpdated);
+      const formatted = date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric' 
+      });
+      dateSpan.textContent = `Profile: ${formatted}`;
+      dateSpan.setAttribute('title', `Last updated: ${date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      })}`);
+    } else if (profileData.contentVersion) {
+      // Fallback to contentVersion (e.g., "2026-Q1")
+      dateSpan.textContent = `Profile: ${profileData.contentVersion}`;
+      dateSpan.setAttribute('title', `Content version: ${profileData.contentVersion}`);
+    } else {
+      // No date information available
+      dateSpan.textContent = '';
+    }
+    
+  } catch (error) {
+    console.error('[Profile Date] Failed to load update date:', error);
+    dateSpan.textContent = '';
+  }
 }
 
 

@@ -17,6 +17,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.0] - 2026-01-11
+### Added
+- 🌐 **World Clock Footer**: Real-time timezone display for global SAP teams
+  - 3 timezones: EST (Americas), CET (Europe), IST (Asia-Pacific)
+  - Auto-updates every 60 seconds
+  - Centered layout with flag indicators
+- 📅 **Profile Update Date Display**: Shows last content update date in footer
+  - Reads from profile JSON lastUpdated field
+  - Displays as "Profile: Mon DD" with hover tooltip
+  - Helps users know when profile content was refreshed
+- 🚀 **Go-Live & Cutover Profile**: New specialized profile for S/4HANA implementations
+  - 10 critical monitoring T-Codes (SM21, ST22, SM37, ST04, ST03N, etc.)
+  - 7 comprehensive guides covering go-live checklists, data migration, incident response
+  - Performance baseline KPIs and interface monitoring playbooks
+  - Essential SAP Notes for S/4HANA go-live success
+  - 2 hot community posts with real-world lessons learned
+
+### Changed
+- Footer layout: World clock now center-aligned with 16px gap between timezones
+- Profile discovery: Added profile-golive to availableProfiles array
+
+---
+
 ## [1.4.0] - 2026-01-11
 ### Added
 - 🛠️ **Build Automation System**: Professional build workflow from gamified-sf best practices
