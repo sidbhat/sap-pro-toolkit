@@ -65,9 +65,18 @@ function copyDir(src, dest) {
       continue;
     }
 
-    // Skip profile-successfactors.json (contains SAP-internal data)
+    // Use sanitized public version for profile-successfactors.json
     if (entry.name === 'profile-successfactors.json') {
-      console.log(`  ${colors.yellow}⚠${colors.reset} Skipping ${srcPath} (SAP-internal only, see .gitignore)`);
+      console.log(`  ${colors.yellow}⚠${colors.reset} Skipping ${srcPath} (using public version instead)`);
+      continue;
+    }
+    
+    // Copy public version as profile-successfactors.json
+    if (entry.name === 'profile-successfactors-public.json') {
+      const publicDestPath = path.join(dest, 'profile-successfactors.json');
+      fs.copyFileSync(srcPath, publicDestPath);
+      console.log(`  ${colors.green}✓${colors.reset} ${entry.name} → profile-successfactors.json (sanitized)`);
+      fileCount++;
       continue;
     }
 
