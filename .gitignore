@@ -28,6 +28,7 @@ build/
 *.zip
 *.crx
 *.pem
+.cache/
 
 # Testing
 coverage/

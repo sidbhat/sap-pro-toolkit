@@ -17,6 +17,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.4.0] - 2026-01-11
+### Added
+- 🛠️ **Build Automation System**: Professional build workflow from gamified-sf best practices
+  - `package.json` with npm scripts for building and versioning
+  - `scripts/build.js` - Automated production build tool
+  - `scripts/sync-version.js` - Version synchronization across package.json and manifest.json
+  - `npm run build` - Create dist/ folder with all extension files
+  - `npm run build:zip` - Create production ZIP file for Chrome Web Store
+  - `npm run clean` - Remove build artifacts
+  - `npm run version:bump:patch|minor|major` - Bump version and sync files
+  - Auto-generated INSTALL.md in dist/ with setup instructions
+  - Colored terminal output with build summary and file counts
+- 🔒 **Enhanced .gitignore**: Added `.cache/` pattern for build caches
+
+### Changed
+- **Build Process**: Manual file copying replaced with automated build scripts
+- **Chrome Web Store Submission**: Now single command (`npm run build:zip`)
+
+### Documentation
+- Build system integrated with security audit workflow
+- Version management now automated with sync scripts
+
+---
+
 ## [1.3.0] - 2026-01-11
 ### Added
 - 🌍 **Internationalization (i18n)**: Full support for 10 languages with automatic detection
