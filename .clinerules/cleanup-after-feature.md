@@ -67,7 +67,7 @@ function exampleFunction(paramName) {
 - [ ] Review file organization (are related functions together?)
 - [ ] Check for overly long functions (>50 lines should be refactored)
 
-### 2. DOCUMENTATION UPDATES (High Priority)
+### 3. DOCUMENTATION UPDATES (High Priority)
 
 #### A. Update README.md
 - [ ] Read current README.md
@@ -75,21 +75,31 @@ function exampleFunction(paramName) {
 - [ ] Update screenshots if UI changed significantly
 - [ ] Update installation/setup instructions if needed
 - [ ] Add any new configuration options
+- [ ] Update keyboard shortcuts table if shortcuts added
 - [ ] Update roadmap section
+- [ ] Add "What's New" section if major features added
 
-#### B. Update Help Documentation (side-panel.html)
+#### B. Update Help Documentation (panel/side-panel.html)
 - [ ] Update "About SF Pro Toolkit" section with new features
-- [ ] Update "Key Features" list
+- [ ] Update "Key Features" list with descriptions
 - [ ] Update keyboard shortcuts section if any shortcuts added
-- [ ] Ensure all feature descriptions are current
+- [ ] Ensure all feature descriptions are current and accurate
+- [ ] Add visual examples or tips for complex features
 
 #### C. Update Technical Documentation
-- [ ] Review and update IMPLEMENTATION-STATUS.md
-- [ ] Update PRD.md if feature scope changed
-- [ ] Update TESTING.md with new test scenarios
+- [ ] Review and update IMPLEMENTATION-STATUS.md with completed features
+- [ ] Update PRD.md if feature scope or requirements changed
+- [ ] Update TESTING.md with new test scenarios and edge cases
 - [ ] Check if CHROME-STORE-SUBMISSION.md needs updates
+- [ ] Update IMPROVEMENTS.md or PROPOSED-IMPROVEMENTS.md if applicable
+- [ ] Add new features to TESTING-GUIDE.md if testing procedures needed
 
-### 3. INTERNATIONALIZATION (Medium Priority)
+#### D. Update .clinerules Documentation (If Workflow Changed)
+- [ ] Update security-audit.md if new security checks needed
+- [ ] Update profile-content-updater.md if profile structure changed
+- [ ] Update cleanup-after-feature.md if cleanup process changed
+
+### 4. INTERNATIONALIZATION (Medium Priority)
 
 #### A. Update English Base File (_locales/en/messages.json)
 - [ ] Add any new UI strings to English messages
@@ -112,7 +122,7 @@ function exampleFunction(paramName) {
 - pt_BR (Portuguese - Brazil)
 - zh_CN (Chinese - Simplified)
 
-### 4. CODE QUALITY CHECKS (Medium Priority)
+### 5. CODE QUALITY CHECKS (Medium Priority)
 
 #### A. Consistency Review
 - [ ] Check naming conventions (camelCase for functions, UPPER_CASE for constants)
@@ -132,7 +142,7 @@ function exampleFunction(paramName) {
 - [ ] Check for inefficient loops or operations
 - [ ] Ensure large operations are async
 
-### 5. GIT COMMIT (Required)
+### 6. GIT COMMIT (Required)
 
 #### A. Stage Changes
 ```bash
@@ -168,7 +178,7 @@ Testing:
 git commit -m "[message]"
 ```
 
-### 6. FINAL REPORT
+### 7. FINAL REPORT
 
 Provide user with:
 - [ ] List of files deleted
