@@ -1,0 +1,134 @@
+{
+  "id": "golive",
+  "name": "🚀 Go-Live & Hypercare",
+  "description": "Critical resources and checklists for SuccessFactors go-live events and hypercare support",
+  "icon": "rocket",
+  "color": "#FF6B35",
+  "version": "1.0",
+  "contentVersion": "2026-Q1",
+  "lastUpdated": "2026-01-11",
+  "shortcuts": [
+    {
+      "id": "golive-1",
+      "name": "System Status Dashboard",
+      "url": "/xi/ui/systemstatus/systemStatus.xhtml",
+      "icon": "monitor-payments",
+      "description": "Monitor system health and job status"
+    },
+    {
+      "id": "golive-2",
+      "name": "Background Jobs",
+      "url": "/admin/viewBackgroundJobQueue.do",
+      "icon": "task",
+      "description": "Monitor critical background jobs"
+    },
+    {
+      "id": "golive-3",
+      "name": "Integration Center",
+      "url": "/admin/integrationPortalApplication.do",
+      "icon": "connected",
+      "description": "Monitor integrations and data flows"
+    },
+    {
+      "id": "golive-4",
+      "name": "Job Scheduler",
+      "url": "/admin/viewBackgroundJobScheduler.do",
+      "icon": "activate",
+      "description": "Review and adjust scheduled jobs"
+    },
+    {
+      "id": "golive-5",
+      "name": "Monitor Jobs",
+      "url": "/admin/monitorJobs.do",
+      "icon": "business-objects-experience",
+      "description": "Real-time job monitoring"
+    },
+    {
+      "id": "golive-6",
+      "name": "Export Data (HRIS Sync)",
+      "url": "/admin/exportData.do",
+      "icon": "download",
+      "description": "HRIS data export monitoring"
+    },
+    {
+      "id": "golive-7",
+      "name": "Import & Export Data",
+      "url": "/admin/foundationDataLandingPage.do",
+      "icon": "upload-to-cloud",
+      "description": "Data import/export hub"
+    },
+    {
+      "id": "golive-8",
+      "name": "Company Settings",
+      "url": "/admin/companySettings.do",
+      "icon": "building",
+      "description": "Verify company configurations"
+    },
+    {
+      "id": "golive-9",
+      "name": "User Management",
+      "url": "/admin/manageUsers.do",
+      "icon": "employee",
+      "description": "User provisioning and access"
+    },
+    {
+      "id": "golive-10",
+      "name": "Incident Management",
+      "url": "https://launchpad.support.sap.com/#incident/create",
+      "icon": "warning",
+      "description": "SAP Support incident creation",
+      "external": true
+    }
+  ],
+  "notes": [
+    {
+      "id": "golive-checklist",
+      "title": "🎯 Go-Live Day Checklist",
+      "content": "=== Pre Go-Live (T-24 Hours) ===\n☐ Freeze all configuration changes\n☐ Complete final data migration\n☐ Verify all integrations are running\n☐ Confirm job schedules aligned with go-live\n☐ Set up war room with key stakeholders\n☐ Test incident escalation procedures\n☐ Verify backup/rollback plan\n☐ Confirm cutover runbook reviewed\n\n=== Go-Live Day (T=0) ===\n☐ Execute cutover steps per runbook\n☐ Monitor system health dashboard\n☐ Verify critical background jobs running\n☐ Test user login access\n☐ Validate HRIS integrations\n☐ Check email notifications working\n☐ Verify reporting data accuracy\n☐ Monitor system performance metrics\n\n=== Post Go-Live (T+4 Hours) ===\n☐ Review all background job logs\n☐ Validate data integrity checks\n☐ Monitor help desk ticket volume\n☐ Track system performance metrics\n☐ Document any issues/workarounds\n☐ Prepare daily status report\n\n=== Hypercare Week 1 ===\n☐ Daily war room check-ins\n☐ Monitor system health 24/7\n☐ Track and resolve incidents quickly\n☐ Review job execution patterns\n☐ Validate integration stability\n☐ Gather user feedback\n☐ Update knowledge base articles",
+      "color": "yellow",
+      "contentVersion": "2026-Q1"
+    },
+    {
+      "id": "critical-jobs",
+      "title": "⚙️ Critical Background Jobs",
+      "content": "=== Daily Jobs ===\n• HRIS Sync (Employee Central)\n• Payroll Data Export\n• Benefits Enrollment Updates\n• Performance Management Notifications\n• Learning Assignments Sync\n\n=== Hourly/Real-Time Jobs ===\n• ODATA Integration Polling\n• Email Notification Queue\n• Workflow Escalations\n• Real-Time Data Replication\n\n=== Weekly Jobs ===\n• User Provisioning Audit\n• Report Generation\n• Data Archival\n• System Maintenance Tasks\n\n⚠️ Job Failure Response:\n1. Check job logs in Background Jobs\n2. Verify integration connectivity\n3. Review data quality issues\n4. Re-run job if transient failure\n5. Escalate to SAP if persistent\n\n📊 Success Metrics:\n• Job completion rate: >99%\n• Average execution time: within SLA\n• Error rate: <1%",
+      "color": "blue",
+      "contentVersion": "2026-Q1"
+    },
+    {
+      "id": "integration-monitoring",
+      "title": "🔄 Integration Health Monitoring",
+      "content": "=== Integration Types ===\n\n1. **HRIS Integrations**\n   • Employee Central → Downstream systems\n   • Payroll feeds (inbound/outbound)\n   • Benefits administration\n   • Time & Attendance sync\n\n2. **SSO/Authentication**\n   • SAML assertion validation\n   • User provisioning (SCIM)\n   • Azure AD / Okta sync\n\n3. **Third-Party Apps**\n   • Learning Management (LMS)\n   • Recruiting (ATS)\n   • Compensation planning\n   • Survey tools\n\n=== Monitoring Points ===\n☐ Integration Center status: All green\n☐ ODATA API call success rate: >99%\n☐ SFTP file transfers: On schedule\n☐ Webhook delivery: No failures\n☐ Error queue: Empty or minimal\n\n=== Troubleshooting Steps ===\n1. Check Integration Center logs\n2. Verify API credentials/certificates\n3. Test connectivity (network/firewall)\n4. Review data mapping errors\n5. Check for rate limiting\n6. Validate endpoint availability",
+      "color": "green",
+      "contentVersion": "2026-Q1"
+    },
+    {
+      "id": "incident-escalation",
+      "title": "🚨 Incident Escalation Matrix",
+      "content": "=== Severity Levels ===\n\n**SEV 1 - Critical (Response: Immediate)**\n• System down/unavailable\n• Data corruption affecting payroll\n• Security breach\n• Critical integration failure\n\n**SEV 2 - High (Response: 2 hours)**\n• Major feature not working\n• Performance degradation\n• Integration delays\n• Widespread user impact\n\n**SEV 3 - Medium (Response: 8 hours)**\n• Minor feature issues\n• Isolated user problems\n• Non-critical job failures\n• Reporting discrepancies\n\n**SEV 4 - Low (Response: 24 hours)**\n• Enhancement requests\n• Cosmetic issues\n• Questions/clarifications\n\n=== Escalation Path ===\n1. **L1 Support**: War room team\n2. **L2 Support**: Implementation partner\n3. **L3 Support**: SAP Support ticket\n4. **Executive**: If business-critical\n\n=== SAP Support ===\n• Component: LOD-SF-[MODULE]\n• Priority: Very High for SEV 1\n• Include: Screenshots, logs, steps to reproduce\n• Reference: Customer success plan number",
+      "color": "pink",
+      "contentVersion": "2026-Q1"
+    },
+    {
+      "id": "common-issues",
+      "title": "🔧 Common Go-Live Issues & Fixes",
+      "content": "=== User Access Issues ===\n**Problem**: Users can't log in\n**Check**:\n• SSO configuration active?\n• User provisioning job completed?\n• RBP permissions assigned?\n• Default locale/timezone set?\n\n=== Data Issues ===\n**Problem**: Missing or incorrect data\n**Check**:\n• Import jobs completed successfully?\n• Data validation rules passed?\n• Effective dating correct?\n• Picklist values mapped?\n\n=== Integration Failures ===\n**Problem**: HRIS sync not working\n**Check**:\n• Integration Center job status\n• API credentials valid?\n• Network connectivity OK?\n• Data format matches schema?\n\n=== Performance Issues ===\n**Problem**: System slow or timeout\n**Check**:\n• Concurrent users vs. capacity\n• Large report queries?\n• Background jobs competing?\n• Database performance metrics\n\n=== Email Notifications ===\n**Problem**: Emails not sending\n**Check**:\n• Email notification settings ON?\n• User has valid email address?\n• Email job queue processing?\n• SMTP/mail relay configured?",
+      "color": "orange",
+      "contentVersion": "2026-Q1"
+    },
+    {
+      "id": "performance-metrics",
+      "title": "📊 Go-Live Performance Metrics",
+      "content": "=== System Health KPIs ===\n\n**Availability**\n• Target: 99.9% uptime\n• Measure: System Status Dashboard\n• Alert: <99.5%\n\n**Performance**\n• Page load time: <3 seconds\n• API response time: <500ms\n• Job execution: Within SLA\n• Report generation: <30 seconds\n\n**Data Quality**\n• Import success rate: >99%\n• Data validation pass rate: 100%\n• Integration accuracy: >99.9%\n• Reconciliation errors: <0.1%\n\n**User Adoption**\n• Login success rate: >95%\n• Active users: Match employee count\n• Help desk tickets: <5% of users\n• Training completion: >80%\n\n=== Daily Reports ===\n1. System health summary\n2. Background job status\n3. Integration execution log\n4. Incident summary & resolution\n5. User access issues\n6. Performance metrics dashboard\n\n=== Week 1 Milestones ===\nDay 1: Stabilization\nDay 3: User adoption trending up\nDay 5: Incident volume decreasing\nDay 7: Transition to BAU support",
+      "color": "blue",
+      "contentVersion": "2026-Q1"
+    },
+    {
+      "id": "golive-sap-notes",
+      "title": "📋 Essential Go-Live SAP Notes",
+      "content": "=== System Health ===\n• 2400504 - System Status Page Best Practices\n• 2800895 - Performance Monitoring\n• 2485159 - Job Scheduler Recommendations\n\n=== Integrations ===\n• 2637754 - Integration Center Troubleshooting\n• 2938293 - ODATA API Best Practices\n• 2527702 - Employee Central Integration Guide\n\n=== User Access ===\n• 2797181 - SSO Configuration Checklist\n• 2318895 - User Provisioning Guidelines\n• 2715171 - RBP Performance Optimization\n\n=== Data Management ===\n• 2821879 - Import Tool Best Practices\n• 2700019 - Data Validation Rules\n• 2631781 - Export Data Troubleshooting\n\n=== Emergency Procedures ===\n• 2527812 - Emergency Configuration Changes\n• 2942156 - Rollback Procedures\n• 2385001 - Support Ticket Escalation",
+      "color": "yellow",
+      "contentVersion": "2026-Q1"
+    }
+  ]
+}
