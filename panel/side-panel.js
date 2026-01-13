@@ -324,9 +324,15 @@ async function loadProfileData(profileId) {
 async function renderEnvironments() {
   const tbody = document.getElementById('environmentList');
   
+  // Remove any existing Quick Actions banner first
+  const section = document.querySelector('.section[data-section="environments"]');
+  if (section) {
+    const existingBanner = section.querySelector('.quick-actions-banner');
+    if (existingBanner) existingBanner.remove();
+  }
   
   // Detect current SAP system and load Quick Actions from ALL profiles
-  let quickActionsRowHTML = '';
+  // Quick Actions will be rendered ABOVE the section (not inside tbody)
   if (currentPageData && currentPageData.solutionType) {
     const solutionType = currentPageData.solutionType;
     
@@ -362,29 +368,35 @@ async function renderEnvironments() {
       const quickActions = solution.quickActions.slice(0, 5);
       const solutionLabel = solution.name || solutionType.toUpperCase();
       
-      quickActionsRowHTML = `
-        <tr class="quick-actions-standalone-row">
-          <td colspan="2" style="padding: 0;">
-            <div class="quick-actions-standalone">
-              <div class="quick-actions-header">
-                <span class="quick-actions-title">⚡ ${solutionLabel} Quick Actions</span>
-              </div>
-              <div class="quick-action-badges">
-                ${quickActions.map(action => `
-                  <span class="quick-action-badge" data-action-id="${action.id}" data-action-path="${action.path}">
-                    <span class="quick-action-icon">⚡</span>${action.name}
-                  </span>
-                `).join('')}
-              </div>
-            </div>
-          </td>
-        </tr>
+      // Render as standalone div ABOVE the table (not inside tbody)
+      quickActionsHTML = `
+        <div class="quick-actions-banner" style="margin-bottom: 12px; padding: 12px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.12) 100%); border-left: 3px solid var(--env-preview); border-radius: 6px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: var(--env-preview); text-transform: uppercase;">⚡ ${solutionLabel} Quick Actions</span>
+          </div>
+          <div class="quick-action-badges">
+            ${quickActions.map(action => `
+              <span class="quick-action-badge" data-action-id="${action.id}" data-action-path="${action.path}">
+                <span class="quick-action-icon">⚡</span>${action.name}
+              </span>
+            `).join('')}
+          </div>
+        </div>
       `;
+      
+      // Render Quick Actions ABOVE section-header
+      if (section) {
+        // Insert at the very top of the section
+        section.insertAdjacentHTML('afterbegin', quickActionsHTML);
+        
+        // Attach handlers
+        attachQuickActionBadgeHandlers(quickActions);
+      }
     }
   }
   
   if (environments.length === 0) {
-    tbody.innerHTML = quickActionsRowHTML + `
+    tbody.innerHTML = `
       <tr class="empty-row">
         <td colspan="2">
           <div class="empty-state">
@@ -395,12 +407,6 @@ async function renderEnvironments() {
       </tr>
     `;
     document.getElementById('addEnvBtnInline')?.addEventListener('click', openAddEnvironmentModal);
-    
-    // Attach quick actions handlers if present
-    if (quickActionsRowHTML) {
-      // Quick Actions are already aggregated and rendered - just attach handlers
-      attachQuickActionBadgeHandlers([]);
-    }
     return;
   }
   
@@ -430,68 +436,18 @@ async function renderEnvironments() {
     return 0;
   });
   
-  // Load Quick Actions and build standalone row HTML
-  let quickActions = [];
-  let standaloneQuickActionsHTML = '';
-  
-  if (currentPageData && currentPageData.solutionType) {
-    // Aggregate Quick Actions from ALL profiles (not just current profile)
-    let allQuickActions = [];
-    
-    for (const profile of availableProfiles) {
-      // Check for custom solutions in storage first
-      const storageKey = `solutions_${profile.id}`;
-      const solutionsResult = await chrome.storage.local.get(storageKey);
-      let solutionsData = solutionsResult[storageKey];
-      
-      // If no custom solutions, load from profile file
-      if (!solutionsData && profile.file) {
-        const profileData = await loadProfileData(profile.id);
-        solutionsData = profileData.solutions;
-      }
-      
-      // Find matching solution for current solutionType
-      const solution = solutionsData?.find(s => s.id === currentPageData.solutionType);
-      if (solution && solution.quickActions) {
-        allQuickActions.push(...solution.quickActions);
-      }
-    }
-    
-    // Remove duplicates by action ID
-    allQuickActions = removeDuplicates(allQuickActions, 'id');
-    
-    // Use combined Quick Actions
-    const solution = allQuickActions.length > 0 ? { quickActions: allQuickActions } : null;
-    
-    if (solution && solution.quickActions && solution.quickActions.length > 0) {
-      quickActions = solution.quickActions.slice(0, 5);
-      const solutionLabel = solution.name || currentPageData.solutionType.toUpperCase();
-      
-      // Build standalone quick actions row
-      standaloneQuickActionsHTML = `
-        <tr class="quick-actions-standalone-row">
-          <td colspan="2" style="padding: 0;">
-            <div class="quick-actions-standalone">
-              <div class="quick-actions-header">
-                <span class="quick-actions-title">⚡ ${solutionLabel} Quick Actions</span>
-              </div>
-              <div class="quick-action-badges">
-                ${quickActions.map(action => `
-                  <span class="quick-action-badge" data-action-id="${action.id}" data-action-path="${action.path}">
-                    <span class="quick-action-icon">⚡</span>${action.name}
-                  </span>
-                `).join('')}
-              </div>
-            </div>
-          </td>
-        </tr>
-      `;
-    }
-  }
-  
-  // Render environments with standalone quick actions prepended
-  tbody.innerHTML = standaloneQuickActionsHTML + sortedEnvs.map(env => {
+  // Render environments (Quick Actions already rendered above section-header)
+  tbody.innerHTML = sortedEnvs.map(env => {
     const isActive = currentHostname && currentHostname === env.hostname;
+    
+    // Color-coded borders for environment types
+    const envTypeColors = {
+      production: '#EF4444',  // Red
+      preview: '#10B981',     // Green
+      sales: '#F59E0B',       // Orange
+      sandbox: '#A855F7'      // Purple
+    };
+    const borderColor = envTypeColors[env.type] || '#D9D9D9';
     
     // Render environment icon using SVG renderer
     const theme = document.body.getAttribute('data-theme') || 'light';
@@ -565,7 +521,7 @@ async function renderEnvironments() {
     
     
     return `
-      <tr class="env-row ${env.type}-env ${isActive ? 'active-row active-env-card' : ''}" data-env-id="${env.id}">
+      <tr class="env-row ${env.type}-env ${isActive ? 'active-row active-env-card' : ''}" data-env-id="${env.id}" style="border-left: 4px solid ${borderColor};">
         <td class="env-name-cell">
           <div class="env-name">
             <span class="status-dot ${env.type} ${isActive ? 'active' : ''}">${iconHTML}</span>
@@ -607,7 +563,6 @@ async function renderEnvironments() {
   }).join('');
   
   attachEnvironmentListeners();
-  attachQuickActionBadgeHandlers(quickActions);
   updateSectionCounts();
 }
 
