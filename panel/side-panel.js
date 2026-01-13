@@ -3914,55 +3914,230 @@ function hideAITestButtons() {
 }
 
 /**
- * Setup AI test button handlers (stub implementations for Phase 4)
+ * Setup AI test button handlers (Phase 4 implementation)
  */
 function setupAITestButtonHandlers() {
-  // Estimate Cost button - Phase 4
+  // Estimate Cost button
   document.getElementById('estimateCostBtn')?.addEventListener('click', async (e) => {
     e.preventDefault();
-    const content = document.getElementById('noteContent').value.trim();
-    const model = document.getElementById('noteModel').value;
-    
-    if (!content) {
-      showToast('Please enter prompt content first', 'warning');
-      return;
-    }
-    
-    // Stub for Phase 4
-    showToast('💰 Cost estimation coming in Phase 4...', 'info');
-    console.log('[AI] Estimate Cost clicked:', { model, contentLength: content.length });
+    await handleEstimateCost();
   });
   
-  // Test Now button - Phase 4
+  // Test Now button
   document.getElementById('testNowBtn')?.addEventListener('click', async (e) => {
     e.preventDefault();
-    const content = document.getElementById('noteContent').value.trim();
-    const model = document.getElementById('noteModel').value;
-    
-    if (!content) {
-      showToast('Please enter prompt content first', 'warning');
-      return;
-    }
-    
-    // Stub for Phase 4
-    showToast('🧪 Live testing coming in Phase 4...', 'info');
-    console.log('[AI] Test Now clicked:', { model, contentLength: content.length });
+    await handleTestNow();
   });
   
-  // Compare All button - Phase 4
+  // Compare All button
   document.getElementById('compareAllBtn')?.addEventListener('click', async (e) => {
     e.preventDefault();
-    const content = document.getElementById('noteContent').value.trim();
-    
-    if (!content) {
-      showToast('Please enter prompt content first', 'warning');
+    await handleCompareAll();
+  });
+  
+  // AI Test Results modal close buttons
+  document.getElementById('closeAiTestResultsModal')?.addEventListener('click', closeAiTestResultsModal);
+  document.getElementById('closeAiTestResultsBtn')?.addEventListener('click', closeAiTestResultsModal);
+}
+
+// ==================== AI COST ESTIMATOR - PHASE 4 IMPLEMENTATION ====================
+
+let llmPricingData = null;
+
+/**
+ * Load LLM pricing data from JSON file
+ * Cached after first load
+ */
+async function loadLLMPricing() {
+  if (llmPricingData) return llmPricingData;
+  
+  try {
+    const response = await fetch(chrome.runtime.getURL('resources/llm-pricing.json'));
+    llmPricingData = await response.json();
+    console.log('[AI] Loaded pricing data for', Object.keys(llmPricingData).length, 'models');
+    return llmPricingData;
+  } catch (error) {
+    console.error('[AI] Failed to load pricing data:', error);
+    showToast('Failed to load pricing data', 'error');
+    return null;
+  }
+}
+
+/**
+ * Estimate token count from text
+ * Rough estimate: ~4 characters = 1 token
+ * @param {string} text - Text to estimate
+ * @returns {number} Estimated token count
+ */
+function estimateTokens(text) {
+  if (!text) return 0;
+  // Simple estimation: 4 chars ≈ 1 token
+  return Math.ceil(text.length / 4);
+}
+
+/**
+ * Calculate cost for given tokens and pricing
+ * @param {number} inputTokens - Input token count
+ * @param {number} outputTokens - Output token count
+ * @param {Object} pricing - Model pricing object
+ * @returns {Object} Cost breakdown
+ */
+function calculateCost(inputTokens, outputTokens, pricing) {
+  const inputCost = (inputTokens / 1000) * pricing.inputCostPer1K;
+  const outputCost = (outputTokens / 1000) * pricing.outputCostPer1K;
+  const totalCost = inputCost + outputCost;
+  
+  return {
+    inputCost: inputCost.toFixed(4),
+    outputCost: outputCost.toFixed(4),
+    totalCost: totalCost.toFixed(4)
+  };
+}
+
+/**
+ * Handle Estimate Cost button click
+ * Offline calculation without API calls
+ */
+async function handleEstimateCost() {
+  const content = document.getElementById('noteContent').value.trim();
+  const modelId = document.getElementById('noteModel').value;
+  
+  if (!content) {
+    showToast('Please enter prompt content first', 'warning');
+    return;
+  }
+  
+  try {
+    const pricing = await loadLLMPricing();
+    if (!pricing || !pricing[modelId]) {
+      showToast('Pricing data not available for this model', 'error');
       return;
     }
     
-    // Stub for Phase 4
-    showToast('🔄 Model comparison coming in Phase 4...', 'info');
-    console.log('[AI] Compare All clicked:', { contentLength: content.length });
-  });
+    const modelData = pricing[modelId];
+    const inputTokens = estimateTokens(content);
+    
+    // Estimate output tokens (assume 150% of input as a rule of thumb)
+    const estimatedOutputTokens = Math.ceil(inputTokens * 1.5);
+    
+    const costs = calculateCost(inputTokens, estimatedOutputTokens, modelData);
+    
+    // Show results in modal
+    showEstimateResults({
+      modelId,
+      modelData,
+      inputTokens,
+      outputTokens: estimatedOutputTokens,
+      costs,
+      isEstimate: true
+    });
+    
+  } catch (error) {
+    console.error('[AI] Estimate failed:', error);
+    showToast('Failed to estimate cost', 'error');
+  }
+}
+
+/**
+ * Handle Test Now button click
+ * Real API call with user's API keys (Phase 6 - stub for now)
+ */
+async function handleTestNow() {
+  const content = document.getElementById('noteContent').value.trim();
+  const modelId = document.getElementById('noteModel').value;
+  
+  if (!content) {
+    showToast('Please enter prompt content first', 'warning');
+    return;
+  }
+  
+  // Phase 6: Check for API keys
+  showToast('🔑 API key configuration coming in Phase 6...', 'info');
+  console.log('[AI] Test Now - requires API keys (Phase 6):', { modelId, contentLength: content.length });
+}
+
+/**
+ * Handle Compare All button click
+ * Compare across all configured models (Phase 6 - stub for now)
+ */
+async function handleCompareAll() {
+  const content = document.getElementById('noteContent').value.trim();
+  
+  if (!content) {
+    showToast('Please enter prompt content first', 'warning');
+    return;
+  }
+  
+  // Phase 6: Implement parallel API calls
+  showToast('🔄 Multi-model comparison coming in Phase 6...', 'info');
+  console.log('[AI] Compare All - requires API keys (Phase 6):', { contentLength: content.length });
+}
+
+/**
+ * Show estimate results in modal
+ * @param {Object} result - Test result object
+ */
+function showEstimateResults(result) {
+  const modal = document.getElementById('aiTestResultsModal');
+  const titleEl = document.getElementById('aiTestResultsTitle');
+  const contentEl = document.getElementById('aiTestResultsContent');
+  
+  if (!modal || !titleEl || !contentEl) {
+    console.error('[AI] Results modal elements not found');
+    return;
+  }
+  
+  titleEl.textContent = result.isEstimate ? '💰 Cost Estimate' : '🧪 Test Results';
+  
+  const html = `
+    <div class="ai-test-result-card">
+      <div class="result-header">
+        <h4>${result.modelData.provider} - ${result.modelData.model || result.modelId}</h4>
+        ${result.isEstimate ? '<span class="badge">Estimate</span>' : '<span class="badge badge-success">Live Test</span>'}
+      </div>
+      
+      <div class="result-metrics">
+        <div class="metric-row">
+          <span class="metric-label">Input Tokens:</span>
+          <span class="metric-value">${result.inputTokens.toLocaleString()}</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Output Tokens:</span>
+          <span class="metric-value">${result.outputTokens.toLocaleString()}${result.isEstimate ? ' (estimated)' : ''}</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Input Cost:</span>
+          <span class="metric-value">$${result.costs.inputCost}</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Output Cost:</span>
+          <span class="metric-value">$${result.costs.outputCost}</span>
+        </div>
+        <div class="metric-row metric-total">
+          <span class="metric-label">Total Cost:</span>
+          <span class="metric-value">$${result.costs.totalCost}</span>
+        </div>
+      </div>
+      
+      <div class="result-footer">
+        <small>Pricing: $${result.modelData.inputCostPer1K}/$${result.modelData.outputCostPer1K} per 1K tokens</small>
+        ${result.modelData.provider === 'SAP AI Core' ? '<br><small>⚠️ SAP AI Core pricing may include markup</small>' : ''}
+      </div>
+    </div>
+  `;
+  
+  contentEl.innerHTML = html;
+  modal.classList.add('active');
+}
+
+/**
+ * Close AI Test Results modal
+ */
+function closeAiTestResultsModal() {
+  const modal = document.getElementById('aiTestResultsModal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
 }
 
 // ==================== WORLD CLOCK & CONTENT DATE ====================

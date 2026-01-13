@@ -638,185 +638,41 @@
       </div>
     </div>
   </div>
-  <!-- Add Note Modal -->
-  <div class="modal" id="addNoteModal">
+
+  <!-- AI Test Results Modal (NEW) -->
+  <div class="modal modal-large" id="aiTestResultsModal">
     <div class="modal-content">
       <div class="modal-header">
         <div class="modal-header-title">
           <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradientModal3)"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradientModalAI)"/>
             <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
             <defs>
-              <linearGradient id="gradientModal3" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+              <linearGradient id="gradientModalAI" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
                 <stop stop-color="#0070F2"/>
                 <stop offset="1" stop-color="#0054A6"/>
               </linearGradient>
             </defs>
           </svg>
-          <h3>Scratch Note</h3>
+          <h3 id="aiTestResultsTitle">AI Test Results</h3>
         </div>
-        <button class="modal-close" id="closeAddNoteModal">&times;</button>
+        <button class="modal-close" id="closeAiTestResultsModal">&times;</button>
       </div>
       <div class="modal-body">
-        <form id="addNoteForm">
-          <div class="form-group">
-            <label for="noteTitle">
-              <span>Title</span> <span class="required-asterisk">*</span>
-              <span class="char-counter" id="noteTitleCounter">0/100</span>
-            </label>
-            <input type="text" id="noteTitle" placeholder="e.g., Employee Review Summarizer" required>
-          </div>
-          
-          <!-- Note Type Selector (NEW - Replaces Tags) -->
-          <div class="form-group">
-            <label>Note Type <span class="required-asterisk">*</span></label>
-            <div class="note-type-selector">
-              <label class="note-type-option">
-                <input type="radio" name="noteType" value="note" checked>
-                <span class="note-type-icon">📝</span>
-                <span class="note-type-label">Note</span>
-              </label>
-              <label class="note-type-option">
-                <input type="radio" name="noteType" value="ai-prompt">
-                <span class="note-type-icon">🤖</span>
-                <span class="note-type-label">AI Prompt</span>
-              </label>
-              <label class="note-type-option">
-                <input type="radio" name="noteType" value="documentation">
-                <span class="note-type-icon">📚</span>
-                <span class="note-type-label">Docs</span>
-              </label>
-              <label class="note-type-option">
-                <input type="radio" name="noteType" value="code">
-                <span class="note-type-icon">💻</span>
-                <span class="note-type-label">Code</span>
-              </label>
-            </div>
-            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
-              AI Prompt type unlocks cost estimation and testing features
-            </small>
-          </div>
-          
-          <!-- Model Selector (Only shown for AI Prompt type) -->
-          <div class="form-group" id="modelSelectorGroup" style="display: none;">
-            <label for="noteModel">Default Model</label>
-            <select id="noteModel">
-              <optgroup label="OpenAI">
-                <option value="gpt-4-turbo">GPT-4 Turbo ($0.01/$0.03 per 1K)</option>
-                <option value="gpt-4">GPT-4 ($0.03/$0.06 per 1K)</option>
-                <option value="gpt-3.5-turbo">GPT-3.5 Turbo ($0.0015/$0.002 per 1K)</option>
-              </optgroup>
-              <optgroup label="Anthropic">
-                <option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet ($0.003/$0.015 per 1K)</option>
-                <option value="claude-3-opus-20240229">Claude 3 Opus ($0.015/$0.075 per 1K)</option>
-                <option value="claude-3-sonnet-20240229">Claude 3 Sonnet ($0.003/$0.015 per 1K)</option>
-                <option value="claude-3-haiku-20240307">Claude 3 Haiku ($0.00025/$0.00125 per 1K)</option>
-              </optgroup>
-              <optgroup label="SAP AI Core">
-                <option value="sap-ai-core-gpt-4">GPT-4 via SAP AI Core</option>
-                <option value="sap-ai-core-gpt-35-turbo">GPT-3.5 via SAP AI Core</option>
-                <option value="sap-ai-core-claude-3-sonnet">Claude 3 Sonnet via SAP AI Core</option>
-              </optgroup>
-            </select>
-            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
-              Used for [Test Now]. You can compare all models with [Compare All].
-            </small>
-          </div>
-          
-          <div class="form-group">
-            <label for="noteContent">
-              <span id="noteContentLabel">Content</span>
-              <span class="char-counter" id="noteContentCounter">0</span>
-            </label>
-            <textarea id="noteContent" rows="6" placeholder="Paste IDs, URLs, configs..."></textarea>
-            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
-              No character limit. Soft warning at 5000+ characters.
-            </small>
-          </div>
-          
-          <div class="form-group">
-            <label for="noteIcon">Icon</label>
-            <select id="noteIcon">
-              <optgroup label="📝 General Notes">
-                <option value="note">📝 Note</option>
-                <option value="clipboard">📋 Clipboard</option>
-                <option value="pin">📌 Pin</option>
-                <option value="bookmark">🔖 Bookmark</option>
-              </optgroup>
-              <optgroup label="🔐 Credentials & Security">
-                <option value="key">🔑 Key/Password</option>
-                <option value="id">🆔 User ID</option>
-                <option value="lock">🔒 Security</option>
-              </optgroup>
-              <optgroup label="🔗 Links & References">
-                <option value="link">🔗 Link/URL</option>
-                <option value="world">🌐 Web Resource</option>
-                <option value="file">📄 File/Document</option>
-              </optgroup>
-              <optgroup label="⚙️ Configuration">
-                <option value="settings">⚙️ Settings</option>
-                <option value="code">💻 Code/Script</option>
-                <option value="terminal">⌨️ Command/Terminal</option>
-              </optgroup>
-              <optgroup label="💡 Ideas & Planning">
-                <option value="idea">💡 Idea</option>
-                <option value="question">❓ Question</option>
-                <option value="checklist">✅ Checklist/Todo</option>
-              </optgroup>
-              <optgroup label="⚠️ Important">
-                <option value="warning">⚠️ Warning</option>
-                <option value="alert">🚨 Alert/Critical</option>
-                <option value="flag">🚩 Flag/Follow-up</option>
-              </optgroup>
-              <optgroup label="🤖 AI">
-                <option value="ai">🤖 AI/Joule</option>
-              </optgroup>
-            </select>
-          </div>
-        </form>
+        <div id="aiTestResultsContent" class="ai-test-results-content">
+          <!-- Populated dynamically -->
+        </div>
       </div>
       <div class="modal-footer">
-        <div class="modal-footer-left">
-          <button class="btn btn-secondary" id="prettifyNoteBtn" title="Format note content">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-            Format
-          </button>
-          <button class="btn btn-secondary" id="downloadNoteBtn" title="Download note as text file" style="display: none;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7 10 12 15 17 10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            Download
-          </button>
-          <!-- AI Test Buttons (Only shown for AI Prompt type) -->
-          <button class="btn btn-accent" id="estimateCostBtn" style="display: none;" title="Estimate cost for this prompt">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="12" font-weight="bold">$</text>
-            </svg>
-            Estimate Cost
-          </button>
-          <button class="btn btn-primary" id="testNowBtn" style="display: none;" title="Test with default model">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            Test Now
-          </button>
-          <button class="btn btn-primary" id="compareAllBtn" style="display: none;" title="Compare across all models">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="7" height="7"/>
-              <rect x="14" y="3" width="7" height="7"/>
-              <rect x="14" y="14" width="7" height="7"/>
-              <rect x="3" y="14" width="7" height="7"/>
-            </svg>
-            Compare All
-          </button>
-        </div>
-        <button class="btn btn-primary" id="saveNoteBtn">Save</button>
+        <button class="btn btn-secondary" id="closeAiTestResultsBtn">Close</button>
+        <button class="btn btn-primary" id="enterpriseCalculatorBtn" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+          Enterprise Calculator
+        </button>
       </div>
     </div>
   </div>
