@@ -343,15 +343,15 @@ body {
   border-color: var(--primary);
 }
 
-/* Tag Badges on Items */
-.tag-badges {
+/* Note Type Badges */
+.note-type-badge {
   display: flex;
   gap: 4px;
   margin-top: 4px;
   flex-wrap: wrap;
 }
 
-.tag-badge {
+.note-type-label {
   font-size: 9px;
   padding: 3px 8px;
   background: var(--primary-glow);
@@ -360,19 +360,6 @@ body {
   font-weight: 600;
   border: none;
   letter-spacing: 0.3px;
-}
-
-/* Clickable tags */
-.tag-badge.clickable-tag {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.tag-badge.clickable-tag:hover {
-  transform: scale(1.05);
-  background: var(--primary);
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 112, 242, 0.3);
 }
 
 /* ==================== ACTIVE ENVIRONMENT HIGHLIGHT ==================== */
@@ -1385,6 +1372,130 @@ body {
   padding: var(--space-lg);
   border-top: 1px solid var(--border-light);
   background: var(--bg-secondary);
+}
+
+/* ==================== NOTE TYPE SELECTOR ==================== */
+
+.note-type-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: var(--space-lg);
+}
+
+.note-type-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--bg-primary);
+}
+
+.note-type-option:hover {
+  border-color: var(--primary);
+  background: var(--bg-secondary);
+}
+
+.note-type-option:has(input[type="radio"]:checked) {
+  border-color: var(--primary);
+  background: var(--primary-glow);
+  box-shadow: 0 2px 4px rgba(0, 112, 242, 0.15);
+}
+
+.note-type-option input[type="radio"] {
+  display: none;
+}
+
+.note-type-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.note-type-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.note-type-option:has(input[type="radio"]:checked) .note-type-label {
+  color: var(--primary);
+}
+
+/* Model Selector Group */
+#modelSelectorGroup {
+  margin-bottom: var(--space-lg);
+}
+
+#modelSelectorGroup label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+#noteModel {
+  width: 100%;
+  padding: 9px var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-family: 'SF Mono', monospace;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+#noteModel:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+/* AI Test Buttons in Modal Footer */
+.modal-footer-left {
+  display: flex;
+  gap: var(--space-sm);
+  margin-right: auto;
+}
+
+#estimateCostBtn,
+#testNowBtn,
+#compareAllBtn {
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: none;
+}
+
+#estimateCostBtn:hover {
+  background: var(--env-sales);
+  color: white;
+  border-color: var(--env-sales);
+}
+
+#testNowBtn:hover {
+  background: var(--env-preview);
+  color: white;
+  border-color: var(--env-preview);
+}
+
+#compareAllBtn:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
 }
 
 /* ==================== FORMS ==================== */

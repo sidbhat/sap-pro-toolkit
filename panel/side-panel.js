@@ -727,7 +727,6 @@ function renderShortcuts() {
   
   tbody.innerHTML = sortedShortcuts.map(shortcut => {
     const displayIcon = renderSAPIcon(shortcut.icon, 'shortcut', 16);
-    const tagBadgesHTML = renderTagBadges(shortcut.tags);
     
     return `
       <tr class="shortcut-row" data-shortcut-id="${shortcut.id}" data-url="${shortcut.url}">
@@ -744,7 +743,6 @@ function renderShortcuts() {
             </button>
           </div>
           ${shortcut.notes ? `<div class="shortcut-notes">${shortcut.notes}</div>` : ''}
-          ${tagBadgesHTML}
         </td>
         <td class="shortcut-actions-cell">
           <div class="table-actions">
@@ -865,7 +863,16 @@ function renderNotes() {
       ? (note.content.length > 60 ? note.content.substring(0, 60) + '...' : note.content)
       : '';
     const displayIcon = renderSAPIcon(note.icon, 'note', 16);
-    const tagBadgesHTML = renderTagBadges(note.tags);
+    
+    // Render note type badge instead of tags
+    const noteType = note.noteType || 'note';
+    const noteTypeLabels = {
+      'note': '📝 Note',
+      'ai-prompt': '🤖 AI Prompt',
+      'documentation': '📚 Documentation',
+      'code': '💻 Code'
+    };
+    const noteTypeBadge = `<div class="note-type-badge"><span class="note-type-label">${noteTypeLabels[noteType]}</span></div>`;
     
     const firstButtonHTML = `<button class="icon-btn primary edit-btn" data-id="${note.id}" title="Edit" tabindex="0">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -889,7 +896,7 @@ function renderNotes() {
             </button>
           </div>
           ${contentPreview ? `<div class="note-preview">${contentPreview}</div>` : ''}
-          ${tagBadgesHTML}
+          ${noteTypeBadge}
         </td>
         <td class="note-actions-cell">
           <div class="table-actions">
@@ -985,7 +992,7 @@ function setupSearchFilter() {
 function filterContent(searchTerm) {
   const term = searchTerm.toLowerCase();
   
-  // Enhanced search: includes name, notes, and tags
+  // Enhanced search: includes name and notes
   document.querySelectorAll('.env-row').forEach(row => {
     const name = row.querySelector('.env-name')?.textContent.toLowerCase() || '';
     const hostname = row.querySelector('.env-hostname')?.textContent.toLowerCase() || '';
@@ -1000,8 +1007,7 @@ function filterContent(searchTerm) {
     if (shortcut) {
       const name = (shortcut.name || '').toLowerCase();
       const notes = (shortcut.notes || '').toLowerCase();
-      const tags = shortcut.tags ? shortcut.tags.map(t => t.toLowerCase()).join(' ') : '';
-      const matches = name.includes(term) || notes.includes(term) || tags.includes(term);
+      const matches = name.includes(term) || notes.includes(term);
       row.style.display = matches ? '' : 'none';
     } else {
       row.style.display = 'none';
@@ -1015,8 +1021,8 @@ function filterContent(searchTerm) {
     if (note) {
       const title = (note.title || '').toLowerCase();
       const content = (note.content || '').toLowerCase();
-      const tags = note.tags ? note.tags.map(t => t.toLowerCase()).join(' ') : '';
-      const matches = title.includes(term) || content.includes(term) || tags.includes(term);
+      const noteType = (note.noteType || '').toLowerCase();
+      const matches = title.includes(term) || content.includes(term) || noteType.includes(term);
       row.style.display = matches ? '' : 'none';
     } else {
       row.style.display = 'none';
@@ -1453,6 +1459,15 @@ function openAddNoteModal() {
   const downloadBtn = document.getElementById('downloadNoteBtn');
   if (downloadBtn) downloadBtn.style.display = 'none';
   
+  // Reset note type to 'note' and hide AI elements
+  const noteTypeRadio = document.querySelector('input[name="noteType"][value="note"]');
+  if (noteTypeRadio) noteTypeRadio.checked = true;
+  
+  const modelGroup = document.getElementById('modelSelectorGroup');
+  if (modelGroup) modelGroup.style.display = 'none';
+  
+  hideAITestButtons();
+  
   document.getElementById('addNoteModal').classList.add('active');
 }
 
@@ -1469,7 +1484,6 @@ function closeAddNoteModal() {
     document.getElementById('noteTitle').removeAttribute('readonly');
     document.getElementById('noteContent').removeAttribute('readonly');
     document.getElementById('noteIcon').removeAttribute('disabled');
-    document.getElementById('noteTags').removeAttribute('readonly');
     
     // Show action buttons again
     document.getElementById('saveNoteBtn').style.display = 'inline-flex';
@@ -1479,6 +1493,11 @@ function closeAddNoteModal() {
     // Clear read-only flag
     modal.removeAttribute('data-readonly-mode');
   }
+  
+  // Hide AI elements when closing
+  hideAITestButtons();
+  const modelGroup = document.getElementById('modelSelectorGroup');
+  if (modelGroup) modelGroup.style.display = 'none';
   
   document.getElementById('addNoteForm').reset();
   document.querySelector('#addNoteModal .modal-header h3').textContent = 'Scratch Note';
@@ -1491,7 +1510,28 @@ function editNote(id) {
   document.getElementById('noteTitle').value = note.title;
   document.getElementById('noteContent').value = note.content || '';
   document.getElementById('noteIcon').value = note.icon || '0';
-  document.getElementById('noteTags').value = note.tags ? note.tags.join(', ') : '';
+  
+  // Set note type radio button
+  const noteType = note.noteType || 'note';
+  const noteTypeRadio = document.querySelector(`input[name="noteType"][value="${noteType}"]`);
+  if (noteTypeRadio) {
+    noteTypeRadio.checked = true;
+  }
+  
+  // Set model selector if ai-prompt type
+  if (noteType === 'ai-prompt' && note.aiConfig && note.aiConfig.defaultModel) {
+    const modelSelect = document.getElementById('noteModel');
+    if (modelSelect) {
+      modelSelect.value = note.aiConfig.defaultModel;
+    }
+    // Show model selector group
+    const modelGroup = document.getElementById('modelSelectorGroup');
+    if (modelGroup) modelGroup.style.display = 'block';
+    
+    // Show AI test buttons
+    showAITestButtons();
+  }
+  
   document.getElementById('addNoteModal').setAttribute('data-edit-id', id);
   document.querySelector('#addNoteModal .modal-header h3').textContent = 'Edit Note';
   
@@ -1525,8 +1565,10 @@ async function saveNote() {
   const title = document.getElementById('noteTitle').value.trim();
   const content = document.getElementById('noteContent').value.trim();
   const icon = document.getElementById('noteIcon').value || '0';
-  const tagsInput = document.getElementById('noteTags').value.trim();
-  const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+  
+  // Get selected note type from radio buttons
+  const noteTypeRadio = document.querySelector('input[name="noteType"]:checked');
+  const noteType = noteTypeRadio ? noteTypeRadio.value : 'note';
   
   if (!title) {
     showToast('Please enter a title', 'warning');
@@ -1536,15 +1578,32 @@ async function saveNote() {
   const modal = document.getElementById('addNoteModal');
   const editId = modal.getAttribute('data-edit-id');
   
+  // Build note object with noteType
+  const noteObject = {
+    id: editId || `note-${Date.now()}`,
+    title,
+    content,
+    icon,
+    noteType,
+    timestamp: Date.now()
+  };
+  
+  // Add aiConfig if ai-prompt type
+  if (noteType === 'ai-prompt') {
+    const modelSelect = document.getElementById('noteModel');
+    noteObject.aiConfig = {
+      defaultModel: modelSelect ? modelSelect.value : 'gpt-4-turbo'
+    };
+  }
+  
   if (editId) {
     // Remove the existing item and add updated version at the end
     notes = notes.filter(n => n.id !== editId);
-    notes.push({ id: editId, title, content, icon, tags, timestamp: Date.now() });
+    notes.push(noteObject);
     showToast('Note updated ✓', 'success');
     modal.removeAttribute('data-edit-id');
   } else {
-    const newNote = { id: `note-${Date.now()}`, title, content, icon, tags, timestamp: Date.now() };
-    notes.push(newNote);
+    notes.push(noteObject);
     showToast('Note saved ✓', 'success');
   }
   
@@ -3385,6 +3444,12 @@ function setupEventListeners() {
   // Setup character counter for notes
   setupNoteCharacterCounter();
   
+  // Setup note type change listener for AI features
+  setupNoteTypeChangeListener();
+  
+  // Setup AI test button handlers (stubs for Phase 4)
+  setupAITestButtonHandlers();
+  
   document.getElementById('copyDiagnosticsBtn')?.addEventListener('click', showDiagnosticsModal);
   document.getElementById('closeDiagnosticsModal')?.addEventListener('click', closeDiagnosticsModal);
   document.getElementById('closeDiagnosticsBtn')?.addEventListener('click', closeDiagnosticsModal);
@@ -3792,6 +3857,111 @@ function removeDuplicates(arr, key) {
     }
     seen.add(value);
     return true;
+  });
+}
+
+// ==================== AI COST ESTIMATOR FUNCTIONS ====================
+
+/**
+ * Setup note type change listener
+ * Shows/hides model selector and AI test buttons based on selected type
+ */
+function setupNoteTypeChangeListener() {
+  const noteTypeRadios = document.querySelectorAll('input[name="noteType"]');
+  
+  noteTypeRadios.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      const selectedType = e.target.value;
+      const modelGroup = document.getElementById('modelSelectorGroup');
+      
+      if (selectedType === 'ai-prompt') {
+        // Show model selector and AI buttons
+        if (modelGroup) modelGroup.style.display = 'block';
+        showAITestButtons();
+      } else {
+        // Hide model selector and AI buttons
+        if (modelGroup) modelGroup.style.display = 'none';
+        hideAITestButtons();
+      }
+    });
+  });
+}
+
+/**
+ * Show AI test buttons in note modal footer
+ */
+function showAITestButtons() {
+  const estimateCostBtn = document.getElementById('estimateCostBtn');
+  const testNowBtn = document.getElementById('testNowBtn');
+  const compareAllBtn = document.getElementById('compareAllBtn');
+  
+  if (estimateCostBtn) estimateCostBtn.style.display = 'inline-flex';
+  if (testNowBtn) testNowBtn.style.display = 'inline-flex';
+  if (compareAllBtn) compareAllBtn.style.display = 'inline-flex';
+}
+
+/**
+ * Hide AI test buttons in note modal footer
+ */
+function hideAITestButtons() {
+  const estimateCostBtn = document.getElementById('estimateCostBtn');
+  const testNowBtn = document.getElementById('testNowBtn');
+  const compareAllBtn = document.getElementById('compareAllBtn');
+  
+  if (estimateCostBtn) estimateCostBtn.style.display = 'none';
+  if (testNowBtn) testNowBtn.style.display = 'none';
+  if (compareAllBtn) compareAllBtn.style.display = 'none';
+}
+
+/**
+ * Setup AI test button handlers (stub implementations for Phase 4)
+ */
+function setupAITestButtonHandlers() {
+  // Estimate Cost button - Phase 4
+  document.getElementById('estimateCostBtn')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const content = document.getElementById('noteContent').value.trim();
+    const model = document.getElementById('noteModel').value;
+    
+    if (!content) {
+      showToast('Please enter prompt content first', 'warning');
+      return;
+    }
+    
+    // Stub for Phase 4
+    showToast('💰 Cost estimation coming in Phase 4...', 'info');
+    console.log('[AI] Estimate Cost clicked:', { model, contentLength: content.length });
+  });
+  
+  // Test Now button - Phase 4
+  document.getElementById('testNowBtn')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const content = document.getElementById('noteContent').value.trim();
+    const model = document.getElementById('noteModel').value;
+    
+    if (!content) {
+      showToast('Please enter prompt content first', 'warning');
+      return;
+    }
+    
+    // Stub for Phase 4
+    showToast('🧪 Live testing coming in Phase 4...', 'info');
+    console.log('[AI] Test Now clicked:', { model, contentLength: content.length });
+  });
+  
+  // Compare All button - Phase 4
+  document.getElementById('compareAllBtn')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const content = document.getElementById('noteContent').value.trim();
+    
+    if (!content) {
+      showToast('Please enter prompt content first', 'warning');
+      return;
+    }
+    
+    // Stub for Phase 4
+    showToast('🔄 Model comparison coming in Phase 4...', 'info');
+    console.log('[AI] Compare All clicked:', { contentLength: content.length });
   });
 }
 
