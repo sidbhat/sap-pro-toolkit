@@ -11,7 +11,7 @@ let notes = [];
 let solutions = []; // Quick Actions are defined in solutions array
 let settings = { showConfirmationForProd: true };
 let availableProfiles = [];
-let currentProfile = 'profile-default';
+let currentProfile = 'profile-global';  // Default to Global profile
 let popularOssNotes = null; // Popular OSS notes data
 
 // ==================== DEBUGGING HELPERS ====================
