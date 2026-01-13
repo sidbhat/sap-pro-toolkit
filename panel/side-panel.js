@@ -101,10 +101,38 @@ async function loadSettings() {
   settings = result;
 }
 
+/**
+ * Load shortcuts from profile-specific storage
+ * On first run for a profile, loads template shortcuts from that profile's JSON file
+ * Shortcuts are stored per-profile (like environments and notes)
+ */
 async function loadShortcuts() {
-  // Load only the specific profile's data
-  const profileData = await loadProfileData(currentProfile);
-  shortcuts = profileData.globalShortcuts || profileData.shortcuts || [];
+  const storageKey = `shortcuts_${currentProfile}`;
+  const initKey = `shortcutsInitialized_${currentProfile}`;
+  
+  const result = await chrome.storage.local.get([storageKey, initKey]);
+  shortcuts = result[storageKey] || [];
+  
+  // On first run for this profile, load template shortcuts from profile JSON
+  if (!result[initKey] && shortcuts.length === 0) {
+    try {
+      const profileData = await loadProfileData(currentProfile);
+      
+      if (profileData.globalShortcuts || profileData.shortcuts) {
+        shortcuts = [...(profileData.globalShortcuts || profileData.shortcuts || [])];
+        
+        // Save to profile-specific storage and mark as initialized
+        await chrome.storage.local.set({ 
+          [storageKey]: shortcuts,
+          [initKey]: true 
+        });
+      }
+    } catch (error) {
+      console.error(`[Shortcuts] Failed to load template shortcuts for ${currentProfile}:`, error);
+    }
+  }
+  
+  console.log(`[Shortcuts] Loaded ${shortcuts.length} shortcuts for profile: ${currentProfile}`);
   renderShortcuts();
 }
 
@@ -1351,7 +1379,10 @@ async function deleteShortcut(id) {
   if (!confirmed) return;
   
   shortcuts = shortcuts.filter(s => s.id !== id);
-  await chrome.storage.local.set({ shortcuts });
+  
+  // Save to profile-specific storage
+  const storageKey = `shortcuts_${currentProfile}`;
+  await chrome.storage.local.set({ [storageKey]: shortcuts });
   
   renderShortcuts();
   showToast('Shortcut deleted', 'success');
@@ -1392,7 +1423,10 @@ async function saveShortcut() {
     showToast('Shortcut saved ✓', 'success');
   }
   
-  await chrome.storage.local.set({ shortcuts });
+  // Save to profile-specific storage
+  const storageKey = `shortcuts_${currentProfile}`;
+  await chrome.storage.local.set({ [storageKey]: shortcuts });
+  
   renderShortcuts();
   closeAddShortcutModal();
 }
@@ -1912,7 +1946,7 @@ async function togglePin(id, type = 'environment') {
   } else if (type === 'shortcut') {
     item = shortcuts.find(s => s.id === id);
     collection = shortcuts;
-    storageKey = 'shortcuts';
+    storageKey = `shortcuts_${currentProfile}`;
     renderFunction = renderShortcuts;
     itemLabel = 'Shortcut';
   } else if (type === 'note') {
