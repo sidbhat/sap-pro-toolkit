@@ -363,7 +363,12 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
     // Cmd/Ctrl + E → New environment
     if ((e.metaKey || e.ctrlKey) && e.key === 'e') {
       e.preventDefault();
-      if (callbacks.addEnvironment) callbacks.addEnvironment();
+      console.log('[Keyboard] Cmd+E pressed, callback exists:', !!callbacks.addEnvironment);
+      if (callbacks.addEnvironment) {
+        callbacks.addEnvironment();
+      } else {
+        console.error('[Keyboard] addEnvironment callback not registered!');
+      }
     }
     
     // Cmd/Ctrl + M → New note

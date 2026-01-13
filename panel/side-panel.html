@@ -89,15 +89,6 @@
       <button class="search-clear" id="clearSearch" style="display: none;">×</button>
     </div>
 
-    <!-- Read-Only Mode Banner (All Profiles) -->
-    <div class="readonly-banner" id="readonlyBanner" style="display: none;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </svg>
-      <span>📘 Viewing all profiles (read-only mode)</span>
-    </div>
-
     <!-- Environments Section -->
     <section class="section" data-section="environments">
       <div class="section-header">
@@ -486,10 +477,6 @@
                 <option value="people">👥 People/Teams</option>
               </optgroup>
             </select>
-            <small id="iconSuggestion" class="icon-suggestion" style="display: none; font-size: 10px; color: var(--accent-blue); margin-top: 4px;">
-              💡 Suggested: <strong id="suggestedShortcutIconName"></strong>
-              <button type="button" class="btn-link" id="acceptShortcutSuggestion" style="margin-left: 8px; font-size: 10px;">Use this</button>
-            </small>
           </div>
         </form>
       </div>
@@ -583,10 +570,6 @@
                 <option value="flag">🚩 Flag/Follow-up</option>
               </optgroup>
             </select>
-            <small id="noteIconSuggestion" class="icon-suggestion" style="display: none; font-size: 10px; color: var(--accent-blue); margin-top: 4px;">
-              💡 Suggested: <strong id="suggestedNoteIconName"></strong>
-              <button type="button" class="btn-link" id="acceptNoteSuggestion" style="margin-left: 8px; font-size: 10px;">Use this</button>
-            </small>
           </div>
         </form>
       </div>
@@ -800,7 +783,6 @@
           <li><strong>Environment Notes</strong>: Add custom notes to environments (test users, configs, etc.)</li>
           <li><strong>Profile System</strong>: Organize configurations by profile (Global, SuccessFactors, S/4HANA, BTP, etc.)</li>
           <li><strong>New Content Notifications</strong>: Get notified when profile content is updated (📋 toast notification)</li>
-          <li><strong>Read-Only Mode</strong>: View all profiles combined without accidental modifications</li>
           <li><strong>Smart URLs</strong>: Supports absolute external URLs for shortcuts</li>
           <li><strong>Scratch Notes</strong>: Store temporary IDs, URLs, and reference information with formatting tools</li>
           <li><strong>JSON Import/Export</strong>: Backup and share your configuration</li>
@@ -901,6 +883,7 @@
 
   <script src="crypto-utils.js"></script>
   <script src="sap-icon-library.js"></script>
+  <script src="svg-renderer.js"></script>
   <script src="validation.js"></script>
   <script src="toolkit-core.js"></script>
   <script src="side-panel.js"></script>

@@ -102,55 +102,23 @@ async function loadSettings() {
 }
 
 async function loadShortcuts() {
-  if (currentProfile === 'profile-all') {
-    let allShortcuts = [];
-    // Aggregate from all other profiles
-    for (const p of availableProfiles) {
-      if (p.id !== 'profile-all' && p.file) {
-        const profileData = await loadProfileData(p.id);
-        allShortcuts.push(...(profileData.globalShortcuts || []), ...(profileData.shortcuts || []));
-      }
-    }
-    shortcuts = removeDuplicates(allShortcuts, 'url');
-  } else {
-    // Load only the specific profile's data
-    const profileData = await loadProfileData(currentProfile);
-    shortcuts = profileData.globalShortcuts || profileData.shortcuts || [];
-  }
+  // Load only the specific profile's data
+  const profileData = await loadProfileData(currentProfile);
+  shortcuts = profileData.globalShortcuts || profileData.shortcuts || [];
   renderShortcuts();
 }
 
 async function loadEnvironments() {
-  if (currentProfile === 'profile-all') {
-    let allEnvironments = [];
-    // Aggregate from all other profiles
-    for (const p of availableProfiles) {
-      if (p.id !== 'profile-all') {
-        const storageKey = `environments_${p.id}`;
-        const result = await chrome.storage.local.get(storageKey);
-        if (result[storageKey] && Array.isArray(result[storageKey])) {
-          allEnvironments.push(...result[storageKey]);
-        } else if (p.file) {
-          const profileData = await loadProfileData(p.id);
-           if (profileData.environments && Array.isArray(profileData.environments)) {
-            allEnvironments.push(...profileData.environments);
-          }
-        }
-      }
-    }
-    environments = removeDuplicates(allEnvironments, 'hostname');
-  } else {
-    // Load for the specific profile
-    const storageKey = `environments_${currentProfile}`;
-    const result = await chrome.storage.local.get(storageKey);
+  // Load for the specific profile
+  const storageKey = `environments_${currentProfile}`;
+  const result = await chrome.storage.local.get(storageKey);
 
-    if (result[storageKey] && Array.isArray(result[storageKey])) {
-      environments = result[storageKey];
-    } else {
-      const profileData = await loadProfileData(currentProfile);
-      environments = profileData.environments || [];
-      await chrome.storage.local.set({ [storageKey]: environments });
-    }
+  if (result[storageKey] && Array.isArray(result[storageKey])) {
+    environments = result[storageKey];
+  } else {
+    const profileData = await loadProfileData(currentProfile);
+    environments = profileData.environments || [];
+    await chrome.storage.local.set({ [storageKey]: environments });
   }
   renderEnvironments();
 }
@@ -272,8 +240,8 @@ async function suggestProfileSwitch(solutionType) {
   const recommendedProfile = profileMap[solutionType];
   if (!recommendedProfile) return;
   
-  // Don't suggest if already on recommended profile or "All Profiles"
-  if (currentProfile === recommendedProfile || currentProfile === 'profile-all') return;
+  // Don't suggest if already on recommended profile
+  if (currentProfile === recommendedProfile) return;
   
   // Check if we've already suggested this session (use sessionStorage)
   const sessionKey = `profileSuggested_${solutionType}`;
@@ -327,7 +295,7 @@ function updateDiagnosticsButton() {
  * @returns {Object} The data for the specified profile.
  */
 async function loadProfileData(profileId) {
-  if (profileId === 'profile-all' || !profileId) {
+  if (!profileId) {
     return { globalShortcuts: [], solutions: [], environments: [] };
   }
 
@@ -356,36 +324,39 @@ async function loadProfileData(profileId) {
 async function renderEnvironments() {
   const tbody = document.getElementById('environmentList');
   
-  // Update section header Add button state based on profile mode
-  const addEnvBtn = document.getElementById('addEnvBtn');
-  if (addEnvBtn) {
-    const isReadOnly = currentProfile === 'profile-all';
-    if (isReadOnly) {
-      addEnvBtn.classList.add('btn-disabled');
-      addEnvBtn.setAttribute('title', 'Switch to a specific profile to add environments');
-    } else {
-      addEnvBtn.classList.remove('btn-disabled');
-      addEnvBtn.setAttribute('title', addEnvBtn.getAttribute('data-title') || 'Add Environment');
-    }
-  }
   
-  // Detect current SAP system and load Quick Actions (independent of saved environments)
+  // Detect current SAP system and load Quick Actions from ALL profiles
   let quickActionsRowHTML = '';
   if (currentPageData && currentPageData.solutionType) {
     const solutionType = currentPageData.solutionType;
     
-    // Check for custom solutions in storage first
-    const storageKey = `solutions_${currentProfile}`;
-    const solutionsResult = await chrome.storage.local.get(storageKey);
-    let solutionsData = solutionsResult[storageKey];
+    // Aggregate Quick Actions from ALL profiles (not just current profile)
+    let allQuickActions = [];
     
-    // If no custom solutions, load from profile
-    if (!solutionsData) {
-      const profileData = await loadProfileData(currentProfile);
-      solutionsData = profileData.solutions;
+    for (const profile of availableProfiles) {
+      // Check for custom solutions in storage first
+      const storageKey = `solutions_${profile.id}`;
+      const solutionsResult = await chrome.storage.local.get(storageKey);
+      let solutionsData = solutionsResult[storageKey];
+      
+      // If no custom solutions, load from profile file
+      if (!solutionsData && profile.file) {
+        const profileData = await loadProfileData(profile.id);
+        solutionsData = profileData.solutions;
+      }
+      
+      // Find matching solution for current solutionType
+      const solution = solutionsData?.find(s => s.id === solutionType);
+      if (solution && solution.quickActions) {
+        allQuickActions.push(...solution.quickActions);
+      }
     }
     
-    const solution = solutionsData?.find(s => s.id === solutionType);
+    // Remove duplicates by action ID (in case multiple profiles define same action)
+    allQuickActions = removeDuplicates(allQuickActions, 'id');
+    
+    // Use combined Quick Actions
+    const solution = allQuickActions.length > 0 ? { quickActions: allQuickActions } : null;
     
     if (solution && solution.quickActions && solution.quickActions.length > 0) {
       const quickActions = solution.quickActions.slice(0, 5);
@@ -477,18 +448,33 @@ async function renderEnvironments() {
   let standaloneQuickActionsHTML = '';
   
   if (currentPageData && currentPageData.solutionType) {
-    // Check for custom solutions in storage first
-    const storageKey = `solutions_${currentProfile}`;
-    const solutionsResult = await chrome.storage.local.get(storageKey);
-    let solutionsData = solutionsResult[storageKey];
+    // Aggregate Quick Actions from ALL profiles (not just current profile)
+    let allQuickActions = [];
     
-    // If no custom solutions, load from profile
-    if (!solutionsData) {
-      const profileData = await loadProfileData(currentProfile);
-      solutionsData = profileData.solutions;
+    for (const profile of availableProfiles) {
+      // Check for custom solutions in storage first
+      const storageKey = `solutions_${profile.id}`;
+      const solutionsResult = await chrome.storage.local.get(storageKey);
+      let solutionsData = solutionsResult[storageKey];
+      
+      // If no custom solutions, load from profile file
+      if (!solutionsData && profile.file) {
+        const profileData = await loadProfileData(profile.id);
+        solutionsData = profileData.solutions;
+      }
+      
+      // Find matching solution for current solutionType
+      const solution = solutionsData?.find(s => s.id === currentPageData.solutionType);
+      if (solution && solution.quickActions) {
+        allQuickActions.push(...solution.quickActions);
+      }
     }
     
-    const solution = solutionsData?.find(s => s.id === currentPageData.solutionType);
+    // Remove duplicates by action ID
+    allQuickActions = removeDuplicates(allQuickActions, 'id');
+    
+    // Use combined Quick Actions
+    const solution = allQuickActions.length > 0 ? { quickActions: allQuickActions } : null;
     
     if (solution && solution.quickActions && solution.quickActions.length > 0) {
       quickActions = solution.quickActions.slice(0, 5);
@@ -520,25 +506,9 @@ async function renderEnvironments() {
   tbody.innerHTML = standaloneQuickActionsHTML + sortedEnvs.map(env => {
     const isActive = currentHostname && currentHostname === env.hostname;
     
-    // Get SAP Fiori icon for environment type
-    const envIcon = window.SAPIconLibrary 
-      ? window.SAPIconLibrary.ENVIRONMENT_ICONS[env.type]
-      : null;
-    
-    // Render icon as SVG or fallback to emoji
-    let iconHTML;
-    if (envIcon && envIcon.path) {
-      const iconColor = document.body.getAttribute('data-theme') === 'dark' 
-        ? envIcon.colorDark 
-        : envIcon.color;
-      iconHTML = `<svg width="18" height="18" viewBox="${envIcon.viewBox}" fill="${iconColor}" xmlns="http://www.w3.org/2000/svg" aria-label="${envIcon.label}">
-        <path d="${envIcon.path}"/>
-      </svg>`;
-    } else {
-      // Fallback to emoji if library not loaded
-      const emojiMap = { production: '🔴', preview: '🟢', sales: '🟠', sandbox: '🟣' };
-      iconHTML = `<span class="emoji-fallback">${emojiMap[env.type] || '🔵'}</span>`;
-    }
+    // Render environment icon using SVG renderer
+    const theme = document.body.getAttribute('data-theme') || 'light';
+    const iconHTML = window.SVGRenderer.renderEnvironmentIcon(env.type, 18, theme);
     
     // Build metadata line: DC + Region + Company ID
     let metaLine = '';
@@ -606,11 +576,6 @@ async function renderEnvironments() {
       line3HTML = `<div class="env-usage-stats">${usageText}</div>`;
     }
     
-    // Check if we're in "All Profiles" mode (read-only)
-    const isReadOnly = currentProfile === 'profile-all';
-    const disabledClass = isReadOnly ? 'btn-disabled' : '';
-    const editTitle = isReadOnly ? 'Switch to a specific profile to edit' : 'Edit';
-    const deleteTitle = isReadOnly ? 'Switch to a specific profile to delete' : 'Delete';
     
     return `
       <tr class="env-row ${env.type}-env ${isActive ? 'active-row active-env-card' : ''}" data-env-id="${env.id}">
@@ -636,13 +601,13 @@ async function renderEnvironments() {
                 <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
               </svg>
             </button>
-            <button class="icon-btn edit-btn ${disabledClass}" data-id="${env.id}" title="${editTitle}" tabindex="0">
+            <button class="icon-btn edit-btn" data-id="${env.id}" title="Edit" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
             </button>
-            <button class="icon-btn danger delete-btn ${disabledClass}" data-id="${env.id}" title="${deleteTitle}" tabindex="0">
+            <button class="icon-btn danger delete-btn" data-id="${env.id}" title="Delete" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -712,11 +677,12 @@ function attachEnvironmentListeners() {
     });
   });
   
-  // Edit button
-  document.querySelectorAll('.edit-btn').forEach(btn => {
+  // Edit button (environment-specific)
+  document.querySelectorAll('.env-row .edit-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
+      console.log('[Edit Environment] Button clicked, ID:', id);
       editEnvironment(id);
     });
   });
@@ -744,12 +710,6 @@ function attachEnvironmentListeners() {
  * @param {string} id - The environment ID
  */
 async function togglePin(id) {
-  // Block pinning in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to pin environments', 'warning');
-    return;
-  }
-  
   const env = environments.find(e => e.id === id);
   if (!env) return;
   
@@ -772,19 +732,6 @@ async function togglePin(id) {
 function renderShortcuts() {
   const tbody = document.getElementById('shortcutsList');
   
-  // Update section header Add button state based on profile mode
-  const addShortcutBtn = document.getElementById('addShortcutBtn');
-  if (addShortcutBtn) {
-    const isReadOnly = currentProfile === 'profile-all';
-    if (isReadOnly) {
-      addShortcutBtn.classList.add('btn-disabled');
-      addShortcutBtn.setAttribute('title', 'Switch to a specific profile to add shortcuts');
-    } else {
-      addShortcutBtn.classList.remove('btn-disabled');
-      const defaultTitle = addShortcutBtn.getAttribute('data-title') || 'Add Shortcut';
-      addShortcutBtn.setAttribute('title', defaultTitle);
-    }
-  }
   
   if (shortcuts.length === 0) {
     tbody.innerHTML = `
@@ -807,12 +754,6 @@ function renderShortcuts() {
     if (!a.pinned && b.pinned) return 1;
     return 0;
   });
-  
-  // Check if we're in "All Profiles" mode (read-only)
-  const isReadOnly = currentProfile === 'profile-all';
-  const disabledClass = isReadOnly ? 'btn-disabled' : '';
-  const editTitle = isReadOnly ? 'Switch to a specific profile to edit' : 'Edit';
-  const deleteTitle = isReadOnly ? 'Switch to a specific profile to delete' : 'Delete';
   
   tbody.innerHTML = sortedShortcuts.map(shortcut => {
     const displayIcon = renderSAPIcon(shortcut.icon, 'shortcut', 16);
@@ -843,13 +784,13 @@ function renderShortcuts() {
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </button>
-            <button class="icon-btn edit-btn ${disabledClass}" data-id="${shortcut.id}" title="${editTitle}" tabindex="0">
+            <button class="icon-btn edit-btn" data-id="${shortcut.id}" title="Edit" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
             </button>
-            <button class="icon-btn danger delete-btn ${disabledClass}" data-id="${shortcut.id}" title="${deleteTitle}" tabindex="0">
+            <button class="icon-btn danger delete-btn" data-id="${shortcut.id}" title="Delete" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -926,19 +867,6 @@ function renderNotes() {
     return;
   }
   
-  // Update section header Add button state based on profile mode
-  const addNoteBtn = document.getElementById('addNoteBtn');
-  if (addNoteBtn) {
-    const isReadOnly = currentProfile === 'profile-all';
-    if (isReadOnly) {
-      addNoteBtn.classList.add('btn-disabled');
-      addNoteBtn.setAttribute('title', 'Switch to a specific profile to add notes');
-    } else {
-      addNoteBtn.classList.remove('btn-disabled');
-      const defaultTitle = addNoteBtn.getAttribute('data-title') || 'Add Note';
-      addNoteBtn.setAttribute('title', defaultTitle);
-    }
-  }
   
   if (notes.length === 0) {
     tbody.innerHTML = `
@@ -962,12 +890,6 @@ function renderNotes() {
     return 0;
   });
   
-  // Check if we're in "All Profiles" mode (read-only)
-  const isReadOnly = currentProfile === 'profile-all';
-  const disabledClass = isReadOnly ? 'btn-disabled' : '';
-  const copyTitle = isReadOnly ? 'Switch to a specific profile to copy' : 'Copy note content';
-  const deleteTitle = isReadOnly ? 'Switch to a specific profile to delete' : 'Delete';
-  
   tbody.innerHTML = sortedNotes.map(note => {
     const contentPreview = note.content 
       ? (note.content.length > 60 ? note.content.substring(0, 60) + '...' : note.content)
@@ -975,20 +897,12 @@ function renderNotes() {
     const displayIcon = renderSAPIcon(note.icon, 'note', 16);
     const tagBadgesHTML = renderTagBadges(note.tags);
     
-    // In "All Profiles" mode, show View button instead of Edit
-    const firstButtonHTML = isReadOnly 
-      ? `<button class="icon-btn primary view-btn" data-id="${note.id}" title="View note (read-only)" tabindex="0">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
-        </button>`
-      : `<button class="icon-btn primary edit-btn" data-id="${note.id}" title="Edit" tabindex="0">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-          </svg>
-        </button>`;
+    const firstButtonHTML = `<button class="icon-btn primary edit-btn" data-id="${note.id}" title="Edit" tabindex="0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+    </button>`;
     
     return `
       <tr class="note-row" data-note-id="${note.id}">
@@ -1010,13 +924,13 @@ function renderNotes() {
         <td class="note-actions-cell">
           <div class="table-actions">
             ${firstButtonHTML}
-            <button class="icon-btn copy-btn ${disabledClass}" data-id="${note.id}" title="${copyTitle}" tabindex="0">
+            <button class="icon-btn copy-btn" data-id="${note.id}" title="Copy note content" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
               </svg>
             </button>
-            <button class="icon-btn danger delete-btn ${disabledClass}" data-id="${note.id}" title="${deleteTitle}" tabindex="0">
+            <button class="icon-btn danger delete-btn" data-id="${note.id}" title="Delete" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -1052,21 +966,12 @@ function attachNoteListeners() {
     });
   });
   
-  // Edit button (only for notes in specific profiles)
+  // Edit button
   document.querySelectorAll('.note-row .edit-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
       editNote(id);
-    });
-  });
-  
-  // View button (for read-only mode in "All Profiles")
-  document.querySelectorAll('.note-row .view-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const id = btn.getAttribute('data-id');
-      viewNoteReadOnly(id);
     });
   });
   
@@ -1240,15 +1145,44 @@ async function switchEnvironment(targetHostname, targetType) {
 /**
  * Quick switch to environment by index (0-based)
  * Used by Cmd+Shift+1/2/3 keyboard shortcuts
+ * IMPORTANT: Uses DISPLAYED order (pinned first, then active, then others)
+ * NOT storage array order - this matches what user sees on screen
  * @param {number} envIndex - Environment index (0 = first, 1 = second, 2 = third)
  */
 async function quickSwitchToEnvironment(envIndex) {
-  if (envIndex < 0 || envIndex >= environments.length) {
+  if (environments.length === 0) {
+    showToast('No environments saved', 'warning');
+    return;
+  }
+  
+  // Sort environments in SAME order as renderEnvironments() display
+  // This ensures keyboard shortcuts target what user SEES, not storage order
+  let currentHostname = null;
+  if (currentPageData) {
+    currentHostname = currentPageData.hostname;
+  }
+  
+  const sortedEnvs = [...environments].sort((a, b) => {
+    // Pinned environments always first
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    
+    // Within pinned or unpinned, active environment first
+    const aIsActive = currentHostname && currentHostname === a.hostname;
+    const bIsActive = currentHostname && currentHostname === b.hostname;
+    if (aIsActive && !bIsActive) return -1;
+    if (!aIsActive && bIsActive) return 1;
+    
+    return 0;
+  });
+  
+  // Now use sorted array for keyboard shortcuts
+  if (envIndex < 0 || envIndex >= sortedEnvs.length) {
     showToast(`No environment at position ${envIndex + 1}`, 'warning');
     return;
   }
   
-  const env = environments[envIndex];
+  const env = sortedEnvs[envIndex];
   if (!env) {
     showToast(`No environment at position ${envIndex + 1}`, 'warning');
     return;
@@ -1260,14 +1194,9 @@ async function quickSwitchToEnvironment(envIndex) {
 // ==================== CRUD - ENVIRONMENTS ====================
 
 function openAddEnvironmentModal() {
-  // Block opening modal in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to add environments', 'warning');
-    return;
-  }
-  
   const modal = document.getElementById('addEnvModal');
   
+  // Populate form with current page data
   if (currentPageData) {
     document.getElementById('envHostname').value = currentPageData.hostname || '';
     const envType = currentPageData.environment || 'production';
@@ -1298,24 +1227,22 @@ async function editEnvironment(id) {
   const env = environments.find(e => e.id === id);
   if (!env) return;
   
+  // Populate form fields
   document.getElementById('envName').value = env.name;
   document.getElementById('envType').value = env.type;
   document.getElementById('envHostname').value = env.hostname;
   document.getElementById('envNotes').value = env.notes || '';
   
-  document.getElementById('addEnvModal').setAttribute('data-edit-id', id);
+  // Set edit mode
+  const modal = document.getElementById('addEnvModal');
+  modal.setAttribute('data-edit-id', id);
   document.querySelector('#addEnvModal .modal-header h3').textContent = 'Edit Environment';
   
-  openAddEnvironmentModal();
+  // Open modal directly (bypass profile check since we're editing existing)
+  modal.classList.add('active');
 }
 
 async function deleteEnvironment(id) {
-  // Block deletion in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to delete environments', 'warning');
-    return;
-  }
-  
   const env = environments.find(e => e.id === id);
   if (!env) return;
   
@@ -1333,12 +1260,6 @@ async function deleteEnvironment(id) {
 }
 
 async function saveEnvironment() {
-  // Block saving in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to save environments', 'warning');
-    return;
-  }
-  
   const name = document.getElementById('envName').value.trim();
   const type = document.getElementById('envType').value;
   let hostname = document.getElementById('envHostname').value.trim();
@@ -1480,12 +1401,6 @@ function editShortcut(id) {
 }
 
 async function deleteShortcut(id) {
-  // Block deletion in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to delete shortcuts', 'warning');
-    return;
-  }
-  
   const shortcut = shortcuts.find(s => s.id === id);
   if (!shortcut) return;
   
@@ -1501,12 +1416,6 @@ async function deleteShortcut(id) {
 }
 
 async function saveShortcut() {
-  // Block saving in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to save shortcuts', 'warning');
-    return;
-  }
-  
   const name = document.getElementById('shortcutName').value.trim();
   const url = document.getElementById('shortcutPath').value.trim();
   const notes = document.getElementById('shortcutNotes').value.trim();
@@ -1547,12 +1456,6 @@ async function saveShortcut() {
 }
 
 async function addCurrentPageAsShortcut() {
-  // Block adding in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to add shortcuts', 'warning');
-    return;
-  }
-  
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
   
   if (!tab || !tab.url) {
@@ -1570,12 +1473,6 @@ async function addCurrentPageAsShortcut() {
 // ==================== CRUD - NOTES ====================
 
 function openAddNoteModal() {
-  // Block opening modal in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to add notes', 'warning');
-    return;
-  }
-  
   // Hide download button when creating new note
   const downloadBtn = document.getElementById('downloadNoteBtn');
   if (downloadBtn) downloadBtn.style.display = 'none';
@@ -1629,51 +1526,8 @@ function editNote(id) {
   if (downloadBtn) downloadBtn.style.display = 'inline-flex';
 }
 
-/**
- * View note in read-only mode (for "All Profiles" mode)
- * @param {string} id - The note ID to view
- */
-function viewNoteReadOnly(id) {
-  const note = notes.find(n => n.id === id);
-  if (!note) {
-    showToast('Note not found', 'error');
-    return;
-  }
-  
-  // Populate modal fields
-  document.getElementById('noteTitle').value = note.title;
-  document.getElementById('noteContent').value = note.content || '';
-  document.getElementById('noteIcon').value = note.icon || '0';
-  document.getElementById('noteTags').value = note.tags ? note.tags.join(', ') : '';
-  
-  // Change modal title
-  document.querySelector('#addNoteModal .modal-header h3').textContent = 'View Note';
-  
-  // Set all inputs to readonly
-  document.getElementById('noteTitle').setAttribute('readonly', true);
-  document.getElementById('noteContent').setAttribute('readonly', true);
-  document.getElementById('noteIcon').setAttribute('disabled', true);
-  document.getElementById('noteTags').setAttribute('readonly', true);
-  
-  // Hide action buttons (Save, Format, Download)
-  document.getElementById('saveNoteBtn').style.display = 'none';
-  document.getElementById('prettifyNoteBtn').style.display = 'none';
-  document.getElementById('downloadNoteBtn').style.display = 'none';
-  
-  // Open modal
-  document.getElementById('addNoteModal').classList.add('active');
-  
-  // Store read-only state so we can restore normal mode when closing
-  document.getElementById('addNoteModal').setAttribute('data-readonly-mode', 'true');
-}
 
 async function deleteNote(id) {
-  // Block deletion in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to delete notes', 'warning');
-    return;
-  }
-  
   const note = notes.find(n => n.id === id);
   if (!note) return;
   
@@ -1689,12 +1543,6 @@ async function deleteNote(id) {
 }
 
 async function saveNote() {
-  // Block saving in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to save notes', 'warning');
-    return;
-  }
-  
   const title = document.getElementById('noteTitle').value.trim();
   const content = document.getElementById('noteContent').value.trim();
   const icon = document.getElementById('noteIcon').value || '0';
@@ -1728,12 +1576,6 @@ async function saveNote() {
 }
 
 async function copyNoteContent(id, btn) {
-  // Block copying in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to copy notes', 'warning');
-    return;
-  }
-  
   const note = notes.find(n => n.id === id);
   if (!note) return;
   
@@ -2025,16 +1867,6 @@ async function getPopularNotesForProfile() {
   const data = await loadPopularOssNotes();
   if (!data) return [];
   
-  // All Profiles: Show universal + top 2 from each solution
-  if (currentProfile === 'profile-all') {
-    const topFromEach = [
-      ...(data.successfactors?.slice(0, 2) || []),
-      ...(data.s4hana?.slice(0, 2) || []),
-      ...(data.btp?.slice(0, 2) || [])
-    ];
-    return [...(data.universal || []), ...topFromEach];
-  }
-  
   // SuccessFactors: Show SF-specific + universal
   if (currentProfile === 'profile-successfactors') {
     return [...(data.successfactors || []), ...(data.universal || [])];
@@ -2122,12 +1954,6 @@ async function openPopularOssNote(noteNumber) {
  * @param {string} type - The item type ('environment', 'shortcut', or 'note')
  */
 async function togglePin(id, type = 'environment') {
-  // Block pinning in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to pin items', 'warning');
-    return;
-  }
-  
   let item, collection, storageKey, renderFunction, itemLabel;
   
   if (type === 'environment') {
@@ -2286,12 +2112,6 @@ async function copyOssNoteUrl() {
 async function addOssNoteAsShortcut() {
   const noteNumber = getValidatedOssNoteNumber();
   if (!noteNumber) return;
-  
-  // Block adding in "All Profiles" mode
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to add shortcuts', 'warning');
-    return;
-  }
   
   try {
     const ossNoteUrl = `https://launchpad.support.sap.com/#/notes/${noteNumber}`;
@@ -2460,7 +2280,6 @@ async function renderSystemProfilesList() {
   
   const systemProfiles = availableProfiles.filter(p => 
     p.type === 'system' && 
-    p.id !== 'profile-all' &&
     !hiddenProfiles.includes(p.id)
   );
   
@@ -3570,9 +3389,6 @@ function setupEventListeners() {
   document.getElementById('cancelAddShortcutBtn')?.addEventListener('click', closeAddShortcutModal);
   document.getElementById('saveShortcutBtn')?.addEventListener('click', saveShortcut);
   
-  // Auto-suggestion for shortcut icons
-  setupShortcutIconAutoSuggestion();
-  
   document.getElementById('addNoteBtn')?.addEventListener('click', openAddNoteModal);
   document.getElementById('closeAddNoteModal')?.addEventListener('click', closeAddNoteModal);
   document.getElementById('saveNoteBtn')?.addEventListener('click', saveNote);
@@ -3584,9 +3400,6 @@ function setupEventListeners() {
       downloadNote(editId);
     }
   });
-  
-  // Auto-suggestion for note icons
-  setupNoteIconAutoSuggestion();
   
   // Setup character counter for notes
   setupNoteCharacterCounter();
@@ -3701,9 +3514,8 @@ async function toggleTheme() {
 // ==================== PROFILE MANAGEMENT ====================
 
 async function discoverProfiles() {
-  // Start with system profiles
+  // Start with system profiles (removed "All Profiles" for simplicity)
   availableProfiles = [
-    { id: 'profile-all', name: 'All Profiles', icon: '🌍', description: 'View everything across all profiles', file: null, type: 'system' },
     { id: 'profile-global', name: 'Global', icon: '⚡', description: 'Core SAP utilities for everyone', file: 'profile-global.json', type: 'system' },
     { id: 'profile-successfactors', name: 'SuccessFactors', icon: '👥', description: 'HR/HCM consultants & admins', file: 'profile-successfactors.json', type: 'system' },
     { id: 'profile-s4hana', name: 'S/4HANA', icon: '🏭', description: 'Clean Core & functional architects', file: 'profile-s4hana.json', type: 'system' },
@@ -3738,8 +3550,6 @@ async function loadActiveProfile() {
   if (profile) {
     document.getElementById('currentProfileName').textContent = profile.name;
   }
-  
-  updateReadOnlyBanner();
 }
 
 /**
@@ -3752,7 +3562,7 @@ async function renderAllProfilesQuickActions() {
   if (!listContainer) return;
   
   try {
-    const editableProfiles = availableProfiles.filter(p => p.id !== 'profile-all');
+    const editableProfiles = availableProfiles;
     let allHTML = '';
     
     for (const profile of editableProfiles) {
@@ -3904,17 +3714,6 @@ async function saveAllQuickActions() {
   }
 }
 
-/**
- * Update read-only banner visibility based on current profile
- * Shows banner when in "All Profiles" mode, hides it otherwise
- */
-function updateReadOnlyBanner() {
-  const banner = document.getElementById('readonlyBanner');
-  if (!banner) return;
-  
-  const isReadOnly = currentProfile === 'profile-all';
-  banner.style.display = isReadOnly ? 'flex' : 'none';
-}
 
 async function renderProfileMenu() {
   const menu = document.getElementById('profileMenu');
@@ -3939,7 +3738,7 @@ async function renderProfileMenu() {
           <div class="profile-name">${profile.name}</div>
           ${description ? `<div class="profile-desc">${description}</div>` : ''}
         </div>
-        ${isActive ? '<svg class="profile-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+        ${isActive ? window.SVGRenderer.renderCheckIcon(14) : ''}
       </button>
     `;
   }).join('');
@@ -3982,10 +3781,7 @@ async function switchProfile(profileId) {
     // Update UI display
     document.getElementById('currentProfileName').textContent = profile.name;
     
-    // Update read-only banner visibility
-    updateReadOnlyBanner();
-    
-    // Reload data (loadShortcuts, loadEnvironments, loadNotes handle "All Profiles" logic)
+    // Reload data
     await loadShortcuts();
     await loadEnvironments();
     await loadNotes();
@@ -4011,83 +3807,6 @@ function removeDuplicates(arr, key) {
     }
     seen.add(value);
     return true;
-  });
-}
-
-// ==================== ICON AUTO-SUGGESTION ====================
-
-/**
- * Setup auto-suggestion for shortcut icons with 500ms debounce
- * Monitors name, notes, and tags fields for keywords and suggests appropriate icons
- */
-function setupShortcutIconAutoSuggestion() {
-  const nameInput = document.getElementById('shortcutName');
-  const notesInput = document.getElementById('shortcutNotes');
-  const tagsInput = document.getElementById('shortcutTags');
-  const iconSelect = document.getElementById('shortcutIcon');
-  const suggestionEl = document.getElementById('iconSuggestion');
-  const suggestedNameEl = document.getElementById('suggestedShortcutIconName');
-  const acceptBtn = document.getElementById('acceptShortcutSuggestion');
-  
-  if (!nameInput || !iconSelect || !suggestionEl) return;
-  
-  let currentSuggestion = null;
-  let debounceTimer = null;
-  
-  function updateSuggestion() {
-    const name = nameInput.value.trim();
-    const notes = notesInput?.value.trim() || '';
-    const tags = tagsInput?.value.trim() || '';
-    
-    // Only suggest if there's content and library is available
-    if (!name || typeof window.SAPIconLibrary === 'undefined') {
-      suggestionEl.style.display = 'none';
-      return;
-    }
-    
-    // Get suggestion from library
-    const suggestedIconId = window.SAPIconLibrary.suggestIcon(name, notes, tags, 'shortcut');
-    
-    if (suggestedIconId && suggestedIconId !== iconSelect.value) {
-      const icon = window.SAPIconLibrary.getIconByValue(suggestedIconId, 'shortcut');
-      currentSuggestion = suggestedIconId;
-      suggestedNameEl.textContent = `${icon.emoji} ${icon.label}`;
-      suggestionEl.style.display = 'block';
-    } else {
-      suggestionEl.style.display = 'none';
-    }
-  }
-  
-  function debouncedUpdateSuggestion() {
-    // Clear existing timer
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
-    }
-    
-    // Set new timer for 500ms
-    debounceTimer = setTimeout(() => {
-      updateSuggestion();
-    }, 500);
-  }
-  
-  // Accept suggestion handler
-  if (acceptBtn) {
-    acceptBtn.addEventListener('click', () => {
-      if (currentSuggestion) {
-        iconSelect.value = currentSuggestion;
-        suggestionEl.style.display = 'none';
-      }
-    });
-  }
-  
-  // Attach event listeners with debounce
-  nameInput.addEventListener('input', debouncedUpdateSuggestion);
-  if (notesInput) notesInput.addEventListener('input', debouncedUpdateSuggestion);
-  if (tagsInput) tagsInput.addEventListener('input', debouncedUpdateSuggestion);
-  
-  // Hide suggestion when icon is manually changed
-  iconSelect.addEventListener('change', () => {
-    suggestionEl.style.display = 'none';
   });
 }
 
@@ -4218,80 +3937,4 @@ async function displayProfileUpdateDate() {
     console.error('[Profile Date] Failed to load update date:', error);
     dateSpan.textContent = '';
   }
-}
-
-
-/**
- * Setup auto-suggestion for note icons with 500ms debounce
- * Monitors title, content, and tags fields for keywords and suggests appropriate icons
- */
-function setupNoteIconAutoSuggestion() {
-  const titleInput = document.getElementById('noteTitle');
-  const contentInput = document.getElementById('noteContent');
-  const tagsInput = document.getElementById('noteTags');
-  const iconSelect = document.getElementById('noteIcon');
-  const suggestionEl = document.getElementById('noteIconSuggestion');
-  const suggestedNameEl = document.getElementById('suggestedNoteIconName');
-  const acceptBtn = document.getElementById('acceptNoteSuggestion');
-  
-  if (!titleInput || !iconSelect || !suggestionEl) return;
-  
-  let currentSuggestion = null;
-  let debounceTimer = null;
-  
-  function updateSuggestion() {
-    const title = titleInput.value.trim();
-    const content = contentInput?.value.trim() || '';
-    const tags = tagsInput?.value.trim() || '';
-    
-    // Only suggest if there's content and library is available
-    if (!title || typeof window.SAPIconLibrary === 'undefined') {
-      suggestionEl.style.display = 'none';
-      return;
-    }
-    
-    // Get suggestion from library (use title as name, content as notes)
-    const suggestedIconId = window.SAPIconLibrary.suggestIcon(title, content, tags, 'note');
-    
-    if (suggestedIconId && suggestedIconId !== iconSelect.value) {
-      const icon = window.SAPIconLibrary.getIconByValue(suggestedIconId, 'note');
-      currentSuggestion = suggestedIconId;
-      suggestedNameEl.textContent = `${icon.emoji} ${icon.label}`;
-      suggestionEl.style.display = 'block';
-    } else {
-      suggestionEl.style.display = 'none';
-    }
-  }
-  
-  function debouncedUpdateSuggestion() {
-    // Clear existing timer
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
-    }
-    
-    // Set new timer for 500ms
-    debounceTimer = setTimeout(() => {
-      updateSuggestion();
-    }, 500);
-  }
-  
-  // Accept suggestion handler
-  if (acceptBtn) {
-    acceptBtn.addEventListener('click', () => {
-      if (currentSuggestion) {
-        iconSelect.value = currentSuggestion;
-        suggestionEl.style.display = 'none';
-      }
-    });
-  }
-  
-  // Attach event listeners with debounce
-  titleInput.addEventListener('input', debouncedUpdateSuggestion);
-  if (contentInput) contentInput.addEventListener('input', debouncedUpdateSuggestion);
-  if (tagsInput) tagsInput.addEventListener('input', debouncedUpdateSuggestion);
-  
-  // Hide suggestion when icon is manually changed
-  iconSelect.addEventListener('change', () => {
-    suggestionEl.style.display = 'none';
-  });
 }
