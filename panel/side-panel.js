@@ -124,36 +124,37 @@ async function loadEnvironments() {
 }
 
 /**
- * Load notes from local storage
- * On first run, also loads template notes from profile-global.json
- * Notes are stored globally (not profile-specific)
+ * Load notes from profile-specific storage
+ * On first run for a profile, loads template notes from that profile's JSON file
+ * Notes are stored per-profile (like environments)
  */
 async function loadNotes() {
-  const result = await chrome.storage.local.get(['notes', 'notesInitialized']);
-  notes = result.notes || [];
+  const storageKey = `notes_${currentProfile}`;
+  const initKey = `notesInitialized_${currentProfile}`;
   
-  // On first run, load template notes from profile-global.json
-  if (!result.notesInitialized || notes.length === 0) {
+  const result = await chrome.storage.local.get([storageKey, initKey]);
+  notes = result[storageKey] || [];
+  
+  // On first run for this profile, load template notes from profile JSON
+  if (!result[initKey] && notes.length === 0) {
     try {
-      const globalResponse = await fetch(chrome.runtime.getURL('resources/profile-global.json'));
-      const globalData = await globalResponse.json();
+      const profileData = await loadProfileData(currentProfile);
       
-      if (globalData.notes && Array.isArray(globalData.notes) && globalData.notes.length > 0) {
-        notes = [...globalData.notes, ...notes]; // Prepend template notes
+      if (profileData.notes && Array.isArray(profileData.notes) && profileData.notes.length > 0) {
+        notes = [...profileData.notes]; // Use template notes from this profile
         
-        // Save to storage and mark as initialized
+        // Save to profile-specific storage and mark as initialized
         await chrome.storage.local.set({ 
-          notes: notes,
-          notesInitialized: true 
+          [storageKey]: notes,
+          [initKey]: true 
         });
       }
     } catch (error) {
-      console.error('[Notes] Failed to load template notes from profile-global.json:', error);
+      console.error(`[Notes] Failed to load template notes for ${currentProfile}:`, error);
     }
   }
   
-  console.log('[Notes] Loaded notes from storage:', notes.length, 'notes');
-  console.log('[Notes] Notes data:', JSON.stringify(notes, null, 2));
+  console.log(`[Notes] Loaded ${notes.length} notes for profile: ${currentProfile}`);
   renderNotes();
 }
 
@@ -1477,7 +1478,10 @@ async function deleteNote(id) {
   if (!confirmed) return;
   
   notes = notes.filter(n => n.id !== id);
-  await chrome.storage.local.set({ notes });
+  
+  // Save to profile-specific storage
+  const storageKey = `notes_${currentProfile}`;
+  await chrome.storage.local.set({ [storageKey]: notes });
   
   renderNotes();
   showToast('Note deleted', 'success');
@@ -1510,7 +1514,9 @@ async function saveNote() {
     showToast('Note saved ✓', 'success');
   }
   
-  await chrome.storage.local.set({ notes });
+  // Save to profile-specific storage
+  const storageKey = `notes_${currentProfile}`;
+  await chrome.storage.local.set({ [storageKey]: notes });
   
   renderNotes();
   closeAddNoteModal();
@@ -1912,7 +1918,7 @@ async function togglePin(id, type = 'environment') {
   } else if (type === 'note') {
     item = notes.find(n => n.id === id);
     collection = notes;
-    storageKey = 'notes';
+    storageKey = `notes_${currentProfile}`;
     renderFunction = renderNotes;
     itemLabel = 'Note';
   } else {
