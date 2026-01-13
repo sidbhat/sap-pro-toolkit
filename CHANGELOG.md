@@ -13,7 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - (Modifications to existing features will be listed here)
 
 ### Removed
-- (Deprecated/removed features will be listed here)
+- ❌ **"All Profiles" Read-Only Mode**: Simplified profile system
+  - Removed profile-all aggregation mode from profile switcher
+  - Removed read-only banner and view-only note functionality
+  - Removed 22 profile-all conditional checks from JavaScript
+  - Removed `viewNoteReadOnly()` and `updateReadOnlyBanner()` functions
+  - Simplified Quick Actions to aggregate from available profiles without special mode
+  - Updated documentation files (CLEANUP-PRIORITIES.md, CLEANUP-TODO.md, CLEANUP-REPORT.md, VALIDATION-INTEGRATION-STEPS.md)
+  - Users now select specific profiles; Quick Actions remain universal across all profiles
 
 ---
 

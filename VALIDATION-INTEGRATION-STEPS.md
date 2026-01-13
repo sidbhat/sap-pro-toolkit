@@ -15,11 +15,6 @@ Replace the existing saveEnvironment() function with:
 
 ```javascript
 async function saveEnvironment() {
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to save environments', 'warning');
-    return;
-  }
-  
   const rawData = {
     name: document.getElementById('envName').value,
     type: document.getElementById('envType').value,
@@ -66,11 +61,6 @@ async function saveEnvironment() {
 
 ```javascript
 async function saveShortcut() {
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to save shortcuts', 'warning');
-    return;
-  }
-  
   const rawData = {
     name: document.getElementById('shortcutName').value,
     url: document.getElementById('shortcutPath').value,
@@ -111,11 +101,6 @@ async function saveShortcut() {
 
 ```javascript
 async function saveNote() {
-  if (currentProfile === 'profile-all') {
-    showToast('Switch to a specific profile to save notes', 'warning');
-    return;
-  }
-  
   const rawData = {
     title: document.getElementById('noteTitle').value,
     content: document.getElementById('noteContent').value,

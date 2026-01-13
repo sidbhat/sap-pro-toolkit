@@ -18,8 +18,6 @@ Based on product owner feedback - 2026-01-11
   - `themes.css`
 
 ### Phase 3: UX Improvements (HIGH PRIORITY)
-- [ ] Add visible banner for "All Profiles" read-only mode
-- [ ] Make disabled buttons more obvious (not just title)
 - [ ] Add 500ms debounce to icon suggestions
 - [ ] Add loading indicators (profile switch, environments, quick actions)
 - [ ] Improve character counter message
@@ -39,7 +37,7 @@ Based on product owner feedback - 2026-01-11
 
 ### Phase 6: Documentation Updates (HIGH PRIORITY)
 - [ ] Update IMPLEMENTATION-STATUS.md
-- [ ] Update README.md (screenshots, keyboard shortcuts, "All Profiles")
+- [ ] Update README.md (screenshots, keyboard shortcuts)
 
 ## ❌ SKIPPED TASKS
 

@@ -63,24 +63,12 @@ link.href = chrome.runtime.getURL('content/dark.css');
 
 ## ⚠️ UX Issues
 
-### 1. Inconsistent "All Profiles" Mode UX
-**Location**: `popup/side-panel.js`
-**Issues**:
-- Add buttons disabled in "All Profiles" but no visual explanation
-- Edit/Delete buttons show "disabled" cursor but still display
-- User must discover limitation through trial and error
-
-**Current Behavior**:
-```javascript
-// Lines 1096-1103: Buttons disabled with generic title
-addEnvBtn.classList.add('btn-disabled');
-addEnvBtn.setAttribute('title', 'Switch to a specific profile to add environments');
-```
-
-**Recommendation**:
-- Add info banner at top: "📘 Viewing all profiles (read-only). Switch to a profile to make changes."
-- Consider using tooltip/popover instead of just title attribute
-- Add visual indicator (badge) to profile switcher showing read-only status
+### 1. Removed "All Profiles" Mode (COMPLETED)
+**Status**: ✅ "All Profiles" read-only mode has been removed from the codebase
+- All profile-all checks removed from JavaScript
+- Read-only banner removed from HTML
+- viewNoteReadOnly() and updateReadOnlyBanner() functions removed
+- Help modal updated to remove read-only mode references
 
 ---
 
@@ -416,19 +404,11 @@ chrome.tabs.onActivated.addListener(async () => {
 
 ---
 
-### 2. Large Data Operations
-**Location**: `side-panel.js` lines 558-575
+### 2. Data Loading Performance
+**Location**: `side-panel.js`
 
-**Issue**: "All Profiles" mode loads ALL data from all profiles
-```javascript
-for (const p of availableProfiles) {
-  const profileData = await loadProfileData(p.id); // Multiple file loads
-  allShortcuts.push(...profileShortcuts);
-}
-```
-
-**Impact**: Could be slow with many profiles
-**Recommendation**: Add loading indicator, consider pagination
+**Note**: "All Profiles" aggregation mode removed. Data now loads per profile only.
+**Recommendation**: Add loading indicators for individual profile data loads
 
 ---
 
@@ -499,7 +479,7 @@ grep -r "sf-toolkit-banner" content/
 - [ ] Remove or document dead visual indicators code
 - [ ] Fix popup-redesign.html reference
 - [ ] Create content/dark.css or remove dark mode feature
-- [ ] Add "All Profiles" read-only banner/indicator
+- [x] "All Profiles" mode removed (COMPLETED)
 
 ### Phase 2: Code Quality
 - [ ] Add JSDoc comments to all public functions
@@ -549,8 +529,7 @@ grep -r "sf-toolkit-banner" content/
 ### Must Do (Before Release)
 1. Fix broken file references (popup-redesign.html, dark.css)
 2. Remove dead visual indicators code
-3. Add "All Profiles" read-only UX indicator
-4. Add try-catch to storage operations
+3. Add try-catch to storage operations
 
 ### Should Do (This Sprint)
 5. Add JSDoc comments to public APIs
@@ -590,8 +569,8 @@ grep -r "sf-toolkit-banner" content/
 
 1. **Visual Indicators**: Decision needed - keep or remove?
 2. **Dark Mode**: Content script feature incomplete
-3. **"All Profiles" Mode**: Consider adding more visual feedback
-4. **Performance**: "All Profiles" may need optimization with scale
+3. **Profile System**: Working well with per-profile data isolation
+4. **Performance**: Consider optimization for multiple profiles
 5. **Testing**: Consider adding automated tests before v2.0
 
 ---

@@ -17,10 +17,9 @@ Quick reference for immediate cleanup tasks
 - [ ] Or add comment explaining why disabled
 - [ ] Check if `content/indicators.css` is still needed
 
-### 3. UX - "All Profiles" Mode
-- [ ] Add visible banner when in "All Profiles" mode
-- [ ] Example: "📘 Viewing all profiles (read-only mode)" yes 
-- [ ] Make disabled state more obvious (not just title attribute)yes
+### 3. UX Improvements (COMPLETED)
+- [x] "All Profiles" mode removed from codebase
+- [x] Read-only banner removed
 
 ---
 
@@ -35,7 +34,6 @@ Quick reference for immediate cleanup tasks
 - [ ] Update `README.md`:
   - Check if screenshots are current
   - Complete keyboard shortcuts section
-  - Add "All Profiles" mode explanation
 
 ### 5. Code Quality yes
 - [ ] Review 80+ `console.log` statements:
@@ -90,7 +88,6 @@ Move to `_locales/en/messages.json`:
   - `themes.css`
 
 ### 11. Performance --- SKIP THIS
-- [ ] Add loading indicator for "All Profiles" mode
 - [ ] Consider code splitting for `sap-icon-library.js` (~2000 lines)
 - [ ] Optimize tab change listener (only re-render if data changed)
 

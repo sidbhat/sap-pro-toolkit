@@ -82,7 +82,6 @@ Major Features
 - BTP Profile: Developer tools for Business Technology Platform
 - Executive Profile: High-level insights for CIOs, CTOs, presales engineers
 - Go-Live Profile: Mission-critical resources for implementation cutover
-- All Profiles Mode: View everything across all profiles
 
 9. System Diagnostics
 - Generate comprehensive diagnostic reports instantly
@@ -191,9 +190,6 @@ High-level insights for CIOs, CTOs, and presales engineers with business value m
 
 🚀 Go-Live & Cutover Profile
 Mission-critical resources for S/4HANA go-live events including cutover checklists, incident response, and hypercare monitoring.
-
-🌍 All Profiles Mode
-View everything across all profiles for comprehensive cross-solution visibility.
 
 ═══════════════════════════════════════════════════════
 
