@@ -398,21 +398,8 @@ async function renderEnvironments() {
     
     // Attach quick actions handlers if present
     if (quickActionsRowHTML) {
-      // Check for custom solutions in storage first
-      const storageKey = `solutions_${currentProfile}`;
-      const solutionsResult = await chrome.storage.local.get(storageKey);
-      let solutionsData = solutionsResult[storageKey];
-      
-      // If no custom solutions, load from profile
-      if (!solutionsData) {
-        const profileData = await loadProfileData(currentProfile);
-        solutionsData = profileData.solutions;
-      }
-      
-      const solution = solutionsData?.find(s => s.id === currentPageData.solutionType);
-      if (solution && solution.quickActions) {
-        attachQuickActionBadgeHandlers(solution.quickActions.slice(0, 5));
-      }
+      // Quick Actions are already aggregated and rendered - just attach handlers
+      attachQuickActionBadgeHandlers([]);
     }
     return;
   }
@@ -629,12 +616,11 @@ function attachQuickActionBadgeHandlers(quickActions) {
     badge.addEventListener('click', async (e) => {
       e.stopPropagation();
       const actionId = badge.getAttribute('data-action-id');
-      const action = quickActions.find(a => a.id === actionId);
+      const actionPath = badge.getAttribute('data-action-path');
       
-      if (!action) {
-        showToast('Quick Action not found', 'error');
-        return;
-      }
+      // Use the path directly from the badge's data attribute
+      // This way we don't need to search through profiles
+      const action = { id: actionId, path: actionPath };
       
       try {
         const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
@@ -643,11 +629,11 @@ function attachQuickActionBadgeHandlers(quickActions) {
         // Build URL with all parameters preserved
         const targetUrl = buildQuickActionUrl(action, currentPageData, tab.url);
         
-        console.log('[Quick Action] Navigating to:', action.name);
+        console.log('[Quick Action] Navigating to:', actionId);
         console.log('[Quick Action] Target URL:', targetUrl);
         
         await chrome.tabs.update(tab.id, { url: targetUrl });
-        showToast(`Navigating to ${action.name}...`, 'success');
+        showToast(`Navigating to ${badge.textContent.trim()}...`, 'success');
         
       } catch (error) {
         console.error('[Quick Action] Navigation failed:', error);
