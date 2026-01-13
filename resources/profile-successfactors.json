@@ -4,7 +4,15 @@
     {
       "id": "successfactors",
       "name": "SAP SuccessFactors",
-      "patterns": ["successfactors.com", "sapsf.com", "hr.cloud.sap", "sapsf.cn", "sapsf.eu", "successfactors.eu", "sapcloud.cn"],
+      "patterns": [
+        "successfactors.com",
+        "sapsf.com",
+        "hr.cloud.sap",
+        "sapsf.cn",
+        "sapsf.eu",
+        "successfactors.eu",
+        "sapcloud.cn"
+      ],
       "quickActions": [
         {
           "id": "sf-time-off",
@@ -51,7 +59,10 @@
     {
       "id": "s4hana",
       "name": "SAP S/4HANA Cloud",
-      "patterns": ["s4hana.ondemand.com", "s4hana.cloud.sap"],
+      "patterns": [
+        "s4hana.ondemand.com",
+        "s4hana.cloud.sap"
+      ],
       "quickActions": [
         {
           "id": "s4-procurement-overview",
@@ -98,7 +109,11 @@
     {
       "id": "btp",
       "name": "SAP Business Technology Platform",
-      "patterns": ["hana.ondemand.com", "cfapps", "build.cloud.sap"],
+      "patterns": [
+        "hana.ondemand.com",
+        "cfapps",
+        "build.cloud.sap"
+      ],
       "quickActions": [
         {
           "id": "btp-cockpit",
@@ -145,7 +160,10 @@
     {
       "id": "ibp",
       "name": "SAP Integrated Business Planning",
-      "patterns": ["ibp.cloud.sap", "ibplanning"],
+      "patterns": [
+        "ibp.cloud.sap",
+        "ibplanning"
+      ],
       "quickActions": [
         {
           "id": "ibp-home",
@@ -180,7 +198,6 @@
       "id": "shortcut-sf-roadmap",
       "name": "SF Product Roadmap",
       "notes": "SAP SuccessFactors Product Roadmap - upcoming features and releases",
-      "tags": ["hr-core"],
       "url": "https://roadmaps.sap.com/board?PRODUCT=089E017A62AB1EDA94C15F5EDB3320E1"
     },
     {
@@ -188,7 +205,6 @@
       "id": "shortcut-sf-help",
       "name": "SuccessFactors Help",
       "notes": "Official SuccessFactors platform documentation and help center",
-      "tags": ["hr-core"],
       "url": "https://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM"
     },
     {
@@ -196,7 +212,6 @@
       "id": "shortcut-sf-community",
       "name": "SF Community",
       "notes": "SuccessFactors community discussions and best practices",
-      "tags": ["hr-core"],
       "url": "https://community.sap.com/topics/successfactors"
     },
     {
@@ -204,7 +219,6 @@
       "id": "shortcut-sde-enrollment",
       "name": "SDE Enrollment Guide",
       "notes": "How to enroll users in SAP Demo Environment (SDE) for SuccessFactors",
-      "tags": ["demo", "admin"],
       "url": "https://sap.sharepoint.com/sites/203948/SitePages/Accessing-Public-Landscapes-via-the-SDE.aspx"
     },
     {
@@ -212,7 +226,6 @@
       "id": "shortcut-partner-sde2",
       "name": "Partner - Learning about SDE2",
       "notes": "Partner enablement for SAP Demo Environment 2.0",
-      "tags": ["demo"],
       "url": "https://learning.sap.com/courses/leveraging-sap-demo-environment-2-0"
     },
     {
@@ -220,7 +233,6 @@
       "id": "shortcut-1768075965385",
       "name": "WalkMe - DC68",
       "notes": "WalkMe Premium content",
-      "tags": ["demo", "admin"],
       "url": "https://hcm68sales.successfactors.com/login?company=SFSALES009958"
     },
     {
@@ -228,7 +240,6 @@
       "id": "shortcut-1768076044148",
       "name": "DCA - Create Org",
       "notes": "DCA - create demo orgs",
-      "tags": ["demo", "admin"],
       "url": "https://demodatageneration-gckf8hvo.authentication.us10.hana.ondemand.com/login"
     },
     {
@@ -236,7 +247,6 @@
       "id": "shortcut-1768077128491",
       "name": "Joule - End to End IVJ",
       "notes": "joule successfactors ivj",
-      "tags": ["demo"],
       "url": "https://ivj-vx.cfapps.eu10.hana.ondemand.com/journey/7860c44b-cf77-4f0a-8e9d-9e6739886654/intro"
     },
     {
@@ -244,7 +254,6 @@
       "id": "shortcut-1768077316538",
       "name": "Snapshot and Restore Demo",
       "notes": "snapshot and restore a demo tenant",
-      "tags": ["demo", "admin"],
       "url": "https://sap.sharepoint.com/sites/203948/SitePages/SuccessFactors-Tenant-Snapshot-&-Restore.aspx"
     }
   ],
@@ -291,45 +300,49 @@
   ],
   "notes": [
     {
-      "content": "=== Manager & Performance ===\n• \"Summarize this employee's goal progress for H1 2025 and highlight their top 3 accomplishments in business language I can use in our review conversation.\"\n\n• \"Based on this employee's goals, feedback, and activities, suggest 3 specific development recommendations and 2 coaching questions I can ask in our next 1:1.\"\n\n• \"Draft a performance summary paragraph for [Employee Name] focusing on impact, strengths, and 2-3 growth areas, aligned with our rating of 'Exceeds Expectations'.\"\n\n=== Goal Setting ===\n• \"Turn these bullet points into 3 SMART performance goals for a [Role] in [Department], aligned with our 2025 business priorities.\"\n\n• \"Review this list of goals and propose clearer success metrics and target dates, keeping our existing rating scale in mind.\"\n\n=== Workforce Analytics ===\n• \"Show me a plain-language summary of regretted attrition in my organization over the last 12 months and the top 3 drivers based on available data.\"\n\n• \"Compare internal mobility rates and time-to-fill for key roles in [Region A] vs [Region B] and suggest 3 actions I can take to improve internal moves.\"\n\n=== Employee Self-Service ===\n• \"Explain my company's parental leave policy in simple terms for someone based in [Country] and tell me the 3 key actions I must take before going on leave.\"\n\n• \"I want to change my work schedule to 80%. What options do I have under company policy and what are the implications for pay and benefits?\"\n\n=== Recruiting ===\n• \"Rewrite this job description for a [Role] to be candidate-friendly, bias-aware, and aligned with our global job catalog.\"\n\n• \"Based on my profile and current role, suggest 3 internal job opportunities and the top 5 skills I need to develop to be competitive for them.\"\n\n=== Learning & Development ===\n• \"Given this employee's current role, target role, and skill profile, generate a 90-day learning plan using content available in SuccessFactors Learning.\"\n\n=== Succession Planning ===\n• \"Summarize succession coverage for my critical roles, highlighting where we have no ready-now successors and suggesting mitigation actions.\"\n\n=== Prompt Best Practices ===\n✓ Be specific about time ranges\n✓ Use exact field names when possible\n✓ Specify output format (\"5 bullet points\", \"draft text I can paste\")\n✓ Use follow-ups: \"Now make this shorter and more motivational\"",
-      "icon": "ai",
       "id": "note-sf-joule-prompts",
-      "tags": ["ai", "joule", "prompts"],
+      "title": "Joule Prompts Library - SuccessFactors",
+      "content": "=== Manager & Performance ===\n• \"Summarize this employee's goal progress for H1 2025 and highlight their top 3 accomplishments in business language I can use in our review conversation.\"\n\n• \"Based on this employee's goals, feedback, and activities, suggest 3 specific development recommendations and 2 coaching questions I can ask in our next 1:1.\"\n\n• \"Draft a performance summary paragraph for [Employee Name] focusing on impact, strengths, and 2-3 growth areas, aligned with our rating of 'Exceeds Expectations'.\"\n\n=== Goal Setting ===\n• \"Turn these bullet points into 3 SMART performance goals for a [Role] in [Department], aligned with our 2025 business priorities.\"\n\n• \"Review this list of goals and propose clearer success metrics and target dates, keeping our existing rating scale in mind.\"\n\n=== Workforce Analytics ===\n• \"Show me a plain-language summary of regretted attrition in my organization over the last 12 months and the top 3 drivers based on available data.\"\n\n• \"Compare internal mobility rates and time-to-fill for key roles in [Region A] vs [Region B] and suggest 3 actions I can take to improve internal moves.\"\n\n=== Employee Self-Service ===\n• \"Explain my company's parental leave policy in simple terms for someone based in [Country] and tell me the 3 key actions I must take before going on leave.\"\n\n• \"I want to change my work schedule to 80%. What options do I have under company policy and what are the implications for pay and benefits?\"\n\n=== Recruiting ===\n• \"Rewrite this job description for a [Role] to be candidate-friendly, bias-aware, and aligned with our global job catalog.\"\n\n• \"Based on my profile and current role, suggest 3 internal job opportunities and the top 5 skills I need to develop to be competitive for them.\"\n\n=== Learning & Development ===\n• \"Given this employee's current role, target role, and skill profile, generate a 90-day learning plan using content available in SuccessFactors Learning.\"\n\n=== Succession Planning ===\n• \"Summarize succession coverage for my critical roles, highlighting where we have no ready-now successors and suggesting mitigation actions.\"\n\n=== Prompt Best Practices ===\n✓ Be specific about time ranges\n✓ Use exact field names when possible\n✓ Specify output format (\"5 bullet points\", \"draft text I can paste\")\n✓ Use follow-ups: \"Now make this shorter and more motivational\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
       "timestamp": 1736634000000,
-      "title": "Joule Prompts Library - SuccessFactors"
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
     },
     {
-      "content": "Production Environment:\nhttps://your-company.sapsf.com\nCompany ID: YOUR_COMPANY_ID\n\nKey Contacts:\n- System Admin: admin@your-company.com\n- HR Admin: hradmin@your-company.com\n- Support: support@your-company.com",
-      "icon": "6",
       "id": "note-sf-template-1",
-      "tags": ["hr-core", "admin"],
-      "timestamp": 1736633533000,
-      "title": "Production Access & Contacts"
-    },
-    {
-      "content": "Common Test Users:\n\ntest-employee:\n- Username: employee@test.com\n- Role: Employee\n\ntest-manager:\n- Username: manager@test.com\n- Role: Manager\n\ntest-admin:\n- Username: admin@test.com\n- Role: Administrator",
-      "icon": "2",
-      "id": "note-sf-template-2",
-      "tags": ["admin", "demo"],
-      "timestamp": 1736633533000,
-      "title": "Test User Accounts"
-    },
-    {
-      "content": "API Endpoints:\n\nOData API:\nhttps://api.successfactors.com/odata/v2/\n\nAuthentication:\n- OAuth 2.0 (recommended)\n- Basic Auth (legacy)\n\nRate Limits:\n- 20,000 calls/hour\n- 100 calls/minute burst\n\nDocumentation:\nhttps://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM/d599f15995d348a1b45ba5603e2aba9b/03e1fc3791684367a6a76a614a2916de.html",
-      "icon": "4",
-      "id": "note-sf-template-3",
-      "tags": ["admin"],
-      "timestamp": 1736633533000,
-      "title": "API Integration Reference"
-    },
-    {
-      "content": "Most Referenced SAP Notes for SuccessFactors:\n\nAPI & Integration:\n• SAP Note 2675565 - OData API Best Practices & Rate Limits\n  https://launchpad.support.sap.com/#/notes/2675565\n• SAP Note 2831451 - Employee Central Data Model Changes\n  https://launchpad.support.sap.com/#/notes/2831451\n\nRecruiting:\n• SAP Note 3123456 - Job Board Posting Configuration\n  https://launchpad.support.sap.com/#/notes/3123456\n\nPayroll:\n• SAP Note 2934788 - Time Off Integration with Payroll\n  https://launchpad.support.sap.com/#/notes/2934788\n\nPerformance:\n• SAP Note 2456789 - Page Load Performance Optimization\n  https://launchpad.support.sap.com/#/notes/2456789\n\nJoule AI:\n• SAP Note 3377766 - Joule Copilot Activation\n  https://launchpad.support.sap.com/#/notes/3377766",
+      "title": "Production Access & Contacts",
+      "content": "Production Environment:\nhttps://your-company.sapsf.com\nCompany ID: YOUR_COMPANY_ID\n\nKey Contacts:\n- System Admin: admin@your-company.com\n- HR Admin: hradmin@your-company.com\n- Support: support@your-company.com",
+      "noteType": "note",
       "icon": "6",
+      "timestamp": 1736633533000
+    },
+    {
+      "id": "note-sf-template-2",
+      "title": "Test User Accounts",
+      "content": "Common Test Users:\n\ntest-employee:\n- Username: employee@test.com\n- Role: Employee\n\ntest-manager:\n- Username: manager@test.com\n- Role: Manager\n\ntest-admin:\n- Username: admin@test.com\n- Role: Administrator",
+      "noteType": "note",
+      "icon": "2",
+      "timestamp": 1736633533000
+    },
+    {
+      "id": "note-sf-template-3",
+      "title": "API Integration Reference",
+      "content": "API Endpoints:\n\nOData API:\nhttps://api.successfactors.com/odata/v2/\n\nAuthentication:\n- OAuth 2.0 (recommended)\n- Basic Auth (legacy)\n\nRate Limits:\n- 20,000 calls/hour\n- 100 calls/minute burst\n\nDocumentation:\nhttps://help.sap.com/docs/SAP_SUCCESSFACTORS_PLATFORM/d599f15995d348a1b45ba5603e2aba9b/03e1fc3791684367a6a76a614a2916de.html",
+      "noteType": "note",
+      "icon": "4",
+      "timestamp": 1736633533000
+    },
+    {
       "id": "note-sf-essential-notes",
-      "tags": ["admin"],
-      "timestamp": 1736633900000,
-      "title": "Essential SF SAP Notes"
+      "title": "Essential SF SAP Notes",
+      "content": "Most Referenced SAP Notes for SuccessFactors:\n\nAPI & Integration:\n• SAP Note 2675565 - OData API Best Practices & Rate Limits\n  https://launchpad.support.sap.com/#/notes/2675565\n• SAP Note 2831451 - Employee Central Data Model Changes\n  https://launchpad.support.sap.com/#/notes/2831451\n\nRecruiting:\n• SAP Note 3123456 - Job Board Posting Configuration\n  https://launchpad.support.sap.com/#/notes/3123456\n\nPayroll:\n• SAP Note 2934788 - Time Off Integration with Payroll\n  https://launchpad.support.sap.com/#/notes/2934788\n\nPerformance:\n• SAP Note 2456789 - Page Load Performance Optimization\n  https://launchpad.support.sap.com/#/notes/2456789\n\nJoule AI:\n• SAP Note 3377766 - Joule Copilot Activation\n  https://launchpad.support.sap.com/#/notes/3377766",
+      "noteType": "note",
+      "icon": "6",
+      "timestamp": 1736633900000
     }
   ],
-  "exportDate": "2026-01-11T23:59:00.000Z"
+  "exportDate": "2026-01-11T23:59:00.000Z",
+  "lastUpdated": "2026-01-13"
 }
