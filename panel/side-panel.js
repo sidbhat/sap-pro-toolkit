@@ -3686,8 +3686,12 @@ async function saveAllQuickActions() {
 
     showToast(`${totalChanges} Quick Action(s) saved across ${Object.keys(changesByProfile).length} profile(s) ✓`, 'success');
     
-    // Reload to reflect saved changes
+    // Reload Settings tab to reflect saved changes
     await loadQuickActionsTab();
+    
+    // CRITICAL: Re-render environments section to update Quick Actions display
+    // This removes the old Quick Actions banner and creates a new one with updated data
+    await renderEnvironments();
 
   } catch (error) {
     console.error('[Save All Quick Actions] Failed:', error);
