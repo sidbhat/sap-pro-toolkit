@@ -1266,15 +1266,18 @@
     </div>
   </div>
 
-  <!-- Markdown rendering libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
+  <!-- Markdown rendering libraries (loaded locally to comply with CSP) -->
+  <script src="vendor/marked.min.js"></script>
+  <script src="vendor/purify.min.js"></script>
   
+  <!-- Core utilities (must be loaded before side-panel.js) -->
   <script src="crypto-utils.js"></script>
   <script src="sap-icon-library.js"></script>
   <script src="svg-renderer.js"></script>
   <script src="validation.js"></script>
   <script src="toolkit-core.js"></script>
+
+  <!-- Main panel script (depends on core utilities) -->
   <script src="side-panel.js"></script>
 </body>
 </html>
