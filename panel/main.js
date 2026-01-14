@@ -77,12 +77,12 @@ async function init() {
       document.getElementById('currentProfileName').textContent = profile.name;
     }
 
-    // Load all data
+    // Load all data (load solutions BEFORE environments to fix Quick Actions race condition)
     await window.loadSettings();
+    await window.loadSolutions();
     await window.loadShortcuts();
     await window.loadEnvironments();
     await window.loadNotes();
-    await window.loadSolutions();
     await window.loadCurrentPageData();
     await window.loadTheme();
 

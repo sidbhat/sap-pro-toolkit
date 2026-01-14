@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Collapsible Section Test</title>
+  <style>
+    .section {
+      padding: 20px;
+      border: 2px solid #ccc;
+      margin: 20px;
+    }
+    
+    .section-content {
+      display: block !important;
+      transition: opacity 0.2s ease;
+      overflow: hidden;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    
+    .section.collapsed .section-content {
+      display: none !important;
+      visibility: hidden;
+      height: 0;
+      opacity: 0;
+    }
+    
+    .section-toggle-icon {
+      transition: transform 0.3s ease;
+    }
+    
+    .section.collapsed .section-toggle-icon {
+      transform: rotate(-90deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="section" data-section="test" id="testSection">
+    <div class="section-header">
+      <button class="section-toggle-btn" id="toggleBtn">
+        <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        Toggle
+      </button>
+      <h2>TEST SECTION</h2>
+    </div>
+    
+    <div class="section-content">
+      <p>This content should hide when collapsed!</p>
+      <p>Click the toggle button above.</p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('toggleBtn').addEventListener('click', () => {
+      const section = document.getElementById('testSection');
+      section.classList.toggle('collapsed');
+      console.log('Collapsed:', section.classList.contains('collapsed'));
+    });
+  </script>
+</body>
+</html>

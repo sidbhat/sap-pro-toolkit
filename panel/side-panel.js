@@ -2501,10 +2501,11 @@ async function openSettingsModal() {
   
   // Initialize Settings UI
   setupSettingsTabs();
+  
+  // Initialize default tab (Quick Actions)
   loadQuickActionsTab();
   
-  // Load saved API keys when opening Settings
-  await loadSavedAPIKeys();
+  console.log('[Settings] Modal opened with Quick Actions tab initialized');
 }
 
 function closeSettingsModal() {
@@ -2536,12 +2537,193 @@ function setupSettingsTabs() {
         }
       });
       
-      // Reload tab content
+      // Initialize tab content when switching
       if (targetTab === 'quick-actions') {
         loadQuickActionsTab();
+      } else if (targetTab === 'api-keys') {
+        initializeAPIKeysTab();
+      } else if (targetTab === 'backup') {
+        initializeBackupTab();
       }
     });
   });
+}
+
+/**
+ * Initialize API Keys tab
+ * Re-attaches event listeners and loads saved configuration
+ */
+function initializeAPIKeysTab() {
+  console.log('[API Keys Tab] Initializing...');
+  
+  // Re-attach event listeners for API Keys buttons
+  const testSAPBtn = document.getElementById('testSAPAICoreBtn');
+  const saveSAPBtn = document.getElementById('saveSAPAICoreBtn');
+  const clearSAPBtn = document.getElementById('clearSAPAICoreBtn');
+  const testOpenAIBtn = document.getElementById('testOpenAIBtn');
+  const clearOpenAIBtn = document.getElementById('clearOpenAIBtn');
+  const testAnthropicBtn = document.getElementById('testAnthropicBtn');
+  const clearAnthropicBtn = document.getElementById('clearAnthropicBtn');
+  const saveMaxTokensBtn = document.getElementById('saveMaxTokensBtn');
+  
+  // Remove existing listeners to prevent duplicates (clone and replace)
+  if (testSAPBtn) {
+    const newTestSAPBtn = testSAPBtn.cloneNode(true);
+    testSAPBtn.parentNode.replaceChild(newTestSAPBtn, testSAPBtn);
+    newTestSAPBtn.addEventListener('click', connectSAPAICore);
+  }
+  
+  if (saveSAPBtn) {
+    const newSaveSAPBtn = saveSAPBtn.cloneNode(true);
+    saveSAPBtn.parentNode.replaceChild(newSaveSAPBtn, saveSAPBtn);
+    newSaveSAPBtn.addEventListener('click', saveSAPAICoreConfig);
+  }
+  
+  if (clearSAPBtn) {
+    const newClearSAPBtn = clearSAPBtn.cloneNode(true);
+    clearSAPBtn.parentNode.replaceChild(newClearSAPBtn, clearSAPBtn);
+    newClearSAPBtn.addEventListener('click', clearSAPAICoreConfig);
+  }
+  
+  if (testOpenAIBtn) {
+    const newTestOpenAIBtn = testOpenAIBtn.cloneNode(true);
+    testOpenAIBtn.parentNode.replaceChild(newTestOpenAIBtn, testOpenAIBtn);
+    newTestOpenAIBtn.addEventListener('click', async () => {
+      const apiKey = document.getElementById('apiKeyopenaiInput').value.trim();
+      if (!apiKey) {
+        showToast('Please enter an API key first', 'warning');
+        return;
+      }
+      
+      try {
+        showToast('Testing OpenAI connection...', 'info');
+        const response = await fetch('https://api.openai.com/v1/models', {
+          headers: { 'Authorization': `Bearer ${apiKey}` }
+        });
+        
+        if (response.ok) {
+          await window.CryptoUtils.encryptAndStore('apiKeyopenai', apiKey);
+          await updateAISettings();
+          showToast('OpenAI connection successful ✓', 'success');
+        } else {
+          showToast('OpenAI connection failed - check API key', 'error');
+        }
+      } catch (error) {
+        console.error('[OpenAI] Test failed:', error);
+        showToast('Connection test failed', 'error');
+      }
+    });
+  }
+  
+  if (clearOpenAIBtn) {
+    const newClearOpenAIBtn = clearOpenAIBtn.cloneNode(true);
+    clearOpenAIBtn.parentNode.replaceChild(newClearOpenAIBtn, clearOpenAIBtn);
+    newClearOpenAIBtn.addEventListener('click', async () => {
+      await chrome.storage.local.remove('apiKeyopenai');
+      document.getElementById('apiKeyopenaiInput').value = '';
+      await updateAISettings();
+      showToast('OpenAI API key cleared', 'success');
+    });
+  }
+  
+  if (testAnthropicBtn) {
+    const newTestAnthropicBtn = testAnthropicBtn.cloneNode(true);
+    testAnthropicBtn.parentNode.replaceChild(newTestAnthropicBtn, testAnthropicBtn);
+    newTestAnthropicBtn.addEventListener('click', async () => {
+      const apiKey = document.getElementById('apiKeyanthropicInput').value.trim();
+      if (!apiKey) {
+        showToast('Please enter an API key first', 'warning');
+        return;
+      }
+      
+      try {
+        showToast('Testing Anthropic connection...', 'info');
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'claude-3-haiku-20240307',
+            max_tokens: 10,
+            messages: [{ role: 'user', content: 'test' }]
+          })
+        });
+        
+        if (response.ok) {
+          await window.CryptoUtils.encryptAndStore('apiKeyanthropic', apiKey);
+          await updateAISettings();
+          showToast('Anthropic connection successful ✓', 'success');
+        } else {
+          showToast('Anthropic connection failed - check API key', 'error');
+        }
+      } catch (error) {
+        console.error('[Anthropic] Test failed:', error);
+        showToast('Connection test failed', 'error');
+      }
+    });
+  }
+  
+  if (clearAnthropicBtn) {
+    const newClearAnthropicBtn = clearAnthropicBtn.cloneNode(true);
+    clearAnthropicBtn.parentNode.replaceChild(newClearAnthropicBtn, clearAnthropicBtn);
+    newClearAnthropicBtn.addEventListener('click', async () => {
+      await chrome.storage.local.remove('apiKeyanthropic');
+      document.getElementById('apiKeyanthropicInput').value = '';
+      await updateAISettings();
+      showToast('Anthropic API key cleared', 'success');
+    });
+  }
+  
+  if (saveMaxTokensBtn) {
+    const newSaveMaxTokensBtn = saveMaxTokensBtn.cloneNode(true);
+    saveMaxTokensBtn.parentNode.replaceChild(newSaveMaxTokensBtn, saveMaxTokensBtn);
+    newSaveMaxTokensBtn.addEventListener('click', async () => {
+      const maxTokens = parseInt(document.getElementById('maxTokensDefault').value) || 4096;
+      await chrome.storage.local.set({ maxTokensDefault: maxTokens });
+      showToast(`Max tokens set to ${maxTokens} ✓`, 'success');
+    });
+  }
+  
+  // Load saved API keys
+  loadSavedAPIKeys();
+  
+  console.log('[API Keys Tab] Initialized successfully');
+}
+
+/**
+ * Initialize Backup/Import-Export tab
+ * Re-attaches event listeners for import/export functionality
+ */
+function initializeBackupTab() {
+  console.log('[Backup Tab] Initializing...');
+  
+  // Re-attach event listeners for backup/import-export buttons
+  const exportBtn = document.getElementById('exportAllBtn');
+  const importBtn = document.getElementById('importJsonBtn');
+  const importFileInput = document.getElementById('importFileInput');
+  
+  if (exportBtn) {
+    const newExportBtn = exportBtn.cloneNode(true);
+    exportBtn.parentNode.replaceChild(newExportBtn, exportBtn);
+    newExportBtn.addEventListener('click', exportJsonToFile);
+  }
+  
+  if (importBtn) {
+    const newImportBtn = importBtn.cloneNode(true);
+    importBtn.parentNode.replaceChild(newImportBtn, importBtn);
+    newImportBtn.addEventListener('click', importJsonFromFile);
+  }
+  
+  if (importFileInput) {
+    const newImportFileInput = importFileInput.cloneNode(true);
+    importFileInput.parentNode.replaceChild(newImportFileInput, importFileInput);
+    newImportFileInput.addEventListener('change', handleFileImport);
+  }
+  
+  console.log('[Backup Tab] Initialized successfully');
 }
 
 // ==================== SETTINGS - QUICK ACTIONS TAB ====================
@@ -3074,6 +3256,8 @@ async function saveDisplayMode(mode) {
  * Loads saved states and sets up toggle handlers
  */
 async function initializeCollapsibleSections() {
+  console.log('[Collapsible Sections] Initializing...');
+  
   // Load saved section states from storage (default: all expanded)
   const result = await chrome.storage.local.get('sectionStates');
   const sectionStates = result.sectionStates || {
@@ -3082,31 +3266,47 @@ async function initializeCollapsibleSections() {
     notes: true
   };
   
+  console.log('[Collapsible Sections] Section states from storage:', sectionStates);
+  
   // Apply saved states to all sections
-  document.querySelectorAll('.section').forEach(section => {
+  const sections = document.querySelectorAll('.section');
+  console.log('[Collapsible Sections] Found', sections.length, 'sections');
+  
+  sections.forEach(section => {
     const sectionId = section.getAttribute('data-section');
     if (sectionId) {
-      const isExpanded = sectionStates[sectionId] !== false; // Default to expanded if not set
+      const savedState = sectionStates[sectionId];
+      const isExpanded = savedState !== false; // Default to expanded if not set
+      
+      console.log(`[Collapsible Sections] Section "${sectionId}": savedState=${savedState}, isExpanded=${isExpanded}`);
       
       if (isExpanded) {
         section.classList.remove('collapsed');
+        console.log(`[Collapsible Sections] ✓ Expanded: ${sectionId}`);
       } else {
         section.classList.add('collapsed');
+        console.log(`[Collapsible Sections] ✗ Collapsed: ${sectionId}`);
       }
     }
   });
   
   // Setup toggle button handlers
-  document.querySelectorAll('.section-toggle-btn').forEach(btn => {
+  const toggleButtons = document.querySelectorAll('.section-toggle-btn');
+  console.log('[Collapsible Sections] Found', toggleButtons.length, 'toggle buttons');
+  
+  toggleButtons.forEach(btn => {
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
       const sectionId = btn.getAttribute('data-section');
+      console.log('[Collapsible Sections] Toggle clicked for:', sectionId);
       await toggleSection(sectionId);
     });
   });
   
   // Update section count badges
   updateSectionCounts();
+  
+  console.log('[Collapsible Sections] ✅ Initialization complete');
 }
 
 /**
@@ -3114,20 +3314,32 @@ async function initializeCollapsibleSections() {
  * @param {string} sectionId - The section ID (environments, shortcuts, notes)
  */
 async function toggleSection(sectionId) {
+  console.log('[Toggle] Starting toggle for:', sectionId);
+  
   const section = document.querySelector(`.section[data-section="${sectionId}"]`);
-  if (!section) return;
+  console.log('[Toggle] Section element found:', !!section);
   
-  const isCurrentlyCollapsed = section.classList.contains('collapsed');
-  const newState = !isCurrentlyCollapsed; // true = expanded
+  if (!section) {
+    console.error('[Toggle] Section not found for ID:', sectionId);
+    return;
+  }
   
-  // Toggle visual state
+  // Toggle visual state FIRST
   section.classList.toggle('collapsed');
+  
+  // Then determine the NEW state based on what we just did
+  const isNowCollapsed = section.classList.contains('collapsed');
+  const newState = !isNowCollapsed; // true = expanded, false = collapsed
+  
+  console.log('[Toggle] After toggle, collapsed:', isNowCollapsed);
+  console.log('[Toggle] Saving state (true=expanded):', newState);
   
   // Save state to storage
   const result = await chrome.storage.local.get('sectionStates');
   const sectionStates = result.sectionStates || {};
   sectionStates[sectionId] = newState;
   await chrome.storage.local.set({ sectionStates });
+  console.log('[Toggle] ✅ State saved:', sectionStates);
 }
 
 /**
@@ -3271,97 +3483,8 @@ function setupEventListeners() {
   // Quick Actions export button
   document.getElementById('exportQaBtn')?.addEventListener('click', exportQuickActionsToJson);
   
-  // API Keys - OpenAI buttons
-  document.getElementById('testOpenAIBtn')?.addEventListener('click', async () => {
-    const apiKey = document.getElementById('apiKeyopenaiInput').value.trim();
-    if (!apiKey) {
-      showToast('Please enter an API key first', 'warning');
-      return;
-    }
-    
-    try {
-      showToast('Testing OpenAI connection...', 'info');
-      const response = await fetch('https://api.openai.com/v1/models', {
-        headers: { 'Authorization': `Bearer ${apiKey}` }
-      });
-      
-      if (response.ok) {
-        // Save the key
-        await window.CryptoUtils.encryptAndStore('apiKeyopenai', apiKey);
-        await updateAISettings();
-        showToast('OpenAI connection successful ✓', 'success');
-      } else {
-        showToast('OpenAI connection failed - check API key', 'error');
-      }
-    } catch (error) {
-      console.error('[OpenAI] Test failed:', error);
-      showToast('Connection test failed', 'error');
-    }
-  });
-  
-  document.getElementById('clearOpenAIBtn')?.addEventListener('click', async () => {
-    await chrome.storage.local.remove('apiKeyopenai');
-    document.getElementById('apiKeyopenaiInput').value = '';
-    await updateAISettings();
-    showToast('OpenAI API key cleared', 'success');
-  });
-  
-  // API Keys - Anthropic buttons
-  document.getElementById('testAnthropicBtn')?.addEventListener('click', async () => {
-    const apiKey = document.getElementById('apiKeyanthropicInput').value.trim();
-    if (!apiKey) {
-      showToast('Please enter an API key first', 'warning');
-      return;
-    }
-    
-    try {
-      showToast('Testing Anthropic connection...', 'info');
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: 'claude-3-haiku-20240307',
-          max_tokens: 10,
-          messages: [{ role: 'user', content: 'test' }]
-        })
-      });
-      
-      if (response.ok) {
-        // Save the key
-        await window.CryptoUtils.encryptAndStore('apiKeyanthropic', apiKey);
-        await updateAISettings();
-        showToast('Anthropic connection successful ✓', 'success');
-      } else {
-        showToast('Anthropic connection failed - check API key', 'error');
-      }
-    } catch (error) {
-      console.error('[Anthropic] Test failed:', error);
-      showToast('Connection test failed', 'error');
-    }
-  });
-  
-  document.getElementById('clearAnthropicBtn')?.addEventListener('click', async () => {
-    await chrome.storage.local.remove('apiKeyanthropic');
-    document.getElementById('apiKeyanthropicInput').value = '';
-    await updateAISettings();
-    showToast('Anthropic API key cleared', 'success');
-  });
-  
-  // API Keys - Max Tokens button
-  document.getElementById('saveMaxTokensBtn')?.addEventListener('click', async () => {
-    const maxTokens = parseInt(document.getElementById('maxTokensDefault').value) || 4096;
-    await chrome.storage.local.set({ maxTokensDefault: maxTokens });
-    showToast(`Max tokens set to ${maxTokens} ✓`, 'success');
-  });
-  
-  // SAP AI Core connection buttons
-  document.getElementById('testSAPAICoreBtn')?.addEventListener('click', connectSAPAICore);
-  document.getElementById('saveSAPAICoreBtn')?.addEventListener('click', saveSAPAICoreConfig);
-  document.getElementById('clearSAPAICoreBtn')?.addEventListener('click', clearSAPAICoreConfig);
+  // API Keys buttons are now handled by initializeAPIKeysTab() when tab is opened
+  // This prevents duplicate listeners and ensures proper initialization
   
   // Enterprise Calculator modal close buttons
   document.getElementById('closeEnterpriseCalculatorModal')?.addEventListener('click', closeEnterpriseCalculatorModal);
@@ -4096,11 +4219,10 @@ function setupAITestButtonHandlers() {
 
 // ==================== AI COST ESTIMATOR - PHASE 4 IMPLEMENTATION ====================
 
-let llmPricingData = null;
-
 /**
  * Load LLM pricing data from JSON file
  * Cached after first load
+ * NOTE: llmPricingData variable is declared in ai-features.js
  */
 async function loadLLMPricing() {
   if (llmPricingData) return llmPricingData;
