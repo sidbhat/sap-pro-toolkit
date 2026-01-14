@@ -49,6 +49,12 @@ window.regenerateDiagnosticsWithAI = async function() {
     return;
   }
 
+  // Show blocking overlay
+  const overlay = document.getElementById('aiBlockingOverlay');
+  if (overlay) {
+    overlay.classList.add('active');
+  }
+
   const contentDiv = document.getElementById('diagnosticsContent');
   const modal = document.getElementById('diagnosticsModal');
   
@@ -139,11 +145,16 @@ window.regenerateDiagnosticsWithAI = async function() {
     if (window.showToast) window.showToast(`AI diagnostics failed: ${error.message}`, 'error');
     contentDiv.innerHTML = `<p style="color: var(--env-production);">Failed to generate AI diagnostics. Please try again.</p>`;
     
-    // ✅ FIX: Add null checks for buttons in error handler
     const saveBtn = document.getElementById('saveDiagnosticsBtn');
     const downloadBtn = document.getElementById('downloadDiagnosticsBtn');
     if (saveBtn) saveBtn.style.display = 'none';
     if (downloadBtn) downloadBtn.style.display = 'none';
+  } finally {
+    // Hide blocking overlay
+    const overlay = document.getElementById('aiBlockingOverlay');
+    if (overlay) {
+      overlay.classList.remove('active');
+    }
   }
 };
 
@@ -344,6 +355,8 @@ function detectPageType(url) {
 // ==================== AI SEARCH ====================
 
 window.performAISearch = async function(query) {
+  console.log('[AI Search] Starting with query:', query);
+  
   if (!document.body.classList.contains('ai-active')) {
     if (window.showToast) window.showToast('AI features are disabled. Configure API keys in Settings.', 'warning');
     return;
@@ -391,6 +404,12 @@ window.performAISearch = async function(query) {
     
     const aiInsightsBar = document.getElementById('aiInsightsBar');
     if (aiInsightsBar) aiInsightsBar.style.display = 'none';
+  } finally {
+    // Hide blocking overlay
+    const overlay = document.getElementById('aiBlockingOverlay');
+    if (overlay) {
+      overlay.classList.remove('active');
+    }
   }
 };
 
@@ -626,7 +645,6 @@ window.handleRunAIPrompt = async function() {
   }
   
   try {
-    if (window.showToast) window.showToast('Running AI prompt...', 'info');
     
     const pricingData = await loadLLMPricing();
     

@@ -1,6 +1,6 @@
 {
   "name": "sf-pro-toolkit",
-  "version": "1.5.0",
+  "version": "1.6.2",
   "description": "SuccessFactors Pro Toolkit - Enterprise Chrome extension for SAP SuccessFactors professionals",
   "private": true,
   "scripts": {

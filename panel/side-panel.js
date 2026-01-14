@@ -1908,6 +1908,7 @@ async function regenerateDiagnosticsWithAI() {
   `;
 
   try {
+    
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     if (!tab || !tab.url) {
       throw new Error('No active tab found');
@@ -3802,6 +3803,8 @@ function setupAISearchHandler() {
  * @param {string} query - The search query
  */
 async function performAISearch(query) {
+  console.log('[AI Search] Starting with query:', query);
+  
   // Check if AI features are enabled
   if (!document.body.classList.contains('ai-active')) {
     showToast('AI features are disabled. Configure API keys in Settings.', 'warning');
@@ -3815,6 +3818,7 @@ async function performAISearch(query) {
   }
   
   try {
+    
     // Show loading state
     const aiInsightsBar = document.getElementById('aiInsightsBar');
     const aiInsightsContent = document.getElementById('aiInsightsContent');
@@ -4480,7 +4484,9 @@ async function handleRunAIPrompt() {
   }
   
   try {
-    showToast('Running AI prompt...', 'info');
+    // Show blocking overlay during AI processing
+    const overlay = document.getElementById('aiBlockingOverlay');
+    if (overlay) overlay.classList.add('active');
     
     // Load pricing data
     const pricingData = await loadLLMPricing();
@@ -4554,6 +4560,10 @@ async function handleRunAIPrompt() {
   } catch (error) {
     console.error('[AI] Prompt execution failed:', error);
     showToast(`AI test failed: ${error.message}`, 'error');
+  } finally {
+    // Always hide overlay when done
+    const overlay = document.getElementById('aiBlockingOverlay');
+    if (overlay) overlay.classList.remove('active');
   }
 }
 

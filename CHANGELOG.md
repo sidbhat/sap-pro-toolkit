@@ -6,11 +6,74 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Added
-- (Features currently in development will be listed here)
+
+---
+
+## [1.6.2] - 2026-01-14
+### Changed
+- ✨ **AI Blocking Overlay**: Enhanced UX during AI operations
+  - Increased overlay opacity from 12% to 95% for better visibility
+  - Changed background color to green (`rgba(16, 185, 129, 0.95)`)
+  - Updated all text to white for optimal contrast
+  - Changed message text to "Generating insights....."
+  - Added subtitle: "Please wait, do not close this window"
+  - Applied blocking overlay to diagnostics AI button
+  - Prevents accidental clicks during AI processing
+
+### Security
+- 🔒 **Removed Hardcoded SAP AI Core Credentials**: Critical security improvement
+  - Cleared pre-populated Client ID value from HTML
+  - Cleared pre-populated Client Secret value from HTML
+  - Cleared pre-populated Base URL and Auth URL values
+  - Updated help text to instruct users to enter their own credentials
+  - All SAP AI Core configuration fields now start empty
+  - Safe for public repository distribution
+- ✅ Passed comprehensive 18-check security audit
+  - No credentials, passwords, or API keys in source code
+  - Customer data (SFSALES IDs) safely in .gitignored file
+  - No person IDs or internal emails exposed
+  - Content moderation passed (no negative SAP messaging)
+  - XSS/injection risks acceptable (innerHTML uses validated data only)
+
+### Documentation
+- Created AI-BLOCKING-OVERLAY-IMPLEMENTATION.md
+- Created AI-BUTTON-LOADING-IMPLEMENTATION.md
+- Updated security audit workflow
+
+---
+
+## [1.6.1] - 2026-01-12
+### Fixed
+- 🐛 **Profile Loading Architecture**: Fixed "All Profiles" and Settings modal behavior
+  - Individual profiles now load only their own data (no automatic Global merging)
+  - "All Profiles" mode aggregates data from all profiles for read-only viewing
+  - Settings modal Quick Actions editor shows ALL profiles' data regardless of current selection
+  - Added missing `loadActiveProfile()` function preventing initialization errors
+  - Fixed `ReferenceError: loadActiveProfile is not defined`
+- 🐛 **Go-Live Profile Shortcuts**: Removed incorrect S/4HANA transaction codes
+  - Deleted 10 misplaced shortcuts (SM21, SM37, ST04, ST22, ST03N, SXI_MONITOR, STMS, SU01, SM35, SAP Support Launchpad)
+  - Changed "shortcuts" array to "globalShortcuts" (empty array)
+  - Profile now focuses on go-live specific guides and checklists
 
 ### Changed
-- (Modifications to existing features will be listed here)
+- **Profile Data Model**: Complete architectural change for Settings independence
+  - `loadProfileData()`: Loads only specific profile, no Global merging
+  - `loadShortcuts()` and `loadEnvironments()`: Aggregate all profiles only in "All Profiles" mode
+  - `renderAllProfilesQuickActions()`: New function for Settings showing all profiles
+  - `saveAllQuickActions()`: Saves changes across multiple profiles
+  - Settings completely decoupled from profile selection (as per user requirement)
+
+### Security
+- ✅ Passed comprehensive 18-check security audit
+  - No credentials, passwords, or API keys found
+  - Customer data (SFSALES IDs) safely in .gitignored file
+  - No person IDs or internal emails exposed
+  - Content moderation passed (no negative SAP messaging)
+  - XSS/injection risks acceptable (innerHTML uses internal storage only)
+
+### Documentation
+- Updated STORAGE-GUIDE.md explaining profile architecture
+- Cleaned emoji prefixes from note titles in all profile JSON files
 
 ### Removed
 - ❌ **"All Profiles" Read-Only Mode**: Simplified profile system
