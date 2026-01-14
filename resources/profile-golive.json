@@ -10,6 +10,50 @@
   "globalShortcuts": [],
   "notes": [
     {
+      "id": "note-golive-prompt-1-1736813990000",
+      "title": "System Health Check",
+      "content": "\"Check [T-codes] for critical errors in the last [time period] and summarize Priority 1 issues with business impact.\"\n\nExample: \"Check ST22 (dumps), SM21 (system log), and SM37 (background jobs) for critical errors in the last 4 hours and summarize Priority 1 issues with business impact and recommended immediate actions.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813990000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-golive-prompt-2-1736813991000",
+      "title": "Data Migration Validation",
+      "content": "\"Analyze this data migration reconciliation report and flag variances > [threshold]% with likely root causes and resolution steps.\"\n\nExample: \"Analyze this data migration reconciliation report for customer master data and flag variances >1% between legacy and S/4HANA with likely root causes (mapping errors, data cleansing issues, timing differences) and specific resolution steps.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813991000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-golive-prompt-3-1736813992000",
+      "title": "War Room Scenario",
+      "content": "\"War room analysis at T+[hours] into go-live: 1) Analyze ST22 dumps, SM21 system log errors, SXI_MONITOR interface failures, SM37 job delays, 2) Classify issues as P1 (system down) or P2 (major function impaired) with business impact assessment, 3) Recommend immediate actions with assigned owners, 4) Identify rollback triggers if issues escalate, 5) Draft incident summary for CIO with status and next steps.\"\n\nExample: \"War room analysis at T+6 hours into go-live: 1) Analyze last 50 ST22 dumps, SM21 critical errors, SXI_MONITOR interface failures (EDI orders, bank statements), SM37 delayed critical jobs (payment run, inventory valuation), 2) Classify as P1 (unable to post invoices - revenue impact $2M/day) or P2 (slow report performance - user productivity), 3) Recommend: restart interface queue (Owner: Integration Lead), tune database indexes (Owner: Basis Lead), activate backup payment file (Owner: Finance Lead), 4) Rollback triggers: >3 hours P1 downtime OR data corruption detected, 5) Draft CIO summary: 2 P1 issues (in progress, ETA 2 hours), 5 P2 issues (workarounds active), hypercare team monitoring.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813992000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-golive-prompt-4-1736813993000",
+      "title": "Cutover Runbook Generation",
+      "content": "\"Generate cutover runbook for data migration from [legacy] to [target]: 1) Pre-migration checks with pass/fail criteria, 2) Execution steps with timing estimates and dependencies, 3) Validation scripts to run at each checkpoint, 4) Reconciliation procedures with acceptable variance thresholds, 5) Rollback plan with decision triggers and backout steps, 6) Communication plan for stakeholders at each milestone.\"\n\nExample: \"Generate cutover runbook for data migration from SAP ECC to S/4HANA: 1) Pre-checks (backup complete, test migration validated, LSMW objects ready, network connectivity verified), 2) Execution steps (T-24hr: freeze ECC, T-20hr: extract data, T-16hr: transform data, T-12hr: load to S/4HANA, T-8hr: run reconciliation, T-4hr: business validation, T-0: go-live), 3) Validation scripts at each step (record counts, balance totals, master data completeness), 4) Reconciliation procedures (trial balance match within 0.01%, inventory balances by plant/sloc, open document counts), 5) Rollback plan (triggers: >5% variance OR P1 blocking issue, backout: restore ECC backup, revert DNS, takes 4 hours), 6) Communication (stakeholder emails at T-24hr, T-12hr, T-4hr, T-0, escalation to steering committee if rollback triggered).\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813993000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
       "id": "s4-golive-checklist",
       "title": "S/4HANA Go-Live Checklist",
       "content": "=== Pre Go-Live (T-48 Hours) ===\n☐ Freeze all transport requests\n☐ Complete final data migration dry run\n☐ Backup production system\n☐ Verify cutover runbook reviewed by all teams\n☐ Confirm rollback procedures tested\n☐ Set up war room with technical & functional teams\n☐ Test emergency access procedures\n☐ Verify all interfaces are ready\n☐ Confirm batch job schedules\n☐ Review authorization matrix\n\n=== Cutover Weekend (T-24 to T=0) ===\n☐ Start system downtime (legacy & S/4HANA)\n☐ Execute final data extraction from legacy\n☐ Run data transformation scripts\n☐ Load data into S/4HANA (LSMW/Migration Cockpit)\n☐ Execute reconciliation reports\n☐ Activate business configuration\n☐ Release critical transport requests\n☐ Execute post-migration validation scripts\n☐ Verify interfaces activated\n☐ Test user access (sample users per role)\n☐ Run smoke tests (order-to-cash, procure-to-pay)\n☐ Generate opening balance reports\n☐ Obtain business sign-off on data validation\n\n=== Go-Live Day (T=0) ===\n☐ Announce system availability to users\n☐ Monitor SM21 (system log) continuously\n☐ Watch ST22 (ABAP dumps) for runtime errors\n☐ Check SM37 (background jobs) execution\n☐ Verify interfaces processing (SXI_MONITOR, SOST)\n☐ Monitor ST04 (database performance)\n☐ Track user login issues\n☐ Validate first business transactions\n☐ Confirm email notifications working\n☐ Review early warning system alerts\n\n=== Post Go-Live (T+4 Hours) ===\n☐ Reconcile critical business processes\n☐ Validate financial postings\n☐ Check material master accuracy\n☐ Verify vendor/customer master data\n☐ Review interface logs for failures\n☐ Document all workarounds applied\n☐ Prepare status report for leadership\n\n=== Hypercare Week 1 ===\n☐ Daily war room meetings (morning & evening)\n☐ 24/7 support coverage active\n☐ Track P1/P2 incidents to resolution\n☐ Monitor system performance metrics\n☐ Validate period-end readiness\n☐ Update end-user documentation\n☐ Conduct daily lessons learned sessions",

@@ -1,197 +1,5 @@
 {
   "version": "2.0",
-  "solutions": [
-    {
-      "id": "successfactors",
-      "name": "SAP SuccessFactors",
-      "patterns": [
-        "successfactors.com",
-        "sapsf.com",
-        "hr.cloud.sap",
-        "sapsf.cn",
-        "sapsf.eu",
-        "successfactors.eu",
-        "sapcloud.cn"
-      ],
-      "quickActions": [
-        {
-          "id": "sf-time-off",
-          "name": "Request Time Off",
-          "path": "/sf/timeoff#TimeOff-request?bplte_company={{company}}",
-          "icon": "🏖️",
-          "description": "Request time off or leave",
-          "category": "Time"
-        },
-        {
-          "id": "sf-edit-profile",
-          "name": "Update My Profile",
-          "path": "/sf/liveprofile#LiveProfile-editProfile?bplte_company={{company}}",
-          "icon": "👤",
-          "description": "Edit profile and skills",
-          "category": "Profile"
-        },
-        {
-          "id": "sf-create-requisition",
-          "name": "Create Requisition",
-          "path": "/sf/recruiting#Recruiting-createJobReq?bplte_company={{company}}",
-          "icon": "📝",
-          "description": "Create new job requisition",
-          "category": "Recruiting"
-        },
-        {
-          "id": "sf-team-analytics",
-          "name": "My Team Analytics",
-          "path": "/sf/analytics#TeamAnalytics-display?bplte_company={{company}}",
-          "icon": "📊",
-          "description": "Team analytics and insights",
-          "category": "Analytics"
-        },
-        {
-          "id": "sf-admin",
-          "name": "Admin Center",
-          "path": "/sf/admin?bplte_company={{company}}",
-          "icon": "⚙️",
-          "description": "System configuration and settings",
-          "category": "Admin"
-        }
-      ]
-    },
-    {
-      "id": "s4hana",
-      "name": "SAP S/4HANA Cloud",
-      "patterns": [
-        "s4hana.ondemand.com",
-        "s4hana.cloud.sap"
-      ],
-      "quickActions": [
-        {
-          "id": "s4-procurement-overview",
-          "name": "Procurement Overview",
-          "path": "/ui#ProcurementOverview-display",
-          "icon": "🛒",
-          "description": "Buyer cockpit with KPIs",
-          "category": "Procurement"
-        },
-        {
-          "id": "s4-monitor-po",
-          "name": "Monitor Purchase Order Items",
-          "path": "/ui#PurchaseOrder-monitor",
-          "icon": "📦",
-          "description": "Analytical list page for PO items",
-          "category": "Procurement"
-        },
-        {
-          "id": "s4-sales-fulfillment",
-          "name": "Sales Order Fulfillment Monitor",
-          "path": "/ui#SalesOrder-monitor",
-          "icon": "📊",
-          "description": "Monitor sales order issues and blocks",
-          "category": "Sales"
-        },
-        {
-          "id": "s4-cash-flow",
-          "name": "Cash Flow Analysis",
-          "path": "/ui#CashFlow-analyze",
-          "icon": "💰",
-          "description": "Interactive cash flow visualization",
-          "category": "Finance"
-        },
-        {
-          "id": "s4-financial-statements",
-          "name": "Display Financial Statements",
-          "path": "/ui#FinancialStatement-display",
-          "icon": "📈",
-          "description": "Balance sheet and P&L reports",
-          "category": "Finance"
-        }
-      ]
-    },
-    {
-      "id": "btp",
-      "name": "SAP Business Technology Platform",
-      "patterns": [
-        "hana.ondemand.com",
-        "cfapps",
-        "build.cloud.sap"
-      ],
-      "quickActions": [
-        {
-          "id": "btp-cockpit",
-          "name": "Cockpit Home",
-          "path": "/cockpit",
-          "icon": "🏠",
-          "description": "BTP Cockpit home",
-          "category": "Core"
-        },
-        {
-          "id": "btp-subaccounts",
-          "name": "Subaccounts",
-          "path": "/cockpit#/globalaccount/subaccounts",
-          "icon": "📂",
-          "description": "Manage subaccounts",
-          "category": "Admin"
-        },
-        {
-          "id": "btp-services",
-          "name": "Service Marketplace",
-          "path": "/cockpit#/globalaccount/services",
-          "icon": "🛒",
-          "description": "Browse and subscribe to services",
-          "category": "Services"
-        },
-        {
-          "id": "btp-security",
-          "name": "Security",
-          "path": "/cockpit#/globalaccount/security",
-          "icon": "🔐",
-          "description": "User management and security",
-          "category": "Security"
-        },
-        {
-          "id": "btp-billing",
-          "name": "Usage & Billing",
-          "path": "/cockpit#/globalaccount/usage",
-          "icon": "💰",
-          "description": "View usage and costs",
-          "category": "Admin"
-        }
-      ]
-    },
-    {
-      "id": "ibp",
-      "name": "SAP Integrated Business Planning",
-      "patterns": [
-        "ibp.cloud.sap",
-        "ibplanning"
-      ],
-      "quickActions": [
-        {
-          "id": "ibp-home",
-          "name": "IBP Home",
-          "path": "/",
-          "icon": "🏠",
-          "description": "IBP home page",
-          "category": "Core"
-        },
-        {
-          "id": "ibp-planning",
-          "name": "Planning View",
-          "path": "/planning",
-          "icon": "📊",
-          "description": "Access planning tools",
-          "category": "Planning"
-        },
-        {
-          "id": "ibp-analytics",
-          "name": "Analytics",
-          "path": "/analytics",
-          "icon": "📈",
-          "description": "View analytics dashboard",
-          "category": "Analytics"
-        }
-      ]
-    }
-  ],
   "globalShortcuts": [
     {
       "icon": "0",
@@ -247,12 +55,48 @@
   ],
   "notes": [
     {
-      "id": "note-sf-joule-prompts",
-      "title": "🤖 Joule Prompts Library - SuccessFactors",
-      "content": "=== Manager & Performance ===\n• \"Summarize this employee's goal progress for H1 2025 and highlight their top 3 accomplishments in business language I can use in our review conversation.\"\n\n• \"Based on this employee's goals, feedback, and activities, suggest 3 specific development recommendations and 2 coaching questions I can ask in our next 1:1.\"\n\n• \"Draft a performance summary paragraph for [Employee Name] focusing on impact, strengths, and 2-3 growth areas, aligned with our rating of 'Exceeds Expectations'.\"\n\n=== Goal Setting ===\n• \"Turn these bullet points into 3 SMART performance goals for a [Role] in [Department], aligned with our 2025 business priorities.\"\n\n• \"Review this list of goals and propose clearer success metrics and target dates, keeping our existing rating scale in mind.\"\n\n=== Workforce Analytics ===\n• \"Show me a plain-language summary of regretted attrition in my organization over the last 12 months and the top 3 drivers based on available data.\"\n\n• \"Compare internal mobility rates and time-to-fill for key roles in [Region A] vs [Region B] and suggest 3 actions I can take to improve internal moves.\"\n\n=== Employee Self-Service ===\n• \"Explain my company's parental leave policy in simple terms for someone based in [Country] and tell me the 3 key actions I must take before going on leave.\"\n\n• \"I want to change my work schedule to 80%. What options do I have under company policy and what are the implications for pay and benefits?\"\n\n=== Recruiting ===\n• \"Rewrite this job description for a [Role] to be candidate-friendly, bias-aware, and aligned with our global job catalog.\"\n\n• \"Based on my profile and current role, suggest 3 internal job opportunities and the top 5 skills I need to develop to be competitive for them.\"\n\n=== Learning & Development ===\n• \"Given this employee's current role, target role, and skill profile, generate a 90-day learning plan using content available in SuccessFactors Learning.\"\n\n=== Succession Planning ===\n• \"Summarize succession coverage for my critical roles, highlighting where we have no ready-now successors and suggesting mitigation actions.\"\n\n=== Prompt Best Practices ===\n✓ Be specific about time ranges\n✓ Use exact field names when possible\n✓ Specify output format (\"5 bullet points\", \"draft text I can paste\")\n✓ Use follow-ups: \"Now make this shorter and more motivational\"",
-      "noteType": "note",
+      "id": "note-sfpub-prompt-1-1736813980000",
+      "title": "Performance Summary",
+      "content": "\"Summarize this employee's goal progress for [time period] and highlight their top 3 accomplishments in business language suitable for performance review discussion.\"\n\nExample: \"Summarize Jane Smith's goal progress for H1 2025 and highlight her top 3 accomplishments in business language I can use in our Q2 review conversation.\"",
+      "noteType": "ai-prompt",
       "icon": "ai",
-      "timestamp": 1736634000000
+      "timestamp": 1736813980000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-sfpub-prompt-2-1736813981000",
+      "title": "Policy Explanation",
+      "content": "\"Explain [company policy] in simple terms for someone based in [country/region] and list the key actions they must take.\"\n\nExample: \"Explain our parental leave policy in simple terms for someone based in Germany and tell me the 3 key actions I must take before going on leave.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813981000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-sfpub-prompt-3-1736813982000",
+      "title": "Attrition Analysis",
+      "content": "\"Analyze regretted attrition in [scope] over [time period], identify top 3 drivers from exit interviews and performance data, then propose 3 retention initiatives with expected ROI and implementation timeline.\"\n\nExample: \"Analyze regretted attrition in my Sales organization over the last 12 months, identify top 3 drivers based on exit interviews and performance trends, then propose 3 retention initiatives with expected ROI (% reduction in attrition) and 90-day implementation timeline.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813982000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-sfpub-prompt-4-1736813983000",
+      "title": "Recruiting Optimization",
+      "content": "\"For [job family/role]: 1) Analyze candidate pipeline and time-to-fill trends for last 6 months, 2) Identify bottlenecks (sourcing, screening, offer acceptance), 3) Propose 3 specific actions to reduce time-to-hire by 20%, 4) Draft communication to hiring managers explaining changes.\"\n\nExample: \"For Software Engineering roles: 1) Analyze candidate pipeline and time-to-fill trends for last 6 months, 2) Identify bottlenecks at each recruiting stage, 3) Propose 3 specific actions to reduce time-to-hire from 45 to 36 days, 4) Draft communication to engineering managers explaining the new faster process.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813983000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
     },
     {
       "id": "note-sf-template-1",

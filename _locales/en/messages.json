@@ -398,5 +398,14 @@
   "encryptionFailed": {
     "message": "Failed to encrypt credentials",
     "description": "Error message when credential encryption fails"
+  },
+  "aiSettings": {
+    "message": "AI Settings"
+  },
+  "enableAiFeatures": {
+    "message": "Enable AI Features"
+  },
+  "enableAiFeaturesDesc": {
+    "message": "Globally enable or disable AI-powered features across the toolkit."
   }
 }

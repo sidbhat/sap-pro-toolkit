@@ -1,6 +1,5 @@
 {
   "version": "2.0",
-  "solutions": [],
   "globalShortcuts": [
     {
       "icon": "5",
@@ -26,6 +25,50 @@
   ],
   "environments": [],
   "notes": [
+    {
+      "id": "note-exec-prompt-1-1736813970000",
+      "title": "Executive Summary",
+      "content": "\"Create a [number]-slide executive summary comparing [solution A] vs [solution B] on [key criteria]. Include decision matrix.\"\n\nExample: \"Create a 3-slide executive summary comparing SAP SuccessFactors vs Workday on AI capabilities, global compliance, and 5-year TCO for 5000 employees. Include decision matrix with weighted scoring.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813970000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-exec-prompt-2-1736813971000",
+      "title": "Business Case",
+      "content": "\"Draft talking points for [audience] meeting on [investment]: expected ROI, implementation timeline, risk mitigation, and success metrics.\"\n\nExample: \"Draft talking points for CFO meeting on SAP BTP AI investment: expected ROI (30% process automation savings), 6-month implementation timeline, risk mitigation (phased rollout), and success metrics (time saved, error reduction, user adoption).\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813971000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-exec-prompt-3-1736813972000",
+      "title": "Competitive Analysis",
+      "content": "\"Build comprehensive competitive analysis for [solution A] vs [solution B] covering: 1) Feature parity with specific AI/ML capabilities, 2) Global deployment footprint with regional compliance requirements, 3) 5-year TCO for [size] including hidden costs, 4) Integration complexity with existing [systems], 5) Risk assessment for implementation. Present as executive briefing with decision matrix.\"\n\nExample: \"Build comprehensive competitive analysis for SAP vs Salesforce covering: 1) Feature parity with specific AI capabilities (Joule vs Einstein, document processing, predictive analytics), 2) Global deployment in EMEA/APAC with GDPR/data residency, 3) 5-year TCO for $500M revenue company including implementation, licensing, integration costs, 4) Integration complexity with Oracle Financials and ServiceNow, 5) Risk assessment (vendor lock-in, skills availability, upgrade complexity). Present as 10-slide executive briefing with weighted decision matrix.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813972000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-exec-prompt-4-1736813973000",
+      "title": "Sales Battlecard",
+      "content": "\"Generate competitive battlecard for [our solution] vs [competitor]: 1) Head-to-head feature comparison with proof points, 2) Pricing comparison with TCO analysis, 3) Customer win stories with measurable ROI, 4) Common objections with responses for IT and procurement buyers, 5) Discovery questions to uncover competitor weaknesses.\"\n\nExample: \"Generate competitive battlecard for SAP SuccessFactors vs Workday: 1) Feature comparison on talent analytics, skills management, recruiting AI with specific proof points from Forrester/Gartner, 2) Pricing comparison showing SAP 15-20% lower TCO for global deployments, 3) Customer wins: 3 examples with specific ROI (reduced time-to-hire 30%, improved retention 15%), 4) Objections and responses: 'Workday has better UX' → 'SAP Joule provides conversational UI rated higher in 2025', 5) Discovery questions: 'How many countries do you operate in?' (advantage SAP for global compliance).\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813973000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
     {
       "id": "note-exec-value-pitch",
       "title": "Value Pitch Script",

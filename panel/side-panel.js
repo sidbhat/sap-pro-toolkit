@@ -316,6 +316,57 @@ function updateDiagnosticsButton() {
   }
 }
 
+/**
+ * Load data from ALL profiles for cross-profile search
+ * @returns {Promise<Object>} Object with all profiles' data
+ */
+async function loadAllProfilesData() {
+  const allData = {
+    environments: [],
+    shortcuts: [],
+    notes: []
+  };
+  
+  for (const profile of availableProfiles) {
+    try {
+      const envKey = `environments_${profile.id}`;
+      const shortcutsKey = `shortcuts_${profile.id}`;
+      const notesKey = `notes_${profile.id}`;
+      
+      const result = await chrome.storage.local.get([envKey, shortcutsKey, notesKey]);
+      
+      const profileEnvs = (result[envKey] || []).map(env => ({
+        ...env,
+        profileId: profile.id,
+        profileName: profile.name,
+        profileIcon: profile.icon || '📁'
+      }));
+      
+      const profileShortcuts = (result[shortcutsKey] || []).map(shortcut => ({
+        ...shortcut,
+        profileId: profile.id,
+        profileName: profile.name,
+        profileIcon: profile.icon || '📁'
+      }));
+      
+      const profileNotes = (result[notesKey] || []).map(note => ({
+        ...note,
+        profileId: profile.id,
+        profileName: profile.name,
+        profileIcon: profile.icon || '📁'
+      }));
+      
+      allData.environments.push(...profileEnvs);
+      allData.shortcuts.push(...profileShortcuts);
+      allData.notes.push(...profileNotes);
+      
+    } catch (error) {
+      console.error(`[Cross-Profile] Failed to load data for ${profile.id}:`, error);
+    }
+  }
+  
+  return allData;
+}
 
 /**
  * Loads the data for a single, specified profile from its JSON file.
@@ -346,6 +397,67 @@ async function loadProfileData(profileId) {
     console.error(`[Profile] Failed to load profile data for ${profileId}:`, error);
     return { globalShortcuts: [], solutions: [], environments: [] };
   }
+}
+
+/**
+ * Load data from ALL profiles for cross-profile search
+ * @returns {Promise<Object>} Object with all profiles' data
+ */
+async function loadAllProfilesData() {
+  const allData = {
+    environments: [],
+    shortcuts: [],
+    notes: []
+  };
+  
+  for (const profile of availableProfiles) {
+    try {
+      // Load profile-specific data from storage
+      const envKey = `environments_${profile.id}`;
+      const shortcutsKey = `shortcuts_${profile.id}`;
+      const notesKey = `notes_${profile.id}`;
+      
+      const result = await chrome.storage.local.get([envKey, shortcutsKey, notesKey]);
+      
+      // Add profile metadata to each item
+      const profileEnvs = (result[envKey] || []).map(env => ({
+        ...env,
+        profileId: profile.id,
+        profileName: profile.name,
+        profileIcon: profile.icon || '📁'
+      }));
+      
+      const profileShortcuts = (result[shortcutsKey] || []).map(shortcut => ({
+        ...shortcut,
+        profileId: profile.id,
+        profileName: profile.name,
+        profileIcon: profile.icon || '📁'
+      }));
+      
+      const profileNotes = (result[notesKey] || []).map(note => ({
+        ...note,
+        profileId: profile.id,
+        profileName: profile.name,
+        profileIcon: profile.icon || '📁'
+      }));
+      
+      allData.environments.push(...profileEnvs);
+      allData.shortcuts.push(...profileShortcuts);
+      allData.notes.push(...profileNotes);
+      
+    } catch (error) {
+      console.error(`[Cross-Profile] Failed to load data for ${profile.id}:`, error);
+    }
+  }
+  
+  console.log('[Cross-Profile] Loaded data:', {
+    environments: allData.environments.length,
+    shortcuts: allData.shortcuts.length,
+    notes: allData.notes.length,
+    profiles: availableProfiles.length
+  });
+  
+  return allData;
 }
 
 // ==================== UI RENDERING - ENVIRONMENTS ====================

@@ -1,58 +1,5 @@
 {
   "version": "2.0",
-  "solutions": [
-    {
-      "id": "btp",
-      "name": "SAP Business Technology Platform",
-      "patterns": [
-        "hana.ondemand.com",
-        "cfapps",
-        "build.cloud.sap"
-      ],
-      "quickActions": [
-        {
-          "id": "btp-cockpit",
-          "name": "Cockpit Home",
-          "path": "/cockpit",
-          "icon": "🏠",
-          "description": "BTP Cockpit home",
-          "category": "Core"
-        },
-        {
-          "id": "btp-subaccounts",
-          "name": "Subaccounts",
-          "path": "/cockpit#/globalaccount/subaccounts",
-          "icon": "📂",
-          "description": "Manage subaccounts",
-          "category": "Admin"
-        },
-        {
-          "id": "btp-services",
-          "name": "Service Marketplace",
-          "path": "/cockpit#/globalaccount/services",
-          "icon": "🛒",
-          "description": "Browse and subscribe to services",
-          "category": "Services"
-        },
-        {
-          "id": "btp-security",
-          "name": "Security",
-          "path": "/cockpit#/globalaccount/security",
-          "icon": "🔐",
-          "description": "User management and security",
-          "category": "Security"
-        },
-        {
-          "id": "btp-billing",
-          "name": "Usage & Billing",
-          "path": "/cockpit#/globalaccount/usage",
-          "icon": "💰",
-          "description": "View usage and costs",
-          "category": "Admin"
-        }
-      ]
-    }
-  ],
   "globalShortcuts": [
     {
       "icon": "4",
@@ -86,12 +33,48 @@
   "environments": [],
   "notes": [
     {
-      "id": "note-btp-joule-prompts",
-      "title": "Joule Prompts Library - BTP & AI Core",
-      "content": "=== RAG on SAP Data (Vector Engine + Generative AI Hub) ===\n• \"Analyze [business documents/emails/tickets] and summarize key decisions, action items, and owners in 5 bullet points.\"\n\n• \"Answer: [business question]. Use ONLY the provided context from HANA Cloud Vector Engine. If insufficient, state: 'I do not have enough information.'\"\n\n=== AI-Powered Development (Joule + Build Code) ===\n• \"Generate a CAP service for managing customer complaints integrated with S/4HANA with CRUD handlers, input validation, authorization checks, and unit tests.\"\n\n• \"Create a Node.js CAP service that: 1) Reads BusinessPartner from S/4HANA API, 2) Enriches with sentiment analysis via AI Core, 3) Returns JSON response.\"\n\n=== Workflow Automation (Build Process Automation) ===\n• \"Design a workflow to automate: [business process description]. Return JSON spec with steps, decisions, service tasks, and human approval points.\"\n\n• \"Request an approval to move sales order 8001234 delivery from March 15 to March 10; this is high urgency for our top customer.\"\n\n=== Joule Studio - Custom Skills ===\nSystem Prompt Template:\n\"You summarize long business texts (emails, meeting notes, ticket logs) into concise summaries.\n\nGuidelines:\n- Output language: same as input\n- Length: max {word_limit} words\n- Focus on decisions, open actions, and owners\n- Exclude greetings and informal chit-chat\n- Never invent facts not present in the input text\"\n\n=== Multi-Step Orchestration ===\n• \"For customer ACME in the US: 1) Summarize all open sales orders with delivery dates in the next 30 days. 2) Identify those at risk due to material availability or credit blocks. 3) Propose an action plan and draft an email to the account manager.\"\n\n=== Architecture Patterns (Design Phase) ===\n• \"Analyze this business goal: [goal description]. List the 3-5 most promising SAP BTP generative-AI patterns with required services (AI Hub, HANA Vector Engine, Build Process Automation), data needed, and key risks (hallucination, data leakage, latency).\"\n\n=== Key Resources ===\n• Joule Studio: https://joule-studio.build.cloud.sap\n• AI Core SDK: https://github.com/SAP/ai-sdk-js\n• BTP Generative AI Hub: https://help.sap.com/docs/sap-ai-core\n• CAP Samples: https://github.com/SAP-samples/cloud-cap-samples",
-      "noteType": "note",
+      "id": "note-btp-prompt-1-1736813960000",
+      "title": "CAP Service Generation",
+      "content": "\"Generate a CAP service for managing [entity] with CRUD operations, input validation, and authorization checks.\"\n\nExample: \"Generate a CAP service for managing customer complaints integrated with S/4HANA with CRUD handlers, input validation (required fields: customer ID, description, severity), authorization checks (managers can see all, employees only their own), and basic unit tests.\"",
+      "noteType": "ai-prompt",
       "icon": "ai",
-      "timestamp": 1736634200000
+      "timestamp": 1736813960000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-btp-prompt-2-1736813961000",
+      "title": "Security Audit",
+      "content": "\"Review my BTP subaccount configuration and identify: 1) Security vulnerabilities (overly permissive roles, public endpoints), 2) Missing audit logs, 3) Compliance gaps for [standard].\"\n\nExample: \"Review my BTP subaccount configuration and identify: 1) Security vulnerabilities (roles with wildcard permissions, endpoints without authentication), 2) Missing audit logs for sensitive operations, 3) Compliance gaps for SOC2 and ISO27001 certification requirements.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813961000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-btp-prompt-3-1736813962000",
+      "title": "RAG Implementation",
+      "content": "\"Design a document Q&A system using HANA Vector Engine + Generative AI Hub: 1) Architecture diagram showing data flow, 2) Document ingestion pipeline (chunking strategy, metadata extraction), 3) Embedding and retrieval logic, 4) Hallucination prevention techniques, 5) Cost estimate for [volume] queries/month.\"\n\nExample: \"Design a document Q&A system for 10,000 internal policy documents using HANA Vector Engine + Generative AI Hub: 1) Architecture diagram with component dependencies, 2) Ingestion pipeline (500-word chunks, extract title/date/department metadata), 3) Semantic search with 5 most relevant chunks, 4) Hallucination prevention (cite sources, confidence scores, fallback to 'I don't know'), 5) Cost estimate for 10K queries/month at $0.50 per 1000 API calls.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813962000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-btp-prompt-4-1736813963000",
+      "title": "Workflow Automation",
+      "content": "\"Design an approval workflow for [business process]: 1) Process steps with decision points, 2) Approval routing logic based on [criteria], 3) Integration points with SAP systems, 4) Notification and escalation rules, 5) Return JSON specification for Build Process Automation.\"\n\nExample: \"Design an expense report approval workflow: 1) Steps: Submit → Manager Review → Finance Review → Payment, 2) Routing: <$500 skip Finance, >$5000 require VP approval, 3) Integration: Read employee data from SuccessFactors, post to S/4HANA for payment, 4) Notifications: Email at each step, escalate if pending >3 days, 5) Return Build Process Automation JSON with service tasks and human tasks configured.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813963000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
     },
     {
       "id": "note-btp-pricing",

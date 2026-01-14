@@ -49,12 +49,48 @@
   "environments": [],
   "notes": [
     {
-      "id": "note-global-joule-best-practices",
-      "title": "Joule Prompt Engineering - Best Practices",
-      "content": "=== Universal Prompt Patterns (All SAP Solutions) ===\n\n**Insight Request Pattern**:\n\"Analyze [object/scope] for [time period] and highlight [top drivers/risks/opportunities]. Present results as [table/summary/management brief].\"\n\nExample: \"Analyze sales orders for Q1 2025 and highlight top 5 blockers. Present as management summary.\"\n\n**Action + Explanation Pattern**:\n\"Perform [action] for [scope], then explain what you did and how it affects [business outcome].\"\n\nExample: \"Create a draft invoice for PO 4500012345, then explain how this affects our cash flow forecast.\"\n\n**Scenario Simulation Pattern**:\n\"Simulate [business change] and show the impact on [KPI] by [dimension], including recommendations.\"\n\nExample: \"Simulate a 10% price increase and show impact on revenue by product line with recommendations.\"\n\n**Multi-Step Orchestration Pattern**:\n\"For [scope]: 1) [Step 1], 2) [Step 2], 3) [Step 3 with action]\"\n\nExample: \"For customer ACME: 1) List open orders, 2) Flag risks, 3) Draft email to account manager with action plan.\"\n\n=== Best Practices Across All Solutions ===\n\n✓ **Be Specific**: Use exact field names, time ranges, thresholds\n✓ **Specify Format**: \"5 bullet points\", \"table\", \"draft email\"\n✓ **Use Follow-Ups**: \"Make this shorter\", \"Add more technical detail\"\n✓ **Provide Context**: Include role, constraints, business goal\n✓ **Iterate**: Start broad, then refine with follow-up prompts\n\n=== Common Mistakes to Avoid ===\n\n✗ Too vague: \"Show me sales data\" → ✓ \"Show top 10 customers by revenue for Q4 2024\"\n✗ No time frame: \"Analyze performance\" → ✓ \"Analyze performance for last 90 days\"\n✗ No output format: \"Give me info\" → ✓ \"Summarize in 3 bullet points\"\n\n=== Solution-Specific Prompt Libraries ===\n\nFor detailed prompt examples, see:\n• SuccessFactors: Switch to SuccessFactors profile → Notes → \"Joule Prompts Library - SuccessFactors\"\n• S/4HANA: Switch to S/4HANA profile → Notes → \"Joule Prompts Library - S/4HANA Finance & ERP\"\n• BTP: Switch to BTP profile → Notes → \"Joule Prompts Library - BTP & AI Core\"",
-      "noteType": "note",
+      "id": "note-global-prompt-1-1736813940000",
+      "title": "Data Analysis Pattern",
+      "content": "\"Analyze [dataset/object] for [time period] and highlight [top insights/drivers/risks]. Present results as [format: table/summary/5 bullet points].\"\n\nExample: \"Analyze sales orders for Q1 2025 and highlight top 5 blockers by revenue impact. Present as executive summary.\"",
+      "noteType": "ai-prompt",
       "icon": "ai",
-      "timestamp": 1736634300000
+      "timestamp": 1736813940000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-global-prompt-2-1736813941000",
+      "title": "Action with Explanation",
+      "content": "\"Perform [action] for [scope], then explain what you did and how it affects [business outcome].\"\n\nExample: \"Create a draft invoice for PO 4500012345, then explain how this affects our cash flow forecast for the month.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813941000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-global-prompt-3-1736813942000",
+      "title": "Scenario Simulation",
+      "content": "\"Simulate [business change] and show the impact on [KPI] by [dimension], including recommendations for mitigation or optimization.\"\n\nExample: \"Simulate a 10% price increase on Product Line A and show impact on revenue, margin, and customer churn by region with recommendations.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813942000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-global-prompt-4-1736813943000",
+      "title": "Multi-Step Orchestration",
+      "content": "\"For [scope]: 1) [Analysis step], 2) [Classification/prioritization step], 3) [Action/output generation step].\"\n\nExample: \"For customer ACME: 1) List all open orders with delivery dates in next 30 days, 2) Flag high-risk orders due to material shortages or credit blocks, 3) Draft email to account manager with action plan and escalation points.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813943000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
     },
     {
       "id": "note-global-1",

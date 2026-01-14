@@ -1,57 +1,5 @@
 {
   "version": "2.0",
-  "solutions": [
-    {
-      "id": "s4hana",
-      "name": "SAP S/4HANA Cloud",
-      "patterns": [
-        "s4hana.ondemand.com",
-        "s4hana.cloud.sap"
-      ],
-      "quickActions": [
-        {
-          "id": "s4-procurement-overview",
-          "name": "Procurement Overview",
-          "path": "/ui#ProcurementOverview-display",
-          "icon": "🛒",
-          "description": "Buyer cockpit with KPIs",
-          "category": "Procurement"
-        },
-        {
-          "id": "s4-monitor-po",
-          "name": "Monitor Purchase Order Items",
-          "path": "/ui#PurchaseOrder-monitor",
-          "icon": "📦",
-          "description": "Analytical list page for PO items",
-          "category": "Procurement"
-        },
-        {
-          "id": "s4-sales-fulfillment",
-          "name": "Sales Order Fulfillment Monitor",
-          "path": "/ui#SalesOrder-monitor",
-          "icon": "📊",
-          "description": "Monitor sales order issues and blocks",
-          "category": "Sales"
-        },
-        {
-          "id": "s4-cash-flow",
-          "name": "Cash Flow Analysis",
-          "path": "/ui#CashFlow-analyze",
-          "icon": "💰",
-          "description": "Interactive cash flow visualization",
-          "category": "Finance"
-        },
-        {
-          "id": "s4-financial-statements",
-          "name": "Display Financial Statements",
-          "path": "/ui#FinancialStatement-display",
-          "icon": "📈",
-          "description": "Balance sheet and P&L reports",
-          "category": "Finance"
-        }
-      ]
-    }
-  ],
   "globalShortcuts": [
     {
       "icon": "3",
@@ -85,12 +33,48 @@
   "environments": [],
   "notes": [
     {
-      "id": "note-s4-joule-prompts",
-      "title": "Joule Prompts Library - S/4HANA Finance & ERP",
-      "content": "=== Financial Analysis ===\n• \"Summarize this month's P&L for Company Code 1000 and highlight the top 5 variances vs budget by cost center. Explain the main drivers in business language.\"\n\n• \"Compare Q1 2025 actuals vs plan for revenue and EBITDA by segment. Flag any deviations greater than 10% and propose likely reasons based on available data.\"\n\n=== Cash Flow & Collections ===\n• \"Forecast 13-week cash flow for our US entity based on open AR/AP and historical patterns. Highlight weeks with potential shortfalls.\"\n\n• \"List customers with overdue receivables > 60 days and highest risk. Propose prioritized collection actions and draft email templates for top 10 accounts.\"\n\n• \"Analyze our DSO trend for the last 12 months and suggest process changes to reduce DSO by 5 days.\"\n\n=== Period Close & Reconciliation ===\n• \"Show me an overview of period-end close status for Company Code 1000 for March 2025 and list tasks at risk of delay.\"\n\n• \"Identify the top 20 open items blocking GR/IR clearing and suggest how to resolve them, including which business users to involve.\"\n\n=== Accounts Payable ===\n• \"Create a draft supplier invoice from this purchase order and attached PDF and route it for approval according to our workflow.\"\n\n• \"Identify suppliers with frequent invoice blocking reasons (price variance, quantity variance, missing PO) and recommend preventive actions.\"\n\n=== Profitability Analysis ===\n• \"Analyze gross margin by product group for the last quarter and show the 10 products with the largest margin erosion vs last year. Provide hypotheses.\"\n\n• \"For Customer X, show revenue, margin, open orders, and open disputes for the last 12 months and classify the customer's profitability.\"\n\n=== Planning & Forecasting ===\n• \"Generate a rolling 12-month revenue and OPEX forecast using the last 24 months of data and current open orders. Present best, base, and worst-case scenarios.\"\n\n• \"Simulate a 5% increase in raw material costs and show the impact on contribution margin by product line.\"\n\n=== Compliance & Audit ===\n• \"Identify unusual journal postings in the last quarter (e.g., large manual entries, postings outside business hours) and group them by risk indicator.\"\n\n• \"List key SoD (segregation of duties) violations detected in finance-related roles and propose mitigation options.\"\n\n=== Natural Language Navigation ===\n• \"Explain the difference between margins in the P&L and contribution margin in CO-PA for my company in simple terms.\"\n\n• \"Guide me step-by-step through posting an accrual for marketing expenses in S/4HANA Cloud.\"\n\n=== Cross-Functional Scenarios ===\n• \"For materials with negative margin in the last 3 months, combine finance and supply chain data to show purchase prices, selling prices, and stock levels, and suggest corrective actions.\"",
-      "noteType": "note",
+      "id": "note-s4-prompt-1-1736813950000",
+      "title": "Cash Position Check",
+      "content": "\"Show my current cash position for [entity/company code] and flag any liquidity concerns for the next [time period].\"\n\nExample: \"Show my current cash position for Company Code 1000 and flag any liquidity concerns for the next 30 days based on open AR, AP, and scheduled payments.\"",
+      "noteType": "ai-prompt",
       "icon": "ai",
-      "timestamp": 1736634100000
+      "timestamp": 1736813950000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-s4-prompt-2-1736813951000",
+      "title": "Collections Prioritization",
+      "content": "\"List customers with overdue receivables > [threshold] days and highest credit risk. Propose prioritized collection actions for top [number] accounts.\"\n\nExample: \"List customers with overdue receivables > 60 days and highest credit risk based on payment history. Propose prioritized collection actions and draft email templates for top 10 accounts.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813951000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-s4-prompt-3-1736813952000",
+      "title": "Period-End Close Analysis",
+      "content": "\"Analyze period-end close for [scope] for [period]: 1) Summarize P&L with top 5 variances vs budget by cost center, 2) Explain variance drivers in business language, 3) Identify reconciliation items blocking close, 4) Recommend corrective actions for next period.\"\n\nExample: \"Analyze period-end close for Company Code 1000 for March 2025: 1) Summarize P&L with top 5 variances vs budget >10% by cost center, 2) Explain drivers (volume, price, timing), 3) Identify top 20 GR/IR clearing items blocking close with resolution steps, 4) Recommend 3 process improvements to accelerate next close by 1 day.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813952000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-s4-prompt-4-1736813953000",
+      "title": "Margin Optimization",
+      "content": "\"For materials with negative margin in last [period], combine finance and supply chain data: 1) Show purchase prices, selling prices, stock levels, and demand forecast, 2) Identify root causes (pricing, cost inflation, volume drop), 3) Calculate margin improvement scenarios (price increase, cost reduction, product mix), 4) Propose specific actions with expected margin improvement.\"\n\nExample: \"For materials with negative margin in last 3 months, combine finance and supply chain data: 1) Show purchase prices, selling prices, current stock levels, and 90-day demand forecast, 2) Identify root causes by product line, 3) Calculate 3 scenarios (5% price increase, 10% cost reduction, optimize product mix), 4) Propose top 5 actions with expected margin improvement from -2% to +3%.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813953000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
     },
     {
       "id": "note-s4-fue-ratios",
