@@ -3776,73 +3776,58 @@ async function renderAllProfilesQuickActions() {
   if (!listContainer) return;
   
   try {
-    const editableProfiles = availableProfiles;
+    // Load base solutions from solutions.json
+    const response = await fetch(chrome.runtime.getURL('resources/solutions.json'));
+    if (!response.ok) {
+      throw new Error('Failed to load solutions.json');
+    }
+    const baseData = await response.json();
+    const baseSolutions = baseData.solutions || [];
+    
+    if (baseSolutions.length === 0) {
+      listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-secondary);">No Quick Actions configured in solutions.json</div>';
+      return;
+    }
+    
     let allHTML = '';
     
-    for (const profile of editableProfiles) {
-      const storageKey = `solutions_${profile.id}`;
-      const result = await chrome.storage.local.get(storageKey);
-      let solutionsData = result[storageKey];
+    // Render solutions from solutions.json
+    for (const solution of baseSolutions) {
       
-      if (!solutionsData) {
-        const profileData = await loadProfileData(profile.id);
-        solutionsData = JSON.parse(JSON.stringify(profileData.solutions || []));
-      }
+      const quickActions = solution.quickActions || [];
       
-      if (!solutionsData || solutionsData.length === 0) continue;
-      
-      // Add profile header
       allHTML += `
-        <div class="qa-profile-section" style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border);">
+        <div class="qa-solution-group" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border);">
           <h3 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px;">
-            ${profile.icon || '📁'} ${profile.name}
+            ${solution.name || solution.id} (${quickActions.length})
           </h3>
+          ${quickActions.length === 0 ? 
+            '<div style="padding: 12px; color: var(--text-secondary); font-size: 11px;">No Quick Actions</div>' :
+            quickActions.map(qa => `
+              <div class="qa-edit-row" data-qa-id="${qa.id}" data-solution-id="${solution.id}" style="margin-bottom: 12px;">
+                <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Name:</label>
+                <input 
+                  type="text" 
+                  class="qa-name-input" 
+                  value="${qa.name}" 
+                  data-original-name="${qa.name}"
+                  style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--bg-primary); color: var(--text-primary); margin-bottom: 8px;"
+                >
+                <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Path:</label>
+                <input 
+                  type="text" 
+                  class="qa-path-input" 
+                  value="${qa.path}" 
+                  data-original-path="${qa.path}"
+                  style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; background: var(--bg-primary); color: var(--text-primary); font-family: 'SF Mono', monospace;"
+                >
+              </div>
+            `).join('')
+          }
+        </div>
       `;
-      
-      // Add solutions for this profile
-      for (const solution of solutionsData) {
-        const quickActions = solution.quickActions || [];
-        
-        allHTML += `
-          <div class="qa-solution-group" style="margin-bottom: 20px;">
-            <h4 style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px;">
-              ${solution.name || solution.id} (${quickActions.length})
-            </h4>
-            ${quickActions.length === 0 ? 
-              '<div style="padding: 12px; color: var(--text-secondary); font-size: 11px;">No Quick Actions</div>' :
-              quickActions.map(qa => `
-                <div class="qa-edit-row" data-qa-id="${qa.id}" data-solution-id="${solution.id}" data-profile-id="${profile.id}" style="margin-bottom: 12px;">
-                  <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Name:</label>
-                  <input 
-                    type="text" 
-                    class="qa-name-input" 
-                    value="${qa.name}" 
-                    data-original-name="${qa.name}"
-                    style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--bg-primary); color: var(--text-primary); margin-bottom: 8px;"
-                  >
-                  <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Path:</label>
-                  <input 
-                    type="text" 
-                    class="qa-path-input" 
-                    value="${qa.path}" 
-                    data-original-path="${qa.path}"
-                    style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; background: var(--bg-primary); color: var(--text-primary); font-family: 'SF Mono', monospace;"
-                  >
-                </div>
-              `).join('')
-            }
-          </div>
-        `;
-      }
-      
-      allHTML += '</div>'; // Close profile section
     }
-    
-    if (!allHTML) {
-      listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-secondary);">No Quick Actions configured</div>';
-    } else {
-      listContainer.innerHTML = allHTML;
-    }
+    listContainer.innerHTML = allHTML;
     
   } catch (error) {
     console.error('[Quick Actions Tab] Failed to load:', error);
@@ -3851,22 +3836,28 @@ async function renderAllProfilesQuickActions() {
 }
 
 /**
- * Save all edited Quick Actions from ALL profiles in the Settings tab.
- * This function is connected to an explicit "Save" button.
+ * Save all edited Quick Actions from the Settings tab.
+ * Saves to chrome.storage.local with key 'solutions'
  */
 async function saveAllQuickActions() {
   const listContainer = document.getElementById('qaEditableList');
   if (!listContainer) return;
 
   try {
-    // Group changes by profile
-    const changesByProfile = {};
+    // Load current solutions from solutions.json
+    const response = await fetch(chrome.runtime.getURL('resources/solutions.json'));
+    if (!response.ok) {
+      throw new Error('Failed to load solutions.json');
+    }
+    const baseData = await response.json();
+    let solutionsData = JSON.parse(JSON.stringify(baseData.solutions || []));
+    
     let totalChanges = 0;
 
+    // Apply changes from the form
     listContainer.querySelectorAll('.qa-edit-row').forEach(row => {
       const qaId = row.getAttribute('data-qa-id');
       const solutionId = row.getAttribute('data-solution-id');
-      const profileId = row.getAttribute('data-profile-id');
       const nameInput = row.querySelector('.qa-name-input');
       const pathInput = row.querySelector('.qa-path-input');
 
@@ -3875,12 +3866,17 @@ async function saveAllQuickActions() {
       const originalName = nameInput.getAttribute('data-original-name');
       const originalPath = pathInput.getAttribute('data-original-path');
 
+      // Find the solution and quick action
+      const solution = solutionsData.find(s => s.id === solutionId);
+      if (!solution) return;
+
+      const qa = solution.quickActions.find(q => q.id === qaId);
+      if (!qa) return;
+
       // Check if changed
-      if (newName !== originalName || newPath !== originalPath) {
-        if (!changesByProfile[profileId]) {
-          changesByProfile[profileId] = [];
-        }
-        changesByProfile[profileId].push({ qaId, solutionId, newName, newPath });
+      if (qa.name !== newName || qa.path !== newPath) {
+        qa.name = newName;
+        qa.path = newPath;
         totalChanges++;
       }
     });
@@ -3890,40 +3886,18 @@ async function saveAllQuickActions() {
       return;
     }
 
-    // Save changes for each profile
-    for (const profileId in changesByProfile) {
-      const storageKey = `solutions_${profileId}`;
-      const result = await chrome.storage.local.get(storageKey);
-      let solutionsData = result[storageKey];
+    // Save to chrome.storage.local with key 'solutions'
+    await chrome.storage.local.set({ solutions: solutionsData });
+    
+    // Update global solutions variable
+    solutions = solutionsData;
 
-      if (!solutionsData) {
-        const profileData = await loadProfileData(profileId);
-        solutionsData = JSON.parse(JSON.stringify(profileData.solutions || []));
-      }
-
-      // Apply changes
-      for (const change of changesByProfile[profileId]) {
-        const solution = solutionsData.find(s => s.id === change.solutionId);
-        if (!solution) continue;
-
-        const qa = solution.quickActions.find(q => q.id === change.qaId);
-        if (!qa) continue;
-
-        qa.name = change.newName;
-        qa.path = change.newPath;
-      }
-
-      // Save to storage
-      await chrome.storage.local.set({ [storageKey]: solutionsData });
-    }
-
-    showToast(`${totalChanges} Quick Action(s) saved across ${Object.keys(changesByProfile).length} profile(s) ✓`, 'success');
+    showToast(`${totalChanges} Quick Action(s) saved ✓`, 'success');
     
     // Reload Settings tab to reflect saved changes
     await loadQuickActionsTab();
     
-    // CRITICAL: Re-render environments section to update Quick Actions display
-    // This removes the old Quick Actions banner and creates a new one with updated data
+    // Re-render environments section to update Quick Actions display
     await renderEnvironments();
 
   } catch (error) {
