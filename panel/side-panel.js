@@ -366,68 +366,11 @@ function updateDiagnosticsButton() {
   const diagnosticsBtn = document.getElementById('footerDiagnosticsBtn');
   if (!diagnosticsBtn) return;
   
-  const isOnSAPSystem = currentPageData && currentPageData.solutionType;
-  
-  if (isOnSAPSystem) {
-    diagnosticsBtn.classList.remove('btn-disabled');
-    diagnosticsBtn.setAttribute('title', 'Diagnostics');
-  } else {
-    diagnosticsBtn.classList.add('btn-disabled');
-    diagnosticsBtn.setAttribute('title', 'Navigate to an SAP system to view diagnostics');
-  }
+  // The button is now universal, so it should always be enabled.
+  diagnosticsBtn.classList.remove('btn-disabled');
+  diagnosticsBtn.setAttribute('title', 'Run Page Diagnostics');
 }
 
-/**
- * Load data from ALL profiles for cross-profile search
- * @returns {Promise<Object>} Object with all profiles' data
- */
-async function loadAllProfilesData() {
-  const allData = {
-    environments: [],
-    shortcuts: [],
-    notes: []
-  };
-  
-  for (const profile of availableProfiles) {
-    try {
-      const envKey = `environments_${profile.id}`;
-      const shortcutsKey = `shortcuts_${profile.id}`;
-      const notesKey = `notes_${profile.id}`;
-      
-      const result = await chrome.storage.local.get([envKey, shortcutsKey, notesKey]);
-      
-      const profileEnvs = (result[envKey] || []).map(env => ({
-        ...env,
-        profileId: profile.id,
-        profileName: profile.name,
-        profileIcon: profile.icon || '📁'
-      }));
-      
-      const profileShortcuts = (result[shortcutsKey] || []).map(shortcut => ({
-        ...shortcut,
-        profileId: profile.id,
-        profileName: profile.name,
-        profileIcon: profile.icon || '📁'
-      }));
-      
-      const profileNotes = (result[notesKey] || []).map(note => ({
-        ...note,
-        profileId: profile.id,
-        profileName: profile.name,
-        profileIcon: profile.icon || '📁'
-      }));
-      
-      allData.environments.push(...profileEnvs);
-      allData.shortcuts.push(...profileShortcuts);
-      allData.notes.push(...profileNotes);
-      
-    } catch (error) {
-      console.error(`[Cross-Profile] Failed to load data for ${profile.id}:`, error);
-    }
-  }
-  
-  return allData;
-}
 
 /**
  * Loads the data for a single, specified profile from its JSON file.
@@ -546,7 +489,7 @@ async function renderEnvironments() {
       const solutionLabel = solution.name || solutionType.toUpperCase();
       
       // Render as standalone div ABOVE the table (not inside tbody)
-      quickActionsHTML = `
+      const quickActionsHTML = `
         <div class="quick-actions-banner" style="margin-bottom: 12px; padding: 12px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.12) 100%); border-left: 3px solid var(--env-preview); border-radius: 6px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
             <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: var(--env-preview); text-transform: uppercase;">⚡ ${solutionLabel} Quick Actions</span>
@@ -638,7 +581,7 @@ async function renderEnvironments() {
         parts.push(currentPageData.datacenter);
       }
       if (currentPageData.region && currentPageData.region !== 'Unknown') {
-        const flag = currentPageData.country && COUNTRY_FLAGS[currentPageData.country] ? COUNTRY_FLAGS[currentPageData.country] : '';
+        const flag = currentPageData.country && typeof COUNTRY_FLAGS !== 'undefined' && COUNTRY_FLAGS[currentPageData.country] ? COUNTRY_FLAGS[currentPageData.country] : '';
         parts.push(`${flag} ${currentPageData.region}`);
       }
       
@@ -822,28 +765,6 @@ function attachEnvironmentListeners() {
   });
 }
 
-/**
- * Toggle pin status for an environment
- * Pinned environments appear at the top of the list
- * @param {string} id - The environment ID
- */
-async function togglePin(id) {
-  const env = environments.find(e => e.id === id);
-  if (!env) return;
-  
-  // Toggle pinned state
-  env.pinned = !env.pinned;
-  
-  // Save to storage
-  const storageKey = `environments_${currentProfile}`;
-  await chrome.storage.local.set({ [storageKey]: environments });
-  
-  // Re-render to show updated pin state and resort
-  renderEnvironments();
-  
-  const message = env.pinned ? 'Environment pinned ⭐' : 'Environment unpinned';
-  showToast(message, 'success');
-}
 
 // ==================== UI RENDERING - SHORTCUTS ====================
 
@@ -1183,47 +1104,6 @@ function filterContent(searchTerm) {
     } else {
       row.style.display = 'none';
     }
-  });
-}
-
-/**
- * Filter all sections by clicking a tag
- * @param {string} tagName - The tag to filter by
- */
-function filterByTag(tagName) {
-  const searchInput = document.getElementById('globalSearch');
-  const clearBtn = document.getElementById('clearSearch');
-  
-  // Update search input to show the tag being filtered
-  searchInput.value = tagName;
-  clearBtn.style.display = 'flex';
-  
-  // Use existing filterContent function to filter by tag
-  filterContent(tagName);
-  
-  // Show toast notification
-  const capitalizedTag = tagName.charAt(0).toUpperCase() + tagName.slice(1);
-  showToast(`Filtering by: ${capitalizedTag}`, 'info');
-}
-
-// ==================== TAG RENDERING ====================
-
-function renderTagBadges(tags) {
-  if (!tags || tags.length === 0) return '';
-  // Capitalize first letter of each tag for better readability
-  return `<div class="tag-badges">${tags.map(tag => {
-    const capitalized = tag.charAt(0).toUpperCase() + tag.slice(1);
-    return `<span class="tag-badge clickable-tag" data-tag="${tag}" title="Click to filter by ${tag}">${capitalized}</span>`;
-  }).join('')}</div>`;
-}
-
-// ==================== ACTIVE STATE HIGHLIGHTING ====================
-
-function highlightActiveStates(currentURL) {
-  document.querySelectorAll('.shortcut-row').forEach(row => {
-    const url = row.getAttribute('data-url');
-    const isActive = currentURL && url && currentURL.includes(url);
-    row.classList.toggle('active-row', isActive);
   });
 }
 
@@ -1661,29 +1541,52 @@ function closeAddNoteModal() {
 
 function editNote(id) {
   const note = notes.find(n => n.id === id);
-  if (!note) return;
+  if (!note) {
+    console.error('[Edit Note] Note not found:', id);
+    showToast('Note not found. Try reloading the extension.', 'error');
+    return;
+  }
   
   console.log('[Edit Note] Opening note:', { id, note });
   
   // Get the modal
   const modal = document.getElementById('addNoteModal');
+  if (!modal) {
+    console.error('[Edit Note] Modal not found: addNoteModal');
+    showToast('Error: Modal not found', 'error');
+    return;
+  }
+  
+  // Get form elements
+  const titleEl = document.getElementById('noteTitle');
+  const contentEl = document.getElementById('noteContent');
+  const iconEl = document.getElementById('noteIcon');
+  
+  if (!titleEl || !contentEl || !iconEl) {
+    console.error('[Edit Note] Form elements not found:', { titleEl, contentEl, iconEl });
+    showToast('Error: Form elements not found', 'error');
+    return;
+  }
   
   // Populate form fields
-  document.getElementById('noteTitle').value = note.title;
-  document.getElementById('noteContent').value = note.content || '';
-  document.getElementById('noteIcon').value = note.icon || '0';
+  titleEl.value = note.title;
+  contentEl.value = note.content || '';
+  iconEl.value = note.icon || '0';
   
   // Set edit mode FIRST (before setting note type)
   modal.setAttribute('data-edit-id', id);
-  document.querySelector('#addNoteModal .modal-header h3').textContent = 'Edit Note';
+  const headerEl = document.querySelector('#addNoteModal .modal-header h3');
+  if (headerEl) headerEl.textContent = 'Edit Note';
   
   // Show download button in edit mode
   const downloadBtn = document.getElementById('downloadNoteBtn');
   if (downloadBtn) downloadBtn.style.display = 'inline-flex';
   
   // Show save and prettify buttons (ensure they're visible)
-  document.getElementById('saveNoteBtn').style.display = 'inline-flex';
-  document.getElementById('prettifyNoteBtn').style.display = 'inline-flex';
+  const saveBtn = document.getElementById('saveNoteBtn');
+  const prettifyBtn = document.getElementById('prettifyNoteBtn');
+  if (saveBtn) saveBtn.style.display = 'inline-flex';
+  if (prettifyBtn) prettifyBtn.style.display = 'inline-flex';
   
   // Set note type radio button
   const noteType = note.noteType || 'note';
@@ -1703,8 +1606,6 @@ function editNote(id) {
   // AFTER modal is active, manually trigger AI feature visibility
   // This ensures the MutationObserver has fired and DOM is ready
   setTimeout(() => {
-    const modelGroup = document.getElementById('modelSelectorGroup');
-    
     if (noteType === 'ai-prompt') {
       console.log('[Edit Note] Showing AI button for ai-prompt type');
       // Show AI button
@@ -1715,6 +1616,8 @@ function editNote(id) {
       hideAITestButtons();
     }
   }, 50); // Small delay to ensure modal is fully rendered
+  
+  console.log('[Edit Note] Modal opened successfully');
 }
 
 
@@ -2016,9 +1919,7 @@ async function prettifyNote() {
   }
 }
 
-/**
- * Setup character counter for note content with soft warning at 5000 chars
- */
+  
 function setupNoteCharacterCounter() {
   const contentInput = document.getElementById('noteContent');
   const counter = document.getElementById('noteContentCounter');
@@ -2060,34 +1961,22 @@ function setupNoteCharacterCounter() {
 // ==================== DIAGNOSTICS ====================
 
 async function showDiagnosticsModal() {
-  // Block opening diagnostics when not on SAP system
-  if (!currentPageData || !currentPageData.solutionType) {
-    showToast('Navigate to an SAP system to view diagnostics', 'warning');
-    return;
-  }
-  
   const modal = document.getElementById('diagnosticsModal');
   const contentDiv = document.getElementById('diagnosticsContent');
   
+  // Reset modal state
+  modal.removeAttribute('data-ai-report');
+  modal.removeAttribute('data-page-title');
+  document.getElementById('saveDiagnosticsBtn').style.display = 'none';
+  document.getElementById('downloadDiagnosticsBtn').style.display = 'none';
+
   modal.classList.add('active');
   contentDiv.innerHTML = `
     <div class="diagnostics-loading">
       <div class="spinner"></div>
-      <span>Gathering diagnostics...</span>
+      <span>Click "Analyze with AI" to start...</span>
     </div>
   `;
-  
-  try {
-    // Refresh page data before gathering diagnostics to ensure latest state
-    await loadCurrentPageData();
-    
-    const diagnostics = await gatherDiagnostics(currentPageData);
-    const formatted = formatDiagnosticsReport(diagnostics);
-    contentDiv.innerHTML = `<pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">${formatted}</pre>`;
-  } catch (error) {
-    console.error('Failed to gather diagnostics:', error);
-    contentDiv.innerHTML = `<p style="color: var(--env-production);">Failed to gather diagnostics. Please try again.</p>`;
-  }
 }
 
 function closeDiagnosticsModal() {
@@ -2115,85 +2004,80 @@ async function copyAllDiagnostics() {
  * Provides insights for presales, admins, consultants, and end users
  */
 async function regenerateDiagnosticsWithAI() {
-  // Check if AI is available
   if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
-    showToast('AI features not available', 'error');
+    showToast('AI features not available. Please configure in Settings.', 'error');
     return;
   }
+
+  const contentDiv = document.getElementById('diagnosticsContent');
+  const modal = document.getElementById('diagnosticsModal');
   
-  try {
-    const contentDiv = document.getElementById('diagnosticsContent');
-    
-    // Show loading state with green highlighting
-    contentDiv.innerHTML = `
-      <div class="diagnostics-ai-enhanced">
-        <div style="display: flex; align-items: center; gap: 12px; padding: 16px;">
-          <div class="spinner"></div>
-          <span>✨ AI is analyzing the page...</span>
-        </div>
+  contentDiv.innerHTML = `
+    <div class="diagnostics-ai-enhanced">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 16px;">
+        <div class="spinner"></div>
+        <span>✨ AI is analyzing the page...</span>
       </div>
-    `;
-    
-    // Get current tab
+    </div>
+  `;
+
+  try {
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     if (!tab || !tab.url) {
-      showToast('No active tab found', 'warning');
-      return;
+      throw new Error('No active tab found');
     }
-    
-    // Inject content script if needed
+
+    // Always try to inject content script, catch error if it fails (e.g., on restricted pages)
     try {
       await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         files: ['content/content.js']
       });
     } catch (injectError) {
-      console.log('[AI Diagnostics] Content script already present');
+      console.warn('[AI Diagnostics] Content script injection failed, proceeding with URL-based analysis:', injectError.message);
     }
     
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    // Scrape comprehensive page data
+    await new Promise(resolve => setTimeout(resolve, 300)); // Give script time to load
+
     const scrapedData = await new Promise((resolve) => {
       chrome.tabs.sendMessage(tab.id, { action: 'scrapePageForDiagnostics' }, (response) => {
-        if (chrome.runtime.lastError) {
-          console.warn('[AI Diagnostics] Scrape failed:', chrome.runtime.lastError);
-          resolve(null);
+        if (chrome.runtime.lastError || !response) {
+          console.warn('[AI Diagnostics] Scrape failed, using fallback data.', chrome.runtime.lastError?.message);
+          resolve({
+            title: tab.title,
+            url: tab.url,
+            performance: {},
+            consoleErrors: [],
+            testData: { found: false },
+            expiredDates: [],
+            cardsNotLoaded: [],
+            error: null
+          });
         } else {
           resolve(response);
         }
       });
     });
+
+    await loadCurrentPageData(); // Refresh current page data
+    const standardDiag = currentPageData ? formatDiagnosticsReport(await gatherDiagnostics(currentPageData)) : 'Standard diagnostics not available for this page.';
     
-    if (!scrapedData) {
-      showToast('Failed to scrape page data', 'error');
-      return;
-    }
-    
-    // Refresh current page data
-    await loadCurrentPageData();
-    
-    // Gather standard diagnostics
-    const diagnostics = await gatherDiagnostics(currentPageData);
-    const standardDiag = formatDiagnosticsReport(diagnostics);
-    
-    // Build comprehensive AI prompt
     const prompt = buildDiagnosticsPrompt(standardDiag, scrapedData, currentPageData);
-    
-    // Call AI
     const result = await window.ToolkitCore.testPromptWithModel(prompt);
-    
+
     if (!result || !result.content) {
       throw new Error('No response from AI');
     }
-    
-    // Display AI-enhanced diagnostics with green highlighting
+
     const formattedResponse = markdownToHTML(result.content);
     
+    // Store the raw response content in the modal for saving/downloading
+    modal.setAttribute('data-ai-report', result.content);
+    modal.setAttribute('data-page-title', scrapedData.title || tab.title);
+
     contentDiv.innerHTML = `
       <div class="diagnostics-ai-enhanced">
         <div class="ai-badge">
-          ✨ AI-Enhanced Diagnostics
           <span style="opacity: 0.8; font-size: 8px;">${result.model || 'AI'} · ${(result.usage?.inputTokens || 0) + (result.usage?.outputTokens || 0)} tokens</span>
         </div>
         <div class="ai-response" style="margin-top: 16px;">
@@ -2201,53 +2085,231 @@ async function regenerateDiagnosticsWithAI() {
         </div>
       </div>
     `;
-    
+
+    // Show save/download buttons
+    document.getElementById('saveDiagnosticsBtn').style.display = 'inline-flex';
+    document.getElementById('downloadDiagnosticsBtn').style.display = 'inline-flex';
+
     showToast('✨ AI diagnostics generated ✓', 'success');
-    
+
   } catch (error) {
     console.error('[AI Diagnostics] Failed:', error);
     showToast(`AI diagnostics failed: ${error.message}`, 'error');
-    
-    // Fallback to standard diagnostics
-    await showDiagnosticsModal();
+    contentDiv.innerHTML = `<p style="color: var(--env-production);">Failed to generate AI diagnostics. Please try again.</p>`;
+    // Hide save/download buttons on failure
+    document.getElementById('saveDiagnosticsBtn').style.display = 'none';
+    document.getElementById('downloadDiagnosticsBtn').style.display = 'none';
   }
 }
 
 /**
- * Build simplified AI prompt for diagnostics - focuses on PAGE FACTS only
+ * Saves the generated AI diagnostics report as a note.
+ */
+async function saveDiagnosticsAsNote() {
+  const modal = document.getElementById('diagnosticsModal');
+  const reportContent = modal.getAttribute('data-ai-report');
+  const pageTitle = modal.getAttribute('data-page-title') || 'Untitled Page';
+
+  if (!reportContent) {
+    showToast('No report content to save.', 'warning');
+    return;
+  }
+
+  try {
+    const cleanContent = stripMarkdown(reportContent);
+    const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    const noteTitle = `Diagnostics Report - ${pageTitle} - ${date}`;
+
+    const newNote = {
+      id: `note-${Date.now()}`,
+      title: noteTitle,
+      content: cleanContent,
+      noteType: 'documentation',
+      icon: 'document',
+      tags: ['diagnostics', 'system-analysis'],
+      timestamp: Date.now(),
+    };
+
+    notes.push(newNote);
+    const storageKey = `notes_${currentProfile}`;
+    await chrome.storage.local.set({ [storageKey]: notes });
+
+    renderNotes();
+    showToast('Diagnostics report saved as a note ✓', 'success');
+  } catch (error) {
+    console.error('[Save Diagnostics] Failed:', error);
+    showToast('Failed to save report as note.', 'error');
+  }
+}
+
+/**
+ * Downloads the generated AI diagnostics report as a text file.
+ */
+async function downloadDiagnosticsReport() {
+  const modal = document.getElementById('diagnosticsModal');
+  const reportContent = modal.getAttribute('data-ai-report');
+
+  if (!reportContent) {
+    showToast('No report content to download.', 'warning');
+    return;
+  }
+
+  try {
+    const cleanContent = stripMarkdown(reportContent);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `diagnostics-report-${timestamp}.txt`;
+
+    const blob = new Blob([cleanContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast('Report downloaded successfully ✓', 'success');
+  } catch (error) {
+    console.error('[Download Diagnostics] Failed:', error);
+    showToast('Failed to download report.', 'error');
+  }
+}
+
+/**
+ * Build enhanced universal diagnostics prompt for any page type
+ * Provides multi-audience guidance (presales, consultants, technical)
  */
 function buildDiagnosticsPrompt(standardDiag, scrapedData, currentPageData) {
-  return `Analyze this SAP page and report ONLY what you observe. Be brief and factual.
+  const pageTitle = scrapedData.title || currentPageData?.hostname || 'Unknown Page';
+  const currentUrl = scrapedData.url || currentPageData?.url || 'Unknown URL';
+  const pageType = currentPageData?.solutionType || detectPageType(currentUrl);
+  const loadTime = scrapedData.performance?.loadTime;
+  const domReady = scrapedData.performance?.domContentLoaded;
+  const resourceCount = scrapedData.performance?.resourceCount;
+  const consoleErrors = scrapedData.consoleErrors || [];
+  const testDataFound = scrapedData.testData?.found || false;
+  const expiredDates = scrapedData.expiredDates || [];
+  const errorStates = scrapedData.error || 'None detected';
+  const failedElements = scrapedData.cardsNotLoaded || [];
 
-# SCRAPED PAGE DATA
+  return `You are an expert SAP system analyst providing diagnostics for presales, consultants, and technical users. Analyze this page and provide actionable insights in the structured format below.
 
-**Console Errors**: ${scrapedData.consoleErrors?.length || 0} errors
-${scrapedData.consoleErrors?.slice(0, 5).map(e => `  - ${e}`).join('\n') || ''}
+# PAGE ANALYSIS DATA
 
-**Performance**:
-  - Load Time: ${scrapedData.performance?.loadTime || 'N/A'}ms
-  - DOM Loaded: ${scrapedData.performance?.domContentLoaded || 'N/A'}ms
-  - Resources: ${scrapedData.performance?.resourceCount || 0}
+**Current Page**: ${pageTitle}
+**URL**: ${currentUrl}
+**Page Type**: ${pageType || 'Unknown'}
+**Timestamp**: ${new Date().toISOString()}
 
-**Test Data**: ${scrapedData.testData?.found ? 'YES ⚠️' : 'No'}
-${scrapedData.testData?.examples?.slice(0, 3).map(ex => `  - ${ex}`).join('\n') || ''}
+## Technical Metrics
+- **Load Time**: ${loadTime || 'N/A'}ms
+- **DOM Ready**: ${domReady || 'N/A'}ms  
+- **Resources**: ${resourceCount || 0} loaded
+- **Console Errors**: ${consoleErrors.length} found
+- **Failed Elements**: ${failedElements.length} detected
 
-**Expired Dates**: ${scrapedData.expiredDates?.length || 0}
-${scrapedData.expiredDates?.slice(0, 3).map(d => `  - ${d.text} (${d.daysAgo} days ago)`).join('\n') || ''}
+## Content Analysis
+- **Test Data Found**: ${testDataFound ? 'YES ⚠️' : 'No'}
+- **Expired Dates**: ${expiredDates.length} detected
+- **Error States**: ${errorStates}
 
-**Cards Not Loaded**: ${scrapedData.cardsNotLoaded?.length || 0}
-${scrapedData.cardsNotLoaded?.slice(0, 3).map(c => `  - ${c}`).join('\n') || ''}
+# YOUR ANALYSIS TASK
 
-**Error Page**: ${scrapedData.error ? 'YES - ' + scrapedData.errorType : 'No'}
-${scrapedData.error ? scrapedData.error : ''}
+Provide your response in this EXACT format:
 
-# YOUR TASK
+## 🔍 QUICK SUMMARY
+[2-3 sentences: What is this page? What's its current state? Any immediate concerns?]
 
-Write 2-3 short paragraphs summarizing ONLY what you see on this page. State facts, not guidance.
+## ⚡ KEY FINDINGS
+**Performance**: [One line assessment]
+**Functionality**: [One line assessment]  
+**Data Quality**: [One line assessment]
+**User Experience**: [One line assessment]
 
-Then include this standard diagnostics:
+## 🎯 FOR PRESALES TEAMS
+**Demo Readiness**: [Ready/Needs Attention/Not Ready + why]
+**Customer Talking Points**: 
+- [Key strength to highlight]
+- [Value proposition visible]
+- [Integration capability shown]
 
-${standardDiag}`;
+**Demo Risks**:
+- [Potential issue 1]
+- [Potential issue 2]
+
+## 🔧 FOR CONSULTANTS  
+**Implementation Insights**:
+- [Configuration observation]
+- [Integration point identified]
+- [Customization detected]
+
+**Client Guidance**:
+- [Immediate recommendation]
+- [Best practice suggestion]
+- [Optimization opportunity]
+
+## 🛠️ TECHNICAL DIAGNOSTICS
+**System Health**: [Healthy/Degraded/Critical + reason]
+**Issues Detected**:
+${consoleErrors.slice(0, 3).map(error => `- ${error}`).join('\n') || '- None'}
+
+**Performance Notes**:
+- Load time: ${loadTime ? (loadTime > 3000 ? 'Slow' : loadTime > 1000 ? 'Moderate' : 'Fast') : 'Unknown'}
+- Error rate: ${consoleErrors.length ? 'Elevated' : 'Normal'}
+
+## 📋 ACTION ITEMS
+**Immediate** (< 1 hour):
+- [ ] [Most urgent task]
+- [ ] [Quick fix needed]
+
+**Short Term** (< 1 week):  
+- [ ] [Important improvement]
+- [ ] [Configuration task]
+
+**Long Term** (> 1 week):
+- [ ] [Strategic enhancement]
+- [ ] [Major optimization]
+
+## 🚨 ALERTS & WARNINGS
+${testDataFound ? '⚠️ **TEST DATA DETECTED** - Not suitable for customer demos' : '✅ No test data visible'}
+${expiredDates.length ? `⚠️ **EXPIRED CONTENT** - ${expiredDates.length} items need updating` : '✅ Content appears current'}
+${consoleErrors.length > 5 ? '🔴 **HIGH ERROR RATE** - System stability concerns' : '✅ Error levels normal'}
+
+## 💡 OPTIMIZATION OPPORTUNITIES
+[3-4 specific, actionable recommendations based on what you observed]
+
+---
+*Analysis completed at ${new Date().toLocaleString()} | Based on live page data*`;
+}
+
+/**
+ * Detect page type from URL for non-SAP pages
+ * @param {string} url - Page URL
+ * @returns {string} Page type classification
+ */
+function detectPageType(url) {
+  if (!url) return 'Unknown';
+  
+  // SAP platforms
+  if (url.includes('sapsf.com') || url.includes('successfactors')) return 'SuccessFactors';
+  if (url.includes('s4hana') || url.includes('.ondemand.com')) return 'S/4HANA';
+  if (url.includes('hana.ondemand') || url.includes('cfapps') || url.includes('build.cloud.sap')) return 'SAP BTP';
+  if (url.includes('ibp.cloud.sap') || url.includes('ibplanning')) return 'SAP IBP';
+  
+  // Other platforms
+  if (url.includes('salesforce.com')) return 'Salesforce';
+  if (url.includes('workday.com')) return 'Workday';
+  if (url.includes('oracle.com')) return 'Oracle';
+  if (url.includes('microsoft.com') || url.includes('office.com')) return 'Microsoft';
+  if (url.includes('github.com')) return 'GitHub';
+  if (url.includes('stackoverflow.com')) return 'Stack Overflow';
+  
+  // Generic classification
+  if (url.includes('localhost') || url.includes('127.0.0.1')) return 'Local Development';
+  if (url.startsWith('chrome://') || url.startsWith('edge://')) return 'Browser Internal';
+  
+  return 'Web Application';
 }
 
 /**
@@ -2554,7 +2616,6 @@ async function openSettingsModal() {
   // Initialize Settings UI
   setupSettingsTabs();
   loadQuickActionsTab();
-  loadProfilesTab();
   
   // Load saved API keys when opening Settings
   await loadSavedAPIKeys();
@@ -2592,8 +2653,6 @@ function setupSettingsTabs() {
       // Reload tab content
       if (targetTab === 'quick-actions') {
         loadQuickActionsTab();
-      } else if (targetTab === 'profiles') {
-        loadProfilesTab();
       }
     });
   });
@@ -2612,16 +2671,6 @@ async function loadQuickActionsTab() {
   
   // Render all profiles' Quick Actions
   await renderAllProfilesQuickActions();
-}
-
-// ==================== SETTINGS - PROFILES TAB ====================
-
-/**
- * Load Profiles tab with simple lists (STUB - Removed in simplification)
- */
-async function loadProfilesTab() {
-  // No-op - Profiles tab removed in simplification
-  console.log('[Profiles Tab] Tab removed in Settings simplification');
 }
 
 /**
@@ -2750,620 +2799,6 @@ async function saveAllQuickActions() {
     console.error('[Save All Quick Actions] Failed:', error);
     showToast('Failed to save Quick Actions', 'error');
   }
-}
-
-
-/**
- * Render system profiles as simple list
- */
-async function renderSystemProfilesList() {
-  const listDiv = document.getElementById('systemProfilesList');
-  if (!listDiv) return;
-  
-  const result = await chrome.storage.local.get('hiddenProfiles');
-  const hiddenProfiles = result.hiddenProfiles || [];
-  
-  const systemProfiles = availableProfiles.filter(p => 
-    p.type === 'system' && 
-    !hiddenProfiles.includes(p.id)
-  );
-  
-  if (systemProfiles.length === 0) {
-    listDiv.innerHTML = '<div style="padding: 12px; color: var(--text-secondary); font-size: 12px;">No visible system profiles</div>';
-    return;
-  }
-  
-  listDiv.innerHTML = systemProfiles.map(profile => {
-    const isActive = profile.id === currentProfile;
-    return `
-      <div class="profile-list-item ${isActive ? 'active' : ''}">
-        <span class="profile-list-icon">${profile.icon || '📁'}</span>
-        <div class="profile-list-info">
-          <div class="profile-list-name">${profile.name}</div>
-          <div class="profile-list-desc">${profile.description || 'System profile'}</div>
-        </div>
-        <div class="profile-list-actions">
-          <button class="btn btn-sm" onclick="hideProfileInline('${profile.id}')" title="Hide">🙈</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-/**
- * Render custom profiles as simple list
- */
-async function renderCustomProfilesList() {
-  const listDiv = document.getElementById('customProfilesList');
-  if (!listDiv) return;
-  
-  const customProfiles = availableProfiles.filter(p => p.type === 'custom');
-  
-  if (customProfiles.length === 0) {
-    listDiv.innerHTML = '<div style="padding: 12px; color: var(--text-secondary); font-size: 12px;">No custom profiles</div>';
-    return;
-  }
-  
-  listDiv.innerHTML = customProfiles.map(profile => {
-    const isActive = profile.id === currentProfile;
-    return `
-      <div class="profile-list-item ${isActive ? 'active' : ''}">
-        <span class="profile-list-icon">${profile.icon || '📁'}</span>
-        <div class="profile-list-info">
-          <div class="profile-list-name">${profile.name}</div>
-          <div class="profile-list-desc">Custom profile</div>
-        </div>
-        <div class="profile-list-actions">
-          <button class="btn btn-sm" onclick="editProfileInline('${profile.id}')" title="Edit">✏️</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteProfileInline('${profile.id}')" title="Delete">🗑️</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-/**
- * Render hidden profiles list
- */
-async function renderHiddenProfilesList() {
-  const sectionDiv = document.getElementById('hiddenProfilesSection');
-  const listDiv = document.getElementById('hiddenProfilesList');
-  
-  if (!sectionDiv || !listDiv) return;
-  
-  const result = await chrome.storage.local.get('hiddenProfiles');
-  const hiddenProfileIds = result.hiddenProfiles || [];
-  
-  if (hiddenProfileIds.length === 0) {
-    sectionDiv.style.display = 'none';
-    return;
-  }
-  
-  sectionDiv.style.display = 'block';
-  
-  const hiddenProfiles = availableProfiles.filter(p => hiddenProfileIds.includes(p.id));
-  
-  listDiv.innerHTML = hiddenProfiles.map(profile => {
-    return `
-      <div class="profile-list-item">
-        <span class="profile-list-icon">${profile.icon || '📁'}</span>
-        <div class="profile-list-info">
-          <div class="profile-list-name">${profile.name}</div>
-          <div class="profile-list-desc">Hidden</div>
-        </div>
-        <div class="profile-list-actions">
-          <button class="btn btn-sm" onclick="unhideProfileInline('${profile.id}')" title="Show">👁️</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-/**
- * Hide profile inline
- */
-async function hideProfileInline(profileId) {
-  try {
-    const result = await chrome.storage.local.get('hiddenProfiles');
-    const hiddenProfiles = result.hiddenProfiles || [];
-    
-    if (!hiddenProfiles.includes(profileId)) {
-      hiddenProfiles.push(profileId);
-    }
-    
-    await chrome.storage.local.set({ hiddenProfiles });
-    
-    if (currentProfile === profileId) {
-      await switchProfile('profile-global');
-    }
-    
-    await loadProfilesTab();
-    renderProfileMenu();
-    showToast('Profile hidden', 'success');
-  } catch (error) {
-    console.error('[Hide Profile] Failed:', error);
-    showToast('Failed to hide', 'error');
-  }
-}
-
-/**
- * Unhide profile inline
- */
-async function unhideProfileInline(profileId) {
-  try {
-    const result = await chrome.storage.local.get('hiddenProfiles');
-    let hiddenProfiles = result.hiddenProfiles || [];
-    
-    hiddenProfiles = hiddenProfiles.filter(id => id !== profileId);
-    
-    await chrome.storage.local.set({ hiddenProfiles });
-    
-    await loadProfilesTab();
-    renderProfileMenu();
-    showToast('Profile restored', 'success');
-  } catch (error) {
-    console.error('[Unhide Profile] Failed:', error);
-    showToast('Failed to restore', 'error');
-  }
-}
-
-/**
- * Edit profile inline (simplified - just prompt for name)
- */
-async function editProfileInline(profileId) {
-  try {
-    const result = await chrome.storage.local.get('customProfiles');
-    const customProfiles = result.customProfiles || {};
-    const profile = customProfiles[profileId];
-    
-    if (!profile) {
-      showToast('Profile not found', 'error');
-      return;
-    }
-    
-    const newName = prompt('Edit profile name:', profile.name);
-    if (newName && newName.trim()) {
-      profile.name = newName.trim();
-      await chrome.storage.local.set({ customProfiles });
-      
-      // Update availableProfiles
-      const idx = availableProfiles.findIndex(p => p.id === profileId);
-      if (idx >= 0) {
-        availableProfiles[idx].name = newName.trim();
-      }
-      
-      await loadProfilesTab();
-      renderProfileMenu();
-      showToast('Profile updated', 'success');
-    }
-  } catch (error) {
-    console.error('[Edit Profile] Failed:', error);
-    showToast('Failed to update', 'error');
-  }
-}
-
-/**
- * Delete profile inline
- */
-async function deleteProfileInline(profileId) {
-  if (!confirm('Delete this profile? All data will be removed.')) return;
-  
-  try {
-    const result = await chrome.storage.local.get('customProfiles');
-    const customProfiles = result.customProfiles || {};
-    
-    delete customProfiles[profileId];
-    await chrome.storage.local.set({ customProfiles });
-    
-    availableProfiles = availableProfiles.filter(p => p.id !== profileId);
-    
-    const keysToRemove = [`environments_${profileId}`, `solutions_${profileId}`];
-    await chrome.storage.local.remove(keysToRemove);
-    
-    if (currentProfile === profileId) {
-      await switchProfile('profile-global');
-    }
-    
-    await loadProfilesTab();
-    renderProfileMenu();
-    showToast('Profile deleted', 'success');
-  } catch (error) {
-    console.error('[Delete Profile] Failed:', error);
-    showToast('Failed to delete', 'error');
-  }
-}
-
-/**
- * Create new profile (simplified - prompt for name only)
- */
-async function createNewProfileInline() {
-  const name = prompt('Enter profile name:');
-  if (!name || !name.trim()) return;
-  
-  try {
-    const result = await chrome.storage.local.get('customProfiles');
-    const customProfiles = result.customProfiles || {};
-    
-    const newId = `custom-${name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
-    
-    customProfiles[newId] = {
-      id: newId,
-      name: name.trim(),
-      type: 'custom',
-      basedOn: 'profile-global',
-      created: new Date().toISOString()
-    };
-    
-    await chrome.storage.local.set({ customProfiles });
-    
-    availableProfiles.push({
-      id: newId,
-      name: name.trim(),
-      type: 'custom',
-      file: null
-    });
-    
-    await loadProfilesTab();
-    renderProfileMenu();
-    showToast(`Profile "${name.trim()}" created`, 'success');
-  } catch (error) {
-    console.error('[Create Profile] Failed:', error);
-    showToast('Failed to create', 'error');
-  }
-}
-
-/**
- * Toggle hidden profiles visibility
- */
-function toggleHiddenProfiles() {
-  const listDiv = document.getElementById('hiddenProfilesList');
-  const toggleBtn = document.getElementById('toggleHiddenProfiles');
-  
-  if (!listDiv || !toggleBtn) return;
-  
-  const isVisible = listDiv.style.display !== 'none';
-  
-  if (isVisible) {
-    listDiv.style.display = 'none';
-    toggleBtn.textContent = '👁️ Show Hidden Profiles';
-  } else {
-    listDiv.style.display = 'block';
-    toggleBtn.textContent = '👁️ Hide List';
-  }
-}
-
-/**
- * Open Create Profile modal
- */
-function openCreateProfileModal() {
-  const modal = document.getElementById('editProfileModal');
-  if (!modal) return;
-  
-  // Reset form
-  document.getElementById('profileName').value = '';
-  document.getElementById('profileDesc').value = '';
-  document.getElementById('profileIcon').value = '📁';
-  document.getElementById('profileBase').value = 'profile-global';
-  document.getElementById('profileCopyQuickActions').checked = false;
-  
-  // Set create mode
-  modal.removeAttribute('data-edit-id');
-  modal.setAttribute('data-mode', 'create');
-  
-  // Update modal title
-  document.querySelector('#editProfileModal .modal-header h3').textContent = 'Create Profile';
-  
-  modal.classList.add('active');
-}
-
-/**
- * Edit custom profile
- */
-async function editProfile(profileId) {
-  const modal = document.getElementById('editProfileModal');
-  if (!modal) return;
-  
-  try {
-    // Load custom profiles from storage
-    const result = await chrome.storage.local.get('customProfiles');
-    const customProfiles = result.customProfiles || {};
-    const profile = customProfiles[profileId];
-    
-    if (!profile) {
-      showToast('Profile not found', 'error');
-      return;
-    }
-    
-    // Populate form
-    document.getElementById('profileName').value = profile.name || '';
-    document.getElementById('profileDesc').value = profile.description || '';
-    document.getElementById('profileIcon').value = profile.icon || '📁';
-    document.getElementById('profileBase').value = profile.basedOn || 'profile-global';
-    document.getElementById('profileCopyQuickActions').checked = false; // Not applicable in edit mode
-    
-    // Set edit mode
-    modal.setAttribute('data-edit-id', profileId);
-    modal.setAttribute('data-mode', 'edit');
-    
-    // Update modal title
-    document.querySelector('#editProfileModal .modal-header h3').textContent = 'Edit Profile';
-    
-    modal.classList.add('active');
-    
-  } catch (error) {
-    console.error('[Edit Profile] Failed:', error);
-    showToast('Failed to load profile', 'error');
-  }
-}
-
-/**
- * Duplicate profile (system or custom)
- */
-async function duplicateProfile(profileId) {
-  const modal = document.getElementById('editProfileModal');
-  if (!modal) return;
-  
-  try {
-    const profile = availableProfiles.find(p => p.id === profileId);
-    if (!profile) {
-      showToast('Profile not found', 'error');
-      return;
-    }
-    
-    // Populate form with " (Copy)" suffix
-    document.getElementById('profileName').value = `${profile.name} (Copy)`;
-    document.getElementById('profileDesc').value = profile.description || '';
-    document.getElementById('profileIcon').value = profile.icon || '📁';
-    document.getElementById('profileBase').value = profileId;
-    document.getElementById('profileCopyQuickActions').checked = true;
-    
-    // Set duplicate mode
-    modal.removeAttribute('data-edit-id');
-    modal.setAttribute('data-mode', 'duplicate');
-    modal.setAttribute('data-source-profile', profileId);
-    
-    // Update modal title
-    document.querySelector('#editProfileModal .modal-header h3').textContent = 'Duplicate Profile';
-    
-    modal.classList.add('active');
-    
-  } catch (error) {
-    console.error('[Duplicate Profile] Failed:', error);
-    showToast('Failed to duplicate profile', 'error');
-  }
-}
-
-/**
- * Delete custom profile
- */
-async function deleteProfile(profileId) {
-  const confirmed = confirm('Delete this profile? All associated data will be removed.');
-  if (!confirmed) return;
-  
-  try {
-    // Load custom profiles
-    const result = await chrome.storage.local.get('customProfiles');
-    const customProfiles = result.customProfiles || {};
-    
-    // Remove profile
-    delete customProfiles[profileId];
-    
-    // Save updated profiles
-    await chrome.storage.local.set({ customProfiles });
-    
-    // Remove from available profiles list
-    availableProfiles = availableProfiles.filter(p => p.id !== profileId);
-    
-    // Remove associated data
-    const keysToRemove = [
-      `environments_${profileId}`,
-      `solutions_${profileId}`
-    ];
-    await chrome.storage.local.remove(keysToRemove);
-    
-    // Switch to Global if deleted current profile
-    if (currentProfile === profileId) {
-      await switchProfile('profile-global');
-    }
-    
-    // Reload grids
-    await loadProfilesManager();
-    renderProfileMenu();
-    
-    showToast('Profile deleted', 'success');
-    
-  } catch (error) {
-    console.error('[Delete Profile] Failed:', error);
-    showToast('Failed to delete profile', 'error');
-  }
-}
-
-/**
- * Hide system profile
- */
-async function hideProfile(profileId) {
-  try {
-    // Load hidden profiles list
-    const result = await chrome.storage.local.get('hiddenProfiles');
-    const hiddenProfiles = result.hiddenProfiles || [];
-    
-    // Add to hidden list
-    if (!hiddenProfiles.includes(profileId)) {
-      hiddenProfiles.push(profileId);
-    }
-    
-    // Save updated list
-    await chrome.storage.local.set({ hiddenProfiles });
-    
-    // Switch to Global if hiding current profile
-    if (currentProfile === profileId) {
-      await switchProfile('profile-global');
-    }
-    
-    // Reload grids and menu
-    await loadProfilesManager();
-    renderProfileMenu();
-    
-    showToast('Profile hidden', 'success');
-    
-  } catch (error) {
-    console.error('[Hide Profile] Failed:', error);
-    showToast('Failed to hide profile', 'error');
-  }
-}
-
-/**
- * Unhide system profile
- */
-async function unhideProfile(profileId) {
-  try {
-    // Load hidden profiles list
-    const result = await chrome.storage.local.get('hiddenProfiles');
-    let hiddenProfiles = result.hiddenProfiles || [];
-    
-    // Remove from hidden list
-    hiddenProfiles = hiddenProfiles.filter(id => id !== profileId);
-    
-    // Save updated list
-    await chrome.storage.local.set({ hiddenProfiles });
-    
-    // Reload grids and menu
-    await loadProfilesManager();
-    renderProfileMenu();
-    
-    showToast('Profile restored', 'success');
-    
-  } catch (error) {
-    console.error('[Unhide Profile] Failed:', error);
-    showToast('Failed to restore profile', 'error');
-  }
-}
-
-/**
- * Save profile (create, edit, or duplicate)
- */
-async function saveProfile() {
-  const modal = document.getElementById('editProfileModal');
-  const mode = modal.getAttribute('data-mode');
-  const editId = modal.getAttribute('data-edit-id');
-  const sourceProfile = modal.getAttribute('data-source-profile');
-  
-  const name = document.getElementById('profileName').value.trim();
-  const description = document.getElementById('profileDesc').value.trim();
-  const icon = document.getElementById('profileIcon').value || '📁';
-  const basedOn = document.getElementById('profileBase').value;
-  const copyQuickActions = document.getElementById('profileCopyQuickActions').checked;
-  
-  // Validation
-  if (!name) {
-    showToast('Profile name is required', 'warning');
-    return;
-  }
-  
-  try {
-    // Load custom profiles
-    const result = await chrome.storage.local.get('customProfiles');
-    const customProfiles = result.customProfiles || {};
-    
-    if (mode === 'create' || mode === 'duplicate') {
-      // Create new profile
-      const newId = `custom-${name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
-      
-      customProfiles[newId] = {
-        id: newId,
-        name,
-        description,
-        icon,
-        type: 'custom',
-        basedOn,
-        created: new Date().toISOString()
-      };
-      
-      // Copy Quick Actions if requested
-      if (copyQuickActions && (sourceProfile || basedOn)) {
-        const sourceId = sourceProfile || basedOn;
-        const sourceKey = `solutions_${sourceId}`;
-        const sourceResult = await chrome.storage.local.get(sourceKey);
-        
-        if (sourceResult[sourceKey]) {
-          const targetKey = `solutions_${newId}`;
-          await chrome.storage.local.set({ [targetKey]: sourceResult[sourceKey] });
-        }
-      }
-      
-      // Save custom profiles
-      await chrome.storage.local.set({ customProfiles });
-      
-      // Add to available profiles list
-      availableProfiles.push({
-        id: newId,
-        name,
-        type: 'custom',
-        file: null,
-        icon,
-        description
-      });
-      
-      showToast(`Profile "${name}" created ✓`, 'success');
-      
-      // Switch to new profile
-      await switchProfile(newId);
-      
-    } else if (mode === 'edit') {
-      // Edit existing profile
-      if (!editId || !customProfiles[editId]) {
-        showToast('Profile not found', 'error');
-        return;
-      }
-      
-      customProfiles[editId].name = name;
-      customProfiles[editId].description = description;
-      customProfiles[editId].icon = icon;
-      customProfiles[editId].basedOn = basedOn;
-      
-      // Save custom profiles
-      await chrome.storage.local.set({ customProfiles });
-      
-      // Update available profiles list
-      const profileIndex = availableProfiles.findIndex(p => p.id === editId);
-      if (profileIndex >= 0) {
-        availableProfiles[profileIndex].name = name;
-        availableProfiles[profileIndex].icon = icon;
-        availableProfiles[profileIndex].description = description;
-      }
-      
-      showToast('Profile updated ✓', 'success');
-      
-      // Update UI if editing current profile
-      if (currentProfile === editId) {
-        document.getElementById('currentProfileName').textContent = name;
-      }
-    }
-    
-    // Reload grids and menu
-    await loadProfilesManager();
-    renderProfileMenu();
-    
-    // Close modal
-    modal.classList.remove('active');
-    modal.removeAttribute('data-edit-id');
-    modal.removeAttribute('data-mode');
-    modal.removeAttribute('data-source-profile');
-    
-  } catch (error) {
-    console.error('[Save Profile] Failed:', error);
-    showToast('Failed to save profile', 'error');
-  }
-}
-
-function closeProfileModal() {
-  const modal = document.getElementById('editProfileModal');
-  modal.classList.remove('active');
-  modal.removeAttribute('data-edit-id');
-  modal.removeAttribute('data-mode');
-  modal.removeAttribute('data-source-profile');
-  document.getElementById('profileName').value = '';
-  document.getElementById('profileDesc').value = '';
 }
 
 // ==================== SETTINGS - EXPORT ====================
@@ -3517,7 +2952,8 @@ async function handleFileImport(event) {
         !shortcuts.some(existing => existing.url === imported.url)
       );
       shortcuts = [...newShortcuts, ...shortcuts];
-      await chrome.storage.local.set({ shortcuts });
+      const storageKey = `shortcuts_${currentProfile}`;
+      await chrome.storage.local.set({ [storageKey]: shortcuts });
       importCount += newShortcuts.length;
       if (newShortcuts.length > 0) importSummary.push(`${newShortcuts.length} shortcuts`);
     }
@@ -3540,7 +2976,8 @@ async function handleFileImport(event) {
         !notes.some(existing => existing.title === imported.title)
       );
       notes = [...newNotes, ...notes];
-      await chrome.storage.local.set({ notes });
+      const storageKey = `notes_${currentProfile}`;
+      await chrome.storage.local.set({ [storageKey]: notes });
       importCount += newNotes.length;
       if (newNotes.length > 0) importSummary.push(`${newNotes.length} notes`);
     }
@@ -3604,9 +3041,9 @@ async function createCustomProfile(profileId, profileName, data) {
     
     // Save data to profile-specific storage keys
     await chrome.storage.local.set({
-      shortcuts: data.shortcuts || [],
+      [`shortcuts_${profileId}`]: data.shortcuts || [],
       [`environments_${profileId}`]: data.environments || [],
-      notes: data.notes || []
+      [`notes_${profileId}`]: data.notes || []
     });
     
     // Add to available profiles list
@@ -3915,6 +3352,8 @@ function setupEventListeners() {
   document.getElementById('closeDiagnosticsBtn')?.addEventListener('click', closeDiagnosticsModal);
   document.getElementById('copyAllDiagnosticsBtn')?.addEventListener('click', copyAllDiagnostics);
   document.getElementById('regenerateDiagnosticsWithAIBtn')?.addEventListener('click', regenerateDiagnosticsWithAI);
+  document.getElementById('saveDiagnosticsBtn')?.addEventListener('click', saveDiagnosticsAsNote);
+  document.getElementById('downloadDiagnosticsBtn')?.addEventListener('click', downloadDiagnosticsReport);
   
   // OSS Note search (inline form in Notes section)
   document.getElementById('ossNoteBtn')?.addEventListener('click', async () => {
@@ -4043,14 +3482,9 @@ function setupEventListeners() {
   document.getElementById('closeEnterpriseCalculatorBtn')?.addEventListener('click', closeEnterpriseCalculatorModal);
   
   // New simplified Settings handlers
-  document.getElementById('newProfileBtn')?.addEventListener('click', createNewProfileInline);
   document.getElementById('exportAllBtn')?.addEventListener('click', exportJsonToFile);
   document.getElementById('importJsonBtn')?.addEventListener('click', importJsonFromFile);
   document.getElementById('importFileInput')?.addEventListener('change', handleFileImport);
-  
-  // Legacy Profile modal handlers (still used for duplicate/edit with full form)
-  document.getElementById('closeProfileModal')?.addEventListener('click', closeProfileModal);
-  document.getElementById('saveProfileBtn')?.addEventListener('click', saveProfile);
   
   // Display mode event listeners removed - extension operates in side panel mode only
   
@@ -5188,24 +4622,29 @@ function showEstimateResults(result) {
   `;
   
   contentEl.innerHTML = html;
+  
+  // Store result data in modal dataset for robust saving and copying
+  modal.dataset.responseContent = result.responseContent || '';
+  modal.dataset.modelName = result.modelData.model || result.modelId;
+  modal.dataset.provider = result.modelData.provider || 'Unknown';
+  modal.dataset.inputTokens = result.inputTokens;
+  modal.dataset.outputTokens = result.outputTokens;
+  modal.dataset.totalCost = result.costs.totalCost;
+  
   modal.classList.add('active');
   
-  // Store result data in modal for download functionality
-  modal.setAttribute('data-response-content', result.responseContent || '');
-  modal.setAttribute('data-model-name', result.modelData.model || result.modelId);
-  modal.setAttribute('data-provider', result.modelData.provider || '');
-  modal.setAttribute('data-input-tokens', result.inputTokens);
-  modal.setAttribute('data-output-tokens', result.outputTokens);
-  
-  // Setup download dropdown functionality
-  setupDownloadDropdown();
-  
-  // Attach handlers to footer buttons (via modal footer, not inline)
+  // Attach handlers to footer buttons
   const saveBtn = modal.querySelector('#saveAiResponseBtn');
+  const copyBtn = modal.querySelector('#copyAiResponseBtn');
   const calcBtn = modal.querySelector('#openEnterpriseCalcBtn');
   
   if (saveBtn) {
+    // Pass the original result object as a fallback
     saveBtn.onclick = () => saveAIResponseAsNote(result);
+  }
+  
+  if (copyBtn) {
+    copyBtn.onclick = copyAIResponseToClipboard;
   }
   
   if (calcBtn) {
@@ -5214,62 +4653,76 @@ function showEstimateResults(result) {
 }
 
 /**
- * Save AI response as a note with AI tags
- * @param {Object} result - AI test result object
+ * Save AI response as a note with AI tags.
+ * Reads content and metadata directly from the modal's dataset attributes
+ * to ensure the visible response is saved.
+ * @param {Object} fallbackResult - Optional fallback AI test result object if dataset is missing.
  */
-async function saveAIResponseAsNote(result) {
-  if (!result || !result.responseContent) {
-    showToast('No response content to save', 'warning');
-    return;
+async function saveAIResponseAsNote(fallbackResult) {
+  const modal = document.getElementById('aiTestResultsModal');
+  
+  // Prioritize reading from the modal's dataset attributes
+  let responseContent = modal.dataset.responseContent;
+  let modelName = modal.dataset.modelName;
+  let provider = modal.dataset.provider;
+  let inputTokens = modal.dataset.inputTokens;
+  let outputTokens = modal.dataset.outputTokens;
+  let totalCost = modal.dataset.totalCost; // may not be available
+
+  // Fallback to the argument if dataset is not available
+  if (!responseContent || !modelName) {
+    if (fallbackResult && fallbackResult.responseContent) {
+        responseContent = fallbackResult.responseContent;
+        modelName = fallbackResult.modelData.model;
+        provider = fallbackResult.modelData.provider;
+        inputTokens = fallbackResult.inputTokens;
+        outputTokens = fallbackResult.outputTokens;
+        totalCost = fallbackResult.costs.totalCost;
+    } else {
+      showToast('No response content to save', 'warning');
+      return;
+    }
   }
   
   try {
-    // Generate title from model info
     const timestamp = new Date().toLocaleString();
-    const title = `AI Response - ${result.modelData.provider} ${result.modelData.model}`;
+    const title = `AI Response - ${provider} ${modelName}`;
     
-    // Strip markdown for clean text storage
-    const cleanResponse = stripMarkdown(result.responseContent);
+    const cleanResponse = stripMarkdown(responseContent);
     
-    // Build note content with clean text response and metadata
+    let costLine = totalCost ? `Cost: $${totalCost}\n` : '';
+
     const content = `${cleanResponse}
 
 ---
-Model: ${result.modelData.provider} - ${result.modelData.model}
-Input Tokens: ${result.inputTokens.toLocaleString()}
-Output Tokens: ${result.outputTokens.toLocaleString()}
-Cost: $${result.costs.totalCost}
-Generated: ${timestamp}`;
+Model: ${provider} - ${modelName}
+Input Tokens: ${Number(inputTokens).toLocaleString()}
+Output Tokens: ${Number(outputTokens).toLocaleString()}
+${costLine}Generated: ${timestamp}`;
     
-    // Create note object with ai-prompt type and AI tags
     const noteObject = {
       id: `note-${Date.now()}`,
       title,
       content,
       icon: 'ai',
       noteType: 'ai-prompt',
-      tags: ['ai', 'llm-response', result.modelData.provider.toLowerCase()],
+      tags: ['ai', 'llm-response', provider ? provider.toLowerCase() : 'ai'],
       timestamp: Date.now(),
       aiConfig: {
-        defaultModel: result.modelData.model,
-        provider: result.modelData.provider
+        defaultModel: modelName,
+        provider: provider
       }
     };
     
-    // Add to notes array
     notes.push(noteObject);
     
-    // Save to profile-specific storage
     const storageKey = `notes_${currentProfile}`;
     await chrome.storage.local.set({ [storageKey]: notes });
     
-    // Refresh notes UI
     renderNotes();
-    
-    // Close AI results modal
     closeAiTestResultsModal();
     
-    showToast('Response saved as note ✓', 'success');
+    showToast('Response saved as a note ✓', 'success');
     
   } catch (error) {
     console.error('[Save AI Response] Failed:', error);
@@ -5278,67 +4731,38 @@ Generated: ${timestamp}`;
 }
 
 /**
- * Download AI response as a text file
- * @param {Object} result - AI test result object
+ * Copies the AI response from the modal to the clipboard.
+ * Reads content directly from the modal's dataset for robustness.
  */
-async function downloadAIResponse(result) {
-  if (!result || !result.responseContent) {
-    showToast('No response content to download', 'warning');
+async function copyAIResponseToClipboard() {
+  const modal = document.getElementById('aiTestResultsModal');
+  const responseContent = modal.dataset.responseContent;
+
+  if (!responseContent) {
+    showToast('No response content to copy.', 'warning');
     return;
   }
-  
+
   try {
-    const timestamp = new Date().toISOString().split('T')[0];
-    const timeStr = new Date().toISOString().split('T')[1].split('.')[0].replace(/:/g, '-');
-    
-    // Strip markdown for clean text export
-    const cleanResponse = stripMarkdown(result.responseContent);
-    
-    // Build file content with clean text and metadata
-    const fileContent = `AI Response
-Generated: ${new Date().toLocaleString()}
+    const plainText = stripMarkdown(responseContent);
 
-Model: ${result.modelData.provider} - ${result.modelData.model}
-Input Tokens: ${result.inputTokens.toLocaleString()}
-Output Tokens: ${result.outputTokens.toLocaleString()}
-Total Cost: $${result.costs.totalCost}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-${cleanResponse}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Cost Breakdown:
-- Input Cost: $${result.costs.inputCost}
-- Output Cost: $${result.costs.outputCost}
-- Total Cost: $${result.costs.totalCost}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-DISCLAIMER:
-Cost estimates are indicative only, based on LiteLLM pricing database.
-Pricing sourced from publicly available model provider rates (OpenAI, Anthropic).
-
-This tool is not affiliated with SAP SE.
-For official pricing, contact your provider or SAP directly.
-`;
-    
-    const blob = new Blob([fileContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `ai-response-${timestamp}-${timeStr}.txt`;
-    a.click();
-    
-    URL.revokeObjectURL(url);
-    
-    showToast('Response downloaded ✓', 'success');
-    
+    // Use Clipboard API with fallback
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(plainText);
+    } else {
+      // Fallback for older browsers or insecure contexts
+      const textarea = document.createElement('textarea');
+      textarea.value = plainText;
+      textarea.style.position = 'fixed'; // Prevent scrolling to bottom
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+    showToast('Response copied to clipboard ✓', 'success');
   } catch (error) {
-    console.error('[Download AI Response] Failed:', error);
-    showToast(`Failed to download: ${error.message}`, 'error');
+    console.error('[Copy AI Response] Failed:', error);
+    showToast('Failed to copy response.', 'error');
   }
 }
 
@@ -5350,316 +4774,6 @@ function closeAiTestResultsModal() {
   if (modal) {
     modal.classList.remove('active');
   }
-}
-
-/**
- * Setup download dropdown functionality for AI response
- */
-function setupDownloadDropdown() {
-  const downloadBtn = document.getElementById('downloadAiResponseBtn');
-  const dropdownMenu = document.getElementById('downloadFormatMenu');
-  
-  if (!downloadBtn || !dropdownMenu) return;
-  
-  // Toggle dropdown on button click
-  downloadBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    dropdownMenu.classList.toggle('show');
-  });
-  
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.btn-dropdown-wrapper')) {
-      dropdownMenu.classList.remove('show');
-    }
-  });
-  
-  // Handle format selection
-  dropdownMenu.querySelectorAll('.btn-dropdown-item').forEach(item => {
-    item.addEventListener('click', async (e) => {
-      e.stopPropagation();
-      const format = item.getAttribute('data-format');
-      await downloadAIResponseInFormat(format);
-      dropdownMenu.classList.remove('show');
-    });
-  });
-}
-
-/**
- * Download AI response in specified format
- * @param {string} format - File format (md, html, pdf, txt)
- */
-async function downloadAIResponseInFormat(format) {
-  const modal = document.getElementById('aiTestResultsModal');
-  if (!modal) return;
-  
-  const responseContent = modal.getAttribute('data-response-content');
-  const modelName = modal.getAttribute('data-model-name');
-  const provider = modal.getAttribute('data-provider');
-  const inputTokens = parseInt(modal.getAttribute('data-input-tokens')) || 0;
-  const outputTokens = parseInt(modal.getAttribute('data-output-tokens')) || 0;
-  
-  if (!responseContent) {
-    showToast('No response content to download', 'warning');
-    return;
-  }
-  
-  try {
-    const timestamp = new Date().toISOString().split('T')[0];
-    const timeStr = new Date().toISOString().split('T')[1].split('.')[0].replace(/:/g, '-');
-    
-    let fileContent, mimeType, extension;
-    
-    switch (format) {
-      case 'md':
-        fileContent = generateMarkdownExport(responseContent, modelName, provider, inputTokens, outputTokens);
-        mimeType = 'text/markdown';
-        extension = 'md';
-        break;
-        
-      case 'html':
-        fileContent = generateHTMLExport(responseContent, modelName, provider, inputTokens, outputTokens);
-        mimeType = 'text/html';
-        extension = 'html';
-        break;
-        
-      case 'pdf':
-        showToast('PDF export opens in print dialog - use "Save as PDF"', 'info');
-        printAsPDF(responseContent, modelName, provider, inputTokens, outputTokens);
-        return; // Don't create blob for PDF
-        
-      case 'txt':
-        fileContent = generateTextExport(responseContent, modelName, provider, inputTokens, outputTokens);
-        mimeType = 'text/plain';
-        extension = 'txt';
-        break;
-        
-      default:
-        showToast('Invalid format', 'error');
-        return;
-    }
-    
-    const blob = new Blob([fileContent], { type: mimeType });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `ai-response-${timestamp}-${timeStr}.${extension}`;
-    a.click();
-    
-    URL.revokeObjectURL(url);
-    
-    showToast(`Downloaded as ${extension.toUpperCase()} ✓`, 'success');
-    
-  } catch (error) {
-    console.error('[Download AI Response] Failed:', error);
-    showToast(`Download failed: ${error.message}`, 'error');
-  }
-}
-
-/**
- * Generate Markdown export
- */
-function generateMarkdownExport(content, modelName, provider, inputTokens, outputTokens) {
-  return `# AI Response
-
-**Generated**: ${new Date().toLocaleString()}  
-**Model**: ${provider} - ${modelName}  
-**Tokens**: ${(inputTokens + outputTokens).toLocaleString()} total (${inputTokens.toLocaleString()} input, ${outputTokens.toLocaleString()} output)
-
----
-
-${content}
-
----
-
-*Generated by SAP Pro Toolkit*
-`;
-}
-
-/**
- * Generate HTML export with styling
- */
-function generateHTMLExport(content, modelName, provider, inputTokens, outputTokens) {
-  const htmlContent = markdownToHTML(content);
-  
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Response - ${modelName}</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.8;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 40px 20px;
-      background: #ffffff;
-      color: #1a1a1a;
-    }
-    .metadata {
-      padding: 16px;
-      background: rgba(16, 185, 129, 0.1);
-      border-left: 4px solid #10B981;
-      border-radius: 6px;
-      margin-bottom: 32px;
-      font-size: 14px;
-    }
-    .metadata strong {
-      color: #10B981;
-    }
-    .content {
-      font-size: 15px;
-      line-height: 1.8;
-    }
-    .content h1 { font-size: 24px; margin-top: 32px; }
-    .content h2 { font-size: 20px; margin-top: 28px; }
-    .content h3 { font-size: 17px; margin-top: 24px; }
-    .content p { margin: 12px 0; }
-    .content code {
-      background: #f5f5f5;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: 'SF Mono', monospace;
-      font-size: 13px;
-    }
-    .content pre {
-      background: #f5f5f5;
-      padding: 16px;
-      border-radius: 6px;
-      overflow-x: auto;
-    }
-    .content ul, .content ol {
-      padding-left: 28px;
-      margin: 12px 0;
-    }
-    .footer {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid #e5e5e5;
-      font-size: 12px;
-      color: #666;
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
-  <h1>AI Response</h1>
-  
-  <div class="metadata">
-    <strong>Generated:</strong> ${new Date().toLocaleString()}<br>
-    <strong>Model:</strong> ${provider} - ${modelName}<br>
-    <strong>Tokens:</strong> ${(inputTokens + outputTokens).toLocaleString()} total (${inputTokens.toLocaleString()} input, ${outputTokens.toLocaleString()} output)
-  </div>
-  
-  <div class="content">
-    ${htmlContent}
-  </div>
-  
-  <div class="footer">
-    Generated by SAP Pro Toolkit
-  </div>
-</body>
-</html>`;
-}
-
-/**
- * Generate plain text export
- */
-function generateTextExport(content, modelName, provider, inputTokens, outputTokens) {
-  const cleanText = stripMarkdown(content);
-  
-  return `AI Response
-Generated: ${new Date().toLocaleString()}
-
-Model: ${provider} - ${modelName}
-Input Tokens: ${inputTokens.toLocaleString()}
-Output Tokens: ${outputTokens.toLocaleString()}
-Total Tokens: ${(inputTokens + outputTokens).toLocaleString()}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-${cleanText}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Generated by SAP Pro Toolkit
-`;
-}
-
-/**
- * Print AI response as PDF
- */
-function printAsPDF(content, modelName, provider, inputTokens, outputTokens) {
-  const htmlContent = markdownToHTML(content);
-  
-  const printWindow = window.open('', '_blank');
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>AI Response - ${modelName}</title>
-      <style>
-        @page { margin: 1in; }
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          line-height: 1.8;
-          font-size: 12pt;
-          color: #1a1a1a;
-        }
-        h1 { font-size: 20pt; margin-bottom: 16pt; }
-        .metadata {
-          padding: 12pt;
-          background: #f5f5f5;
-          border-left: 4pt solid #10B981;
-          margin-bottom: 24pt;
-          font-size: 10pt;
-        }
-        .content { font-size: 11pt; line-height: 1.7; }
-        .content h1 { font-size: 16pt; margin-top: 20pt; }
-        .content h2 { font-size: 14pt; margin-top: 18pt; }
-        .content h3 { font-size: 12pt; margin-top: 16pt; }
-        .content code {
-          background: #f5f5f5;
-          padding: 2pt 4pt;
-          font-family: 'Courier New', monospace;
-          font-size: 10pt;
-        }
-        .content pre {
-          background: #f5f5f5;
-          padding: 12pt;
-          border-radius: 4pt;
-          overflow-wrap: break-word;
-        }
-        .footer {
-          margin-top: 30pt;
-          padding-top: 15pt;
-          border-top: 1pt solid #ccc;
-          font-size: 9pt;
-          color: #666;
-          text-align: center;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>AI Response</h1>
-      <div class="metadata">
-        <strong>Generated:</strong> ${new Date().toLocaleString()}<br>
-        <strong>Model:</strong> ${provider} - ${modelName}<br>
-        <strong>Tokens:</strong> ${(inputTokens + outputTokens).toLocaleString()} total
-      </div>
-      <div class="content">${htmlContent}</div>
-      <div class="footer">Generated by SAP Pro Toolkit</div>
-    </body>
-    </html>
-  `);
-  printWindow.document.close();
-  printWindow.focus();
-  setTimeout(() => {
-    printWindow.print();
-  }, 500);
 }
 
 /**
