@@ -515,6 +515,84 @@ function showToast(message, type = 'info', duration = 3000, onClickCallback = nu
   }
 }
 
+// ==================== SAP AI CORE API ====================
+
+/**
+ * Load deployed models from SAP AI Core
+ * @param {Object} config - AI Core configuration
+ * @returns {Promise<Array>} Array of deployed model objects
+ */
+async function loadSAPAICoreModels(config) {
+  const { clientId, clientSecret, baseUrl, authUrl, resourceGroup } = config;
+  
+  try {
+    // Step 1: Get OAuth token
+    const tokenResponse = await fetch(authUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        grant_type: 'client_credentials',
+        client_id: clientId,
+        client_secret: clientSecret
+      })
+    });
+    
+    if (!tokenResponse.ok) {
+      throw new Error(`Auth failed: ${tokenResponse.status} ${tokenResponse.statusText}`);
+    }
+    
+    const tokenData = await tokenResponse.json();
+    const accessToken = tokenData.access_token;
+    
+    if (!accessToken) {
+      throw new Error('No access token received');
+    }
+    
+    // Step 2: Get deployments
+    const deploymentsUrl = `${baseUrl}/v2/lm/deployments?$filter=executableId eq 'azure-openai' and targetStatus eq 'RUNNING'&resourceGroup=${resourceGroup}`;
+    
+    const deploymentsResponse = await fetch(deploymentsUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'AI-Resource-Group': resourceGroup
+      }
+    });
+    
+    if (!deploymentsResponse.ok) {
+      throw new Error(`Failed to fetch deployments: ${deploymentsResponse.status}`);
+    }
+    
+    const deploymentsData = await deploymentsResponse.json();
+    const deployments = deploymentsData.resources || [];
+    
+    // Filter for RUNNING status only
+    const runningDeployments = deployments.filter(d => 
+      d.status === 'RUNNING' && d.targetStatus === 'RUNNING'
+    );
+    
+    if (runningDeployments.length === 0) {
+      throw new Error('No running deployments found');
+    }
+    
+    // Format for dropdown
+    const models = runningDeployments.map(d => ({
+      id: d.id,
+      name: d.configurationName || d.id,
+      status: d.status,
+      scenario: d.scenarioId
+    }));
+    
+    return models;
+    
+  } catch (error) {
+    console.error('[SAP AI Core] Load models failed:', error);
+    throw error;
+  }
+}
+
 // ==================== DIAGNOSTICS ====================
 
 async function gatherDiagnostics(currentPageData) {
@@ -587,3 +665,334 @@ Detection:       ${env.detectedVia || 'N/A'}
 Copy this information when reporting issues
 ═══════════════════════════════════════`;
 }
+
+// ==================== AI PROMPT TESTING ====================
+
+/**
+ * Test a prompt with the configured AI model
+ * @param {string} promptText - The prompt to test
+ * @returns {Promise<Object>} Result with content, model, provider, and usage
+ */
+async function testPromptWithModel(promptText) {
+  if (!promptText || !promptText.trim()) {
+    throw new Error('Prompt text is required');
+  }
+  
+  try {
+    // Check which API keys are available
+    const openaiKey = await window.CryptoUtils.retrieveAndDecrypt('apiKeyopenai');
+    const anthropicKey = await window.CryptoUtils.retrieveAndDecrypt('apiKeyanthropic');
+    const sapCredentials = await window.CryptoUtils.retrieveAndDecrypt('sapAiCoreCredentials');
+    
+    // Get max tokens setting (default 4096)
+    const maxTokensResult = await chrome.storage.local.get({ maxTokensDefault: 4096 });
+    const maxTokens = maxTokensResult.maxTokensDefault;
+    
+    // Try SAP AI Core first (if configured with primary model)
+    if (sapCredentials && sapCredentials.primaryModel) {
+      console.log('[AI Test] Using SAP AI Core with model:', sapCredentials.primaryModel);
+      return await testWithSAPAICore(promptText, sapCredentials, maxTokens);
+    }
+    
+    // Try OpenAI
+    if (openaiKey) {
+      console.log('[AI Test] Using OpenAI');
+      return await testWithOpenAI(promptText, openaiKey, maxTokens);
+    }
+    
+    // Try Anthropic
+    if (anthropicKey) {
+      console.log('[AI Test] Using Anthropic');
+      return await testWithAnthropic(promptText, anthropicKey, maxTokens);
+    }
+    
+    throw new Error('No API keys configured. Please configure at least one provider in Settings.');
+    
+  } catch (error) {
+    console.error('[AI Test] Failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Test with OpenAI API
+ */
+async function testWithOpenAI(promptText, apiKey, maxTokens) {
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'gpt-4-turbo',
+      messages: [{ role: 'user', content: promptText }],
+      max_tokens: maxTokens
+    })
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`OpenAI API error: ${error.error?.message || response.statusText}`);
+  }
+  
+  const data = await response.json();
+  
+  return {
+    content: data.choices[0]?.message?.content || 'No response',
+    model: data.model,
+    provider: 'OpenAI',
+    usage: {
+      inputTokens: data.usage?.prompt_tokens || 0,
+      outputTokens: data.usage?.completion_tokens || 0,
+      cost: calculateOpenAICost(data.usage, data.model)
+    }
+  };
+}
+
+/**
+ * Test with Anthropic API
+ */
+async function testWithAnthropic(promptText, apiKey, maxTokens) {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'claude-3-5-sonnet-20241022',
+      max_tokens: maxTokens,
+      messages: [{ role: 'user', content: promptText }]
+    })
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`Anthropic API error: ${error.error?.message || response.statusText}`);
+  }
+  
+  const data = await response.json();
+  
+  return {
+    content: data.content[0]?.text || 'No response',
+    model: data.model,
+    provider: 'Anthropic',
+    usage: {
+      inputTokens: data.usage?.input_tokens || 0,
+      outputTokens: data.usage?.output_tokens || 0,
+      cost: calculateAnthropicCost(data.usage, data.model)
+    }
+  };
+}
+
+/**
+ * Test with SAP AI Core - UPDATED WITH SMART ENDPOINT STRATEGY
+ * Detects model type and uses appropriate API format
+ */
+async function testWithSAPAICore(promptText, credentials, maxTokens) {
+  const { clientId, clientSecret, baseUrl, authUrl, resourceGroup, primaryModel, primaryDeploymentId } = credentials;
+  
+  // Use deployment ID for API calls, model name for detection
+  const deploymentId = primaryDeploymentId || primaryModel; // Fallback to primaryModel for backward compatibility
+  
+  console.log('[SAP AI Core] Starting test with model:', primaryModel);
+  console.log('[SAP AI Core] Using deployment ID:', deploymentId);
+  
+  // Step 1: Get OAuth token
+  const tokenResponse = await fetch(authUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: clientId,
+      client_secret: clientSecret
+    })
+  });
+  
+  if (!tokenResponse.ok) {
+    throw new Error('SAP AI Core authentication failed');
+  }
+  
+  const tokenData = await tokenResponse.json();
+  const accessToken = tokenData.access_token;
+  
+  // Step 2: Get deployment details to extract model name and deployment URL
+  const deploymentUrl = `${baseUrl}/v2/lm/deployments/${deploymentId}?resourceGroup=${resourceGroup}`;
+  
+  const deploymentResponse = await fetch(deploymentUrl, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'AI-Resource-Group': resourceGroup
+    }
+  });
+  
+  if (!deploymentResponse.ok) {
+    throw new Error(`Failed to get deployment details: ${deploymentResponse.status}`);
+  }
+  
+  const deployment = await deploymentResponse.json();
+  
+  // Log full deployment object to debug structure
+  console.log('[SAP AI Core] Full deployment response:', JSON.stringify(deployment, null, 2));
+  
+  // Try multiple paths to find model name
+  const modelName = deployment.details?.scaling?.backendDetails?.model?.name || 
+                    deployment.configurationName || 
+                    deployment.scenarioId || 
+                    '';
+  const deploymentInferenceUrl = deployment.deploymentUrl || '';
+  
+  console.log('[SAP AI Core] Extracted values:', {
+    modelName: modelName,
+    configurationName: deployment.configurationName,
+    scenarioId: deployment.scenarioId,
+    deploymentUrl: deploymentInferenceUrl
+  });
+  
+  // Step 3: Detect model type from primaryModel (now contains model identifier like "anthropic--claude-4.5-sonnet")
+  const modelNameLower = modelName.toLowerCase();
+  const primaryModelLower = primaryModel.toLowerCase();
+  const detectionString = (primaryModelLower + ' ' + modelNameLower).toLowerCase();
+  
+  console.log('[SAP AI Core] Model detection - primaryModel:', primaryModel);
+  console.log('[SAP AI Core] Model detection - modelName from deployment:', modelName);
+  console.log('[SAP AI Core] Combined detection string:', detectionString);
+  
+  let requestBody, inferenceUrl, expectedResponseFormat;
+  
+  if (detectionString.includes('anthropic') || detectionString.includes('claude')) {
+    // Anthropic models use /invoke endpoint with special format
+    console.log('[SAP AI Core] Detected Anthropic/Claude model - using /invoke endpoint');
+    inferenceUrl = `${deploymentInferenceUrl}/invoke`;
+    requestBody = {
+      anthropic_version: 'bedrock-2023-05-31',
+      max_tokens: maxTokens,
+      messages: [{ role: 'user', content: promptText }]
+    };
+    expectedResponseFormat = 'anthropic';
+    
+  } else if (detectionString.includes('gpt') || detectionString.includes('openai')) {
+    // OpenAI models use /chat/completions with model field
+    console.log('[SAP AI Core] Detected OpenAI/GPT model - using /chat/completions endpoint');
+    inferenceUrl = `${deploymentInferenceUrl}/chat/completions`;
+    requestBody = {
+      model: modelName,
+      messages: [{ role: 'user', content: promptText }],
+      max_tokens: maxTokens
+    };
+    expectedResponseFormat = 'openai';
+    
+  } else {
+    // Unknown model type - default to OpenAI format (most common)
+    console.log('[SAP AI Core] Unknown model type - defaulting to OpenAI format');
+    console.warn('[SAP AI Core] Could not detect model type from:', { modelName, deploymentId: primaryModel });
+    inferenceUrl = `${deploymentInferenceUrl}/chat/completions`;
+    requestBody = {
+      messages: [{ role: 'user', content: promptText }],
+      max_tokens: maxTokens
+    };
+    expectedResponseFormat = 'openai';
+  }
+  
+  console.log('[SAP AI Core] Inference URL:', inferenceUrl);
+  console.log('[SAP AI Core] Request body:', JSON.stringify(requestBody, null, 2));
+  
+  // Step 4: Call inference endpoint
+  const response = await fetch(inferenceUrl, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'AI-Resource-Group': resourceGroup,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(requestBody)
+  });
+  
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('[SAP AI Core] Inference failed:', response.status, errorText);
+    throw new Error(`SAP AI Core inference failed: ${response.status} ${errorText}`);
+  }
+  
+  const data = await response.json();
+  console.log('[SAP AI Core] Response:', data);
+  
+  // Step 5: Parse response based on format
+  let content, usage;
+  
+  if (expectedResponseFormat === 'anthropic') {
+    // Anthropic format: { content: [{ text: "..." }], usage: { input_tokens, output_tokens } }
+    content = data.content?.[0]?.text || 'No response';
+    usage = {
+      inputTokens: data.usage?.input_tokens || 0,
+      outputTokens: data.usage?.output_tokens || 0,
+      cost: 'N/A (SAP AI Core)'
+    };
+  } else {
+    // OpenAI format: { choices: [{ message: { content: "..." } }], usage: { prompt_tokens, completion_tokens } }
+    content = data.choices?.[0]?.message?.content || 'No response';
+    usage = {
+      inputTokens: data.usage?.prompt_tokens || 0,
+      outputTokens: data.usage?.completion_tokens || 0,
+      cost: 'N/A (SAP AI Core)'
+    };
+  }
+  
+  return {
+    content: content,
+    model: modelName || primaryModel,
+    provider: 'SAP AI Core',
+    usage: usage
+  };
+}
+
+/**
+ * Calculate OpenAI cost
+ */
+function calculateOpenAICost(usage, model) {
+  if (!usage) return '0.0000';
+  
+  // Pricing per 1K tokens (as of 2024)
+  const pricing = {
+    'gpt-4-turbo': { input: 0.01, output: 0.03 },
+    'gpt-4': { input: 0.03, output: 0.06 },
+    'gpt-3.5-turbo': { input: 0.0005, output: 0.0015 }
+  };
+  
+  const modelPricing = pricing[model] || pricing['gpt-4-turbo'];
+  const inputCost = (usage.prompt_tokens / 1000) * modelPricing.input;
+  const outputCost = (usage.completion_tokens / 1000) * modelPricing.output;
+  
+  return (inputCost + outputCost).toFixed(4);
+}
+
+/**
+ * Calculate Anthropic cost
+ */
+function calculateAnthropicCost(usage, model) {
+  if (!usage) return '0.0000';
+  
+  // Pricing per 1K tokens (as of 2024)
+  const pricing = {
+    'claude-3-5-sonnet-20241022': { input: 0.003, output: 0.015 },
+    'claude-3-opus': { input: 0.015, output: 0.075 },
+    'claude-3-haiku': { input: 0.00025, output: 0.00125 }
+  };
+  
+  const modelPricing = pricing[model] || pricing['claude-3-5-sonnet-20241022'];
+  const inputCost = (usage.input_tokens / 1000) * modelPricing.input;
+  const outputCost = (usage.output_tokens / 1000) * modelPricing.output;
+  
+  return (inputCost + outputCost).toFixed(4);
+}
+
+// ==================== EXPORTS ====================
+
+// Export functions for use in side-panel.js
+window.ToolkitCore = {
+  loadSAPAICoreModels,
+  testPromptWithModel
+};

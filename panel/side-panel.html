@@ -476,7 +476,7 @@
                 <option value="success">✅ Success/Verified</option>
                 <option value="warning">⚠️ Warning</option>
                 <option value="sync">🔄 Sync/Restore</option>
-                <option value="ai">🤖 AI/Joule</option>
+                <option value="ai">✨ AI/Joule</option>
                 <option value="package">📦 Package/Module</option>
               </optgroup>
               <optgroup label="👥 People">
@@ -533,7 +533,7 @@
               </label>
               <label class="note-type-option">
                 <input type="radio" name="noteType" value="ai-prompt">
-                <span class="note-type-icon">🤖</span>
+                <span class="note-type-icon">✨</span>
                 <span class="note-type-label">AI Prompt</span>
               </label>
             </div>
@@ -633,7 +633,7 @@
               </linearGradient>
             </defs>
           </svg>
-          <h3 id="aiTestResultsTitle">AI Test Results</h3>
+          <h3 id="aiTestResultsTitle">AI Response</h3>
         </div>
         <button class="modal-close" id="closeAiTestResultsModal">&times;</button>
       </div>
@@ -643,14 +643,69 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="closeAiTestResultsBtn">Close</button>
-        <button class="btn btn-primary" id="enterpriseCalculatorBtn" style="display: none;">
+        <button class="btn btn-primary" id="saveAiResponseBtn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="16"/>
-            <line x1="8" y1="12" x2="16" y2="12"/>
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
           </svg>
-          Enterprise Calculator
+          Save as Note
+        </button>
+        <div class="btn-dropdown-wrapper">
+          <button class="btn btn-primary" id="downloadAiResponseBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 4px;">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="btn-dropdown-menu" id="downloadFormatMenu">
+            <button class="btn-dropdown-item" data-format="md">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              Markdown (.md)
+            </button>
+            <button class="btn-dropdown-item" data-format="html">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+              HTML (.html)
+            </button>
+            <button class="btn-dropdown-item" data-format="pdf">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+              PDF (.pdf)
+            </button>
+            <button class="btn-dropdown-item" data-format="txt">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              Text (.txt)
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-accent" id="openEnterpriseCalcBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="9" y1="21" x2="9" y2="9"/>
+          </svg>
+          Calculator
         </button>
       </div>
     </div>
@@ -676,38 +731,11 @@
         <button class="modal-close" id="closeEnterpriseCalculatorModal">&times;</button>
       </div>
       <div class="modal-body">
-        <!-- Calculator Inputs -->
-        <div class="enterprise-inputs">
-          <div class="form-group">
-            <label for="enterpriseUsers">
-              Number of Users
-              <span class="input-hint">(e.g., employees, customers, API consumers)</span>
-            </label>
-            <input type="number" id="enterpriseUsers" min="1" value="100" placeholder="100">
-          </div>
-          <div class="form-group">
-            <label for="enterpriseCallsPerDay">
-              Calls per User per Day
-              <span class="input-hint">(e.g., questions asked, API requests)</span>
-            </label>
-            <input type="number" id="enterpriseCallsPerDay" min="1" value="10" placeholder="10">
-          </div>
-          <button class="btn btn-primary btn-block" id="calculateEnterpriseBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-            Calculate Costs
-          </button>
-        </div>
-
-        <!-- Results Container -->
-        <div id="enterpriseResultsContent" class="enterprise-results-content" style="display: none;">
-          <!-- Populated dynamically after calculation -->
+        <div id="enterpriseCalculatorContent">
+          <!-- Populated dynamically by openEnterpriseCalculator() -->
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="closeEnterpriseCalculatorBtn">Close</button>
         <button class="btn btn-primary" id="exportEnterpriseReportBtn" style="display: none;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -875,31 +903,31 @@
             <!-- AI Core Client Id -->
             <div class="form-group" style="margin-bottom: 12px;">
               <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Client Id</label>
-              <input type="password" id="sapAiCoreClientId" placeholder="Enter client ID" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <input type="password" id="sapAiCoreClientId" placeholder="Enter client ID" value="sb-6424e28b-8759-4457-a477-a162a1b419d6!b273804|aicore!b164" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
               <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
-                Client Id is set. To change it, please re-enter the value.
+                Test credentials pre-populated. Update as needed.
               </small>
             </div>
             
             <!-- AI Core Client Secret -->
             <div class="form-group" style="margin-bottom: 12px;">
               <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Client Secret</label>
-              <input type="password" id="sapAiCoreClientSecret" placeholder="Enter client secret" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <input type="password" id="sapAiCoreClientSecret" placeholder="Enter client secret" value="9e863462-ac31-4619-8d03-230a04d5de12$3l-n-3bPuOlzmmMGR4U4cykEOVBGtF8YsiDIs59qDsY=" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
               <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
-                Client Secret is set. To change it, please re-enter the value.
+                Test credentials pre-populated. Update as needed.
               </small>
             </div>
             
             <!-- AI Core Base URL -->
             <div class="form-group" style="margin-bottom: 12px;">
               <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Base URL</label>
-              <input type="text" id="sapAiCoreBaseUrl" placeholder="Enter AI Core API base URL" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <input type="text" id="sapAiCoreBaseUrl" placeholder="Enter AI Core API base URL" value="https://api.ai.prod.us-east-1.aws.ml.hana.ondemand.com" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
             </div>
             
             <!-- AI Core Auth URL -->
             <div class="form-group" style="margin-bottom: 12px;">
               <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Auth URL</label>
-              <input type="text" id="sapAiCoreAuthUrl" placeholder="Enter OAuth token endpoint URL" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <input type="text" id="sapAiCoreAuthUrl" placeholder="Enter OAuth token endpoint URL" value="https://six-ai.authentication.us10.hana.ondemand.com/oauth/token" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
             </div>
             
             <!-- AI Core Resource Group -->
@@ -924,19 +952,13 @@
               </small>
             </div>
             
-            <!-- Action Buttons (4 buttons same row) -->
+            <!-- Action Buttons (3 buttons same row) -->
             <div style="display: flex; gap: 8px; margin-top: 12px;">
               <button class="btn btn-secondary btn-sm" id="testSAPAICoreBtn" style="flex: 1;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                Connect
-              </button>
-              <button class="btn btn-secondary btn-sm" id="refreshSAPModelsBtn" title="Refresh deployed models list" style="flex: 1;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
-                </svg>
-                Refresh
+                Connect & Load Models
               </button>
               <button class="btn btn-accent btn-sm" id="saveSAPAICoreBtn" title="Save configuration" style="flex: 1;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -946,7 +968,7 @@
                 </svg>
                 Save
               </button>
-              <button class="btn btn-danger btn-sm" id="clearSAPAICoreBtn" title="Clear all configuration">
+              <button class="btn btn-danger btn-sm" id="clearSAPAICoreBtn" title="Clear all configuration" style="flex: 1;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="18" y1="6" x2="6" y2="18"/>
                   <line x1="6" y1="6" x2="18" y2="18"/>
@@ -1042,9 +1064,6 @@
             </p>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" id="closeSettingsBtn">Close</button>
       </div>
     </div>
   </div>

@@ -237,10 +237,66 @@ class CryptoUtils {
       return false;
     }
   }
+
+  /**
+   * Encrypt data and store in chrome.storage.local
+   * @param {string} key - Storage key
+   * @param {any} data - Data to encrypt (will be JSON stringified)
+   * @returns {Promise<void>}
+   */
+  async encryptAndStore(key, data) {
+    try {
+      // Convert data to string if it's an object
+      const plaintext = typeof data === 'string' ? data : JSON.stringify(data);
+      
+      // Encrypt the data
+      const encrypted = await this.encryptPassword(plaintext);
+      
+      // Store encrypted data
+      await chrome.storage.local.set({ [key]: encrypted });
+      
+      console.log(`[CryptoUtils] Encrypted and stored: ${key}`);
+    } catch (error) {
+      console.error(`[CryptoUtils] Failed to encrypt and store ${key}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Retrieve and decrypt data from chrome.storage.local
+   * @param {string} key - Storage key
+   * @returns {Promise<any>} Decrypted data (parsed if JSON)
+   */
+  async retrieveAndDecrypt(key) {
+    try {
+      const result = await chrome.storage.local.get(key);
+      const encrypted = result[key];
+      
+      if (!encrypted) {
+        return null;
+      }
+      
+      // Decrypt the data
+      const plaintext = await this.decryptPassword(encrypted);
+      
+      // Try to parse as JSON, otherwise return as string
+      try {
+        return JSON.parse(plaintext);
+      } catch {
+        return plaintext;
+      }
+    } catch (error) {
+      console.error(`[CryptoUtils] Failed to retrieve and decrypt ${key}:`, error);
+      throw error;
+    }
+  }
 }
 
 // Export singleton instance
 const cryptoUtils = new CryptoUtils();
+
+// Export as window.CryptoUtils for backward compatibility
+window.CryptoUtils = cryptoUtils;
 
 // Self-test on load (only in development)
 if (chrome.runtime.getManifest().version.includes('dev')) {
