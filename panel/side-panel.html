@@ -74,21 +74,23 @@
 
     <!-- Global Search -->
     <div class="search-bar">
-      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/>
-        <path d="m21 21-4.35-4.35"/>
-      </svg>
-      <input 
-        type="text" 
-        id="globalSearch" 
-        class="search-input" 
-        placeholder="Search environments, shortcuts, notes..."
-        data-i18n-placeholder="globalSearchPlaceholder"
-      >
-      <button class="btn btn-accent btn-sm" id="aiSearchBtn" title="Enter search query" style="position: absolute; right: 80px;">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input 
+          type="text" 
+          id="globalSearch" 
+          class="search-input" 
+          placeholder="Search all items..."
+          data-i18n-placeholder="globalSearchPlaceholder"
+        >
+        <button class="search-clear" id="clearSearch" style="display: none;">×</button>
+      </div>
+      <button class="btn btn-accent btn-sm" id="aiSearchBtn" title="Perform AI-powered search (Cmd+Shift+S)">
         ✨ AI
       </button>
-      <button class="search-clear" id="clearSearch" style="display: none;">×</button>
     </div>
 
     <!-- AI Insights Bar (Hidden by default) -->

@@ -97,8 +97,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ==================== DATA LOADING ====================
 
 async function loadSettings() {
-  const result = await chrome.storage.sync.get({ showConfirmationForProd: true });
+  const result = await chrome.storage.sync.get({ showConfirmationForProd: true, enableAiFeatures: true });
   settings = result;
+  await updateAISettings();
+}
+
+/**
+ * Checks settings and API key storage to determine if AI features should be active.
+ * Adds or removes the 'ai-active' class from the body to show/hide the AI button.
+ */
+async function updateAISettings() {
+  try {
+    const keys = await chrome.storage.local.get(['apiKeyopenai', 'apiKeyanthropic', 'sapAiCoreCredentials']);
+    const isAiEnabled = settings.enableAiFeatures;
+    const hasApiKey = keys.apiKeyopenai || keys.apiKeyanthropic || (keys.sapAiCoreCredentials && keys.sapAiCoreCredentials.clientId);
+
+    if (isAiEnabled && hasApiKey) {
+      document.body.classList.add('ai-active');
+    } else {
+      document.body.classList.remove('ai-active');
+    }
+  } catch (error) {
+    console.error("Failed to update AI settings:", error);
+    document.body.classList.remove('ai-active');
+  }
 }
 
 /**
@@ -3504,6 +3526,15 @@ function updateSectionCounts() {
 
 function setupEventListeners() {
   setupSearchFilter();
+
+  const enableAiFeaturesEl = document.getElementById('enableAiFeatures');
+  if (enableAiFeaturesEl) {
+    enableAiFeaturesEl.addEventListener('change', async (e) => {
+      settings.enableAiFeatures = e.target.checked;
+      await chrome.storage.sync.set({ enableAiFeatures: settings.enableAiFeatures });
+      await updateAISettings();
+    });
+  }
   
   // Tag filtering - click any tag to filter all sections
   document.addEventListener('click', (e) => {
