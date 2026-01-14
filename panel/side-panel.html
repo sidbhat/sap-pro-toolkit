@@ -855,31 +855,31 @@
             <!-- AI Core Client Id -->
             <div class="form-group" style="margin-bottom: 12px;">
               <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Client Id</label>
-              <input type="password" id="sapAiCoreClientId" placeholder="Enter client ID" value="sb-6424e28b-8759-4457-a477-a162a1b419d6!b273804|aicore!b164" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <input type="password" id="sapAiCoreClientId" placeholder="Enter client ID" value="" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
               <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
-                Test credentials pre-populated. Update as needed.
+                Enter your SAP AI Core client ID from your service key.
               </small>
             </div>
             
             <!-- AI Core Client Secret -->
             <div class="form-group" style="margin-bottom: 12px;">
               <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Client Secret</label>
-              <input type="password" id="sapAiCoreClientSecret" placeholder="Enter client secret" value="9e863462-ac31-4619-8d03-230a04d5de12$3l-n-3bPuOlzmmMGR4U4cykEOVBGtF8YsiDIs59qDsY=" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <input type="password" id="sapAiCoreClientSecret" placeholder="Enter client secret" value="" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
               <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
-                Test credentials pre-populated. Update as needed.
+                Enter your SAP AI Core client secret from your service key.
               </small>
             </div>
             
             <!-- AI Core Base URL -->
             <div class="form-group" style="margin-bottom: 12px;">
               <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Base URL</label>
-              <input type="text" id="sapAiCoreBaseUrl" placeholder="Enter AI Core API base URL" value="https://api.ai.prod.us-east-1.aws.ml.hana.ondemand.com" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <input type="text" id="sapAiCoreBaseUrl" placeholder="Enter AI Core API base URL" value="" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
             </div>
             
             <!-- AI Core Auth URL -->
             <div class="form-group" style="margin-bottom: 12px;">
               <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Auth URL</label>
-              <input type="text" id="sapAiCoreAuthUrl" placeholder="Enter OAuth token endpoint URL" value="https://six-ai.authentication.us10.hana.ondemand.com/oauth/token" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <input type="text" id="sapAiCoreAuthUrl" placeholder="Enter OAuth token endpoint URL" value="" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
             </div>
             
             <!-- AI Core Resource Group -->
@@ -1248,6 +1248,15 @@
     <div class="loading-modal-content">
       <div class="spinner-large"></div>
       <p class="loading-message" id="loadingMessage">Loading...</p>
+    </div>
+  </div>
+
+  <!-- AI Blocking Overlay - Prevents interaction during AI operations -->
+  <div id="aiBlockingOverlay">
+    <div class="ai-blocking-content">
+      <div class="spinner-large"></div>
+      <div class="ai-blocking-message" id="aiBlockingMessage">Generating insights.....</div>
+      <div class="ai-blocking-subtitle">Please wait, do not close this window</div>
     </div>
   </div>
 
