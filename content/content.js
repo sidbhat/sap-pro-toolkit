@@ -88,6 +88,24 @@ function setupMessageListeners() {
       return true;
     }
     
+    // NEW: Handle comprehensive page scraping for AI diagnostics
+    if (request.action === 'scrapePageForDiagnostics') {
+      console.log('[Content Script] Scraping page for diagnostics...');
+      try {
+        const diagnosticsData = scrapePageForDiagnostics();
+        console.log('[Content Script] Diagnostics data:', diagnosticsData);
+        sendResponse(diagnosticsData);
+      } catch (error) {
+        console.error('[Content Script] Diagnostics scraping failed:', error);
+        sendResponse({
+          error: 'Failed to scrape diagnostics',
+          title: document.title,
+          url: window.location.href
+        });
+      }
+      return true;
+    }
+    
     return false;
   });
   
@@ -341,6 +359,239 @@ function extractPageContent() {
   }
   
   return text;
+}
+
+// ==================== DIAGNOSTICS SCRAPING ====================
+
+/**
+ * Comprehensive page scraping for AI-powered diagnostics
+ * Captures meta tags, console errors, performance metrics, error states, and more
+ * @returns {Object} Comprehensive diagnostics data
+ */
+function scrapePageForDiagnostics() {
+  const url = window.location.href;
+  const title = document.title;
+  
+  // Extract all diagnostic components
+  const metaTags = extractMetaTags();
+  const consoleErrors = getConsoleErrors();
+  const performanceMetrics = getPerformanceMetrics();
+  const errorDetection = detectErrorPage();
+  const pageContent = extractPageContent();
+  const testDataFound = findTestData();
+  const expiredDates = findExpiredDates();
+  const cardsNotLoaded = findCardsNotLoaded();
+  const pageStructure = analyzePageStructure();
+  
+  return {
+    title: title,
+    url: url,
+    metaTags: metaTags,
+    consoleErrors: consoleErrors,
+    performance: performanceMetrics,
+    error: errorDetection.isError ? errorDetection.message : null,
+    errorType: errorDetection.errorType || null,
+    content: pageContent,
+    testData: testDataFound,
+    expiredDates: expiredDates,
+    cardsNotLoaded: cardsNotLoaded,
+    pageStructure: pageStructure,
+    timestamp: new Date().toISOString()
+  };
+}
+
+/**
+ * Extract meta tags from page head
+ * @returns {Object} Key meta tag values
+ */
+function extractMetaTags() {
+  const metaTags = {};
+  
+  // Extract standard meta tags
+  const standardTags = ['viewport', 'charset', 'description', 'keywords'];
+  standardTags.forEach(name => {
+    const tag = document.querySelector(`meta[name="${name}"]`);
+    if (tag) metaTags[name] = tag.content;
+  });
+  
+  // Extract SAP-specific meta tags
+  const sapTags = document.querySelectorAll('meta[name^="sap-"]');
+  sapTags.forEach(tag => {
+    metaTags[tag.name] = tag.content;
+  });
+  
+  // Extract Content-Security-Policy
+  const cspTag = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+  if (cspTag) metaTags['csp'] = cspTag.content.substring(0, 200); // Truncate long CSP
+  
+  return metaTags;
+}
+
+/**
+ * Get recent console errors (stored by injected script)
+ * @returns {Array} Last 5 console errors
+ */
+function getConsoleErrors() {
+  // Check if injected script stored errors
+  const storedErrors = window.__sfProToolkitErrors || [];
+  return storedErrors.slice(-5).map(err => ({
+    message: err.message || String(err),
+    timestamp: err.timestamp || new Date().toISOString()
+  }));
+}
+
+/**
+ * Get performance metrics from Navigation Timing API
+ * @returns {Object} Performance metrics
+ */
+function getPerformanceMetrics() {
+  const metrics = {};
+  
+  try {
+    const perfData = performance.getEntriesByType('navigation')[0];
+    if (perfData) {
+      metrics.loadTime = Math.round(perfData.loadEventEnd - perfData.fetchStart);
+      metrics.domContentLoaded = Math.round(perfData.domContentLoadedEventEnd - perfData.fetchStart);
+      metrics.ttfb = Math.round(perfData.responseStart - perfData.requestStart); // Time to First Byte
+    }
+    
+    // Resource counts
+    const resources = performance.getEntriesByType('resource');
+    metrics.resourceCount = resources.length;
+    metrics.scriptCount = resources.filter(r => r.initiatorType === 'script').length;
+    metrics.imageCount = resources.filter(r => r.initiatorType === 'img').length;
+    metrics.cssCount = resources.filter(r => r.initiatorType === 'link' || r.initiatorType === 'css').length;
+    
+    // Memory usage (if available)
+    if (performance.memory) {
+      metrics.memoryUsed = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024); // MB
+      metrics.memoryLimit = Math.round(performance.memory.jsHeapSizeLimit / 1024 / 1024); // MB
+    }
+  } catch (error) {
+    console.error('[Diagnostics] Performance metrics error:', error);
+  }
+  
+  return metrics;
+}
+
+/**
+ * Find test/demo data patterns on page
+ * @returns {Array} Test data indicators found
+ */
+function findTestData() {
+  const testPatterns = [];
+  const bodyText = document.body.textContent;
+  
+  // Common test patterns
+  const patterns = [
+    { pattern: /test[-_\s]?employee/gi, label: 'Test Employee' },
+    { pattern: /demo[-_\s]?user/gi, label: 'Demo User' },
+    { pattern: /sample[-_\s]?data/gi, label: 'Sample Data' },
+    { pattern: /@(test|demo|example)\.(com|org)/gi, label: 'Test Email' },
+    { pattern: /\b(lorem ipsum|dolor sit amet)\b/gi, label: 'Lorem Ipsum' },
+    { pattern: /\b(testing|test data)\b/gi, label: 'Testing Labels' }
+  ];
+  
+  patterns.forEach(({ pattern, label }) => {
+    const matches = bodyText.match(pattern);
+    if (matches && matches.length > 0) {
+      testPatterns.push({ label: label, count: matches.length });
+    }
+  });
+  
+  return testPatterns;
+}
+
+/**
+ * Find dates that are significantly in the past (potential data issues)
+ * @returns {Array} Expired dates found
+ */
+function findExpiredDates() {
+  const expiredDates = [];
+  const now = new Date();
+  const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+  
+  // Find all date-like strings in visible text
+  const bodyText = document.body.textContent;
+  
+  // Match common date formats (MM/DD/YYYY, DD/MM/YYYY, YYYY-MM-DD)
+  const datePatterns = [
+    /\b(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})\b/g,  // MM/DD/YYYY or DD/MM/YYYY
+    /\b(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})\b/g   // YYYY-MM-DD
+  ];
+  
+  datePatterns.forEach(pattern => {
+    let match;
+    while ((match = pattern.exec(bodyText)) !== null && expiredDates.length < 10) {
+      try {
+        // Try to parse the date
+        const dateStr = match[0];
+        const parsed = new Date(dateStr);
+        
+        if (!isNaN(parsed.getTime()) && parsed < oneYearAgo) {
+          expiredDates.push({
+            date: dateStr,
+            yearsAgo: Math.floor((now - parsed) / (365 * 24 * 60 * 60 * 1000))
+          });
+        }
+      } catch (e) {
+        // Skip invalid dates
+      }
+    }
+  });
+  
+  return expiredDates.slice(0, 10); // Limit to 10 most found
+}
+
+/**
+ * Detect cards or modules that failed to load
+ * @returns {Array} Unloaded components found
+ */
+function findCardsNotLoaded() {
+  const unloadedCards = [];
+  
+  // Look for common loading states
+  const loadingIndicators = [
+    { selector: '.loading', label: 'Loading Indicator' },
+    { selector: '.spinner', label: 'Spinner' },
+    { selector: '[data-loading="true"]', label: 'Loading Attribute' },
+    { selector: '.error-message', label: 'Error Message' },
+    { selector: '.no-data', label: 'No Data Message' },
+    { selector: '.empty-state', label: 'Empty State' }
+  ];
+  
+  loadingIndicators.forEach(({ selector, label }) => {
+    const elements = document.querySelectorAll(selector);
+    if (elements.length > 0) {
+      unloadedCards.push({ type: label, count: elements.length });
+    }
+  });
+  
+  // Look for elements with "error" in class or text
+  const errorElements = document.querySelectorAll('[class*="error"], [class*="failed"]');
+  if (errorElements.length > 0) {
+    unloadedCards.push({ type: 'Error Elements', count: errorElements.length });
+  }
+  
+  return unloadedCards;
+}
+
+/**
+ * Analyze page structure for diagnostics
+ * @returns {Object} Page structure analysis
+ */
+function analyzePageStructure() {
+  return {
+    totalElements: document.querySelectorAll('*').length,
+    divCount: document.querySelectorAll('div').length,
+    forms: document.querySelectorAll('form').length,
+    tables: document.querySelectorAll('table').length,
+    iframes: document.querySelectorAll('iframe').length,
+    buttons: document.querySelectorAll('button').length,
+    inputs: document.querySelectorAll('input').length,
+    images: document.querySelectorAll('img').length,
+    links: document.querySelectorAll('a').length
+  };
 }
 
 // ==================== UTILITY ====================

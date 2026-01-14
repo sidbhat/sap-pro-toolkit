@@ -2110,6 +2110,147 @@ async function copyAllDiagnostics() {
 }
 
 /**
+ * Regenerate diagnostics with AI-powered comprehensive page analysis
+ * Scrapes page for errors, test data, expired dates, unloaded cards, etc.
+ * Provides insights for presales, admins, consultants, and end users
+ */
+async function regenerateDiagnosticsWithAI() {
+  // Check if AI is available
+  if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
+    showToast('AI features not available', 'error');
+    return;
+  }
+  
+  try {
+    const contentDiv = document.getElementById('diagnosticsContent');
+    
+    // Show loading state with green highlighting
+    contentDiv.innerHTML = `
+      <div class="diagnostics-ai-enhanced">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 16px;">
+          <div class="spinner"></div>
+          <span>✨ AI is analyzing the page...</span>
+        </div>
+      </div>
+    `;
+    
+    // Get current tab
+    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+    if (!tab || !tab.url) {
+      showToast('No active tab found', 'warning');
+      return;
+    }
+    
+    // Inject content script if needed
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['content/content.js']
+      });
+    } catch (injectError) {
+      console.log('[AI Diagnostics] Content script already present');
+    }
+    
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // Scrape comprehensive page data
+    const scrapedData = await new Promise((resolve) => {
+      chrome.tabs.sendMessage(tab.id, { action: 'scrapePageForDiagnostics' }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.warn('[AI Diagnostics] Scrape failed:', chrome.runtime.lastError);
+          resolve(null);
+        } else {
+          resolve(response);
+        }
+      });
+    });
+    
+    if (!scrapedData) {
+      showToast('Failed to scrape page data', 'error');
+      return;
+    }
+    
+    // Refresh current page data
+    await loadCurrentPageData();
+    
+    // Gather standard diagnostics
+    const diagnostics = await gatherDiagnostics(currentPageData);
+    const standardDiag = formatDiagnosticsReport(diagnostics);
+    
+    // Build comprehensive AI prompt
+    const prompt = buildDiagnosticsPrompt(standardDiag, scrapedData, currentPageData);
+    
+    // Call AI
+    const result = await window.ToolkitCore.testPromptWithModel(prompt);
+    
+    if (!result || !result.content) {
+      throw new Error('No response from AI');
+    }
+    
+    // Display AI-enhanced diagnostics with green highlighting
+    const formattedResponse = markdownToHTML(result.content);
+    
+    contentDiv.innerHTML = `
+      <div class="diagnostics-ai-enhanced">
+        <div class="ai-badge">
+          ✨ AI-Enhanced Diagnostics
+          <span style="opacity: 0.8; font-size: 8px;">${result.model || 'AI'} · ${(result.usage?.inputTokens || 0) + (result.usage?.outputTokens || 0)} tokens</span>
+        </div>
+        <div class="ai-response" style="margin-top: 16px;">
+          ${formattedResponse}
+        </div>
+      </div>
+    `;
+    
+    showToast('✨ AI diagnostics generated ✓', 'success');
+    
+  } catch (error) {
+    console.error('[AI Diagnostics] Failed:', error);
+    showToast(`AI diagnostics failed: ${error.message}`, 'error');
+    
+    // Fallback to standard diagnostics
+    await showDiagnosticsModal();
+  }
+}
+
+/**
+ * Build simplified AI prompt for diagnostics - focuses on PAGE FACTS only
+ */
+function buildDiagnosticsPrompt(standardDiag, scrapedData, currentPageData) {
+  return `Analyze this SAP page and report ONLY what you observe. Be brief and factual.
+
+# SCRAPED PAGE DATA
+
+**Console Errors**: ${scrapedData.consoleErrors?.length || 0} errors
+${scrapedData.consoleErrors?.slice(0, 5).map(e => `  - ${e}`).join('\n') || ''}
+
+**Performance**:
+  - Load Time: ${scrapedData.performance?.loadTime || 'N/A'}ms
+  - DOM Loaded: ${scrapedData.performance?.domContentLoaded || 'N/A'}ms
+  - Resources: ${scrapedData.performance?.resourceCount || 0}
+
+**Test Data**: ${scrapedData.testData?.found ? 'YES ⚠️' : 'No'}
+${scrapedData.testData?.examples?.slice(0, 3).map(ex => `  - ${ex}`).join('\n') || ''}
+
+**Expired Dates**: ${scrapedData.expiredDates?.length || 0}
+${scrapedData.expiredDates?.slice(0, 3).map(d => `  - ${d.text} (${d.daysAgo} days ago)`).join('\n') || ''}
+
+**Cards Not Loaded**: ${scrapedData.cardsNotLoaded?.length || 0}
+${scrapedData.cardsNotLoaded?.slice(0, 3).map(c => `  - ${c}`).join('\n') || ''}
+
+**Error Page**: ${scrapedData.error ? 'YES - ' + scrapedData.errorType : 'No'}
+${scrapedData.error ? scrapedData.error : ''}
+
+# YOUR TASK
+
+Write 2-3 short paragraphs summarizing ONLY what you see on this page. State facts, not guidance.
+
+Then include this standard diagnostics:
+
+${standardDiag}`;
+}
+
+/**
  * Load popular OSS notes data from JSON file
  * @returns {Object} Popular notes data organized by solution
  */
@@ -3773,6 +3914,7 @@ function setupEventListeners() {
   document.getElementById('closeDiagnosticsModal')?.addEventListener('click', closeDiagnosticsModal);
   document.getElementById('closeDiagnosticsBtn')?.addEventListener('click', closeDiagnosticsModal);
   document.getElementById('copyAllDiagnosticsBtn')?.addEventListener('click', copyAllDiagnostics);
+  document.getElementById('regenerateDiagnosticsWithAIBtn')?.addEventListener('click', regenerateDiagnosticsWithAI);
   
   // OSS Note search (inline form in Notes section)
   document.getElementById('ossNoteBtn')?.addEventListener('click', async () => {

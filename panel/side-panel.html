@@ -154,6 +154,13 @@
           <h2 class="section-title">SHORTCUTS <span class="section-count"></span></h2>
           <p class="section-desc">External links and reference information</p>
         </div>
+        <button class="btn btn-accent btn-sm" id="ossNoteBtn" title="Search OSS Note" style="padding: 6px 10px; font-size: 12px; margin-right: 8px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          OSS Note
+        </button>
         <button class="btn-add" id="addShortcutBtn" data-title="Add Shortcut" title="Add shortcut">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19"/>
@@ -162,52 +169,6 @@
         </button>
         <button class="btn-add ai-btn" id="addShortcutWithAIBtn" data-title="Add with AI" title="Add shortcut with AI summary (scrapes current page)" style="margin-left: 8px;">
           ✨
-        </button>
-      </div>
-      
-      <!-- Shortcuts Content -->
-      <div class="section-content">
-        <div class="table-container">
-          <table class="data-table" id="shortcutsTable">
-            <tbody id="shortcutsList">
-              <tr class="empty-row">
-                <td colspan="4">
-                  <div class="empty-state">
-                    <p>No shortcuts</p>
-                    <button class="btn btn-secondary btn-sm" id="addCurrentPageBtnEmpty">+ Add Current Page</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- Notes Section -->
-    <section class="section" data-section="notes">
-      <div class="section-header">
-        <button class="section-toggle-btn" data-section="notes" title="Collapse section">
-          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <div>
-          <h2 class="section-title">SCRATCH NOTES <span class="section-count"></span></h2>
-          <p class="section-desc">Store temporary IDs, URLs, and reference information</p>
-        </div>
-        <button class="btn btn-accent btn-sm" id="ossNoteBtn" title="Search OSS Note" style="padding: 6px 10px; font-size: 12px; margin-right: 8px;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
-          </svg>
-          OSS Note
-        </button>
-        <button class="btn-add" id="addNoteBtn" data-title="Add Note" title="Add Note">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
         </button>
       </div>
       
@@ -272,6 +233,45 @@
             </svg>
           </button>
         </div>
+      </div>
+      
+      <!-- Shortcuts Content -->
+      <div class="section-content">
+        <div class="table-container">
+          <table class="data-table" id="shortcutsTable">
+            <tbody id="shortcutsList">
+              <tr class="empty-row">
+                <td colspan="4">
+                  <div class="empty-state">
+                    <p>No shortcuts</p>
+                    <button class="btn btn-secondary btn-sm" id="addCurrentPageBtnEmpty">+ Add Current Page</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notes Section -->
+    <section class="section" data-section="notes">
+      <div class="section-header">
+        <button class="section-toggle-btn" data-section="notes" title="Collapse section">
+          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div>
+          <h2 class="section-title">SCRATCH NOTES <span class="section-count"></span></h2>
+          <p class="section-desc">Store temporary IDs, URLs, and reference information</p>
+        </div>
+        <button class="btn-add" id="addNoteBtn" data-title="Add Note" title="Add Note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
       </div>
       
       <!-- Notes Content -->
@@ -1262,6 +1262,10 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" id="closeDiagnosticsBtn">Close</button>
+        <button class="btn btn-accent" id="regenerateDiagnosticsWithAIBtn" 
+                title="Enhance diagnostics with AI analysis">
+          ✨ AI
+        </button>
         <button class="btn btn-primary" id="copyAllDiagnosticsBtn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
