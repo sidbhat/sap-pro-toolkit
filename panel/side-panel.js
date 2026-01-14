@@ -100,24 +100,13 @@ async function loadSettings() {
 }
 
 /**
- * Checks settings and API key storage to determine if AI features should be active.
- * Adds or removes the 'ai-active' class from the body to show/hide the AI button.
+ * AI Search button is always visible.
+ * Users will see helpful error messages if API keys aren't configured.
  */
 async function updateAISettings() {
-  try {
-    const keys = await chrome.storage.local.get(['apiKeyopenai', 'apiKeyanthropic', 'sapAiCoreCredentials']);
-    const isAiEnabled = settings.enableAiFeatures;
-    const hasApiKey = keys.apiKeyopenai || keys.apiKeyanthropic || (keys.sapAiCoreCredentials && keys.sapAiCoreCredentials.clientId);
-
-    if (isAiEnabled && hasApiKey) {
-      document.body.classList.add('ai-active');
-    } else {
-      document.body.classList.remove('ai-active');
-    }
-  } catch (error) {
-    console.error("Failed to update AI settings:", error);
-    document.body.classList.remove('ai-active');
-  }
+  // Always show AI button - let users discover the feature
+  document.body.classList.add('ai-active');
+  console.log('[AI Settings] AI Search button is always visible');
 }
 
 /**
@@ -201,27 +190,56 @@ async function loadNotes() {
     }
   }
   
+  // Migration: Ensure all notes have noteType field
+  let needsSave = false;
+  notes = notes.map(note => {
+    if (!note.noteType) {
+      console.log('[Notes Migration] Adding missing noteType to:', note.title);
+      needsSave = true;
+      return {
+        ...note,
+        noteType: 'note' // Default type for notes without it
+      };
+    }
+    return note;
+  });
+  
+  // Save if we added missing fields
+  if (needsSave) {
+    await chrome.storage.local.set({ [storageKey]: notes });
+    console.log('[Notes Migration] Saved', notes.length, 'notes with noteType field');
+  }
+  
   console.log(`[Notes] Loaded ${notes.length} notes for profile: ${currentProfile}`);
   renderNotes();
 }
 
 async function loadSolutions() {
   try {
-    const response = await fetch(chrome.runtime.getURL('resources/solutions.json'));
-    if (!response.ok) {
-      throw new Error('Failed to load base solutions.json');
-    }
-    const baseData = await response.json();
-    let baseSolutions = baseData.solutions || [];
-
+    console.log('[Load Solutions] Starting...');
+    
+    // Check if we have solutions in storage
     const result = await chrome.storage.local.get('solutions');
-    const customSolutions = result.solutions || [];
-
-    const solutionMap = new Map();
-    baseSolutions.forEach(sol => solutionMap.set(sol.id, { ...sol }));
-    customSolutions.forEach(sol => solutionMap.set(sol.id, { ...sol }));
-
-    solutions = Array.from(solutionMap.values());
+    
+    if (result.solutions && Array.isArray(result.solutions)) {
+      // Use saved solutions from storage
+      solutions = result.solutions;
+      console.log('[Load Solutions] ✅ Loaded from storage:', solutions.length, 'solutions');
+    } else {
+      // FIRST RUN: Copy solutions.json into storage
+      console.log('[Load Solutions] First run - copying solutions.json to storage...');
+      const response = await fetch(chrome.runtime.getURL('resources/solutions.json'));
+      if (!response.ok) {
+        throw new Error('Failed to load solutions.json');
+      }
+      const baseData = await response.json();
+      solutions = baseData.solutions || [];
+      
+      // SAVE TO STORAGE (this becomes the source of truth from now on)
+      await chrome.storage.local.set({ solutions: solutions });
+      console.log('[Load Solutions] ✅ Copied to storage:', solutions.length, 'solutions');
+      console.log('[Load Solutions] 📝 From now on, all edits save to storage only');
+    }
 
   } catch (error) {
     console.error('[Solutions] Failed to load:', error);
@@ -515,38 +533,13 @@ async function renderEnvironments() {
     if (existingBanner) existingBanner.remove();
   }
   
-  // Detect current SAP system and load Quick Actions from ALL profiles
+  // Detect current SAP system and load Quick Actions from GLOBAL solutions storage
   // Quick Actions will be rendered ABOVE the section (not inside tbody)
   if (currentPageData && currentPageData.solutionType) {
     const solutionType = currentPageData.solutionType;
     
-    // Aggregate Quick Actions from ALL profiles (not just current profile)
-    let allQuickActions = [];
-    
-    for (const profile of availableProfiles) {
-      // Check for custom solutions in storage first
-      const storageKey = `solutions_${profile.id}`;
-      const solutionsResult = await chrome.storage.local.get(storageKey);
-      let solutionsData = solutionsResult[storageKey];
-      
-      // If no custom solutions, load from profile file
-      if (!solutionsData && profile.file) {
-        const profileData = await loadProfileData(profile.id);
-        solutionsData = profileData.solutions;
-      }
-      
-      // Find matching solution for current solutionType
-      const solution = solutionsData?.find(s => s.id === solutionType);
-      if (solution && solution.quickActions) {
-        allQuickActions.push(...solution.quickActions);
-      }
-    }
-    
-    // Remove duplicates by action ID (in case multiple profiles define same action)
-    allQuickActions = removeDuplicates(allQuickActions, 'id');
-    
-    // Use combined Quick Actions
-    const solution = allQuickActions.length > 0 ? { quickActions: allQuickActions } : null;
+    // Find matching solution from global solutions array
+    const solution = solutions.find(s => s.id === solutionType);
     
     if (solution && solution.quickActions && solution.quickActions.length > 0) {
       const quickActions = solution.quickActions.slice(0, 5);
@@ -1023,13 +1016,14 @@ function renderNotes() {
     const noteType = note.noteType || 'note';
     const noteTypeLabels = {
       'note': '📝 Note',
-      'ai-prompt': '🤖 AI Prompt',
+      'ai-prompt': '✨ AI Prompt',
       'documentation': '📚 Documentation',
       'code': '💻 Code'
     };
     const noteTypeBadge = `<div class="note-type-badge"><span class="note-type-label">${noteTypeLabels[noteType]}</span></div>`;
     
-    const firstButtonHTML = `<button class="icon-btn primary edit-btn" data-id="${note.id}" title="Edit" tabindex="0">
+    // Edit button (always shown for all note types)
+    const editButtonHTML = `<button class="icon-btn primary edit-btn" data-id="${note.id}" title="Edit" tabindex="0">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -1055,7 +1049,7 @@ function renderNotes() {
         </td>
         <td class="note-actions-cell">
           <div class="table-actions">
-            ${firstButtonHTML}
+            ${editButtonHTML}
             <button class="icon-btn copy-btn" data-id="${note.id}" title="Copy note content" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -1115,6 +1109,13 @@ function attachNoteListeners() {
       deleteNote(id);
     });
   });
+  
+  // Show AI buttons if AI is active
+  if (document.body.classList.contains('ai-active')) {
+    document.querySelectorAll('.ai-prompt-btn').forEach(btn => {
+      btn.style.display = 'flex';
+    });
+  }
   
   // Add tooltips
   document.querySelectorAll('.note-title, .note-preview').forEach(el => {
@@ -1662,39 +1663,58 @@ function editNote(id) {
   const note = notes.find(n => n.id === id);
   if (!note) return;
   
+  console.log('[Edit Note] Opening note:', { id, note });
+  
+  // Get the modal
+  const modal = document.getElementById('addNoteModal');
+  
+  // Populate form fields
   document.getElementById('noteTitle').value = note.title;
   document.getElementById('noteContent').value = note.content || '';
   document.getElementById('noteIcon').value = note.icon || '0';
   
+  // Set edit mode FIRST (before setting note type)
+  modal.setAttribute('data-edit-id', id);
+  document.querySelector('#addNoteModal .modal-header h3').textContent = 'Edit Note';
+  
+  // Show download button in edit mode
+  const downloadBtn = document.getElementById('downloadNoteBtn');
+  if (downloadBtn) downloadBtn.style.display = 'inline-flex';
+  
+  // Show save and prettify buttons (ensure they're visible)
+  document.getElementById('saveNoteBtn').style.display = 'inline-flex';
+  document.getElementById('prettifyNoteBtn').style.display = 'inline-flex';
+  
   // Set note type radio button
   const noteType = note.noteType || 'note';
+  console.log('[Edit Note] Setting note type:', noteType);
+  
   const noteTypeRadio = document.querySelector(`input[name="noteType"][value="${noteType}"]`);
   if (noteTypeRadio) {
     noteTypeRadio.checked = true;
+    console.log('[Edit Note] Radio button checked:', noteTypeRadio);
+  } else {
+    console.warn('[Edit Note] Note type radio button not found:', noteType);
   }
   
-  // Set model selector if ai-prompt type
-  if (noteType === 'ai-prompt' && note.aiConfig && note.aiConfig.defaultModel) {
-    const modelSelect = document.getElementById('noteModel');
-    if (modelSelect) {
-      modelSelect.value = note.aiConfig.defaultModel;
-    }
-    // Show model selector group
+  // Open modal BEFORE triggering AI features (modal must be visible for proper rendering)
+  modal.classList.add('active');
+  
+  // AFTER modal is active, manually trigger AI feature visibility
+  // This ensures the MutationObserver has fired and DOM is ready
+  setTimeout(() => {
     const modelGroup = document.getElementById('modelSelectorGroup');
-    if (modelGroup) modelGroup.style.display = 'block';
     
-    // Show AI test buttons
-    showAITestButtons();
-  }
-  
-  document.getElementById('addNoteModal').setAttribute('data-edit-id', id);
-  document.querySelector('#addNoteModal .modal-header h3').textContent = 'Edit Note';
-  
-  openAddNoteModal();
-  
-  // Show download button in edit mode (must be after openAddNoteModal)
-  const downloadBtn = document.getElementById('downloadNoteBtn');
-  if (downloadBtn) downloadBtn.style.display = 'inline-flex';
+    if (noteType === 'ai-prompt') {
+      console.log('[Edit Note] Showing AI button for ai-prompt type');
+      // Show AI button
+      showAITestButtons();
+    } else {
+      console.log('[Edit Note] Hiding AI button for non-ai-prompt type');
+      // Hide AI button
+      hideAITestButtons();
+    }
+  }, 50); // Small delay to ensure modal is fully rendered
 }
 
 
@@ -1793,6 +1813,58 @@ async function copyNoteContent(id, btn) {
 }
 
 /**
+ * Download note content as a text file
+ * @param {string} id - Note ID
+ */
+async function downloadNote(id) {
+  const note = notes.find(n => n.id === id);
+  if (!note) {
+    showToast('Note not found', 'error');
+    return;
+  }
+  
+  try {
+    const timestamp = new Date().toISOString().split('T')[0];
+    const timeStr = new Date().toISOString().split('T')[1].split('.')[0].replace(/:/g, '-');
+    
+    // Build file content
+    const fileContent = `${note.title}
+${note.timestamp ? `Created: ${new Date(note.timestamp).toLocaleString()}` : ''}
+${note.noteType ? `Type: ${note.noteType}` : ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${note.content || ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+    
+    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create safe filename from title
+    const safeTitle = note.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .substring(0, 50);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `note-${safeTitle}-${timestamp}-${timeStr}.txt`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    
+    showToast('Note downloaded ✓', 'success');
+    
+  } catch (error) {
+    console.error('[Download Note] Failed:', error);
+    showToast(`Failed to download: ${error.message}`, 'error');
+  }
+}
+
+/**
  * Render Quick Actions as editable text fields (SIMPLIFIED)
  * Both name AND path are editable
  * No onclick handlers - uses event delegation instead
@@ -1828,7 +1900,7 @@ async function renderQuickActionsBySection(profileId) {
           ${quickActions.length === 0 ? 
             '<div style="padding: 12px; color: var(--text-secondary); font-size: 11px;">No Quick Actions</div>' :
             quickActions.map(qa => `
-              <div class="qa-edit-row" data-qa-id="${qa.id}" data-solution-id="${solution.id}" style="margin-bottom: 12px;">
+              <div class="qa-edit-row" data-qa-id="${qa.id}" data-solution-id="${solution.id}" style="margin-bottom: 16px;">
                 <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Name:</label>
                 <input 
                   type="text" 
@@ -2334,7 +2406,7 @@ async function addOssNoteAsShortcut() {
 
 // ==================== SETTINGS ====================
 
-function openSettingsModal() {
+async function openSettingsModal() {
   const modal = document.getElementById('settingsModal');
   modal.classList.add('active');
   
@@ -2342,6 +2414,9 @@ function openSettingsModal() {
   setupSettingsTabs();
   loadQuickActionsTab();
   loadProfilesTab();
+  
+  // Load saved API keys when opening Settings
+  await loadSavedAPIKeys();
 }
 
 function closeSettingsModal() {
@@ -2409,53 +2484,127 @@ async function loadProfilesTab() {
 }
 
 /**
+ * Export edited Quick Actions as solutions.json file
+ * This allows users to replace resources/solutions.json and rebuild the extension
+ */
+async function exportQuickActionsToJson() {
+  try {
+    console.log('[Export QA] Starting export...');
+    
+    // Get current solutions from global variable (already has edits)
+    const solutionsData = { solutions: solutions };
+    
+    const jsonStr = JSON.stringify(solutionsData, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const timestamp = new Date().toISOString().split('T')[0];
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `solutions-${timestamp}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    
+    const qaCount = solutions.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0);
+    showToast(`Exported ${qaCount} Quick Actions ✓ | Replace resources/solutions.json and rebuild`, 'success');
+    
+  } catch (error) {
+    console.error('[Export QA] Failed:', error);
+    showToast('Failed to export Quick Actions', 'error');
+  }
+}
+
+/**
  * Save all edited Quick Actions from the Settings tab.
- * This function is connected to an explicit "Save" button.
+ * Saves to a SINGLE 'solutions' key (global, not per-profile)
  */
 async function saveAllQuickActions() {
-  const profileId = currentProfile;
   const listContainer = document.getElementById('qaEditableList');
-  if (!listContainer) return;
+  if (!listContainer) {
+    console.error('[Save QA] Container not found!');
+    return;
+  }
 
   try {
-    const storageKey = `solutions_${profileId}`;
-    const result = await chrome.storage.local.get(storageKey);
-    let solutionsData = result[storageKey];
-
-    if (!solutionsData) {
-      const profileData = await loadProfileData(profileId);
-      solutionsData = JSON.parse(JSON.stringify(profileData.solutions || []));
-    }
-
+    console.log('[Save QA] Starting save...');
+    console.log('[Save QA] Current solutions:', solutions);
+    
+    // Deep clone to avoid mutating original
+    let solutionsData = JSON.parse(JSON.stringify(solutions));
+    
     let changesMade = 0;
+    const changes = [];
+
+    // Apply changes from the form
     listContainer.querySelectorAll('.qa-edit-row').forEach(row => {
       const qaId = row.getAttribute('data-qa-id');
       const solutionId = row.getAttribute('data-solution-id');
       const nameInput = row.querySelector('.qa-name-input');
       const pathInput = row.querySelector('.qa-path-input');
 
-      const solution = solutionsData.find(s => s.id === solutionId);
-      if (!solution) return;
-
-      const qa = solution.quickActions.find(q => q.id === qaId);
-      if (!qa) return;
+      if (!nameInput || !pathInput) {
+        console.warn('[Save QA] Missing inputs for:', qaId);
+        return;
+      }
 
       const newName = nameInput.value.trim();
       const newPath = pathInput.value.trim();
+      const oldName = nameInput.getAttribute('data-original-name');
+      const oldPath = pathInput.getAttribute('data-original-path');
 
+      console.log('[Save QA] Processing:', { qaId, solutionId, oldName, newName, oldPath, newPath });
+
+      // Find the solution and quick action
+      const solution = solutionsData.find(s => s.id === solutionId);
+      if (!solution) {
+        console.warn('[Save QA] Solution not found:', solutionId);
+        return;
+      }
+
+      const qa = solution.quickActions.find(q => q.id === qaId);
+      if (!qa) {
+        console.warn('[Save QA] QA not found:', qaId);
+        return;
+      }
+
+      // Check if changed
       if (qa.name !== newName || qa.path !== newPath) {
+        changes.push({ qaId, oldName: qa.name, newName, oldPath: qa.path, newPath });
         qa.name = newName;
         qa.path = newPath;
         changesMade++;
       }
     });
 
-    if (changesMade > 0) {
-      await chrome.storage.local.set({ [storageKey]: solutionsData });
-      showToast(`${changesMade} Quick Action(s) saved ✓`, 'success');
-    } else {
+    console.log('[Save QA] Changes detected:', changesMade);
+    console.log('[Save QA] Change details:', changes);
+
+    if (changesMade === 0) {
       showToast('No changes to save', 'info');
+      return;
     }
+
+    console.log('[Save QA] Saving to storage with key: "solutions"');
+    console.log('[Save QA] Data to save:', solutionsData);
+    
+    // Save to SINGLE global 'solutions' key
+    await chrome.storage.local.set({ solutions: solutionsData });
+    
+    // Verify save
+    const verifyResult = await chrome.storage.local.get('solutions');
+    console.log('[Save QA] Verification - data in storage:', verifyResult.solutions);
+    
+    // Update global solutions variable
+    solutions = solutionsData;
+    console.log('[Save QA] Updated global solutions variable');
+
+    showToast(`${changesMade} Quick Action(s) saved ✓`, 'success');
+    
+    // Re-render to show changes
+    await renderAllProfilesQuickActions();
+    await renderEnvironments();
+
   } catch (error) {
     console.error('[Save All Quick Actions] Failed:', error);
     showToast('Failed to save Quick Actions', 'error');
@@ -3611,8 +3760,11 @@ function setupEventListeners() {
   // Setup note type change listener for AI features
   setupNoteTypeChangeListener();
   
-  // Setup AI test button handlers (stubs for Phase 4)
+  // Setup AI button handler
   setupAITestButtonHandlers();
+  
+  // Setup AI Search button handler
+  setupAISearchHandler();
   
   document.getElementById('copyDiagnosticsBtn')?.addEventListener('click', showDiagnosticsModal);
   document.getElementById('closeDiagnosticsModal')?.addEventListener('click', closeDiagnosticsModal);
@@ -3645,6 +3797,105 @@ function setupEventListeners() {
 
   // Quick Actions save button
   document.getElementById('saveAllQaBtn')?.addEventListener('click', saveAllQuickActions);
+  
+  // Quick Actions export button
+  document.getElementById('exportQaBtn')?.addEventListener('click', exportQuickActionsToJson);
+  
+  // API Keys - OpenAI buttons
+  document.getElementById('testOpenAIBtn')?.addEventListener('click', async () => {
+    const apiKey = document.getElementById('apiKeyopenaiInput').value.trim();
+    if (!apiKey) {
+      showToast('Please enter an API key first', 'warning');
+      return;
+    }
+    
+    try {
+      showToast('Testing OpenAI connection...', 'info');
+      const response = await fetch('https://api.openai.com/v1/models', {
+        headers: { 'Authorization': `Bearer ${apiKey}` }
+      });
+      
+      if (response.ok) {
+        // Save the key
+        await window.CryptoUtils.encryptAndStore('apiKeyopenai', apiKey);
+        await updateAISettings();
+        showToast('OpenAI connection successful ✓', 'success');
+      } else {
+        showToast('OpenAI connection failed - check API key', 'error');
+      }
+    } catch (error) {
+      console.error('[OpenAI] Test failed:', error);
+      showToast('Connection test failed', 'error');
+    }
+  });
+  
+  document.getElementById('clearOpenAIBtn')?.addEventListener('click', async () => {
+    await chrome.storage.local.remove('apiKeyopenai');
+    document.getElementById('apiKeyopenaiInput').value = '';
+    await updateAISettings();
+    showToast('OpenAI API key cleared', 'success');
+  });
+  
+  // API Keys - Anthropic buttons
+  document.getElementById('testAnthropicBtn')?.addEventListener('click', async () => {
+    const apiKey = document.getElementById('apiKeyanthropicInput').value.trim();
+    if (!apiKey) {
+      showToast('Please enter an API key first', 'warning');
+      return;
+    }
+    
+    try {
+      showToast('Testing Anthropic connection...', 'info');
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'claude-3-haiku-20240307',
+          max_tokens: 10,
+          messages: [{ role: 'user', content: 'test' }]
+        })
+      });
+      
+      if (response.ok) {
+        // Save the key
+        await window.CryptoUtils.encryptAndStore('apiKeyanthropic', apiKey);
+        await updateAISettings();
+        showToast('Anthropic connection successful ✓', 'success');
+      } else {
+        showToast('Anthropic connection failed - check API key', 'error');
+      }
+    } catch (error) {
+      console.error('[Anthropic] Test failed:', error);
+      showToast('Connection test failed', 'error');
+    }
+  });
+  
+  document.getElementById('clearAnthropicBtn')?.addEventListener('click', async () => {
+    await chrome.storage.local.remove('apiKeyanthropic');
+    document.getElementById('apiKeyanthropicInput').value = '';
+    await updateAISettings();
+    showToast('Anthropic API key cleared', 'success');
+  });
+  
+  // API Keys - Max Tokens button
+  document.getElementById('saveMaxTokensBtn')?.addEventListener('click', async () => {
+    const maxTokens = parseInt(document.getElementById('maxTokensDefault').value) || 4096;
+    await chrome.storage.local.set({ maxTokensDefault: maxTokens });
+    showToast(`Max tokens set to ${maxTokens} ✓`, 'success');
+  });
+  
+  // SAP AI Core connection buttons
+  document.getElementById('testSAPAICoreBtn')?.addEventListener('click', connectSAPAICore);
+  document.getElementById('saveSAPAICoreBtn')?.addEventListener('click', saveSAPAICoreConfig);
+  document.getElementById('clearSAPAICoreBtn')?.addEventListener('click', clearSAPAICoreConfig);
+  
+  // Enterprise Calculator modal close buttons
+  document.getElementById('closeEnterpriseCalculatorModal')?.addEventListener('click', closeEnterpriseCalculatorModal);
+  document.getElementById('closeEnterpriseCalculatorBtn')?.addEventListener('click', closeEnterpriseCalculatorModal);
   
   // New simplified Settings handlers
   document.getElementById('newProfileBtn')?.addEventListener('click', createNewProfileInline);
@@ -3731,6 +3982,7 @@ async function discoverProfiles() {
     { id: 'profile-s4hana', name: 'S/4HANA', icon: '🏭', description: 'Clean Core & functional architects', file: 'profile-s4hana.json', type: 'system' },
     { id: 'profile-btp', name: 'BTP & Integration', icon: '🔧', description: 'Developers & technical architects', file: 'profile-btp.json', type: 'system' },
     { id: 'profile-executive', name: 'Executive & Sales', icon: '👔', description: 'CIOs, CTOs, presales engineers', file: 'profile-executive.json', type: 'system' },
+    { id: 'profile-ai-joule', name: 'AI & Joule', icon: '🤖', description: 'AI prompts, Joule copilot, and generative AI resources', file: 'profile-ai-joule.json', type: 'system' },
     { id: 'profile-golive', name: 'Go-Live & Cutover', icon: '🚀', description: 'S/4HANA implementation go-live events and cutover activities', file: 'profile-golive.json', type: 'system' }
   ];
   
@@ -3772,13 +4024,11 @@ async function renderAllProfilesQuickActions() {
   if (!listContainer) return;
   
   try {
-    // Load base solutions from solutions.json
-    const response = await fetch(chrome.runtime.getURL('resources/solutions.json'));
-    if (!response.ok) {
-      throw new Error('Failed to load solutions.json');
-    }
-    const baseData = await response.json();
-    const baseSolutions = baseData.solutions || [];
+    console.log('[Render QA] Starting render...');
+    console.log('[Render QA] Current solutions in memory:', solutions);
+    
+    // USE THE GLOBAL SOLUTIONS VARIABLE (already loaded from storage or file)
+    const baseSolutions = solutions;
     
     if (baseSolutions.length === 0) {
       listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-secondary);">No Quick Actions configured in solutions.json</div>';
@@ -3787,9 +4037,8 @@ async function renderAllProfilesQuickActions() {
     
     let allHTML = '';
     
-    // Render solutions from solutions.json
+    // Render solutions from solutions.json with 2-column grid layout
     for (const solution of baseSolutions) {
-      
       const quickActions = solution.quickActions || [];
       
       allHTML += `
@@ -3800,23 +4049,27 @@ async function renderAllProfilesQuickActions() {
           ${quickActions.length === 0 ? 
             '<div style="padding: 12px; color: var(--text-secondary); font-size: 11px;">No Quick Actions</div>' :
             quickActions.map(qa => `
-              <div class="qa-edit-row" data-qa-id="${qa.id}" data-solution-id="${solution.id}" style="margin-bottom: 12px;">
-                <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Name:</label>
-                <input 
-                  type="text" 
-                  class="qa-name-input" 
-                  value="${qa.name}" 
-                  data-original-name="${qa.name}"
-                  style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--bg-primary); color: var(--text-primary); margin-bottom: 8px;"
-                >
-                <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Path:</label>
-                <input 
-                  type="text" 
-                  class="qa-path-input" 
-                  value="${qa.path}" 
-                  data-original-path="${qa.path}"
-                  style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; background: var(--bg-primary); color: var(--text-primary); font-family: 'SF Mono', monospace;"
-                >
+              <div class="qa-edit-row" data-qa-id="${qa.id}" data-solution-id="${solution.id}" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div>
+                  <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Name:</label>
+                  <input 
+                    type="text" 
+                    class="qa-name-input" 
+                    value="${qa.name}" 
+                    data-original-name="${qa.name}"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--bg-primary); color: var(--text-primary);"
+                  >
+                </div>
+                <div>
+                  <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Path:</label>
+                  <input 
+                    type="text" 
+                    class="qa-path-input" 
+                    value="${qa.path}" 
+                    data-original-path="${qa.path}"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; background: var(--bg-primary); color: var(--text-primary); font-family: 'SF Mono', monospace;"
+                  >
+                </div>
               </div>
             `).join('')
           }
@@ -3828,77 +4081,6 @@ async function renderAllProfilesQuickActions() {
   } catch (error) {
     console.error('[Quick Actions Tab] Failed to load:', error);
     listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--env-production);">Failed to load</div>';
-  }
-}
-
-/**
- * Save all edited Quick Actions from the Settings tab.
- * Saves to chrome.storage.local with key 'solutions'
- */
-async function saveAllQuickActions() {
-  const listContainer = document.getElementById('qaEditableList');
-  if (!listContainer) return;
-
-  try {
-    // Load current solutions from solutions.json
-    const response = await fetch(chrome.runtime.getURL('resources/solutions.json'));
-    if (!response.ok) {
-      throw new Error('Failed to load solutions.json');
-    }
-    const baseData = await response.json();
-    let solutionsData = JSON.parse(JSON.stringify(baseData.solutions || []));
-    
-    let totalChanges = 0;
-
-    // Apply changes from the form
-    listContainer.querySelectorAll('.qa-edit-row').forEach(row => {
-      const qaId = row.getAttribute('data-qa-id');
-      const solutionId = row.getAttribute('data-solution-id');
-      const nameInput = row.querySelector('.qa-name-input');
-      const pathInput = row.querySelector('.qa-path-input');
-
-      const newName = nameInput.value.trim();
-      const newPath = pathInput.value.trim();
-      const originalName = nameInput.getAttribute('data-original-name');
-      const originalPath = pathInput.getAttribute('data-original-path');
-
-      // Find the solution and quick action
-      const solution = solutionsData.find(s => s.id === solutionId);
-      if (!solution) return;
-
-      const qa = solution.quickActions.find(q => q.id === qaId);
-      if (!qa) return;
-
-      // Check if changed
-      if (qa.name !== newName || qa.path !== newPath) {
-        qa.name = newName;
-        qa.path = newPath;
-        totalChanges++;
-      }
-    });
-
-    if (totalChanges === 0) {
-      showToast('No changes to save', 'info');
-      return;
-    }
-
-    // Save to chrome.storage.local with key 'solutions'
-    await chrome.storage.local.set({ solutions: solutionsData });
-    
-    // Update global solutions variable
-    solutions = solutionsData;
-
-    showToast(`${totalChanges} Quick Action(s) saved ✓`, 'success');
-    
-    // Reload Settings tab to reflect saved changes
-    await loadQuickActionsTab();
-    
-    // Re-render environments section to update Quick Actions display
-    await renderEnvironments();
-
-  } catch (error) {
-    console.error('[Save All Quick Actions] Failed:', error);
-    showToast('Failed to save Quick Actions', 'error');
   }
 }
 
@@ -3998,11 +4180,425 @@ function removeDuplicates(arr, key) {
   });
 }
 
+// ==================== AI SEARCH FUNCTIONALITY ====================
+
+/**
+ * Setup AI Search button handler
+ */
+function setupAISearchHandler() {
+  const aiSearchBtn = document.getElementById('aiSearchBtn');
+  const searchInput = document.getElementById('globalSearch');
+  
+  if (!aiSearchBtn || !searchInput) {
+    console.warn('[AI Search] Button or search input not found');
+    return;
+  }
+  
+  aiSearchBtn.addEventListener('click', async () => {
+    const searchQuery = searchInput.value.trim();
+    
+    if (!searchQuery) {
+      showToast('Enter a search query first', 'warning');
+      searchInput.focus();
+      return;
+    }
+    
+    await performAISearch(searchQuery);
+  });
+  
+  console.log('[AI Search] Handler attached successfully');
+}
+
+/**
+ * Perform comprehensive AI-powered search across ALL profiles
+ * @param {string} query - The search query
+ */
+async function performAISearch(query) {
+  // Check if AI features are enabled
+  if (!document.body.classList.contains('ai-active')) {
+    showToast('AI features are disabled. Configure API keys in Settings.', 'warning');
+    return;
+  }
+  
+  // Check if ToolkitCore is loaded
+  if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
+    showToast('AI features not available', 'error');
+    return;
+  }
+  
+  try {
+    // Show loading state
+    const aiInsightsBar = document.getElementById('aiInsightsBar');
+    const aiInsightsContent = document.getElementById('aiInsightsContent');
+    
+    if (!aiInsightsBar || !aiInsightsContent) {
+      console.error('[AI Search] Insights bar elements not found');
+      return;
+    }
+    
+    aiInsightsBar.style.display = 'block';
+    aiInsightsContent.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px;">
+        <div class="spinner"></div>
+        <span>🔍 Analyzing toolkit data across all profiles...</span>
+      </div>
+    `;
+    
+    // BUILD COMPREHENSIVE CONTEXT
+    console.log('[AI Search] Building comprehensive context...');
+    const context = await buildComprehensiveContext(query);
+    
+    // BUILD ENHANCED PROMPT
+    const prompt = buildEnhancedPrompt(query, context);
+    console.log('[AI Search] Prompt built with', context.stats.totalItems, 'items analyzed');
+    
+    // CALL AI
+    const result = await window.ToolkitCore.testPromptWithModel(prompt);
+    
+    if (!result || !result.content) {
+      throw new Error('No response from AI');
+    }
+    
+    // DISPLAY RESULTS
+    displayEnhancedAISearchResults(query, result.content, context);
+    
+  } catch (error) {
+    console.error('[AI Search] Failed:', error);
+    showToast(`AI search failed: ${error.message}`, 'error');
+    
+    const aiInsightsBar = document.getElementById('aiInsightsBar');
+    if (aiInsightsBar) aiInsightsBar.style.display = 'none';
+  }
+}
+
+/**
+ * Build comprehensive context from ALL profiles and toolkit data
+ * @param {string} query - User's search query
+ * @returns {Object} Comprehensive context object
+ */
+async function buildComprehensiveContext(query) {
+  console.log('[AI Search Context] Loading all profile data...');
+  
+  // 1. LOAD EVERYTHING
+  const allData = await loadAllProfilesData();
+  const currentPageInfo = currentPageData;
+  const activeProfile = currentProfile;
+  const allProfiles = availableProfiles;
+  const allSolutions = solutions;
+  
+  // 2. GROUP DATA BY PROFILE
+  const groupByProfile = (items) => {
+    const grouped = {};
+    items.forEach(item => {
+      const profileId = item.profileId || 'unknown';
+      if (!grouped[profileId]) {
+        grouped[profileId] = {
+          profileName: item.profileName,
+          profileIcon: item.profileIcon,
+          items: []
+        };
+      }
+      grouped[profileId].items.push(item);
+    });
+    return grouped;
+  };
+  
+  const environmentsByProfile = groupByProfile(allData.environments);
+  const shortcutsByProfile = groupByProfile(allData.shortcuts);
+  const notesByProfile = groupByProfile(allData.notes);
+  
+  // 3. BUILD COMPREHENSIVE SUMMARY
+  const context = {
+    query: query,
+    
+    // Active profile info
+    activeProfile: {
+      id: activeProfile,
+      name: allProfiles.find(p => p.id === activeProfile)?.name || 'Unknown',
+      icon: allProfiles.find(p => p.id === activeProfile)?.icon || '📁',
+      itemCounts: {
+        environments: environments.length,
+        shortcuts: shortcuts.length,
+        notes: notes.length
+      }
+    },
+    
+    // All profiles summary
+    allProfiles: allProfiles.map(p => ({
+      id: p.id,
+      name: p.name,
+      icon: p.icon || '📁',
+      description: p.description || '',
+      type: p.type
+    })),
+    
+    // Cross-profile data grouped
+    environmentsByProfile: environmentsByProfile,
+    shortcutsByProfile: shortcutsByProfile,
+    notesByProfile: notesByProfile,
+    
+    // Current context
+    currentContext: {
+      onSAPSystem: !!currentPageInfo,
+      solutionType: currentPageInfo?.solutionType || 'none',
+      hostname: currentPageInfo?.hostname || 'not on SAP system',
+      datacenter: currentPageInfo?.datacenter || 'Unknown',
+      environment: currentPageInfo?.environment || 'Unknown'
+    },
+    
+    // Quick Actions available
+    quickActions: allSolutions.map(s => ({
+      solution: s.name,
+      solutionId: s.id,
+      actionsCount: s.quickActions?.length || 0,
+      actions: (s.quickActions || []).map(qa => ({
+        id: qa.id,
+        name: qa.name,
+        path: qa.path
+      }))
+    })),
+    
+    // Statistics
+    stats: {
+      totalProfiles: allProfiles.length,
+      totalEnvironments: allData.environments.length,
+      totalShortcuts: allData.shortcuts.length,
+      totalNotes: allData.notes.length,
+      totalQuickActions: allSolutions.reduce((sum, s) => sum + (s.quickActions?.length || 0), 0),
+      totalItems: allData.environments.length + allData.shortcuts.length + allData.notes.length
+    }
+  };
+  
+  console.log('[AI Search Context] Built comprehensive context:', {
+    profiles: context.stats.totalProfiles,
+    items: context.stats.totalItems,
+    environments: context.stats.totalEnvironments,
+    shortcuts: context.stats.totalShortcuts,
+    notes: context.stats.totalNotes,
+    quickActions: context.stats.totalQuickActions
+  });
+  
+  return context;
+}
+
+/**
+ * Build enhanced AI prompt with full toolkit context
+ * @param {string} query - User's search query
+ * @param {Object} context - Comprehensive context object
+ * @returns {string} - Enhanced prompt for AI
+ */
+function buildEnhancedPrompt(query, context) {
+  // Build profiles list
+  const profilesList = context.allProfiles.map(p => 
+    `  • ${p.icon} ${p.name} (${p.type}) - ${p.description}`
+  ).join('\n');
+  
+  // Build environments by profile
+  const envsByProfile = Object.entries(context.environmentsByProfile).map(([profileId, data]) => {
+    const items = data.items.slice(0, 5); // Limit to top 5 per profile
+    return `  ${data.profileIcon} ${data.profileName} (${data.items.length}):
+${items.map(env => `    - ${env.name} (${env.type}) - ${env.hostname}`).join('\n')}`;
+  }).join('\n');
+  
+  // Build shortcuts by profile
+  const shortcutsByProfile = Object.entries(context.shortcutsByProfile).map(([profileId, data]) => {
+    const items = data.items.slice(0, 5);
+    return `  ${data.profileIcon} ${data.profileName} (${data.items.length}):
+${items.map(sc => `    - ${sc.name}`).join('\n')}`;
+  }).join('\n');
+  
+  // Build notes by profile
+  const notesByProfile = Object.entries(context.notesByProfile).map(([profileId, data]) => {
+    const items = data.items.slice(0, 5);
+    return `  ${data.profileIcon} ${data.profileName} (${data.items.length}):
+${items.map(note => `    - ${note.title} (${note.noteType || 'note'})`).join('\n')}`;
+  }).join('\n');
+  
+  // Build Quick Actions summary
+  const quickActionsList = context.quickActions
+    .filter(qa => qa.actionsCount > 0)
+    .map(qa => `  ⚡ ${qa.solution} (${qa.actionsCount}): ${qa.actions.slice(0, 3).map(a => a.name).join(', ')}${qa.actionsCount > 3 ? '...' : ''}`)
+    .join('\n');
+  
+  // Build the comprehensive prompt
+  const prompt = `You are an intelligent search assistant for SAP Pro Toolkit, a productivity tool for SAP professionals.
+
+## YOUR MISSION
+Answer the user's query by analyzing ALL data across ALL profiles in the toolkit. Provide specific, actionable insights with exact counts, names, and profile recommendations.
+
+## TOOLKIT DATA ANALYSIS
+
+**Active Profile:** ${context.activeProfile.icon} ${context.activeProfile.name}
+  - ${context.activeProfile.itemCounts.environments} environments
+  - ${context.activeProfile.itemCounts.shortcuts} shortcuts
+  - ${context.activeProfile.itemCounts.notes} notes
+
+**All Available Profiles (${context.stats.totalProfiles}):**
+${profilesList}
+
+**Current Context:**
+  - On SAP System: ${context.currentContext.onSAPSystem ? 'YES' : 'NO'}
+  - Solution Type: ${context.currentContext.solutionType}
+  - Hostname: ${context.currentContext.hostname}
+  - Data Center: ${context.currentContext.datacenter}
+  - Environment Type: ${context.currentContext.environment}
+
+**Cross-Profile Data Summary:**
+  - Total Environments: ${context.stats.totalEnvironments} across ${context.stats.totalProfiles} profiles
+  - Total Shortcuts: ${context.stats.totalShortcuts}
+  - Total Notes: ${context.stats.totalNotes}
+  - Total Quick Actions: ${context.stats.totalQuickActions}
+
+**Environments by Profile:**
+${envsByProfile || '  (No environments)'}
+
+**Shortcuts by Profile:**
+${shortcutsByProfile || '  (No shortcuts)'}
+
+**Notes by Profile:**
+${notesByProfile || '  (No notes)'}
+
+**Available Quick Actions:**
+${quickActionsList || '  (No Quick Actions)'}
+
+## YOUR TASK
+
+User Query: "${query}"
+
+Analyze the above toolkit data and provide:
+1. **Specific answers** with exact counts and item names
+2. **Profile recommendations** if better data exists in other profiles
+3. **Quick Actions** if applicable to the query
+4. **Relevant items** from the toolkit (environments, shortcuts, notes)
+5. **Navigation suggestions** (which profile to switch to, which environment to use)
+
+Be SPECIFIC and ACTIONABLE. Examples of good responses:
+- "Found 3 SuccessFactors environments: 'SF Prod DC15', 'SF Preview DC20', 'SF Sandbox'. Currently in '${context.activeProfile.name}' profile. Switch to 'SuccessFactors' profile for 15 SF-specific shortcuts."
+- "You have 2 AI prompts related to Joule in the 'AI & Joule' profile notes section. Switch to that profile to access them."
+- "Quick Action available for your current system: Navigate to Admin Center. You're on ${context.currentContext.hostname}."
+
+Provide your analysis now:`;
+
+  console.log('[AI Search] Prompt length:', prompt.length, 'characters');
+  return prompt;
+}
+
+/**
+ * Display enhanced AI search results with actionable buttons
+ * @param {string} query - Original search query
+ * @param {string} response - AI response content
+ * @param {Object} context - Comprehensive context object
+ */
+function displayEnhancedAISearchResults(query, response, context) {
+  const aiInsightsContent = document.getElementById('aiInsightsContent');
+  
+  if (!aiInsightsContent) return;
+  
+  // Parse AI response for actionable items (profile switches, environment navigation)
+  const actions = extractActionableItems(response, context);
+  
+  // Build action buttons
+  let actionButtons = '';
+  if (actions.profileSwitch) {
+    const profile = availableProfiles.find(p => p.id === actions.profileSwitch);
+    if (profile) {
+      actionButtons += `
+        <button class="btn btn-sm btn-primary" onclick="switchProfile('${actions.profileSwitch}')" style="display: inline-flex; align-items: center; gap: 6px;">
+          ${profile.icon} Switch to ${profile.name}
+        </button>
+      `;
+    }
+  }
+  
+  if (actions.environmentSwitch) {
+    actionButtons += `
+      <button class="btn btn-sm btn-primary" onclick="switchEnvironment('${actions.environmentSwitch.hostname}', '${actions.environmentSwitch.type}')" style="display: inline-flex; align-items: center; gap: 6px;">
+        🔄 Switch to ${actions.environmentSwitch.name}
+      </button>
+    `;
+  }
+  
+  // Use markdownToHTML utility for clean formatting
+  const formattedResponse = markdownToHTML(response);
+  
+  const html = `
+    <div style="padding: 12px;">
+      <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+        <strong>🔍 "${query}"</strong><br>
+        <span style="opacity: 0.8;">📊 Analyzed ${context.stats.totalEnvironments} environments, ${context.stats.totalShortcuts} shortcuts, ${context.stats.totalNotes} notes across ${context.stats.totalProfiles} profiles</span>
+      </div>
+      
+      <div class="ai-response" style="font-size: 13px; line-height: 1.6; color: var(--text-primary);">
+        ${formattedResponse}
+      </div>
+      
+      ${actionButtons ? `<div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap;">${actionButtons}</div>` : ''}
+    </div>
+  `;
+  
+  aiInsightsContent.innerHTML = html;
+  showToast('AI search complete ✓', 'success');
+}
+
+/**
+ * Extract actionable items from AI response
+ * Detects profile switch recommendations and environment suggestions
+ * @param {string} response - AI response text
+ * @param {Object} context - Comprehensive context object
+ * @returns {Object} Actionable items extracted from response
+ */
+function extractActionableItems(response, context) {
+  const actions = {
+    profileSwitch: null,
+    environmentSwitch: null
+  };
+  
+  // Detect profile switch recommendations
+  const lowerResponse = response.toLowerCase();
+  
+  // Check for profile mentions in response
+  context.allProfiles.forEach(profile => {
+    const profileNameLower = profile.name.toLowerCase();
+    if (lowerResponse.includes(`switch to '${profileNameLower}'`) || 
+        lowerResponse.includes(`switch to "${profileNameLower}"`) ||
+        lowerResponse.includes(`switch to ${profileNameLower} profile`)) {
+      actions.profileSwitch = profile.id;
+    }
+  });
+  
+  // Detect environment switch recommendations
+  Object.entries(context.environmentsByProfile).forEach(([profileId, data]) => {
+    data.items.forEach(env => {
+      if (lowerResponse.includes(env.name.toLowerCase()) && 
+          (lowerResponse.includes('switch to') || lowerResponse.includes('use'))) {
+        actions.environmentSwitch = {
+          id: env.id,
+          name: env.name,
+          hostname: env.hostname,
+          type: env.type
+        };
+      }
+    });
+  });
+  
+  return actions;
+}
+
+/**
+ * Setup close button for AI insights bar
+ */
+document.getElementById('closeAiInsights')?.addEventListener('click', () => {
+  const aiInsightsBar = document.getElementById('aiInsightsBar');
+  if (aiInsightsBar) {
+    aiInsightsBar.style.display = 'none';
+  }
+});
+
 // ==================== AI COST ESTIMATOR FUNCTIONS ====================
 
 /**
  * Setup note type change listener
- * Shows/hides model selector and AI test buttons based on selected type
+ * Shows/hides AI button based on selected type
  */
 function setupNoteTypeChangeListener() {
   const noteTypeRadios = document.querySelectorAll('input[name="noteType"]');
@@ -4010,67 +4606,43 @@ function setupNoteTypeChangeListener() {
   noteTypeRadios.forEach(radio => {
     radio.addEventListener('change', (e) => {
       const selectedType = e.target.value;
-      const modelGroup = document.getElementById('modelSelectorGroup');
+      const aiBtn = document.getElementById('enhanceWithAIBtn');
       
       if (selectedType === 'ai-prompt') {
-        // Show model selector and AI buttons
-        if (modelGroup) modelGroup.style.display = 'block';
-        showAITestButtons();
+        // Show AI button for AI-prompt type
+        if (aiBtn) aiBtn.style.display = 'inline-flex';
       } else {
-        // Hide model selector and AI buttons
-        if (modelGroup) modelGroup.style.display = 'none';
-        hideAITestButtons();
+        // Hide AI button for other types
+        if (aiBtn) aiBtn.style.display = 'none';
       }
     });
   });
 }
 
 /**
- * Show AI test buttons in note modal footer
+ * Show AI button in note modal footer
  */
 function showAITestButtons() {
-  const estimateCostBtn = document.getElementById('estimateCostBtn');
-  const testNowBtn = document.getElementById('testNowBtn');
-  const compareAllBtn = document.getElementById('compareAllBtn');
-  
-  if (estimateCostBtn) estimateCostBtn.style.display = 'inline-flex';
-  if (testNowBtn) testNowBtn.style.display = 'inline-flex';
-  if (compareAllBtn) compareAllBtn.style.display = 'inline-flex';
+  const aiBtn = document.getElementById('enhanceWithAIBtn');
+  if (aiBtn) aiBtn.style.display = 'inline-flex';
 }
 
 /**
- * Hide AI test buttons in note modal footer
+ * Hide AI button in note modal footer
  */
 function hideAITestButtons() {
-  const estimateCostBtn = document.getElementById('estimateCostBtn');
-  const testNowBtn = document.getElementById('testNowBtn');
-  const compareAllBtn = document.getElementById('compareAllBtn');
-  
-  if (estimateCostBtn) estimateCostBtn.style.display = 'none';
-  if (testNowBtn) testNowBtn.style.display = 'none';
-  if (compareAllBtn) compareAllBtn.style.display = 'none';
+  const aiBtn = document.getElementById('enhanceWithAIBtn');
+  if (aiBtn) aiBtn.style.display = 'none';
 }
 
 /**
- * Setup AI test button handlers (Phase 4 implementation)
+ * Setup AI test button handlers
  */
 function setupAITestButtonHandlers() {
-  // Estimate Cost button
-  document.getElementById('estimateCostBtn')?.addEventListener('click', async (e) => {
+  // Main AI button (triggers LLM call)
+  document.getElementById('enhanceWithAIBtn')?.addEventListener('click', async (e) => {
     e.preventDefault();
-    await handleEstimateCost();
-  });
-  
-  // Test Now button
-  document.getElementById('testNowBtn')?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    await handleTestNow();
-  });
-  
-  // Compare All button
-  document.getElementById('compareAllBtn')?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    await handleCompareAll();
+    await handleRunAIPrompt();
   });
   
   // AI Test Results modal close buttons
@@ -4092,13 +4664,74 @@ async function loadLLMPricing() {
   try {
     const response = await fetch(chrome.runtime.getURL('resources/llm-pricing.json'));
     llmPricingData = await response.json();
-    console.log('[AI] Loaded pricing data for', Object.keys(llmPricingData).length, 'models');
+    console.log('[AI] Loaded pricing data for', Object.keys(llmPricingData.models).length, 'models');
     return llmPricingData;
   } catch (error) {
     console.error('[AI] Failed to load pricing data:', error);
     showToast('Failed to load pricing data', 'error');
     return null;
   }
+}
+
+/**
+ * Fuzzy lookup for model pricing using keyword matching
+ * @param {string} modelId - Model identifier from API response
+ * @param {Object} pricingData - Loaded pricing data from llm-pricing.json
+ * @returns {Object|null} Pricing object with input/output costs or null
+ */
+function lookupModelPricing(modelId, pricingData) {
+  if (!modelId || !pricingData || !pricingData.models) return null;
+  
+  const modelLower = modelId.toLowerCase();
+  
+  // Define keyword mappings for fuzzy matching
+  const keywordMap = {
+    // Claude models (order matters - check specific versions first)
+    'sonnet-4.5': 'claude-3-5-sonnet-20240620',
+    'sonnet-3.5': 'claude-3-5-sonnet-20240620',
+    'opus': 'claude-3-opus-20240229',
+    'sonnet': 'claude-3-sonnet-20240229',
+    'haiku': 'claude-3-haiku-20240307',
+    
+    // OpenAI models
+    'gpt-4-turbo': 'gpt-4-turbo',
+    'gpt-4': 'gpt-4',
+    'gpt-3.5': 'gpt-3.5-turbo',
+    'gpt-35': 'gpt-3.5-turbo'
+  };
+  
+  // Try keyword matching
+  for (const [keyword, pricingKey] of Object.entries(keywordMap)) {
+    if (modelLower.includes(keyword)) {
+      // Check if this is SAP AI Core (prefer sap-ai-core-* variants)
+      if (modelLower.includes('sap') || modelLower.includes('ai-core') || modelLower.includes('anthropic--') || modelLower.includes('openai--')) {
+        // Try SAP AI Core variant first
+        const sapVariants = [
+          'sap-ai-core-gpt-4',
+          'sap-ai-core-gpt-35-turbo',
+          'sap-ai-core-claude-3-sonnet'
+        ];
+        
+        for (const sapKey of sapVariants) {
+          if (sapKey.includes(keyword.replace('.', '')) || sapKey.includes(keyword.split('-')[0])) {
+            if (pricingData.models[sapKey]) {
+              console.log('[AI Pricing] Matched SAP AI Core variant:', modelId, '→', sapKey);
+              return pricingData.models[sapKey];
+            }
+          }
+        }
+      }
+      
+      // Fall back to base model pricing
+      if (pricingData.models[pricingKey]) {
+        console.log('[AI Pricing] Matched base model:', modelId, '→', pricingKey);
+        return pricingData.models[pricingKey];
+      }
+    }
+  }
+  
+  console.warn('[AI Pricing] No pricing found for model:', modelId);
+  return null;
 }
 
 /**
@@ -4111,6 +4744,135 @@ function estimateTokens(text) {
   if (!text) return 0;
   // Simple estimation: 4 chars ≈ 1 token
   return Math.ceil(text.length / 4);
+}
+
+/**
+ * Convert markdown text to clean HTML
+ * Reusable utility for all AI/LLM response rendering
+ * @param {string} markdown - Raw markdown text
+ * @returns {string} Clean HTML string
+ */
+function markdownToHTML(markdown) {
+  if (!markdown) return '';
+  
+  let html = markdown;
+  
+  // Convert code blocks first (```code```)
+  html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+  
+  // Convert inline code (`code`)
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  
+  // Convert headers (# H1, ## H2, ### H3)
+  html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+  
+  // Convert horizontal rules (---)
+  html = html.replace(/^---+$/gm, '<hr>');
+  
+  // Convert bold (**text** or __text__)
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+  
+  // Convert links ([text](url))
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+  
+  // Convert lists (bullet points)
+  const lines = html.split('\n');
+  let inList = false;
+  let listType = null;
+  const processedLines = [];
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    
+    // Numbered list
+    if (/^\d+\.\s/.test(trimmed)) {
+      if (!inList || listType !== 'ol') {
+        if (inList) processedLines.push(`</${listType}>`);
+        processedLines.push('<ol>');
+        inList = true;
+        listType = 'ol';
+      }
+      processedLines.push(`<li>${trimmed.replace(/^\d+\.\s/, '')}</li>`);
+    }
+    // Bullet list (-, *, •)
+    else if (/^[-*•]\s/.test(trimmed)) {
+      if (!inList || listType !== 'ul') {
+        if (inList) processedLines.push(`</${listType}>`);
+        processedLines.push('<ul>');
+        inList = true;
+        listType = 'ul';
+      }
+      processedLines.push(`<li>${trimmed.replace(/^[-*•]\s/, '')}</li>`);
+    }
+    // Regular line
+    else {
+      if (inList) {
+        processedLines.push(`</${listType}>`);
+        inList = false;
+        listType = null;
+      }
+      
+      // Convert paragraphs (non-empty lines that aren't headers/hr/lists)
+      if (trimmed && !trimmed.startsWith('<')) {
+        processedLines.push(`<p>${line}</p>`);
+      } else {
+        processedLines.push(line);
+      }
+    }
+  }
+  
+  // Close any open list
+  if (inList) {
+    processedLines.push(`</${listType}>`);
+  }
+  
+  return processedLines.join('\n');
+}
+
+/**
+ * Strip markdown formatting to produce clean plain text
+ * Used for saving notes and exporting to text files
+ * @param {string} markdown - Raw markdown text
+ * @returns {string} Clean plain text
+ */
+function stripMarkdown(markdown) {
+  if (!markdown) return '';
+  
+  let text = markdown;
+  
+  // Remove code blocks
+  text = text.replace(/```[\s\S]*?```/g, '');
+  
+  // Remove inline code backticks
+  text = text.replace(/`([^`]+)`/g, '$1');
+  
+  // Remove headers (keep text only)
+  text = text.replace(/^#{1,6}\s+/gm, '');
+  
+  // Remove horizontal rules
+  text = text.replace(/^---+$/gm, '');
+  
+  // Remove bold/italic markers
+  text = text.replace(/\*\*([^*]+)\*\*/g, '$1');
+  text = text.replace(/__([^_]+)__/g, '$1');
+  text = text.replace(/\*([^*]+)\*/g, '$1');
+  text = text.replace(/_([^_]+)_/g, '$1');
+  
+  // Remove links (keep text only)
+  text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+  
+  // Clean up list markers
+  text = text.replace(/^[-*•]\s+/gm, '• ');
+  text = text.replace(/^\d+\.\s+/gm, '');
+  
+  // Clean up excessive whitespace
+  text = text.replace(/\n{3,}/g, '\n\n');
+  
+  return text.trim();
 }
 
 /**
@@ -4133,82 +4895,100 @@ function calculateCost(inputTokens, outputTokens, pricing) {
 }
 
 /**
- * Handle Estimate Cost button click
- * Offline calculation without API calls
+ * Handle AI button click - runs the prompt with LLM
+ * This is the main entry point for AI functionality
  */
-async function handleEstimateCost() {
+async function handleRunAIPrompt() {
   const content = document.getElementById('noteContent').value.trim();
-  const modelId = document.getElementById('noteModel').value;
   
   if (!content) {
     showToast('Please enter prompt content first', 'warning');
+    return;
+  }
+  
+  // Check if ToolkitCore is loaded and has AI functions
+  if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
+    console.error('[AI] ToolkitCore or testPromptWithModel not available');
+    showToast('AI features not available - ToolkitCore missing', 'error');
     return;
   }
   
   try {
-    const pricing = await loadLLMPricing();
-    if (!pricing || !pricing[modelId]) {
-      showToast('Pricing data not available for this model', 'error');
+    showToast('Running AI prompt...', 'info');
+    
+    // Load pricing data
+    const pricingData = await loadLLMPricing();
+    
+    // Call the test function from ToolkitCore
+    const result = await window.ToolkitCore.testPromptWithModel(content);
+    
+    if (!result) {
+      showToast('No response from AI', 'warning');
       return;
     }
     
-    const modelData = pricing[modelId];
-    const inputTokens = estimateTokens(content);
+    // Lookup model pricing using fuzzy matching
+    const modelPricing = pricingData ? lookupModelPricing(result.model, pricingData) : null;
     
-    // Estimate output tokens (assume 150% of input as a rule of thumb)
-    const estimatedOutputTokens = Math.ceil(inputTokens * 1.5);
+    let costs, modelData;
     
-    const costs = calculateCost(inputTokens, estimatedOutputTokens, modelData);
+    if (modelPricing && result.usage?.inputTokens && result.usage?.outputTokens) {
+      // Calculate costs from pricing data
+      const inputCost = (result.usage.inputTokens / 1000) * modelPricing.input;
+      const outputCost = (result.usage.outputTokens / 1000) * modelPricing.output;
+      const totalCost = inputCost + outputCost;
+      
+      costs = {
+        inputCost: inputCost.toFixed(4),
+        outputCost: outputCost.toFixed(4),
+        totalCost: totalCost.toFixed(4)
+      };
+      
+      modelData = {
+        provider: result.provider,
+        model: result.model,
+        inputCostPer1K: modelPricing.input,
+        outputCostPer1K: modelPricing.output,
+        disclaimer: modelPricing.disclaimer || null
+      };
+      
+      console.log('[AI] Calculated costs from pricing data:', costs);
+    } else {
+      // Fallback: use API-provided cost or default to 0
+      costs = {
+        inputCost: (result.usage?.cost ? (parseFloat(result.usage.cost) / 2).toFixed(4) : '0.0000'),
+        outputCost: (result.usage?.cost ? (parseFloat(result.usage.cost) / 2).toFixed(4) : '0.0000'),
+        totalCost: result.usage?.cost || '0.0000'
+      };
+      
+      modelData = {
+        provider: result.provider,
+        model: result.model,
+        inputCostPer1K: 0,
+        outputCostPer1K: 0
+      };
+      
+      console.warn('[AI] No pricing data found, using fallback costs');
+    }
     
-    // Show results in modal
-    showEstimateResults({
-      modelId,
-      modelData,
-      inputTokens,
-      outputTokens: estimatedOutputTokens,
-      costs,
-      isEstimate: true
-    });
+    // Transform result to match existing showEstimateResults format
+    const estimateResult = {
+      modelId: result.model,
+      modelData: modelData,
+      inputTokens: result.usage?.inputTokens || 0,
+      outputTokens: result.usage?.outputTokens || 0,
+      costs: costs,
+      isEstimate: false, // This is a live test, not an estimate
+      responseContent: result.content // Store actual response content
+    };
+    
+    // Use existing modal display function
+    showEstimateResults(estimateResult);
     
   } catch (error) {
-    console.error('[AI] Estimate failed:', error);
-    showToast('Failed to estimate cost', 'error');
+    console.error('[AI] Prompt execution failed:', error);
+    showToast(`AI test failed: ${error.message}`, 'error');
   }
-}
-
-/**
- * Handle Test Now button click
- * Real API call with user's API keys (Phase 6 - stub for now)
- */
-async function handleTestNow() {
-  const content = document.getElementById('noteContent').value.trim();
-  const modelId = document.getElementById('noteModel').value;
-  
-  if (!content) {
-    showToast('Please enter prompt content first', 'warning');
-    return;
-  }
-  
-  // Phase 6: Check for API keys
-  showToast('🔑 API key configuration coming in Phase 6...', 'info');
-  console.log('[AI] Test Now - requires API keys (Phase 6):', { modelId, contentLength: content.length });
-}
-
-/**
- * Handle Compare All button click
- * Compare across all configured models (Phase 6 - stub for now)
- */
-async function handleCompareAll() {
-  const content = document.getElementById('noteContent').value.trim();
-  
-  if (!content) {
-    showToast('Please enter prompt content first', 'warning');
-    return;
-  }
-  
-  // Phase 6: Implement parallel API calls
-  showToast('🔄 Multi-model comparison coming in Phase 6...', 'info');
-  console.log('[AI] Compare All - requires API keys (Phase 6):', { contentLength: content.length });
 }
 
 /**
@@ -4225,7 +5005,14 @@ function showEstimateResults(result) {
     return;
   }
   
-  titleEl.textContent = result.isEstimate ? '💰 Cost Estimate' : '🧪 Test Results';
+  titleEl.textContent = result.isEstimate ? '💰 Cost Estimate' : '✨ AI Response';
+  
+  // Show response content if available (live test) using markdownToHTML utility
+  const responseContentHTML = result.responseContent ? `
+    <div class="result-content ai-response" style="margin: 16px 0; padding: 16px; background: var(--bg-secondary); border-radius: 6px; font-size: 13px; line-height: 1.7; max-height: 400px; overflow-y: auto;">
+${markdownToHTML(result.responseContent)}
+    </div>
+  ` : '';
   
   const html = `
     <div class="ai-test-result-card">
@@ -4233,6 +5020,8 @@ function showEstimateResults(result) {
         <h4>${result.modelData.provider} - ${result.modelData.model || result.modelId}</h4>
         ${result.isEstimate ? '<span class="badge">Estimate</span>' : '<span class="badge badge-success">Live Test</span>'}
       </div>
+      
+      ${responseContentHTML}
       
       <div class="result-metrics">
         <div class="metric-row">
@@ -4259,13 +5048,187 @@ function showEstimateResults(result) {
       
       <div class="result-footer">
         <small>Pricing: $${result.modelData.inputCostPer1K}/$${result.modelData.outputCostPer1K} per 1K tokens</small>
-        ${result.modelData.provider === 'SAP AI Core' ? '<br><small>⚠️ SAP AI Core pricing may include markup</small>' : ''}
+      </div>
+      
+      <div class="result-disclaimer" style="margin-top: 12px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-left: 3px solid #F59E0B; border-radius: 4px; font-size: 11px; line-height: 1.5; color: var(--text-secondary);">
+        <strong style="color: #F59E0B;">⚠️ Cost Estimates Disclaimer:</strong> Pricing shown is indicative only, based on publicly available model provider rates (OpenAI, Anthropic) sourced from LiteLLM pricing database. These are NOT official SAP prices. This tool is not affiliated with or endorsed by SAP SE. Actual costs depend on your specific agreements, volume discounts, and enterprise contracts. For official pricing, contact your provider or SAP directly.
+      </div>
+      
+      <div class="result-actions" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end;">
+        <button class="btn btn-secondary" id="saveResponseAsNoteBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Save as Note
+        </button>
+        <button class="btn btn-secondary" id="downloadResponseBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download
+        </button>
+        <button class="btn btn-secondary" onclick="closeAiTestResultsModal()">Close</button>
+        <button class="btn btn-primary" id="openEnterpriseCalcFromResultsBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          📊 Plan for Enterprise
+        </button>
       </div>
     </div>
   `;
   
   contentEl.innerHTML = html;
   modal.classList.add('active');
+  
+  // Attach handlers to all action buttons
+  document.getElementById('saveResponseAsNoteBtn')?.addEventListener('click', () => {
+    saveAIResponseAsNote(result);
+  });
+  
+  document.getElementById('downloadResponseBtn')?.addEventListener('click', () => {
+    downloadAIResponse(result);
+  });
+  
+  document.getElementById('openEnterpriseCalcFromResultsBtn')?.addEventListener('click', () => {
+    openEnterpriseCalculator(result);
+  });
+}
+
+/**
+ * Save AI response as a note with AI tags
+ * @param {Object} result - AI test result object
+ */
+async function saveAIResponseAsNote(result) {
+  if (!result || !result.responseContent) {
+    showToast('No response content to save', 'warning');
+    return;
+  }
+  
+  try {
+    // Generate title from model info
+    const timestamp = new Date().toLocaleString();
+    const title = `AI Response - ${result.modelData.provider} ${result.modelData.model}`;
+    
+    // Strip markdown for clean text storage
+    const cleanResponse = stripMarkdown(result.responseContent);
+    
+    // Build note content with clean text response and metadata
+    const content = `${cleanResponse}
+
+---
+Model: ${result.modelData.provider} - ${result.modelData.model}
+Input Tokens: ${result.inputTokens.toLocaleString()}
+Output Tokens: ${result.outputTokens.toLocaleString()}
+Cost: $${result.costs.totalCost}
+Generated: ${timestamp}`;
+    
+    // Create note object with ai-prompt type and AI tags
+    const noteObject = {
+      id: `note-${Date.now()}`,
+      title,
+      content,
+      icon: 'ai',
+      noteType: 'ai-prompt',
+      tags: ['ai', 'llm-response', result.modelData.provider.toLowerCase()],
+      timestamp: Date.now(),
+      aiConfig: {
+        defaultModel: result.modelData.model,
+        provider: result.modelData.provider
+      }
+    };
+    
+    // Add to notes array
+    notes.push(noteObject);
+    
+    // Save to profile-specific storage
+    const storageKey = `notes_${currentProfile}`;
+    await chrome.storage.local.set({ [storageKey]: notes });
+    
+    // Refresh notes UI
+    renderNotes();
+    
+    // Close AI results modal
+    closeAiTestResultsModal();
+    
+    showToast('Response saved as note ✓', 'success');
+    
+  } catch (error) {
+    console.error('[Save AI Response] Failed:', error);
+    showToast(`Failed to save: ${error.message}`, 'error');
+  }
+}
+
+/**
+ * Download AI response as a text file
+ * @param {Object} result - AI test result object
+ */
+async function downloadAIResponse(result) {
+  if (!result || !result.responseContent) {
+    showToast('No response content to download', 'warning');
+    return;
+  }
+  
+  try {
+    const timestamp = new Date().toISOString().split('T')[0];
+    const timeStr = new Date().toISOString().split('T')[1].split('.')[0].replace(/:/g, '-');
+    
+    // Strip markdown for clean text export
+    const cleanResponse = stripMarkdown(result.responseContent);
+    
+    // Build file content with clean text and metadata
+    const fileContent = `AI Response
+Generated: ${new Date().toLocaleString()}
+
+Model: ${result.modelData.provider} - ${result.modelData.model}
+Input Tokens: ${result.inputTokens.toLocaleString()}
+Output Tokens: ${result.outputTokens.toLocaleString()}
+Total Cost: $${result.costs.totalCost}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${cleanResponse}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Cost Breakdown:
+- Input Cost: $${result.costs.inputCost}
+- Output Cost: $${result.costs.outputCost}
+- Total Cost: $${result.costs.totalCost}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DISCLAIMER:
+Cost estimates are indicative only, based on LiteLLM pricing database.
+Pricing sourced from publicly available model provider rates (OpenAI, Anthropic).
+
+This tool is not affiliated with SAP SE.
+For official pricing, contact your provider or SAP directly.
+`;
+    
+    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ai-response-${timestamp}-${timeStr}.txt`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    
+    showToast('Response downloaded ✓', 'success');
+    
+  } catch (error) {
+    console.error('[Download AI Response] Failed:', error);
+    showToast(`Failed to download: ${error.message}`, 'error');
+  }
 }
 
 /**
@@ -4275,5 +5238,527 @@ function closeAiTestResultsModal() {
   const modal = document.getElementById('aiTestResultsModal');
   if (modal) {
     modal.classList.remove('active');
+  }
+}
+
+/**
+ * Open Enterprise Calculator modal with pre-populated data from test results
+ * @param {Object} testResult - Test result object with token counts, costs, and original prompt
+ */
+function openEnterpriseCalculator(testResult) {
+  const modal = document.getElementById('enterpriseCalculatorModal');
+  const contentEl = document.getElementById('enterpriseCalculatorContent');
+  
+  if (!modal || !contentEl) {
+    console.error('[Enterprise Calc] Modal elements not found');
+    showToast('Enterprise calculator not available', 'error');
+    return;
+  }
+  
+  // Close the AI Test Results modal first
+  closeAiTestResultsModal();
+  
+  // Get original prompt from note content (if coming from note modal)
+  const noteContent = document.getElementById('noteContent')?.value.trim() || '';
+  
+  // Store original prompt and response in modal for later use
+  modal.setAttribute('data-original-prompt', noteContent);
+  modal.setAttribute('data-ai-response', testResult.responseContent || '');
+  
+  // Pre-populate form with test data
+  const html = `
+    <div class="enterprise-calc-form">
+      <h4 style="margin-bottom: 16px; color: var(--text-primary);">Scale Parameters</h4>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+        <div class="form-group">
+          <label>Number of Users</label>
+          <input type="number" id="enterpriseNumUsers" value="1000" min="1" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary);">
+        </div>
+        
+        <div class="form-group">
+          <label>Queries per User per Day</label>
+          <input type="number" id="enterpriseQueriesPerDay" value="5" min="1" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary);">
+        </div>
+        
+        <div class="form-group">
+          <label>Working Days per Year</label>
+          <input type="number" id="enterpriseWorkingDays" value="250" min="1" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary);">
+        </div>
+        
+        <div class="form-group">
+          <label>Expected Output Tokens</label>
+          <input type="number" id="enterpriseOutputTokens" value="${testResult.outputTokens}" min="1" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary);">
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" id="calculateEnterpriseBtn" style="width: 100%; margin-bottom: 24px;">
+        Calculate Annual Projections
+      </button>
+      
+      <div id="enterpriseResults" style="display: none;">
+        <h4 style="margin-bottom: 16px; color: var(--text-primary);">Annual Cost Projection</h4>
+        <div id="enterpriseResultsContent"></div>
+      </div>
+    </div>
+  `;
+  
+  contentEl.innerHTML = html;
+  
+  // Store test result data for calculation
+  modal.setAttribute('data-test-input-tokens', testResult.inputTokens);
+  modal.setAttribute('data-test-model', testResult.modelData.model);
+  modal.setAttribute('data-test-provider', testResult.modelData.provider);
+  modal.setAttribute('data-test-response', testResult.responseContent || '');
+  
+  // Attach calculate button handler
+  document.getElementById('calculateEnterpriseBtn')?.addEventListener('click', () => {
+    calculateEnterpriseProjections(testResult);
+  });
+  
+  modal.classList.add('active');
+}
+
+/**
+ * Calculate and display enterprise cost projections
+ * @param {Object} testResult - Original test result with token counts
+ */
+function calculateEnterpriseProjections(testResult) {
+  const numUsers = parseInt(document.getElementById('enterpriseNumUsers').value) || 1000;
+  const queriesPerDay = parseInt(document.getElementById('enterpriseQueriesPerDay').value) || 5;
+  const workingDays = parseInt(document.getElementById('enterpriseWorkingDays').value) || 250;
+  const outputTokens = parseInt(document.getElementById('enterpriseOutputTokens').value) || testResult.outputTokens;
+  
+  // Calculate annual query volume
+  const annualQueries = numUsers * queriesPerDay * workingDays;
+  
+  // Calculate annual token usage
+  const annualInputTokens = testResult.inputTokens * annualQueries;
+  const annualOutputTokens = outputTokens * annualQueries;
+  
+  // Calculate annual costs (using per-query cost from test)
+  // Parse cost as float and ensure it's a valid number
+  const costPerQuery = parseFloat(testResult.costs.totalCost) || 0;
+  const annualCost = costPerQuery * annualQueries;
+  const monthlyCost = annualCost / 12;
+  
+  // Get original prompt and response from modal attributes
+  const modal = document.getElementById('enterpriseCalculatorModal');
+  const originalPrompt = modal.getAttribute('data-original-prompt') || '';
+  const aiResponse = modal.getAttribute('data-ai-response') || testResult.responseContent || '';
+  
+  // Display results
+  const resultsDiv = document.getElementById('enterpriseResults');
+  const resultsContent = document.getElementById('enterpriseResultsContent');
+  
+  if (!resultsDiv || !resultsContent) return;
+  
+  // Build input/output display sections
+  let contextHTML = '';
+  if (originalPrompt || aiResponse) {
+    contextHTML = `
+      <div class="enterprise-projection-card" style="padding: 16px; background: var(--bg-secondary); border-radius: 6px; margin-bottom: 16px;">
+        <h5 style="margin-bottom: 12px; color: var(--text-primary);">Context</h5>
+        ${originalPrompt ? `
+          <div style="margin-bottom: 12px;">
+            <strong style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 6px;">📝 Original Prompt (Input):</strong>
+            <div style="padding: 12px; background: var(--bg-primary); border-radius: 4px; font-size: 12px; line-height: 1.6; max-height: 200px; overflow-y: auto; white-space: pre-wrap; font-family: 'SF Mono', monospace;">${originalPrompt}</div>
+          </div>
+        ` : ''}
+        ${aiResponse ? `
+          <div>
+            <strong style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 6px;">✨ AI Response (Output):</strong>
+            <div class="ai-response" style="padding: 12px; background: var(--bg-primary); border-radius: 4px; font-size: 13px; line-height: 1.7; max-height: 300px; overflow-y: auto;">${markdownToHTML(aiResponse)}</div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+  
+  const html = `
+    ${contextHTML}
+    
+    <div class="enterprise-projection-card" style="padding: 16px; background: var(--bg-secondary); border-radius: 6px; margin-bottom: 16px;">
+      <h5 style="margin-bottom: 12px; color: var(--text-primary);">Volume Projections</h5>
+      <div class="metric-row">
+        <span class="metric-label">Annual Queries:</span>
+        <span class="metric-value">${annualQueries.toLocaleString()}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Annual Input Tokens:</span>
+        <span class="metric-value">${annualInputTokens.toLocaleString()}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Annual Output Tokens:</span>
+        <span class="metric-value">${annualOutputTokens.toLocaleString()}</span>
+      </div>
+    </div>
+    
+    <div class="enterprise-projection-card" style="padding: 16px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.12) 100%); border-radius: 6px;">
+      <h5 style="margin-bottom: 12px; color: var(--text-primary);">Cost Projections</h5>
+      <div class="metric-row">
+        <span class="metric-label">Cost per Query:</span>
+        <span class="metric-value">$${costPerQuery.toFixed(4)}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Monthly Cost:</span>
+        <span class="metric-value">$${monthlyCost.toFixed(2)}</span>
+      </div>
+      <div class="metric-row metric-total" style="font-size: 16px; font-weight: 700;">
+        <span class="metric-label">Annual Cost:</span>
+        <span class="metric-value">$${annualCost.toFixed(2)}</span>
+      </div>
+    </div>
+    
+    <div style="margin-top: 16px; padding: 12px; background: var(--bg-tertiary); border-radius: 6px; font-size: 11px; color: var(--text-secondary);">
+      <strong>Model:</strong> ${testResult.modelData.provider} - ${testResult.modelData.model}<br>
+      <strong>Assumptions:</strong> ${numUsers.toLocaleString()} users × ${queriesPerDay} queries/day × ${workingDays} working days
+    </div>
+    
+    <div class="result-disclaimer" style="margin-top: 12px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-left: 3px solid #F59E0B; border-radius: 4px; font-size: 11px; line-height: 1.5; color: var(--text-secondary);">
+      <strong style="color: #F59E0B;">⚠️ Cost Estimates Disclaimer:</strong> Pricing shown is indicative only, based on publicly available model provider rates (OpenAI, Anthropic) sourced from LiteLLM pricing database. These are NOT official SAP prices. This tool is not affiliated with or endorsed by SAP SE. Actual costs depend on your specific agreements, volume discounts, and enterprise contracts. For official pricing, contact your provider or SAP directly.
+    </div>
+  `;
+  
+  resultsContent.innerHTML = html;
+  resultsDiv.style.display = 'block';
+  
+  // Show export button
+  const exportBtn = document.getElementById('exportEnterpriseReportBtn');
+  if (exportBtn) {
+    exportBtn.style.display = 'inline-flex';
+    
+    // Attach export handler with current data
+    exportBtn.onclick = () => {
+      exportEnterpriseReport({
+        testResult,
+        numUsers,
+        queriesPerDay,
+        workingDays,
+        outputTokens,
+        annualQueries,
+        annualInputTokens,
+        annualOutputTokens,
+        costPerQuery,
+        monthlyCost,
+        annualCost
+      });
+    };
+  }
+  
+  showToast('Projections calculated ✓', 'success');
+}
+
+/**
+ * Export enterprise cost projection as text file with input/output context
+ * @param {Object} data - Projection data
+ */
+function exportEnterpriseReport(data) {
+  const timestamp = new Date().toISOString().split('T')[0];
+  
+  // Get original prompt and response from modal
+  const modal = document.getElementById('enterpriseCalculatorModal');
+  const originalPrompt = modal.getAttribute('data-original-prompt') || '';
+  const aiResponse = data.testResult.responseContent || '';
+  
+  // Strip markdown for clean text export
+  const cleanResponse = stripMarkdown(aiResponse);
+  
+  // Build comprehensive text report with input/output context
+  const report = `SAP Pro Toolkit - Enterprise AI Cost Projection
+Generated: ${new Date().toLocaleString()}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONTEXT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${originalPrompt ? `📝 ORIGINAL PROMPT (INPUT)
+${originalPrompt}
+
+` : ''}${aiResponse ? `✨ AI RESPONSE (OUTPUT)
+${cleanResponse}
+
+` : ''}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MODEL DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Provider: ${data.testResult.modelData.provider}
+Model: ${data.testResult.modelData.model}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SCALE PARAMETERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Number of Users: ${data.numUsers.toLocaleString()}
+Queries per User per Day: ${data.queriesPerDay}
+Working Days per Year: ${data.workingDays}
+Expected Output Tokens: ${data.outputTokens.toLocaleString()}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VOLUME PROJECTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Annual Queries: ${data.annualQueries.toLocaleString()}
+Annual Input Tokens: ${data.annualInputTokens.toLocaleString()}
+Annual Output Tokens: ${data.annualOutputTokens.toLocaleString()}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COST PROJECTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Cost per Query: $${data.costPerQuery.toFixed(4)}
+Monthly Cost: $${data.monthlyCost.toFixed(2)}
+Annual Cost: $${data.annualCost.toFixed(2)}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TEST METRICS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Input Tokens per Query: ${data.testResult.inputTokens.toLocaleString()}
+Output Tokens per Query: ${data.testResult.outputTokens.toLocaleString()}
+Cost per Query: $${data.testResult.costs.totalCost}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DISCLAIMER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ Cost Estimates Disclaimer
+
+Pricing Source: LiteLLM pricing database (publicly available model rates)
+Indicative Pricing: Pricing shown is indicative only, based on OpenAI and 
+                    Anthropic published rates
+Not Official SAP Pricing: These are NOT official SAP prices
+Not Affiliated: This tool is not affiliated with or endorsed by SAP SE
+Actual Costs: Actual costs depend on specific agreements, volume discounts, 
+             and enterprise contracts
+Official Pricing Contact: Contact your provider or SAP directly for official pricing
+
+Last Updated: 2026-01-13
+`;
+  
+  const blob = new Blob([report], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `enterprise-ai-cost-projection-${timestamp}.txt`;
+  a.click();
+  
+  URL.revokeObjectURL(url);
+  
+  showToast('Report exported ✓', 'success');
+}
+
+/**
+ * Close Enterprise Calculator modal
+ */
+function closeEnterpriseCalculatorModal() {
+  const modal = document.getElementById('enterpriseCalculatorModal');
+  if (modal) {
+    modal.classList.remove('active');
+    
+    // Hide export button
+    const exportBtn = document.getElementById('exportEnterpriseReportBtn');
+    if (exportBtn) exportBtn.style.display = 'none';
+  }
+}
+
+// ==================== SAP AI CORE CONFIGURATION ====================
+
+/**
+ * Connect to SAP AI Core and load deployed models
+ */
+async function connectSAPAICore() {
+  const clientId = document.getElementById('sapAiCoreClientId').value.trim();
+  const clientSecret = document.getElementById('sapAiCoreClientSecret').value.trim();
+  const baseUrl = document.getElementById('sapAiCoreBaseUrl').value.trim();
+  const authUrl = document.getElementById('sapAiCoreAuthUrl').value.trim();
+  const resourceGroup = document.getElementById('sapAiCoreResourceGroup').value.trim() || 'default';
+  
+  if (!clientId || !clientSecret || !baseUrl || !authUrl) {
+    showToast('Please fill in all required fields', 'warning');
+    return;
+  }
+  
+  // Verify ToolkitCore is loaded
+  if (!window.ToolkitCore || !window.ToolkitCore.loadSAPAICoreModels) {
+    console.error('[SAP AI Core] ToolkitCore not loaded!', window.ToolkitCore);
+    showToast('System error: ToolkitCore not loaded. Try reloading the extension.', 'error');
+    return;
+  }
+  
+  try {
+    showToast('Connecting to SAP AI Core...', 'info');
+    
+    // Test connection by loading deployed models
+    // This validates credentials and populates the model dropdown
+    const models = await window.ToolkitCore.loadSAPAICoreModels({
+      clientId,
+      clientSecret,
+      baseUrl,
+      authUrl,
+      resourceGroup
+    });
+    
+    if (!models || models.length === 0) {
+      showToast('No deployed models found in resource group', 'warning');
+      return;
+    }
+    
+    // Populate model dropdown with model identifier as value (not deployment ID)
+    const modelSelect = document.getElementById('sapAiCoreModel');
+    modelSelect.disabled = false;
+    modelSelect.innerHTML = models.map(m => 
+      `<option value="${m.name}" data-deployment-id="${m.id}">${m.name} (${m.status})</option>`
+    ).join('');
+    
+    showToast(`Connected ✓ Found ${models.length} deployed model(s)`, 'success');
+    
+  } catch (error) {
+    console.error('[SAP AI Core] Connection failed:', error);
+    showToast(`Connection failed: ${error.message}`, 'error');
+  }
+}
+
+/**
+ * Save SAP AI Core configuration to encrypted storage
+ */
+async function saveSAPAICoreConfig() {
+  const clientId = document.getElementById('sapAiCoreClientId').value.trim();
+  const clientSecret = document.getElementById('sapAiCoreClientSecret').value.trim();
+  const baseUrl = document.getElementById('sapAiCoreBaseUrl').value.trim();
+  const authUrl = document.getElementById('sapAiCoreAuthUrl').value.trim();
+  const resourceGroup = document.getElementById('sapAiCoreResourceGroup').value.trim() || 'default';
+  const selectedModel = document.getElementById('sapAiCoreModel').value;
+  
+  if (!clientId || !clientSecret || !baseUrl || !authUrl) {
+    showToast('Please fill in all required fields', 'warning');
+    return;
+  }
+  
+  if (!selectedModel) {
+    showToast('Please select a deployed model', 'warning');
+    return;
+  }
+  
+  try {
+    // Get the deployment ID from the selected option's data attribute
+    const modelSelect = document.getElementById('sapAiCoreModel');
+    const selectedOption = modelSelect.options[modelSelect.selectedIndex];
+    const deploymentId = selectedOption.getAttribute('data-deployment-id');
+    
+    // Encrypt and save credentials with BOTH model name and deployment ID
+    const credentials = {
+      clientId,
+      clientSecret,
+      baseUrl,
+      authUrl,
+      resourceGroup,
+      primaryModel: selectedModel,        // Model name (e.g., "anthropic--claude-4.5-sonnet")
+      primaryDeploymentId: deploymentId   // Deployment UUID (e.g., "ddf5f587ac5289df")
+    };
+    
+    await window.CryptoUtils.encryptAndStore('sapAiCoreCredentials', credentials);
+    
+    // Show primary model indicator
+    const indicator = document.getElementById('sapAiCorePrimaryIndicator');
+    const modelName = document.getElementById('primaryModelName');
+    if (indicator && modelName) {
+      const modelSelect = document.getElementById('sapAiCoreModel');
+      const selectedOption = modelSelect.options[modelSelect.selectedIndex];
+      modelName.textContent = selectedOption.text;
+      indicator.style.display = 'block';
+    }
+    
+    // Update AI settings
+    await updateAISettings();
+    
+    showToast('SAP AI Core configuration saved ✓', 'success');
+    
+  } catch (error) {
+    console.error('[SAP AI Core] Save failed:', error);
+    showToast(`Failed to save: ${error.message}`, 'error');
+  }
+}
+
+/**
+ * Clear SAP AI Core configuration from storage
+ */
+async function clearSAPAICoreConfig() {
+  if (!confirm('Clear SAP AI Core configuration? This cannot be undone.')) return;
+  
+  try {
+    await chrome.storage.local.remove('sapAiCoreCredentials');
+    
+    // Clear form fields
+    document.getElementById('sapAiCoreClientId').value = '';
+    document.getElementById('sapAiCoreClientSecret').value = '';
+    document.getElementById('sapAiCoreBaseUrl').value = '';
+    document.getElementById('sapAiCoreAuthUrl').value = '';
+    document.getElementById('sapAiCoreResourceGroup').value = 'default';
+    
+    // Reset model dropdown
+    const modelSelect = document.getElementById('sapAiCoreModel');
+    modelSelect.disabled = true;
+    modelSelect.innerHTML = '<option value="">Connect to load deployed models...</option>';
+    
+    // Hide primary model indicator
+    const indicator = document.getElementById('sapAiCorePrimaryIndicator');
+    if (indicator) indicator.style.display = 'none';
+    
+    // Update AI settings
+    await updateAISettings();
+    
+    showToast('SAP AI Core configuration cleared', 'success');
+    
+  } catch (error) {
+    console.error('[SAP AI Core] Clear failed:', error);
+    showToast('Failed to clear configuration', 'error');
+  }
+}
+
+/**
+ * Load saved API keys when Settings modal opens
+ * Decrypts and populates the input fields
+ */
+async function loadSavedAPIKeys() {
+  try {
+    // Load OpenAI API key
+    const openaiKey = await window.CryptoUtils.retrieveAndDecrypt('apiKeyopenai');
+    if (openaiKey) {
+      document.getElementById('apiKeyopenaiInput').value = openaiKey;
+    }
+    
+    // Load Anthropic API key
+    const anthropicKey = await window.CryptoUtils.retrieveAndDecrypt('apiKeyanthropic');
+    if (anthropicKey) {
+      document.getElementById('apiKeyanthropicInput').value = anthropicKey;
+    }
+    
+    // Load SAP AI Core credentials
+    const sapCredentials = await window.CryptoUtils.retrieveAndDecrypt('sapAiCoreCredentials');
+    if (sapCredentials) {
+      document.getElementById('sapAiCoreClientId').value = sapCredentials.clientId || '';
+      document.getElementById('sapAiCoreClientSecret').value = sapCredentials.clientSecret || '';
+      document.getElementById('sapAiCoreBaseUrl').value = sapCredentials.baseUrl || '';
+      document.getElementById('sapAiCoreAuthUrl').value = sapCredentials.authUrl || '';
+      document.getElementById('sapAiCoreResourceGroup').value = sapCredentials.resourceGroup || 'default';
+      
+      // Show primary model indicator if set
+      if (sapCredentials.primaryModel) {
+        const indicator = document.getElementById('sapAiCorePrimaryIndicator');
+        const modelName = document.getElementById('primaryModelName');
+        if (indicator && modelName) {
+          modelName.textContent = sapCredentials.primaryModel;
+          indicator.style.display = 'block';
+        }
+      }
+    }
+    
+    console.log('[API Keys] Loaded saved credentials');
+    
+  } catch (error) {
+    console.error('[API Keys] Failed to load saved keys:', error);
+    // Don't show error toast - just log it, as this is expected on first run
   }
 }
