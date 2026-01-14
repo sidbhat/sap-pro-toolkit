@@ -814,6 +814,35 @@ body {
   fill: none;
 }
 
+/* AI Button Styling - sparkle icon */
+.btn-add.ai-btn {
+  background: linear-gradient(135deg, var(--env-sales) 0%, #D97706 100%);
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: aiPulse 2s ease-in-out infinite;
+}
+
+.btn-add.ai-btn:hover {
+  background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+  transform: scale(1.08) rotate(5deg);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+@keyframes aiPulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+  }
+  50% { 
+    box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+  }
+}
+
 /* Disabled state for buttons (read-only mode) */
 .btn-disabled {
   opacity: 0.4;
@@ -1932,6 +1961,13 @@ body {
 .form-group textarea {
   resize: vertical;
   min-height: 280px;
+}
+
+/* Shortcut notes textarea - larger for AI summaries */
+#addShortcutModal textarea#shortcutNotes {
+  min-height: 180px;
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 /* Note modal specifically needs even more space */

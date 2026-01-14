@@ -3757,6 +3757,9 @@ function setupEventListeners() {
   // Setup character counter for notes
   setupNoteCharacterCounter();
   
+  // Setup character counter for shortcut notes
+  setupShortcutNotesCharacterCounter();
+  
   // Setup note type change listener for AI features
   setupNoteTypeChangeListener();
   
@@ -6072,5 +6075,262 @@ async function loadSavedAPIKeys() {
   } catch (error) {
     console.error('[API Keys] Failed to load saved keys:', error);
     // Don't show error toast - just log it, as this is expected on first run
+  }
+}
+
+// ==================== AI SHORTCUT CREATION ====================
+
+/**
+ * Setup character counter for shortcut notes field (5000 char limit)
+ */
+function setupShortcutNotesCharacterCounter() {
+  const notesInput = document.getElementById('shortcutNotes');
+  const counter = document.getElementById('shortcutNotesCounter');
+  
+  if (!notesInput || !counter) return;
+  
+  function updateCounter() {
+    const length = notesInput.value.length;
+    const maxLength = 5000;
+    const percentage = (length / maxLength) * 100;
+    
+    counter.textContent = `${length.toLocaleString()}/${maxLength.toLocaleString()}`;
+    
+    // Color coding: orange at 80%, red at 95%
+    if (percentage >= 95) {
+      counter.style.color = '#EF4444';
+      counter.style.fontWeight = '700';
+    } else if (percentage >= 80) {
+      counter.style.color = '#F59E0B';
+      counter.style.fontWeight = '600';
+    } else {
+      counter.style.color = 'var(--text-secondary)';
+      counter.style.fontWeight = '400';
+    }
+  }
+  
+  // Update on input
+  notesInput.addEventListener('input', updateCounter);
+  
+  // Update when modal opens
+  const modal = document.getElementById('addShortcutModal');
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+        if (modal.classList.contains('active')) {
+          updateCounter();
+        }
+      }
+    });
+  });
+  
+  observer.observe(modal, { attributes: true });
+}
+
+/**
+ * Add event listener for AI shortcut button
+ */
+document.getElementById('addShortcutWithAIBtn')?.addEventListener('click', addShortcutWithAI);
+
+/**
+ * AI-powered shortcut creation
+ * Opens modal first, then scrapes page and populates fields dynamically
+ */
+async function addShortcutWithAI() {
+  // Check if AI is available
+  if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
+    showToast('AI features not available', 'error');
+    return;
+  }
+  
+  try {
+    // Open modal FIRST with empty fields
+    openAddShortcutModal();
+    
+    const notesField = document.getElementById('shortcutNotes');
+    
+    // Show loading state in notes field with green background
+    notesField.value = '⏳ Analyzing current page...';
+    notesField.style.background = 'rgba(16, 185, 129, 0.1)';
+    notesField.style.borderColor = '#10B981';
+    
+    // Get current tab
+    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+    if (!tab || !tab.url) {
+      notesField.value = '';
+      notesField.style.background = '';
+      notesField.style.borderColor = '';
+      showToast('No active tab found', 'warning');
+      return;
+    }
+    
+    // Check if we can inject scripts (not on chrome:// or edge:// pages)
+    if (tab.url.startsWith('chrome://') || tab.url.startsWith('edge://') || tab.url.startsWith('about:')) {
+      notesField.value = '';
+      notesField.style.background = '';
+      notesField.style.borderColor = '';
+      showToast('Cannot scrape browser internal pages', 'warning');
+      document.getElementById('shortcutName').value = tab.title;
+      document.getElementById('shortcutPath').value = tab.url;
+      return;
+    }
+    
+    // Inject content script if not already present
+    notesField.value = '⏳ Preparing to scrape page...';
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['content/content.js']
+      });
+      console.log('[AI Shortcut] Content script injected');
+    } catch (injectError) {
+      console.log('[AI Shortcut] Content script already present or injection failed:', injectError);
+      // Continue anyway - script might already be loaded
+    }
+    
+    // Wait a moment for script to initialize
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // Scrape page content via content script
+    notesField.value = '⏳ Scraping page content...';
+    const scrapedData = await new Promise((resolve) => {
+      chrome.tabs.sendMessage(tab.id, { action: 'scrapePageForShortcut' }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.warn('[AI Shortcut] Message failed:', chrome.runtime.lastError);
+          resolve({ error: 'Failed to scrape page', title: tab.title, url: tab.url, content: '' });
+        } else {
+          resolve(response);
+        }
+      });
+    });
+    
+    console.log('[AI Shortcut] Scraped data:', scrapedData);
+    
+    // Populate URL immediately
+    document.getElementById('shortcutPath').value = scrapedData.url;
+    
+    // Enhance title if it's vague
+    notesField.value = '⏳ Enhancing title...';
+    const enhancedTitle = await enhanceTitle(scrapedData.title, scrapedData.content);
+    document.getElementById('shortcutName').value = enhancedTitle;
+    
+    // Generate AI summary from page content
+    notesField.value = '⏳ Generating AI summary...';
+    const summary = await generatePageSummary(scrapedData.title, scrapedData.url, scrapedData.content);
+    
+    // Populate with summary and remove loading state
+    notesField.value = summary;
+    notesField.style.background = '';
+    notesField.style.borderColor = '';
+    
+    // Set default icon
+    document.getElementById('shortcutIcon').value = '8';
+    
+    showToast('✨ AI summary generated ✓', 'success');
+    
+  } catch (error) {
+    console.error('[AI Shortcut] Failed:', error);
+    const notesField = document.getElementById('shortcutNotes');
+    notesField.value = '';
+    notesField.style.background = '';
+    notesField.style.borderColor = '';
+    showToast(`AI shortcut creation failed: ${error.message}`, 'error');
+  }
+}
+
+/**
+ * Smart title enhancement - only enhances vague titles
+ * @param {string} originalTitle - Original page title
+ * @param {string} pageContent - Page content for context
+ * @returns {string} Enhanced or original title
+ */
+async function enhanceTitle(originalTitle, pageContent) {
+  // List of vague titles that need enhancement
+  const vagueTitles = [
+    'dashboard',
+    'home',
+    'admin',
+    'settings',
+    'configuration',
+    'profile',
+    'reports',
+    'analytics',
+    'overview',
+    'home page',
+    'main page',
+    'portal'
+  ];
+  
+  // Check if title is vague (case-insensitive)
+  const titleLower = originalTitle.toLowerCase().trim();
+  const isVague = vagueTitles.some(vague => titleLower === vague || titleLower.startsWith(vague + ' '));
+  
+  // If title is good (specific), return it unchanged
+  if (!isVague) {
+    console.log('[Title Enhancement] Title is specific, keeping original:', originalTitle);
+    return originalTitle;
+  }
+  
+  // If title is vague, enhance it with AI
+  console.log('[Title Enhancement] Vague title detected, enhancing:', originalTitle);
+  
+  try {
+    const prompt = `Based on this page content, generate a more descriptive title (max 50 characters). 
+Current title: "${originalTitle}"
+
+Page content preview:
+${pageContent.substring(0, 500)}
+
+Provide only the enhanced title, nothing else.`;
+    
+    const result = await window.ToolkitCore.testPromptWithModel(prompt);
+    
+    if (result && result.content) {
+      const enhancedTitle = result.content.trim().replace(/^["']|["']$/g, ''); // Remove quotes
+      console.log('[Title Enhancement] Enhanced title:', enhancedTitle);
+      return enhancedTitle.substring(0, 50); // Limit to 50 chars
+    }
+    
+  } catch (error) {
+    console.warn('[Title Enhancement] Failed, using original:', error);
+  }
+  
+  return originalTitle;
+}
+
+/**
+ * Generate AI summary from page content
+ * @param {string} title - Page title
+ * @param {string} url - Page URL
+ * @param {string} content - Scraped page content
+ * @returns {string} AI-generated summary
+ */
+async function generatePageSummary(title, url, content) {
+  if (!content || content.length < 50) {
+    return `${title}\n\nURL: ${url}`;
+  }
+  
+  try {
+    const prompt = `Summarize this page in 2-3 concise sentences (max 200 words). Focus on what the page is about and its key information.
+
+Page Title: ${title}
+URL: ${url}
+
+Content:
+${content}
+
+Provide only the summary, no preamble.`;
+    
+    const result = await window.ToolkitCore.testPromptWithModel(prompt);
+    
+    if (result && result.content) {
+      return result.content.trim();
+    }
+    
+    return `${title}\n\n${content.substring(0, 200)}...`;
+    
+  } catch (error) {
+    console.error('[AI Summary] Failed:', error);
+    return `${title}\n\n${content.substring(0, 200)}...`;
   }
 }

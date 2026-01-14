@@ -154,11 +154,14 @@
           <h2 class="section-title">SHORTCUTS <span class="section-count"></span></h2>
           <p class="section-desc">External links and reference information</p>
         </div>
-        <button class="btn-add" id="addShortcutBtn" data-title="Add Shortcut" title="Add Shortcut" style="width: 32px; height: 32px;">
+        <button class="btn-add" id="addShortcutBtn" data-title="Add Shortcut" title="Add shortcut">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19"/>
             <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
+        </button>
+        <button class="btn-add ai-btn" id="addShortcutWithAIBtn" data-title="Add with AI" title="Add shortcut with AI summary (scrapes current page)" style="margin-left: 8px;">
+          ✨
         </button>
       </div>
       
@@ -428,9 +431,9 @@
           <div class="form-group">
             <label for="shortcutNotes">
               Notes
-              <span class="char-counter" id="shortcutNotesCounter">0/500</span>
+              <span class="char-counter" id="shortcutNotesCounter">0/5000</span>
             </label>
-            <input type="text" id="shortcutNotes" placeholder="Optional description">
+            <textarea id="shortcutNotes" rows="8" maxlength="5000" placeholder="Optional description or AI-generated summary..."></textarea>
           </div>
           <div class="form-group">
             <label for="shortcutTags">

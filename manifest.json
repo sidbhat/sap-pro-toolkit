@@ -9,26 +9,12 @@
     "storage",
     "tabs",
     "activeTab",
-    "sidePanel"
+    "sidePanel",
+    "scripting"
   ],
   
   "host_permissions": [
-    "https://*.hr.cloud.sap/*",
-    "https://*.sapsf.com/*",
-    "https://*.sapsf.cn/*",
-    "https://*.sapcloud.cn/*",
-    "https://*.successfactors.eu/*",
-    "https://*.sapsf.eu/*",
-    "https://*.successfactors.com/*",
-    "https://*.s4hana.ondemand.com/*",
-    "https://*.s4hana.cloud.sap/*",
-    "https://*.hana.ondemand.com/*",
-    "https://*.cfapps.us10.hana.ondemand.com/*",
-    "https://*.cfapps.eu10.hana.ondemand.com/*",
-    "https://*.cfapps.ap21.hana.ondemand.com/*",
-    "https://*.build.cloud.sap/*",
-    "https://*.ibp.cloud.sap/*",
-    "https://*.scmibp.ondemand.com/*"
+    "<all_urls>"
   ],
   
   "action": {

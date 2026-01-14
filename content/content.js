@@ -61,11 +61,37 @@ function injectHelperScript() {
 function setupMessageListeners() {
   // Listen to messages from side panel
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log('[Content Script] Received message:', request.action);
+    
     if (request.action === 'getPageData') {
+      console.log('[Content Script] Sending page data:', pageData || currentEnvironment);
       sendResponse(pageData || currentEnvironment);
       return true;
     }
+    
+    // NEW: Handle page scraping for AI shortcut creation
+    if (request.action === 'scrapePageForShortcut') {
+      console.log('[Content Script] Scraping page content...');
+      try {
+        const scrapedData = scrapePageContent();
+        console.log('[Content Script] Scraped data:', scrapedData);
+        sendResponse(scrapedData);
+      } catch (error) {
+        console.error('[Content Script] Scraping failed:', error);
+        sendResponse({
+          error: 'Failed to scrape page',
+          title: document.title,
+          url: window.location.href,
+          content: ''
+        });
+      }
+      return true;
+    }
+    
+    return false;
   });
+  
+  console.log('[Content Script] Message listeners setup complete');
 }
 
 function listenForPageData() {
@@ -210,6 +236,111 @@ function detectEnvironmentHeuristic(hostname) {
   
   // Default to production for standard hostnames
   return 'production';
+}
+
+// ==================== PAGE SCRAPING FOR AI ====================
+
+/**
+ * Scrape page content for AI shortcut creation
+ * Returns page title, URL, content summary, and error detection
+ * @returns {Object} Scraped page data
+ */
+function scrapePageContent() {
+  const url = window.location.href;
+  const title = document.title;
+  
+  // Detect error pages
+  const errorDetection = detectErrorPage();
+  
+  // Extract main content
+  const content = extractPageContent();
+  
+  return {
+    title: title,
+    url: url,
+    content: content,
+    error: errorDetection.isError ? errorDetection.message : null,
+    errorType: errorDetection.errorType || null
+  };
+}
+
+/**
+ * Detect if current page is an error page (404, 403, 500, etc.)
+ * @returns {Object} Error detection result
+ */
+function detectErrorPage() {
+  const bodyText = document.body.textContent.toLowerCase();
+  const title = document.title.toLowerCase();
+  
+  // Check HTTP status code patterns in title/content
+  const statusPatterns = [
+    { pattern: /404|not found|page not found/i, type: '404', message: '⚠️ Error Page Detected: 404 Not Found' },
+    { pattern: /403|forbidden|access denied/i, type: '403', message: '⚠️ Error Page Detected: 403 Forbidden' },
+    { pattern: /500|internal server error|server error/i, type: '500', message: '⚠️ Error Page Detected: 500 Internal Server Error' },
+    { pattern: /503|service unavailable/i, type: '503', message: '⚠️ Error Page Detected: 503 Service Unavailable' },
+    { pattern: /error|oops|something went wrong/i, type: 'generic', message: '⚠️ Error Page Detected: Generic Error' }
+  ];
+  
+  for (const { pattern, type, message } of statusPatterns) {
+    if (pattern.test(title) || pattern.test(bodyText)) {
+      return { isError: true, errorType: type, message: message };
+    }
+  }
+  
+  return { isError: false };
+}
+
+/**
+ * Extract meaningful page content for AI summarization
+ * Focuses on main content areas, removes noise
+ * @returns {string} Extracted content (max 3000 chars)
+ */
+function extractPageContent() {
+  // Try to find main content area
+  const mainSelectors = [
+    'main',
+    '[role="main"]',
+    '#content',
+    '#main',
+    '.content',
+    '.main-content',
+    'article',
+    '.page-content'
+  ];
+  
+  let mainElement = null;
+  for (const selector of mainSelectors) {
+    mainElement = document.querySelector(selector);
+    if (mainElement) break;
+  }
+  
+  // Fallback to body if no main content found
+  const targetElement = mainElement || document.body;
+  
+  // Extract text content, removing scripts and styles
+  const clone = targetElement.cloneNode(true);
+  
+  // Remove unwanted elements
+  const unwantedSelectors = ['script', 'style', 'nav', 'header', 'footer', '.navigation', '.menu', '.sidebar'];
+  unwantedSelectors.forEach(selector => {
+    clone.querySelectorAll(selector).forEach(el => el.remove());
+  });
+  
+  // Get clean text
+  let text = clone.textContent || '';
+  
+  // Clean up whitespace
+  text = text
+    .replace(/\s+/g, ' ')  // Normalize whitespace
+    .replace(/\n{3,}/g, '\n\n')  // Max 2 consecutive newlines
+    .trim();
+  
+  // Limit to 3000 characters for AI processing
+  if (text.length > 3000) {
+    text = text.substring(0, 3000) + '... (content truncated)';
+  }
+  
+  return text;
 }
 
 // ==================== UTILITY ====================
