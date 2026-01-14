@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadShortcuts();
     await loadEnvironments();
     await loadNotes();
+    await loadSolutions();
     await loadCurrentPageData();
     setupEventListeners();
     
@@ -206,6 +207,30 @@ async function loadNotes() {
   
   console.log(`[Notes] Loaded ${notes.length} notes for profile: ${currentProfile}`);
   renderNotes();
+}
+
+async function loadSolutions() {
+  try {
+    const response = await fetch(chrome.runtime.getURL('resources/solutions.json'));
+    if (!response.ok) {
+      throw new Error('Failed to load base solutions.json');
+    }
+    const baseData = await response.json();
+    let baseSolutions = baseData.solutions || [];
+
+    const result = await chrome.storage.local.get('solutions');
+    const customSolutions = result.solutions || [];
+
+    const solutionMap = new Map();
+    baseSolutions.forEach(sol => solutionMap.set(sol.id, { ...sol }));
+    customSolutions.forEach(sol => solutionMap.set(sol.id, { ...sol }));
+
+    solutions = Array.from(solutionMap.values());
+
+  } catch (error) {
+    console.error('[Solutions] Failed to load:', error);
+    solutions = [];
+  }
 }
 
 async function loadCurrentPageData() {
