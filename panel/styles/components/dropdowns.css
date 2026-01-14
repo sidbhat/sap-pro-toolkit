@@ -1,0 +1,113 @@
+/* ==================== SPLIT BUTTON DROPDOWN ==================== */
+
+.btn-split-group {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  margin-right: auto;
+}
+
+.btn-split-main {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+  padding-right: 12px;
+}
+
+.btn-split-toggle {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 7px 8px;
+  min-width: 32px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-split-toggle svg {
+  width: 10px;
+  height: 10px;
+}
+
+.btn-split-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 220px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.btn-split-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.dropdown-option:last-child {
+  border-bottom: none;
+}
+
+.dropdown-option:hover {
+  background: var(--bg-secondary);
+}
+
+.dropdown-option svg {
+  flex-shrink: 0;
+}
+
+.dropdown-option > span:nth-child(2) {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropdown-option > span:nth-child(2) > span:first-child {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.option-desc {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  display: block;
+}
+
+.dropdown-option:hover > span:nth-child(2) > span:first-child {
+  color: var(--primary);
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .btn-split-dropdown {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] .btn-split-dropdown {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+}
+

@@ -1,0 +1,11 @@
+/* ==================== MAIN CONTAINER LAYOUT ==================== */
+
+.side-panel-container {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 140px; /* Space for sticky footer (increased for world clock) */
+}

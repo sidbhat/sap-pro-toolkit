@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadEnvironments();
     await loadNotes();
     await loadSolutions();
-    await loadCurrentPageData();
+    await window.loadCurrentPageData();
     setupEventListeners();
     
     // Setup enhanced keyboard shortcuts with callbacks
@@ -75,13 +75,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Listen for tab changes to update UI
     chrome.tabs.onActivated.addListener(async () => {
-      await loadCurrentPageData();
+      await window.loadCurrentPageData();
     });
     
     // Listen for URL changes within the same tab
     chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       if (changeInfo.status === 'complete') {
-        await loadCurrentPageData();
+        await window.loadCurrentPageData();
       }
     });
     
@@ -247,120 +247,7 @@ async function loadSolutions() {
   }
 }
 
-async function loadCurrentPageData() {
-  try {
-    // Side panel needs to query across all windows, not just currentWindow
-    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-    
-    if (!tab || !tab.url) {
-      currentPageData = null;
-      renderEnvironments();
-      updateDiagnosticsButton();
-      return;
-    }
-    
-    // Check if it's any SAP page (not just SF)
-    const hostname = new URL(tab.url).hostname;
-    const solutionType = detectSolutionType(tab.url, hostname);
-    
-    if (!solutionType) {
-      currentPageData = null;
-      renderEnvironments();
-      updateDiagnosticsButton();
-      return;
-    }
-    
-    const messagePromise = new Promise((resolve) => {
-      chrome.tabs.sendMessage(tab.id, { action: 'getPageData' }, (response) => {
-        if (chrome.runtime.lastError) {
-          console.log('[SF Pro Toolkit] Content script message failed, using URL detection');
-          resolve(null);
-        } else {
-          resolve(response);
-        }
-      });
-    });
-    
-    const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 500));
-    const response = await Promise.race([messagePromise, timeoutPromise]);
-    
-    if (response && response.hostname) {
-      currentPageData = response;
-      currentPageData.url = tab.url;
-      currentPageData.solutionType = solutionType;
-      console.log('[SF Pro Toolkit] Using enhanced data from content script:', currentPageData);
-    } else {
-      currentPageData = detectEnvironmentFromURL(tab.url);
-      currentPageData.url = tab.url;
-      currentPageData.solutionType = solutionType;
-      console.log('[SF Pro Toolkit] Using URL-based detection:', currentPageData);
-    }
-    
-    // Auto-suggest profile switch if on live SAP system
-    await suggestProfileSwitch(solutionType);
-    
-    renderEnvironments();
-    highlightActiveStates(tab.url);
-    updateDiagnosticsButton();
-    
-  } catch (error) {
-    console.error('[SF Pro Toolkit] Failed to load page data:', error);
-    currentPageData = null;
-    renderEnvironments();
-    updateDiagnosticsButton();
-  }
-}
 
-/**
- * Suggest profile switch when user is on a live SAP system
- * Only suggests once per session to avoid being annoying
- * @param {string} solutionType - The detected solution type (successfactors, s4hana, btp, ibp)
- */
-async function suggestProfileSwitch(solutionType) {
-  if (!solutionType) return;
-  
-  // Map solution types to recommended profiles
-  const profileMap = {
-    'successfactors': 'profile-successfactors',
-    's4hana': 'profile-s4hana',
-    'btp': 'profile-btp',
-    'ibp': 'profile-successfactors' // IBP is part of SF ecosystem
-  };
-  
-  const recommendedProfile = profileMap[solutionType];
-  if (!recommendedProfile) return;
-  
-  // Don't suggest if already on recommended profile
-  if (currentProfile === recommendedProfile) return;
-  
-  // Check if we've already suggested this session (use sessionStorage)
-  const sessionKey = `profileSuggested_${solutionType}`;
-  const result = await chrome.storage.session.get(sessionKey);
-  if (result[sessionKey]) return;
-  
-  // Mark as suggested for this session
-  await chrome.storage.session.set({ [sessionKey]: true });
-  
-  // Get profile name for display
-  const profile = availableProfiles.find(p => p.id === recommendedProfile);
-  if (!profile) return;
-  
-  // Show toast notification with action
-  const solutionLabels = {
-    'successfactors': 'SuccessFactors',
-    's4hana': 'S/4HANA',
-    'btp': 'BTP',
-    'ibp': 'IBP'
-  };
-  
-  const solutionLabel = solutionLabels[solutionType] || solutionType;
-  const message = chrome.i18n.getMessage('profileSwitchSuggestion')
-    .replace('{solutionLabel}', solutionLabel)
-    .replace('{profileName}', profile.name);
-  showToast(message, 'info', 5000, () => {
-    switchProfile(recommendedProfile);
-  });
-}
 
 function updateDiagnosticsButton() {
   const diagnosticsBtn = document.getElementById('footerDiagnosticsBtn');
@@ -478,11 +365,16 @@ async function renderEnvironments() {
   
   // Detect current SAP system and load Quick Actions from GLOBAL solutions storage
   // Quick Actions will be rendered ABOVE the section (not inside tbody)
+  console.log('[Quick Actions] Current page data:', currentPageData);
+  console.log('[Quick Actions] Solution type detected:', currentPageData?.solutionType);
+  console.log('[Quick Actions] Solutions array:', solutions);
+  
   if (currentPageData && currentPageData.solutionType) {
     const solutionType = currentPageData.solutionType;
     
     // Find matching solution from global solutions array
     const solution = solutions.find(s => s.id === solutionType);
+    console.log('[Quick Actions] Matched solution:', solution);
     
     if (solution && solution.quickActions && solution.quickActions.length > 0) {
       const quickActions = solution.quickActions.slice(0, 5);
@@ -1770,21 +1662,15 @@ ${note.content || ''}
 /**
  * Render Quick Actions as editable text fields (SIMPLIFIED)
  * Both name AND path are editable
- * No onclick handlers - uses event delegation instead
+ * Uses GLOBAL solutions storage (not profile-specific)
  */
 async function renderQuickActionsBySection(profileId) {
   const listContainer = document.getElementById('qaEditableList');
   if (!listContainer) return;
   
   try {
-    const storageKey = `solutions_${profileId}`;
-    const result = await chrome.storage.local.get(storageKey);
-    let solutionsData = result[storageKey];
-    
-    if (!solutionsData) {
-      const profileData = await loadProfileData(profileId);
-      solutionsData = JSON.parse(JSON.stringify(profileData.solutions || []));
-    }
+    // ✅ FIX: Use global solutions array (already loaded)
+    const solutionsData = solutions;
     
     if (!solutionsData || solutionsData.length === 0) {
       listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-secondary);">No Quick Actions configured</div>';
@@ -2778,14 +2664,14 @@ async function saveAllQuickActions() {
     console.log('[Save QA] Saving to storage with key: "solutions"');
     console.log('[Save QA] Data to save:', solutionsData);
     
-    // Save to SINGLE global 'solutions' key
+    // ✅ FIX: Save to SINGLE global 'solutions' key (matches loadSolutions)
     await chrome.storage.local.set({ solutions: solutionsData });
     
     // Verify save
     const verifyResult = await chrome.storage.local.get('solutions');
     console.log('[Save QA] Verification - data in storage:', verifyResult.solutions);
     
-    // Update global solutions variable
+    // ✅ FIX: Update global solutions variable immediately
     solutions = solutionsData;
     console.log('[Save QA] Updated global solutions variable');
 

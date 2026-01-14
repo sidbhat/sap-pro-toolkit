@@ -1,0 +1,249 @@
+/* ==================== MODALS ==================== */
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal.active {
+  display: flex; /* Ensure flex display for centering when active */
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  animation: modalSlideIn 0.2s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-large .modal-content {
+  max-width: 520px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+}
+
+.modal-header-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.modal-icon {
+  width: var(--logo-size-modal);
+  height: var(--logo-size-modal);
+  flex-shrink: 0;
+  display: block;
+}
+
+.modal-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.modal-close:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.modal-body {
+  padding: var(--space-lg);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ==================== HARMONIZED MODAL FOOTER SYSTEM ==================== */
+
+.modal-footer {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg);
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+  flex-wrap: nowrap;
+  min-height: 68px;
+}
+
+/* Left section for utility buttons (Format, Download, etc.) */
+.modal-footer-left {
+  display: flex;
+  gap: var(--space-sm);
+  flex: 1;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Right section for primary actions (Cancel, Save) */
+.modal-footer-right {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* When no left section exists, right section spans full width */
+.modal-footer:not(:has(.modal-footer-left)) {
+  justify-content: flex-end;
+}
+
+/* Ensure all buttons in modal footer have consistent dimensions */
+.modal-footer .btn,
+.modal-footer .btn-sm,
+.modal-footer .btn-primary,
+.modal-footer .btn-secondary,
+.modal-footer .btn-accent,
+.modal-footer .btn-ai,
+.modal-footer .btn-danger {
+  height: 36px;
+  min-height: 36px;
+  min-width: 100px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Primary action buttons (Save) get emphasis */
+.modal-footer #saveNoteBtn,
+.modal-footer #saveShortcutBtn,
+.modal-footer #saveEnvBtn,
+.modal-footer #saveProfileBtn {
+  min-width: 120px;
+  order: 99; /* Always last in right section */
+}
+
+/* Utility buttons in left section are smaller */
+.modal-footer .modal-footer-left .btn {
+  min-width: 80px;
+  height: 32px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+/* AI buttons maintain green theme */
+.modal-footer .btn-ai {
+  background: var(--env-preview);
+  border-color: var(--env-preview);
+  color: white;
+}
+
+.modal-footer .btn-ai:hover {
+  background: #0D9468;
+  border-color: #0D9468;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Download dropdown wrapper positioning */
+.modal-footer .btn-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Ensure buttons stay organized on narrow screens */
+@media (max-width: 420px) {
+  .modal-footer {
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    min-height: auto;
+  }
+  
+  .modal-footer-left {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--space-sm);
+    border-top: 1px solid var(--border-light);
+    padding-top: var(--space-sm);
+  }
+  
+  .modal-footer-right {
+    order: 1;
+    width: 100%;
+    justify-content: stretch;
+  }
+  
+  .modal-footer .btn {
+    flex: 1;
+    min-width: 0;
+    font-size: 12px;
+  }
+  
+  .modal-footer .modal-footer-left .btn {
+    flex: none;
+    min-width: 60px;
+  }
+}
+
+.modal-footer-left {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.modal-footer-right {
+  display: flex;
+  gap: var(--space-sm);
+  margin-left: auto;
+}

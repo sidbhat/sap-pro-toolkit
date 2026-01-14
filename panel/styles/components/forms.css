@@ -1,0 +1,138 @@
+/* ==================== FORMS ==================== */
+
+/* Required field asterisk styling - consistent across all forms */
+[data-i18n="required"],
+.required-asterisk {
+  color: var(--env-production);
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.form-group {
+  margin-bottom: var(--space-lg);
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+/* Labels with character counters use flex layout */
+.form-group label:has(.char-counter) {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 9px var(--space-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 280px;
+}
+
+/* Shortcut notes textarea - larger for AI summaries */
+#addShortcutModal textarea#shortcutNotes {
+  min-height: 180px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Note modal specifically needs even more space */
+#addNoteModal textarea#noteContent {
+  min-height: 320px;
+}
+
+/* ==================== NOTE TYPE SELECTOR ==================== */
+
+.note-type-selector {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.note-type-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.note-type-option:hover {
+  border-color: var(--primary);
+  background: var(--bg-tertiary);
+  transform: translateY(-2px);
+}
+
+.note-type-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.note-type-option input[type="radio"]:checked + .note-type-icon {
+  transform: scale(1.1);
+}
+
+.note-type-option:has(input[type="radio"]:checked) {
+  border-color: var(--primary);
+  background: var(--primary-glow);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.note-type-icon {
+  font-size: 24px;
+  transition: transform 0.2s ease;
+}
+
+.note-type-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.note-type-option:has(input[type="radio"]:checked) .note-type-label {
+  color: var(--primary);
+}

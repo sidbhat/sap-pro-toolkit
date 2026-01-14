@@ -991,8 +991,33 @@ function calculateAnthropicCost(usage, model) {
 
 // ==================== EXPORTS ====================
 
-// Export functions for use in side-panel.js
+// Export functions for use in side-panel.js and other modules
 window.ToolkitCore = {
   loadSAPAICoreModels,
   testPromptWithModel
 };
+
+// Export utility functions
+window.detectLanguage = detectLanguage;
+window.initI18n = initI18n;
+window.isSFPage = isSFPage;
+window.detectEnvironmentFromURL = detectEnvironmentFromURL;
+window.detectSolutionType = detectSolutionType;
+window.buildShortcutUrl = buildShortcutUrl;
+window.buildQuickActionUrl = buildQuickActionUrl;
+window.isAbsoluteUrl = isAbsoluteUrl;
+window.extractAllUrlParameters = extractAllUrlParameters;
+window.updatePlatformSpecificUI = updatePlatformSpecificUI;
+window.showToast = showToast;
+window.renderSAPIcon = renderSAPIcon;
+window.suggestIconForContent = suggestIconForContent;
+
+// Export diagnostics functions
+window.gatherDiagnostics = gatherDiagnostics;
+window.formatDiagnosticsReport = formatDiagnosticsReport;
+
+// Export constants
+window.ENV_COLORS = ENV_COLORS;
+window.ENV_EMOJIS = ENV_EMOJIS;
+window.ENV_LABELS = ENV_LABELS;
+window.COUNTRY_FLAGS = COUNTRY_FLAGS;

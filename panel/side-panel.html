@@ -525,7 +525,6 @@
             <input type="text" id="noteTitle" placeholder="e.g., Test User IDs" required>
           </div>
           
-          <!-- Note Type Selector (NEW - Replaces Tags) -->
           <div class="form-group">
             <label>Note Type <span class="required-asterisk">*</span></label>
             <div class="note-type-selector">
@@ -542,7 +541,6 @@
             </div>
           </div>
           
-          
           <div class="form-group">
             <label for="noteContent">
               Content
@@ -557,63 +555,58 @@
           <div class="form-group">
             <label for="noteIcon">Icon</label>
             <select id="noteIcon">
-              <optgroup label="📝 General Notes">
+              <optgroup label="📝 Notes & Documentation">
                 <option value="note">📝 Note</option>
                 <option value="clipboard">📋 Clipboard</option>
-                <option value="pin">📌 Pin</option>
-                <option value="bookmark">🔖 Bookmark</option>
+                <option value="document">📄 Document</option>
+                <option value="page">📃 Page</option>
               </optgroup>
-              <optgroup label="🔐 Credentials & Security">
-                <option value="key">🔑 Key/Password</option>
-                <option value="id">🆔 User ID</option>
-                <option value="lock">🔒 Security</option>
+              <optgroup label="🔑 Security & Access">
+                <option value="key">🔑 Key/Credential</option>
+                <option value="security">🔐 Security</option>
+                <option value="credentials">🔓 Credentials</option>
               </optgroup>
               <optgroup label="🔗 Links & References">
-                <option value="link">🔗 Link/URL</option>
-                <option value="world">🌐 Web Resource</option>
-                <option value="file">📄 File/Document</option>
+                <option value="link">🔗 Link</option>
+                <option value="external">🌐 External Link</option>
               </optgroup>
-              <optgroup label="⚙️ Configuration">
+              <optgroup label="⚙️ Settings & Config">
                 <option value="settings">⚙️ Settings</option>
-                <option value="code">💻 Code/Script</option>
-                <option value="terminal">⌨️ Command/Terminal</option>
+                <option value="tools">🛠️ Tools</option>
               </optgroup>
-              <optgroup label="💡 Ideas & Planning">
+              <optgroup label="💡 Ideas & Alerts">
                 <option value="idea">💡 Idea</option>
-                <option value="question">❓ Question</option>
-                <option value="checklist">✅ Checklist/Todo</option>
-              </optgroup>
-              <optgroup label="⚠️ Important">
                 <option value="warning">⚠️ Warning</option>
-                <option value="alert">🚨 Alert/Critical</option>
-                <option value="flag">🚩 Flag/Follow-up</option>
+                <option value="alert">🚨 Alert</option>
+              </optgroup>
+              <optgroup label="✨ AI & Special">
+                <option value="ai">✨ AI/Joule</option>
               </optgroup>
             </select>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <div class="modal-footer-left">
-          <!-- Download Button -->
-          <button class="btn btn-secondary" id="downloadNoteBtn" title="Download note as text file">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7 10 12 15 17 10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            Download
-          </button>
-        </div>
-        
-        <div class="modal-footer-right">
-          <!-- AI Button (Only shown for AI Prompt type) -->
-          <button class="btn btn-ai btn-sm" id="enhanceWithAIBtn" style="display: none;" title="Run your prompt with AI">
-            ✨ AI
-          </button>
-          
-          <!-- Save Button -->
-          <button class="btn btn-primary" id="saveNoteBtn">Save</button>
-        </div>
+        <button class="btn btn-secondary" id="downloadNoteBtn" title="Download note as text file" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download
+        </button>
+        <button class="btn btn-secondary" id="prettifyNoteBtn" title="Format note with consistent spacing">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="4 7 4 4 20 4 20 7"/>
+            <line x1="9" y1="20" x2="15" y2="20"/>
+            <line x1="12" y1="4" x2="12" y2="20"/>
+          </svg>
+          Format
+        </button>
+        <button class="btn btn-ai" id="enhanceWithAIBtn" style="display: none;" title="Run your prompt with AI">
+          ✨ AI
+        </button>
+        <button class="btn btn-primary" id="saveNoteBtn">Save</button>
       </div>
     </div>
   </div>
@@ -1189,52 +1182,63 @@
     </div>
   </div>
 
-    <!-- Diagnostics Modal -->
-    <div id="diagnosticsModal" class="modal">
-      <div class="modal-content large-modal">
-        <div class="modal-header">
+  <!-- Diagnostics Modal -->
+  <div id="diagnosticsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="6" fill="url(#gradientModalDiag)"/>
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="gradientModalDiag" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0070F2"/>
+                <stop offset="1" stop-color="#0054A6"/>
+              </linearGradient>
+            </defs>
+          </svg>
           <h3>Page Diagnostics</h3>
-          <button id="closeDiagnosticsModal" class="close-btn">&times;</button>
         </div>
-        <div class="modal-body" id="diagnosticsContent">
-          <!-- Diagnostics content will be loaded here -->
-        </div>
-        <div class="modal-footer" style="justify-content: space-between;">
-          <div>
-            <button id="regenerateDiagnosticsWithAIBtn" class="btn btn-primary">✨ Analyze with AI</button>
-          </div>
-          <div>
-            <button id="copyAllDiagnosticsBtn" class="btn btn-secondary">Copy</button>
-            <button id="saveDiagnosticsBtn" class="btn btn-secondary" style="display: none;">Save as Note</button>
-            <button id="downloadDiagnosticsBtn" class="btn btn-secondary" style="display: none;">Download Report</button>
-            <button id="closeDiagnosticsBtn" class="btn">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
         <button class="modal-close" id="closeDiagnosticsModal">&times;</button>
       </div>
       <div class="modal-body">
         <div id="diagnosticsContent" class="diagnostics-content">
-          <div class="diagnostics-loading">
-            <div class="spinner"></div>
-            <span>Gathering diagnostics...</span>
-          </div>
+          <!-- Content populated dynamically by JavaScript -->
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="closeDiagnosticsBtn">Close</button>
-        <button class="btn btn-ai" id="regenerateDiagnosticsWithAIBtn" 
-                title="Enhance diagnostics with AI analysis">
-          ✨ AI
-        </button>
-        <button class="btn btn-primary" id="copyAllDiagnosticsBtn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-          Copy All
-        </button>
+        <div class="modal-footer-left">
+          <button class="btn btn-secondary" id="saveDiagnosticsBtn" style="display: none;" title="Save diagnostics as note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Save
+          </button>
+          <button class="btn btn-secondary" id="downloadDiagnosticsBtn" style="display: none;" title="Download diagnostics report">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download
+          </button>
+        </div>
+        <div class="modal-footer-right">
+          <button class="btn btn-secondary" id="closeDiagnosticsBtn">Close</button>
+          <button class="btn btn-ai" id="regenerateDiagnosticsWithAIBtn" 
+                  title="Enhance diagnostics with AI analysis">
+            ✨ AI
+          </button>
+          <button class="btn btn-primary" id="copyAllDiagnosticsBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy All
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -1257,8 +1261,15 @@
   <script src="svg-renderer.js"></script>
   <script src="validation.js"></script>
   <script src="toolkit-core.js"></script>
+  
+  <!-- Modular scripts (must be loaded before side-panel.js) -->
+  <script src="state.js"></script>
+  <script src="ui-render.js"></script>
+  <script src="actions.js"></script>
+  <script src="ai-features.js"></script>
+  <script src="main.js"></script>
 
-  <!-- Main panel script (depends on core utilities) -->
+  <!-- Main panel script (depends on all modules above) -->
   <script src="side-panel.js"></script>
 </body>
 </html>

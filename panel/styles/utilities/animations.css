@@ -1,0 +1,199 @@
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== EXPORT SECTION ==================== */
+
+.export-section {
+  margin-top: 24px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.export-section h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.export-section p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.export-note {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  line-height: 1.5;
+}
+
+.export-note strong {
+  color: var(--text-primary);
+}
+
+/* ==================== MICRO-INTERACTIONS ==================== */
+
+/* Hover lift effect */
+.icon-btn:hover,
+.btn:hover,
+.profile-card:hover,
+.quick-action-item:hover {
+  transform: translateY(-1px);
+}
+
+/* Click press effect */
+.icon-btn:active,
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Pulse animation for new items */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.new-item {
+  animation: pulse 0.6s ease-in-out;
+}
+
+/* Glow effect for primary actions */
+.btn-primary:hover,
+.icon-btn.primary:hover {
+  box-shadow: 0 4px 12px rgba(0, 112, 242, 0.3);
+}
+
+[data-theme="dark"] .btn-primary:hover,
+[data-theme="dark"] .icon-btn.primary:hover {
+  box-shadow: 0 4px 16px rgba(59, 158, 255, 0.4);
+}
+
+/* Smooth tab transitions */
+.settings-tab {
+  position: relative;
+}
+
+.settings-tab::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.settings-tab.active::after {
+  transform: scaleX(1);
+}
+
+/* ==================== ENHANCED DARK MODE ==================== */
+
+[data-theme="dark"] {
+  /* Improved contrast for better readability */
+  --bg-primary: #1D232A;
+  --bg-secondary: #2D353D;
+  --bg-tertiary: #3D454D;
+  --text-primary: #FAFAFA;
+  --text-secondary: #C5C5C5;
+  --text-tertiary: #999999;
+  --border: #4A5560;
+  --border-light: #3A4248;
+  
+  /* Vibrant blue with enhanced glow */
+  --primary: #3B9EFF;
+  --primary-dark: #1E7FE0;
+  --primary-glow: rgba(59, 158, 255, 0.25);
+  
+  /* Enhanced glassmorphism */
+  --glass-bg: rgba(29, 35, 42, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.12);
+}
+
+/* Enhanced interactive element glows in dark mode */
+[data-theme="dark"] .settings-tab.active {
+  box-shadow: 0 2px 8px rgba(59, 158, 255, 0.2);
+}
+
+[data-theme="dark"] .quick-action-item:hover,
+[data-theme="dark"] .profile-card:hover {
+  box-shadow: 0 4px 12px rgba(59, 158, 255, 0.15);
+}
+
+/* Auto mode with dark preference */
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] {
+    --bg-primary: #1D232A;
+    --bg-secondary: #2D353D;
+    --bg-tertiary: #3D454D;
+    --text-primary: #FAFAFA;
+    --text-secondary: #C5C5C5;
+    --text-tertiary: #999999;
+    --border: #4A5560;
+    --border-light: #3A4248;
+    --primary: #3B9EFF;
+    --primary-dark: #1E7FE0;
+    --primary-glow: rgba(59, 158, 255, 0.25);
+    --glass-bg: rgba(29, 35, 42, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.12);
+  }
+  
+  [data-theme="auto"] .settings-tab.active {
+    box-shadow: 0 2px 8px rgba(59, 158, 255, 0.2);
+  }
+  
+  [data-theme="auto"] .quick-action-item:hover,
+  [data-theme="auto"] .profile-card:hover {
+    box-shadow: 0 4px 12px rgba(59, 158, 255, 0.15);
+  }
+  
+  [data-theme="auto"] .btn-primary:hover,
+  [data-theme="auto"] .icon-btn.primary:hover {
+    box-shadow: 0 4px 16px rgba(59, 158, 255, 0.4);
+  }
+}
+
+/* ==================== CHECKBOX GROUPS ==================== */
+
+.form-group.checkbox {
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+.form-group.checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.form-group.checkbox input[type="checkbox"] {
+  width: auto;
+  cursor: pointer;
+  margin: 0;
+}
+
