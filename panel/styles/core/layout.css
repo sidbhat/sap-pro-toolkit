@@ -7,5 +7,4 @@
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  padding-bottom: 140px; /* Space for sticky footer (increased for world clock) */
 }
