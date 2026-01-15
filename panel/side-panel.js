@@ -1869,20 +1869,6 @@ function closeDiagnosticsModal() {
   document.getElementById('diagnosticsModal').classList.remove('active');
 }
 
-async function copyAllDiagnostics() {
-  try {
-    // Refresh page data before copying diagnostics to ensure latest state
-    await loadCurrentPageData();
-    
-    const diagnostics = await gatherDiagnostics(currentPageData);
-    const formatted = formatDiagnosticsReport(diagnostics);
-    await navigator.clipboard.writeText(formatted);
-    showToast('Diagnostics copied to clipboard ✓', 'success');
-  } catch (error) {
-    console.error('Failed to copy diagnostics:', error);
-    showToast('Failed to copy diagnostics', 'error');
-  }
-}
 
 /**
  * Regenerate diagnostics with AI-powered comprehensive page analysis
@@ -2742,37 +2728,6 @@ async function loadQuickActionsTab() {
   await renderAllProfilesQuickActions();
 }
 
-/**
- * Export edited Quick Actions as solutions.json file
- * This allows users to replace resources/solutions.json and rebuild the extension
- */
-async function exportQuickActionsToJson() {
-  try {
-    console.log('[Export QA] Starting export...');
-    
-    // Get current solutions from global variable (already has edits)
-    const solutionsData = { solutions: solutions };
-    
-    const jsonStr = JSON.stringify(solutionsData, null, 2);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const timestamp = new Date().toISOString().split('T')[0];
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `solutions-${timestamp}.json`;
-    a.click();
-    
-    URL.revokeObjectURL(url);
-    
-    const qaCount = solutions.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0);
-    showToast(`Exported ${qaCount} Quick Actions ✓ | Replace resources/solutions.json and rebuild`, 'success');
-    
-  } catch (error) {
-    console.error('[Export QA] Failed:', error);
-    showToast('Failed to export Quick Actions', 'error');
-  }
-}
 
 /**
  * Save all edited Quick Actions from the Settings tab.
@@ -2872,76 +2827,6 @@ async function saveAllQuickActions() {
 
 // ==================== SETTINGS - EXPORT ====================
 
-/**
- * Export configuration from Quick Actions tab
- */
-async function exportConfigFromSettings() {
-  const profileSelect = document.getElementById('qaProfileSelect');
-  if (!profileSelect) {
-    await exportJsonToFile();
-    return;
-  }
-  
-  const profileId = profileSelect.value;
-  const profile = availableProfiles.find(p => p.id === profileId);
-  
-  if (!profile) {
-    showToast('Profile not found', 'error');
-    return;
-  }
-  
-  try {
-    // Load data for selected profile
-    const storageKey = `environments_${profileId}`;
-    const envResult = await chrome.storage.local.get(storageKey);
-    const profileEnvs = envResult[storageKey] || [];
-    
-    const solutionsKey = `solutions_${profileId}`;
-    const solutionsResult = await chrome.storage.local.get(solutionsKey);
-    let profileSolutions = solutionsResult[solutionsKey];
-    
-    if (!profileSolutions) {
-      const profileData = await loadProfileData(profileId);
-      profileSolutions = profileData.solutions || [];
-    }
-    
-    // Use current shortcuts and notes (global)
-    const exportData = {
-      version: '1.0',
-      profileType: 'custom',
-      profile: profileId,
-      profileName: profile.name,
-      basedOn: profileId.startsWith('custom-') ? 'profile-successfactors' : profileId,
-      shortcuts: shortcuts,
-      environments: profileEnvs,
-      notes: notes,
-      solutions: profileSolutions,
-      exportDate: new Date().toISOString(),
-      description: 'Custom profile export. To create a new profile, edit "profileName" field and re-import.'
-    };
-    
-    const jsonStr = JSON.stringify(exportData, null, 2);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const timestamp = new Date().toISOString().split('T')[0];
-    const profileSlug = profile.name.toLowerCase().replace(/\s+/g, '-');
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `sap-pro-toolkit-${profileSlug}-${timestamp}.json`;
-    a.click();
-    
-    URL.revokeObjectURL(url);
-    
-    const itemCount = shortcuts.length + profileEnvs.length + notes.length;
-    const qaCount = profileSolutions?.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0) || 0;
-    showToast(`Exported ${itemCount} items + ${qaCount} Quick Actions ✓`, 'success');
-    
-  } catch (error) {
-    console.error('[Export Config] Failed:', error);
-    showToast('Failed to export configuration', 'error');
-  }
-}
 
 async function importJsonFromFile() {
   const fileInput = document.getElementById('importFileInput');
@@ -3191,64 +3076,7 @@ async function exportJsonToFile() {
   }
 }
 
-/**
- * Generate and download an empty template JSON file for import
- * Creates a template with empty arrays for shortcuts, environments, and notes
- */
-async function downloadTemplate() {
-  try {
-    // Generate template structure
-    const template = {
-      version: '1.0',
-      shortcuts: [],
-      environments: [],
-      notes: [],
-      exportDate: new Date().toISOString()
-    };
-    
-    const jsonStr = JSON.stringify(template, null, 2);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'sap-pro-toolkit-template.json';
-    a.click();
-    
-    URL.revokeObjectURL(url);
-    showToast('Template downloaded ✓', 'success');
-    
-  } catch (error) {
-    console.error('Template download failed:', error);
-    showToast('Failed to download template', 'error');
-  }
-}
 
-// ==================== DISPLAY MODE FUNCTIONS (DISABLED - SIDE PANEL ONLY) ====================
-// These functions are commented out since the extension now operates in side panel mode only
-
-/* 
-async function loadDisplayModeSetting() {
-  const result = await chrome.storage.local.get({ displayMode: 'sidepanel' });
-  const mode = result.displayMode;
-  
-  const popupRadio = document.getElementById('displayModePopup');
-  const sidePanelRadio = document.getElementById('displayModeSidePanel');
-  
-  if (popupRadio && sidePanelRadio) {
-    if (mode === 'sidepanel') {
-      sidePanelRadio.checked = true;
-    } else {
-      popupRadio.checked = true;
-    }
-  }
-}
-
-async function saveDisplayMode(mode) {
-  await chrome.storage.local.set({ displayMode: mode });
-  showToast(`Display mode will change after reloading extension`, 'success');
-}
-*/
 
 // ==================== COLLAPSIBLE SECTIONS ====================
 
@@ -3383,18 +3211,10 @@ function setupEventListeners() {
     });
   }
   
-  // Tag filtering - click any tag to filter all sections
-  document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('clickable-tag')) {
-      e.stopPropagation(); // Prevent row click from firing
-      const tag = e.target.getAttribute('data-tag');
-      filterByTag(tag);
-    }
-  });
   
   // Global click handler to close all dropdowns when clicking outside
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.kebab-btn') && !e.target.closest('.dropdown-menu')) {
+    if (!e.target.closest('.dropdown-menu')) {
       document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('active'));
     }
   });
@@ -3449,7 +3269,6 @@ function setupEventListeners() {
   document.getElementById('copyDiagnosticsBtn')?.addEventListener('click', showDiagnosticsModal);
   document.getElementById('closeDiagnosticsModal')?.addEventListener('click', closeDiagnosticsModal);
   document.getElementById('closeDiagnosticsBtn')?.addEventListener('click', closeDiagnosticsModal);
-  document.getElementById('copyAllDiagnosticsBtn')?.addEventListener('click', copyAllDiagnostics);
   document.getElementById('regenerateDiagnosticsWithAIBtn')?.addEventListener('click', regenerateDiagnosticsWithAI);
   document.getElementById('saveDiagnosticsBtn')?.addEventListener('click', saveDiagnosticsAsNote);
   document.getElementById('downloadDiagnosticsBtn')?.addEventListener('click', downloadDiagnosticsReport);
@@ -3480,9 +3299,6 @@ function setupEventListeners() {
 
   // Quick Actions save button
   document.getElementById('saveAllQaBtn')?.addEventListener('click', saveAllQuickActions);
-  
-  // Quick Actions export button
-  document.getElementById('exportQaBtn')?.addEventListener('click', exportQuickActionsToJson);
   
   // API Keys buttons are now handled by initializeAPIKeysTab() when tab is opened
   // This prevents duplicate listeners and ensures proper initialization

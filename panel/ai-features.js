@@ -29,19 +29,6 @@ window.closeDiagnosticsModal = function() {
   document.getElementById('diagnosticsModal').classList.remove('active');
 };
 
-window.copyAllDiagnostics = async function() {
-  try {
-    if (window.loadCurrentPageData) await window.loadCurrentPageData();
-    
-    const diagnostics = typeof gatherDiagnostics === 'function' ? await gatherDiagnostics(window.currentPageData) : {};
-    const formatted = typeof formatDiagnosticsReport === 'function' ? formatDiagnosticsReport(diagnostics) : '';
-    await navigator.clipboard.writeText(formatted);
-    if (window.showToast) window.showToast('Diagnostics copied to clipboard ✓', 'success');
-  } catch (error) {
-    console.error('Failed to copy diagnostics:', error);
-    if (window.showToast) window.showToast('Failed to copy diagnostics', 'error');
-  }
-};
 
 window.regenerateDiagnosticsWithAI = async function() {
   if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {

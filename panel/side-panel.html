@@ -21,7 +21,7 @@
       <img src="../icons/icon-32.png" alt="SF Pro Toolkit" class="modal-icon">
       <h3>[Modal Title]</h3>
     </div>
-    <button class="modal-close" id="close[Modal]Modal">&times;</button>
+    <button class="icon-btn" id="close[Modal]Modal">&times;</button>
   </div>
   
   CHECKLIST FOR NEW MODALS:
@@ -34,7 +34,7 @@
     <!-- Header -->
     <div class="side-panel-header">
       <div class="header-content">
-        <button class="header-btn" id="helpBtn" data-i18n-title="helpBtn" title="Help">
+        <button class="icon-btn icon-btn--transparent-light" id="helpBtn" data-i18n-title="helpBtn" title="Help">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
@@ -86,7 +86,7 @@
           placeholder="Search all items..."
           data-i18n-placeholder="globalSearchPlaceholder"
         >
-        <button class="search-clear" id="clearSearch" style="display: none;">×</button>
+        <button class="icon-btn" id="clearSearch" style="display: none; height: 24px; width: 24px;">×</button>
       </div>
       <button class="btn btn-accent btn-sm" id="aiSearchBtn" title="Perform AI-powered search (Cmd+Shift+S)">
         ✨ AI
@@ -97,7 +97,7 @@
     <div class="ai-insights-bar" id="aiInsightsBar" style="display: none;">
       <div class="ai-insights-header">
         <span class="ai-insights-title">✨ AI INSIGHTS</span>
-        <button class="ai-insights-close" id="closeAiInsights" title="Clear AI search">×</button>
+        <button class="icon-btn" id="closeAiInsights" title="Clear AI search" style="height: 24px; width: 24px;">×</button>
       </div>
       <div class="ai-insights-content" id="aiInsightsContent">
         <!-- Populated dynamically -->
@@ -342,7 +342,7 @@
           </svg>
           <h3 data-i18n="addEnvironmentTitle">Add Environment</h3>
         </div>
-        <button class="modal-close" id="closeAddEnvModal">&times;</button>
+        <button class="icon-btn" id="closeAddEnvModal">&times;</button>
       </div>
       <div class="modal-body">
         <form id="addEnvForm">
@@ -407,7 +407,7 @@
           </svg>
           <h3 data-i18n="addShortcutTitle">Add Shortcut</h3>
         </div>
-        <button class="modal-close" id="closeAddShortcutModal">&times;</button>
+        <button class="icon-btn" id="closeAddShortcutModal">&times;</button>
       </div>
       <div class="modal-body">
         <form id="addShortcutForm">
@@ -513,7 +513,7 @@
           </svg>
           <h3>Scratch Note</h3>
         </div>
-        <button class="modal-close" id="closeAddNoteModal">&times;</button>
+        <button class="icon-btn" id="closeAddNoteModal">&times;</button>
       </div>
       <div class="modal-body">
         <form id="addNoteForm">
@@ -628,7 +628,7 @@
           </svg>
           <h3 id="aiTestResultsTitle">AI Response</h3>
         </div>
-        <button class="modal-close" id="closeAiTestResultsModal">&times;</button>
+        <button class="icon-btn" id="closeAiTestResultsModal">&times;</button>
       </div>
       <div class="modal-body">
         <div id="aiTestResultsContent" class="ai-test-results-content">
@@ -680,7 +680,7 @@
           </svg>
           <h3>Enterprise Cost Calculator</h3>
         </div>
-        <button class="modal-close" id="closeEnterpriseCalculatorModal">&times;</button>
+        <button class="icon-btn" id="closeEnterpriseCalculatorModal">&times;</button>
       </div>
       <div class="modal-body">
         <div id="enterpriseCalculatorContent">
@@ -717,7 +717,7 @@
           </svg>
           <h3>Settings</h3>
         </div>
-        <button class="modal-close" id="closeSettingsModal">&times;</button>
+        <button class="icon-btn" id="closeSettingsModal">&times;</button>
       </div>
       <div class="modal-body">
         <!-- Tab Navigation -->
@@ -1037,7 +1037,7 @@
           </svg>
           <h3 id="profileModalTitle">Create Profile</h3>
         </div>
-        <button class="modal-close" id="closeProfileModal">&times;</button>
+        <button class="icon-btn" id="closeProfileModal">&times;</button>
       </div>
       <div class="modal-body">
         <form id="profileForm">
@@ -1108,7 +1108,7 @@
           </svg>
           <h3>About SF Pro Toolkit</h3>
         </div>
-        <button class="modal-close" id="closeHelpModal">&times;</button>
+        <button class="icon-btn" id="closeHelpModal">&times;</button>
       </div>
       <div class="modal-body">
         <p style="font-size: 12px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 20px;">
@@ -1199,7 +1199,7 @@
           </svg>
           <h3>Page Diagnostics</h3>
         </div>
-        <button class="modal-close" id="closeDiagnosticsModal">&times;</button>
+        <button class="icon-btn" id="closeDiagnosticsModal">&times;</button>
       </div>
       <div class="modal-body">
         <div id="diagnosticsContent" class="diagnostics-content">

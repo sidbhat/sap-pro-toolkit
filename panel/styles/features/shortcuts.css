@@ -73,29 +73,3 @@
 }
 
 /* URL Type Badges - Enhanced */
-.badge-external, .badge-relative {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 3px 8px;
-  font-size: 9px;
-  font-weight: 700;
-  border-radius: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  line-height: 1;
-  transition: all 0.2s ease;
-}
-
-.badge-external {
-  background: rgba(59, 158, 255, 0.2);
-  color: var(--primary);
-  border: 1px solid var(--primary);
-}
-
-.badge-relative {
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--env-preview);
-  border: 1px solid var(--env-preview);
-}
-
