@@ -43,7 +43,7 @@ panel/
     │   ├── header.css          (Side panel header, logo, nav)
     │   ├── search.css          (Search bar, filters, AI button)
     │   ├── sections.css        (Section layouts, toggle, counts)
-    │   └── footer.css          (Sticky footer, world clock)
+    │   └── footer.css          (Sticky footer)
     │
     ├── features/               (Feature-Specific - 9 files)
     │   ├── ai-insights.css     (AI insights bar, recommendations)
@@ -76,7 +76,7 @@ panel/
 | **utilities/loading.css** | 196 | Spinners, loading cards, overlays |
 | **layout/sections.css** | 172 | Section headers, toggle, content |
 | **features/environments.css** | 151 | Environment table, badges, quick actions |
-| **layout/footer.css** | 151 | Sticky footer, world clock, metadata |
+| **layout/footer.css** | 151 | Sticky footer, metadata |
 | **features/profiles.css** | 149 | Profile switcher, manager, list |
 | **features/ai-insights.css** | 120 | AI insights bar, recommendations |
 | **components/dropdowns.css** | 114 | Split buttons, kebab menus |
