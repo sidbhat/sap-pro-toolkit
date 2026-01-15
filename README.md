@@ -167,7 +167,23 @@ Generate comprehensive diagnostic reports for troubleshooting and support ticket
 
 ## 📋 Version History
 
-### v1.6.0 (In Development)
+### v1.6.2 (2026-01-14) - Latest Release
+- ✨ **AI UX Improvements**: Enhanced user experience during AI operations
+  - Increased overlay opacity from 12% to 95% for better visibility
+  - Changed to green background (`rgba(16, 185, 129, 0.95)`)
+  - Updated message text to "Generating insights....."
+  - Added blocking overlay to diagnostics AI button
+  - Prevents accidental clicks during AI processing
+- 🔒 **Security**: Removed hardcoded SAP AI Core credentials
+  - Cleared all pre-populated credential values from HTML
+  - Updated help text to instruct users to enter own credentials
+  - All credential fields now start empty
+  - Safe for public repository distribution
+- 🐛 **UI Fixes**: Removed Close and Copy All buttons from diagnostics modal
+  - Streamlined diagnostics modal footer
+  - Improved user workflow
+
+### v1.6.0
 - 🔐 **NEW**: Auto-login feature with AES-256-GCM encryption
   - Optional credential storage per environment
   - Automatic login when switching environments
@@ -197,7 +213,7 @@ Generate comprehensive diagnostic reports for troubleshooting and support ticket
 - 📚 **NEW**: Comprehensive security documentation (AUTO-LOGIN-SECURITY.md)
 - 🧪 **NEW**: Detailed testing guide (AUTO-LOGIN-TESTING-GUIDE.md)
 - 🐛 **FIXED**: Keyboard shortcuts not working (removed conflicting manifest.json commands)
-- 🐛 **FIXED**: Pin buttons not visible (CSS overflow issues resolved)
+- � **FIXED**: Pin buttons not visible (CSS overflow issues resolved)
 - 🐛 **FIXED**: Footer overlapping content (increased padding)
 
 ### v1.3.0
@@ -213,7 +229,7 @@ Generate comprehensive diagnostic reports for troubleshooting and support ticket
 - ❌ Removed dark mode feature for simplicity
 - 📰 Added What's New documentation shortcuts
 - 🎯 Center-aligned header with help button
-- 📋 Enhanced diagnostics section with clear description
+- �📋 Enhanced diagnostics section with clear description
 - ✨ Improved animations and hover effects
 - 🖼️ New professional hero image
 
