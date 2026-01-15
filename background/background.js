@@ -174,54 +174,6 @@ function isSFPage(url) {
   return sfDomains.some(domain => url.includes(domain));
 }
 
-/**
- * Check if two hostnames belong to the same SAP solution type
- * Only preserve paths when switching within the same solution (e.g., SF prod → SF sales)
- * @param {string} hostname1 - First hostname
- * @param {string} hostname2 - Second hostname
- * @returns {boolean} True if both belong to same solution type
- */
-function areSameSolutionType(hostname1, hostname2) {
-  const getSolutionType = (hostname) => {
-    // SuccessFactors domains
-    if (hostname.includes('hr.cloud.sap') || 
-        hostname.includes('sapsf.') || 
-        hostname.includes('successfactors') ||
-        hostname.includes('sapcloud.cn')) {
-      return 'successfactors';
-    }
-    
-    // S/4HANA domains
-    if (hostname.includes('s4hana') || hostname.includes('s4h')) {
-      return 's4hana';
-    }
-    
-    // BTP domains
-    if (hostname.includes('hana.ondemand') || 
-        hostname.includes('cfapps') || 
-        hostname.includes('build.cloud.sap')) {
-      return 'btp';
-    }
-    
-    // IBP domains (similar to SF)
-    if (hostname.includes('ibp') || hostname.includes('scmibp')) {
-      return 'ibp';
-    }
-    
-    return 'other';
-  };
-  
-  const type1 = getSolutionType(hostname1);
-  const type2 = getSolutionType(hostname2);
-  
-  // IBP and SuccessFactors can share paths (same login system)
-  if ((type1 === 'successfactors' && type2 === 'ibp') || 
-      (type1 === 'ibp' && type2 === 'successfactors')) {
-    return true;
-  }
-  
-  return type1 === type2 && type1 !== 'other';
-}
 
 // ==================== KEEP ALIVE (Manifest V3) ====================
 
