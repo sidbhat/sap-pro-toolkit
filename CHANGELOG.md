@@ -155,9 +155,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Parent containers use `overflow: visible` instead of `hidden`
   - Child text elements handle truncation with `overflow: hidden; text-overflow: ellipsis`
   - Applied to `.env-name`, `.shortcut-name`, `.note-title`
-- **Footer Spacing**: Increased padding to prevent content overlap
-  - Changed `.side-panel-container` padding-bottom from 80px to 140px
-  - Accommodates expanded world clock footer
 
 ### Fixed
 - 🐛 **CRITICAL: Keyboard Shortcuts Not Working**: Resolved Chrome commands API conflict
@@ -166,8 +163,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🐛 **Pin Buttons Not Visible**: CSS overflow clipping star icons
   - Fixed parent container overflow settings
   - Pin buttons now visible and clickable
-- 🐛 **Footer Overlapping Content**: World clock cutting off page bottom
-  - Increased container padding-bottom by 60px
 - 🐛 **Chrome Manifest Error**: Exceeded 4 shortcut limit
   - Removed all Chrome command shortcuts from manifest.json
   - Now handle shortcuts via JavaScript only
@@ -194,10 +189,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.0] - 2026-01-11
 ### Added
-- 🌐 **World Clock Footer**: Real-time timezone display for global SAP teams
-  - 3 timezones: EST (Americas), CET (Europe), IST (Asia-Pacific)
-  - Auto-updates every 60 seconds
-  - Centered layout with flag indicators
 - 📅 **Profile Update Date Display**: Shows last content update date in footer
   - Reads from profile JSON lastUpdated field
   - Displays as "Profile: Mon DD" with hover tooltip
@@ -210,7 +201,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 2 hot community posts with real-world lessons learned
 
 ### Changed
-- Footer layout: World clock now center-aligned with 16px gap between timezones
 - Profile discovery: Added profile-golive to availableProfiles array
 
 ---

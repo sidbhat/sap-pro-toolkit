@@ -43,7 +43,6 @@ SF Pro Toolkit uses Chrome's `chrome.storage.local` API to persist user data. Th
 | `hiddenProfiles` | array | Hidden system profile IDs |
 | `collapsedSections` | object | Collapsed section states |
 | `pinnedEnvironments` | array | Pinned environment IDs |
-| `worldClockTimezones` | array | World clock timezone configs |
 | `theme` | string | Theme setting (`"light"`, `"dark"`, `"auto"`) |
 
 ---
@@ -316,7 +315,6 @@ chrome.storage.local.clear(() => {
 
 ### Clear Only Custom Data (Keep System Profiles)
 ```javascript
-const keysToKeep = ['theme', 'worldClockTimezones'];
 
 chrome.storage.local.get(null, (data) => {
   const keepData = {};

@@ -57,12 +57,6 @@ Major Features
 - Tag system for easy retrieval
 - Perfect for go-live checklists, troubleshooting notes, user IDs
 
-5. World Clock Footer
-- Real-time timezone display for global SAP teams
-- 3 timezones: EST (Americas), CET (Europe), IST (Asia-Pacific)
-- Auto-updates every 60 seconds
-- Center-aligned layout with flag indicators
-- Helps distributed teams coordinate across regions
 
 6. Profile Content Update Tracking
 - Shows last content update date in footer
@@ -155,11 +149,6 @@ Boost your SAP productivity with a comprehensive toolkit designed for profession
 • Browser and platform information
 • One-click copy for support tickets
 
-🌐 World Clock Footer
-• Real-time display of 3 global timezones
-• EST (Americas), CET (Europe), IST (Asia-Pacific)
-• Auto-updates every minute
-• Perfect for distributed teams coordinating across regions
 
 🚀 Go-Live & Cutover Support
 • Specialized profile for S/4HANA implementation go-live events
@@ -294,7 +283,6 @@ v1.0.0 (Jan 2026) - INITIAL PUBLIC RELEASE:
 • Smart shortcuts system with SAP Fiori icon library
 • Scratch notes with color-coding
 • System diagnostics and support ticket generation
-• World clock footer for global teams
 • Go-Live & Cutover profile for S/4HANA implementations
 • Specialized profiles (SuccessFactors, S/4HANA, BTP, Executive)
 • Multilingual support (10 languages)
@@ -311,7 +299,6 @@ v1.0.0 (Jan 2026) - INITIAL PUBLIC RELEASE:
 ✓ Flexibility: Customize for your specific workflow
 ✓ Reliability: No external dependencies, works offline
 ✓ Professional: Designed by SAP consultants, for SAP consultants
-✓ Global: Support for distributed teams across timezones
 ✓ Mission-Critical: Go-live support for high-stakes implementations
 
 Download now and transform your SAP workflow!
@@ -338,7 +325,6 @@ Required Assets
 
 Upload 5 screenshots showing key features:
 
-Screenshot 1: World Clock & Profile Switcher
 - Caption: "Global team coordination with real-time world clock and specialized profiles for each SAP solution"
 - Show: Footer with world clock + profile dropdown menu open
 
@@ -545,7 +531,6 @@ Core Features:
 • Quick environment switching with keyboard shortcuts (Cmd+Shift+1/2)
 • Smart shortcuts system with SAP Fiori icon library
 • Color-coded note-taking for go-live checklists and troubleshooting
-• World clock footer for global team coordination (EST, CET, IST)
 • Go-Live & Cutover profile with S/4HANA monitoring T-Codes and checklists
 • System diagnostics for support ticket generation
 • Specialized profiles for different SAP solutions and roles
@@ -566,7 +551,6 @@ Key Points:
 2. Multi-Platform Support: Works with SuccessFactors (HCM), S/4HANA (ERP), and BTP (Platform)
 3. Data Privacy: All data stored locally in Chrome storage, no external transmission, no user tracking
 4. Host Permissions: Required to detect current SAP environment (SuccessFactors, S/4HANA, BTP) and enable context-aware features like environment switching and diagnostics
-5. Core Features: Environment management, shortcuts, note-taking, world clock for global teams, go-live support
 6. Security: Extension has passed 18 automated security checks, no sensitive data in build, all JavaScript minified
 7. Performance: Minified JavaScript (41% reduction) for fast load times and smaller download
 
