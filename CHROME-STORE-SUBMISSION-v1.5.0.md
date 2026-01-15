@@ -325,8 +325,6 @@ Required Assets
 
 Upload 5 screenshots showing key features:
 
-- Caption: "Global team coordination with real-time world clock and specialized profiles for each SAP solution"
-- Show: Footer with world clock + profile dropdown menu open
 
 Screenshot 2: Multi-Environment Management
 - Caption: "Seamlessly switch between Production, Preview, Sales, and Sandbox environments across all SAP platforms"
@@ -414,7 +412,6 @@ User Benefits:
 - Organized access to frequently-used pages across all SAP platforms
 - Professional note-taking during client sessions
 - Quick diagnostics for support tickets
-- Global team coordination with world clock
 - Mission-critical go-live support
 
 ═══════════════════════════════════════════════════════
