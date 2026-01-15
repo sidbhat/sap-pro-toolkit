@@ -57,7 +57,6 @@ Major Features
 - Tag system for easy retrieval
 - Perfect for go-live checklists, troubleshooting notes, user IDs
 
-
 6. Profile Content Update Tracking
 - Shows last content update date in footer
 - Format: "Profile: Mon DD" with hover tooltip
@@ -148,7 +147,6 @@ Boost your SAP productivity with a comprehensive toolkit designed for profession
 • API endpoints and technical specs
 • Browser and platform information
 • One-click copy for support tickets
-
 
 🚀 Go-Live & Cutover Support
 • Specialized profile for S/4HANA implementation go-live events
@@ -324,7 +322,6 @@ Required Assets
 4. Screenshots (1280x800px or 640x400px)
 
 Upload 5 screenshots showing key features:
-
 
 Screenshot 2: Multi-Environment Management
 - Caption: "Seamlessly switch between Production, Preview, Sales, and Sandbox environments across all SAP platforms"
