@@ -3383,7 +3383,7 @@ async function discoverProfiles() {
   // Start with system profiles (removed "All Profiles" for simplicity)
   availableProfiles = [
     { id: 'profile-global', name: 'Global', icon: '⚡', description: 'Core SAP utilities for everyone', file: 'profile-global.json', type: 'system' },
-    { id: 'profile-successfactors', name: 'SuccessFactors', icon: '👥', description: 'HR/HCM consultants & admins', file: 'profile-successfactors.json', type: 'system' },
+    { id: 'profile-successfactors', name: 'SuccessFactors', icon: '👥', description: 'HR/HCM consultants & admins', file: 'profile-successfactors-public.json', type: 'system' },
     { id: 'profile-s4hana', name: 'S/4HANA', icon: '🏭', description: 'Clean Core & functional architects', file: 'profile-s4hana.json', type: 'system' },
     { id: 'profile-btp', name: 'BTP & Integration', icon: '🔧', description: 'Developers & technical architects', file: 'profile-btp.json', type: 'system' },
     { id: 'profile-executive', name: 'Executive & Sales', icon: '👔', description: 'CIOs, CTOs, presales engineers', file: 'profile-executive.json', type: 'system' },
