@@ -197,6 +197,11 @@ window.renderEnvironments = async function() {
   
   attachEnvironmentListeners();
   updateSectionCounts();
+  
+  // Re-initialize collapsible sections after render (restore event listeners)
+  if (window.initializeCollapsibleSections) {
+    await window.initializeCollapsibleSections();
+  }
 };
 
 function attachQuickActionBadgeHandlers(quickActions) {
@@ -345,6 +350,11 @@ window.renderShortcuts = function() {
   
   attachShortcutListeners();
   updateSectionCounts();
+  
+  // Re-initialize collapsible sections after render (restore event listeners)
+  if (window.initializeCollapsibleSections) {
+    window.initializeCollapsibleSections();
+  }
 };
 
 function attachShortcutListeners() {
@@ -488,6 +498,11 @@ window.renderNotes = function() {
   
   attachNoteListeners();
   updateSectionCounts();
+  
+  // Re-initialize collapsible sections after render (restore event listeners)
+  if (window.initializeCollapsibleSections) {
+    window.initializeCollapsibleSections();
+  }
 };
 
 function attachNoteListeners() {

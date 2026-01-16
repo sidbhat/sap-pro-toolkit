@@ -1,0 +1,7 @@
+Based on this page content, generate a more descriptive title (max 50 characters). 
+Current title: "{{originalTitle}}"
+
+Page content preview:
+{{pageContent}}
+
+Provide only the enhanced title, nothing else.

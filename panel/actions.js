@@ -1218,19 +1218,22 @@ window.initializeCollapsibleSections = async function() {
     notes: true
   };
   
+  // Apply collapsed states to sections
   document.querySelectorAll('.section').forEach(section => {
     const sectionId = section.getAttribute('data-section');
     if (sectionId) {
       const isExpanded = sectionStates[sectionId] !== false;
-      
-      if (isExpanded) {
-        section.classList.remove('collapsed');
-      } else {
-        section.classList.add('collapsed');
-      }
+      section.classList.toggle('collapsed', !isExpanded);
     }
   });
   
+  // CRITICAL: Remove ALL existing listeners by cloning buttons
+  document.querySelectorAll('.section-toggle-btn').forEach(btn => {
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+  });
+  
+  // NOW attach fresh listeners to cloned buttons (no duplicates possible)
   document.querySelectorAll('.section-toggle-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();

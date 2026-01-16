@@ -68,8 +68,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       quickSwitchEnv: quickSwitchToEnvironment
     });
     
-    // Initialize collapsible sections
-    await initializeCollapsibleSections();
+    // Initialize collapsible sections (now using window version from actions.js)
+    await window.initializeCollapsibleSections();
     
     updatePlatformSpecificUI();
     
@@ -1097,8 +1097,11 @@ async function quickSwitchToEnvironment(envIndex) {
 
 // ==================== CRUD - ENVIRONMENTS ====================
 
-function openAddEnvironmentModal() {
+async function openAddEnvironmentModal() {
   const modal = document.getElementById('addEnvModal');
+  
+  // ALWAYS refresh current page data before opening modal
+  await window.loadCurrentPageData();
   
   // Populate form with current page data
   if (currentPageData) {
@@ -3080,96 +3083,8 @@ async function exportJsonToFile() {
 
 // ==================== COLLAPSIBLE SECTIONS ====================
 
-/**
- * Initialize collapsible sections with persistence
- * Loads saved states and sets up toggle handlers
- */
-async function initializeCollapsibleSections() {
-  console.log('[Collapsible Sections] Initializing...');
-  
-  // Load saved section states from storage (default: all expanded)
-  const result = await chrome.storage.local.get('sectionStates');
-  const sectionStates = result.sectionStates || {
-    environments: true,  // true = expanded
-    shortcuts: true,
-    notes: true
-  };
-  
-  console.log('[Collapsible Sections] Section states from storage:', sectionStates);
-  
-  // Apply saved states to all sections
-  const sections = document.querySelectorAll('.section');
-  console.log('[Collapsible Sections] Found', sections.length, 'sections');
-  
-  sections.forEach(section => {
-    const sectionId = section.getAttribute('data-section');
-    if (sectionId) {
-      const savedState = sectionStates[sectionId];
-      const isExpanded = savedState !== false; // Default to expanded if not set
-      
-      console.log(`[Collapsible Sections] Section "${sectionId}": savedState=${savedState}, isExpanded=${isExpanded}`);
-      
-      if (isExpanded) {
-        section.classList.remove('collapsed');
-        console.log(`[Collapsible Sections] ✓ Expanded: ${sectionId}`);
-      } else {
-        section.classList.add('collapsed');
-        console.log(`[Collapsible Sections] ✗ Collapsed: ${sectionId}`);
-      }
-    }
-  });
-  
-  // Setup toggle button handlers
-  const toggleButtons = document.querySelectorAll('.section-toggle-btn');
-  console.log('[Collapsible Sections] Found', toggleButtons.length, 'toggle buttons');
-  
-  toggleButtons.forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      e.stopPropagation();
-      const sectionId = btn.getAttribute('data-section');
-      console.log('[Collapsible Sections] Toggle clicked for:', sectionId);
-      await toggleSection(sectionId);
-    });
-  });
-  
-  // Update section count badges
-  updateSectionCounts();
-  
-  console.log('[Collapsible Sections] ✅ Initialization complete');
-}
-
-/**
- * Toggle a section's collapsed state
- * @param {string} sectionId - The section ID (environments, shortcuts, notes)
- */
-async function toggleSection(sectionId) {
-  console.log('[Toggle] Starting toggle for:', sectionId);
-  
-  const section = document.querySelector(`.section[data-section="${sectionId}"]`);
-  console.log('[Toggle] Section element found:', !!section);
-  
-  if (!section) {
-    console.error('[Toggle] Section not found for ID:', sectionId);
-    return;
-  }
-  
-  // Toggle visual state FIRST
-  section.classList.toggle('collapsed');
-  
-  // Then determine the NEW state based on what we just did
-  const isNowCollapsed = section.classList.contains('collapsed');
-  const newState = !isNowCollapsed; // true = expanded, false = collapsed
-  
-  console.log('[Toggle] After toggle, collapsed:', isNowCollapsed);
-  console.log('[Toggle] Saving state (true=expanded):', newState);
-  
-  // Save state to storage
-  const result = await chrome.storage.local.get('sectionStates');
-  const sectionStates = result.sectionStates || {};
-  sectionStates[sectionId] = newState;
-  await chrome.storage.local.set({ sectionStates });
-  console.log('[Toggle] ✅ State saved:', sectionStates);
-}
+// Collapsible sections are now handled by window.initializeCollapsibleSections() in actions.js
+// No local implementation needed here
 
 /**
  * Update section count badges to show number of items

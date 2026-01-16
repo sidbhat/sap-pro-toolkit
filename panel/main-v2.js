@@ -8,61 +8,12 @@ async function init() {
   console.log('[Init] Starting SF Pro Toolkit initialization...');
 
   try {
-    // Define available profiles (hardcoded list of profile files)
-    const profileDefinitions = [
-      { 
-        id: 'profile-global', 
-        name: 'Global', 
-        file: 'profile-global.json',
-        icon: '🌐',
-        description: 'Universal SAP shortcuts and resources across all solutions'
-      },
-      { 
-        id: 'profile-successfactors', 
-        name: 'SuccessFactors', 
-        file: 'profile-successfactors-public.json',
-        icon: '👥',
-        description: 'SuccessFactors HCM tools, shortcuts, and Joule prompts'
-      },
-      { 
-        id: 'profile-s4hana', 
-        name: 'S/4HANA', 
-        file: 'profile-s4hana.json',
-        icon: '🏭',
-        description: 'S/4HANA Cloud ERP, Fiori apps, and Clean Core resources'
-      },
-      { 
-        id: 'profile-btp', 
-        name: 'BTP', 
-        file: 'profile-btp.json',
-        icon: '☁️',
-        description: 'SAP Business Technology Platform and development tools'
-      },
-      { 
-        id: 'profile-executive', 
-        name: 'Executive', 
-        file: 'profile-executive.json',
-        icon: '📊',
-        description: 'Strategic resources for SAP leadership and decision makers'
-      },
-      { 
-        id: 'profile-golive', 
-        name: 'Go-Live', 
-        file: 'profile-golive.json',
-        icon: '🚀',
-        description: 'Critical checklists for S/4HANA go-live and cutover'
-      },
-      { 
-        id: 'profile-ai-joule', 
-        name: 'AI & Joule', 
-        file: 'profile-ai-joule.json',
-        icon: '✨',
-        description: 'SAP AI, Joule, Generative AI Hub, and prompt engineering'
-      }
-    ];
+    // Discover profiles dynamically from JSON files
+    await window.discoverProfiles();
+    console.log('[Init] Discovered profiles:', window.availableProfiles.length);
 
-    window.availableProfiles.length = 0;
-    window.availableProfiles.push(...profileDefinitions);
+    // Render profile tabs (Chrome-style)
+    window.renderProfileTabs();
 
     // Load active profile
     const result = await chrome.storage.local.get('activeProfile');
@@ -71,11 +22,14 @@ async function init() {
     // Set current profile using window object
     window.setCurrentProfile(activeProfile);
 
-    // Update profile display
-    const profile = window.availableProfiles.find(p => p.id === activeProfile);
-    if (profile) {
-      document.getElementById('currentProfileName').textContent = profile.name;
-    }
+    // Update profile display (DISABLED - profile dropdown removed for testing)
+    // const profile = window.availableProfiles.find(p => p.id === activeProfile);
+    // if (profile) {
+    //   const profileNameEl = document.getElementById('currentProfileName');
+    //   if (profileNameEl) {
+    //     profileNameEl.textContent = profile.name;
+    //   }
+    // }
 
     // Load all data (load solutions BEFORE environments to fix Quick Actions race condition)
     await window.loadSettings();
@@ -86,18 +40,17 @@ async function init() {
     await window.loadCurrentPageData();
     await window.loadTheme();
 
-    // Render UI FIRST (so buttons exist in DOM)
+    // Render UI
     window.renderShortcuts();
     window.renderEnvironments();
     window.renderNotes();
-    window.renderProfileMenu();
     await window.renderPopularNotes();
+
+    // Initialize collapsible sections
+    await window.initializeCollapsibleSections();
 
     // Update diagnostics button state
     window.updateDiagnosticsButton();
-
-    // Initialize collapsible sections AFTER rendering (attach event listeners to actual buttons)
-    await window.initializeCollapsibleSections();
 
     // Setup all event listeners
     setupEventListeners();
@@ -242,12 +195,6 @@ function setupEventListeners() {
     document.getElementById('editProfileModal')?.classList.remove('active');
   });
 
-  // Profile switching
-  document.getElementById('profileDropdownBtn')?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    window.toggleProfileMenu();
-  });
-
   // Quick Actions Save
   document.getElementById('saveAllQaBtn')?.addEventListener('click', window.saveAllQuickActions);
 
@@ -334,15 +281,6 @@ function setupEventListeners() {
   });
 
   // Section toggle buttons are set up in initializeCollapsibleSections() - don't duplicate here
-
-  // Close profile menu when clicking outside
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('profileMenu');
-    const switcher = document.getElementById('profileDropdownBtn');
-    if (menu && !menu.contains(e.target) && !switcher?.contains(e.target)) {
-      menu.classList.remove('active');
-    }
-  });
 
   // Functions are already exposed to window object by their respective modules
   // No need to re-assign them here since they're already window.functionName

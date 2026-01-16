@@ -1,0 +1,9 @@
+Summarize this page in 2-3 concise sentences (max 200 words). Focus on what the page is about and its key information.
+
+Page Title: {{title}}
+URL: {{url}}
+
+Content:
+{{content}}
+
+Provide only the summary, no preamble.

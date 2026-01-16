@@ -1,0 +1,74 @@
+{{contextHTML}}
+
+<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+    <span
+        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; font-size: 13px; font-weight: 600; color: #10B981;">
+        🤖 {{provider}} - {{model}}
+    </span>
+    <span
+        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; font-size: 13px; font-weight: 600; color: #3B82F6;">
+        📊 {{inputTokens}} input tokens
+    </span>
+    <span
+        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 12px; font-size: 13px; font-weight: 600; color: #8B5CF6;">
+        📈 {{outputTokens}} output tokens
+    </span>
+</div>
+
+<div class="enterprise-projection-card"
+    style="padding: 16px; background: var(--bg-secondary); border-radius: 6px; margin-bottom: 16px;">
+    <h5 style="margin-bottom: 12px; color: var(--text-primary);">Volume Projections</h5>
+    <div class="metric-row">
+        <span class="metric-label">Annual Queries:</span>
+        <span class="metric-value">{{annualQueries}}</span>
+    </div>
+    <div class="metric-row">
+        <span class="metric-label">Annual Input Tokens:</span>
+        <span class="metric-value">{{annualInputTokens}}</span>
+    </div>
+    <div class="metric-row">
+        <span class="metric-label">Annual Output Tokens:</span>
+        <span class="metric-value">{{annualOutputTokens}}</span>
+    </div>
+</div>
+
+<div class="llm-response-card">
+    <div class="llm-response-header">
+        <span class="llm-response-title">
+            {{copyIcon}}
+            Cost Projections
+        </span>
+    </div>
+    <div class="llm-response-content">
+        <div class="metric-row">
+            <span class="metric-label">Cost per Query:</span>
+            <span class="metric-value">{{costPerQuery}}</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">Monthly Cost:</span>
+            <span class="metric-value">{{monthlyCost}}</span>
+        </div>
+        <div class="metric-row metric-total" style="font-size: 16px; font-weight: 700;">
+            <span class="metric-label">Annual Cost:</span>
+            <span class="metric-value">{{annualCost}}</span>
+        </div>
+    </div>
+    <div
+        style="margin-top: 12px; padding: 10px; background: rgba(16, 185, 129, 0.15); border-radius: 4px; font-size: 10px; line-height: 1.4; color: var(--text-secondary);">
+        <strong style="color: #10B981;">✨ AI INSIGHTS</strong> – Cost projections based on AI-analyzed token usage.
+        Always verify with your provider for accurate enterprise pricing.
+    </div>
+</div>
+
+<div
+    style="margin-top: 16px; padding: 12px; background: var(--bg-tertiary); border-radius: 6px; font-size: 11px; color: var(--text-secondary);">
+    <strong>Assumptions:</strong> {{assumptions}}
+</div>
+
+<div class="result-disclaimer"
+    style="margin-top: 12px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-left: 3px solid #F59E0B; border-radius: 4px; font-size: 11px; line-height: 1.5; color: var(--text-secondary);">
+    <strong style="color: #F59E0B;">⚠️ Cost Estimates Disclaimer:</strong> Pricing shown is indicative only, based on
+    publicly available model provider rates (OpenAI, Anthropic) sourced from LiteLLM pricing database. These are NOT
+    official SAP prices. This tool is not affiliated with or endorsed by SAP SE. Actual costs depend on your specific
+    agreements, volume discounts, and enterprise contracts. For official pricing, contact your provider or SAP directly.
+</div>
