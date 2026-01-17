@@ -1,15 +1,9 @@
 /* ==================== DIAGNOSTICS ==================== */
 
 .diagnostics-content {
-  font-family: 'SF Mono', monospace;
-  font-size: 12px;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  background: var(--bg-tertiary);
-  padding: var(--space-lg);
-  border-radius: var(--radius-md);
-  max-height: 600px;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* AI-Enhanced Diagnostics View - Green Theme */
