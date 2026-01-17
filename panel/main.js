@@ -139,6 +139,13 @@ async function init() {
 
     console.log('[Init] ✅ Initialization complete');
 
+    // Check for first-run and show welcome modal
+    const isFirstRun = await window.checkFirstRun();
+    if (isFirstRun) {
+      console.log('[Welcome] First run detected - showing welcome modal');
+      document.getElementById('welcomeModal')?.classList.add('active');
+    }
+
   } catch (error) {
     console.error('[Init] ❌ Failed:', error);
     if (window.showToast) {
@@ -166,6 +173,25 @@ function setupEventListeners() {
   document.getElementById('cancelAddShortcutBtn')?.addEventListener('click', window.closeAddShortcutModal);
   document.getElementById('saveShortcutBtn')?.addEventListener('click', window.saveShortcut);
   document.getElementById('addShortcutWithAIBtn')?.addEventListener('click', window.addShortcutWithAI);
+
+  // Welcome modal
+  document.getElementById('welcomeGotItBtn')?.addEventListener('click', async () => {
+    await window.markWelcomeSeen();
+    document.getElementById('welcomeModal')?.classList.remove('active');
+    if (window.showToast) window.showToast('Welcome! Let\'s get started 🚀', 'success');
+  });
+  
+  document.getElementById('welcomeLearnMoreBtn')?.addEventListener('click', async () => {
+    await window.markWelcomeSeen();
+    document.getElementById('welcomeModal')?.classList.remove('active');
+    document.getElementById('helpModal')?.classList.add('active');
+  });
+  
+  document.getElementById('welcomeSettingsBtn')?.addEventListener('click', async () => {
+    await window.markWelcomeSeen();
+    document.getElementById('welcomeModal')?.classList.remove('active');
+    if (window.openSettingsModal) window.openSettingsModal();
+  });
 
   // Note actions
   document.getElementById('addNoteBtn')?.addEventListener('click', window.openAddNoteModal);

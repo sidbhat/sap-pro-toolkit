@@ -3,6 +3,11 @@
 /* Icon Picker Component */
 @import url('styles/components/icon-picker.css');
 
+/* Welcome Modal & Empty States */
+@import url('styles/features/welcome.css');
+@import url('styles/features/empty-states.css');
+@import url('styles/components/tooltips.css');
+
 /* ==================== THEME SYSTEM & CSS VARIABLES ==================== */
 
 :root {

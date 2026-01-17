@@ -31,8 +31,14 @@ window.closeDiagnosticsModal = function () {
 
 
 window.regenerateDiagnosticsWithAI = async function () {
+  // Check if AI features are configured
   if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
-    if (window.showToast) window.showToast('AI features not available. Please configure in Settings.', 'error');
+    if (window.showToast) {
+      window.showToast('⚙️ AI features require configuration', 'warning');
+      setTimeout(() => {
+        if (window.showToast) window.showToast('💡 Go to Settings → API Keys to configure OpenAI, Anthropic, or SAP AI Core', 'info');
+      }, 2000);
+    }
     return;
   }
 
@@ -289,12 +295,22 @@ window.performAISearch = async function (query) {
   console.log('[AI Search] Starting with query:', query);
 
   if (!document.body.classList.contains('ai-active')) {
-    if (window.showToast) window.showToast('AI features are disabled. Configure API keys in Settings.', 'warning');
+    if (window.showToast) {
+      window.showToast('⚙️ AI features require configuration', 'warning');
+      setTimeout(() => {
+        if (window.showToast) window.showToast('💡 Go to Settings → API Keys to configure OpenAI, Anthropic, or SAP AI Core', 'info');
+      }, 2000);
+    }
     return;
   }
 
   if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
-    if (window.showToast) window.showToast('AI features not available', 'error');
+    if (window.showToast) {
+      window.showToast('⚙️ AI features require configuration', 'warning');
+      setTimeout(() => {
+        if (window.showToast) window.showToast('💡 Go to Settings → API Keys to configure OpenAI, Anthropic, or SAP AI Core', 'info');
+      }, 2000);
+    }
     return;
   }
 

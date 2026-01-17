@@ -32,6 +32,23 @@ window.loadSettings = async function () {
   await updateAISettings();
 };
 
+/**
+ * Check if this is the user's first run
+ * @returns {Promise<boolean>} True if first run (hasn't seen welcome modal)
+ */
+window.checkFirstRun = async function () {
+  const result = await chrome.storage.local.get('hasSeenWelcome');
+  return !result.hasSeenWelcome;
+};
+
+/**
+ * Mark welcome modal as seen
+ */
+window.markWelcomeSeen = async function () {
+  await chrome.storage.local.set({ hasSeenWelcome: true });
+  console.log('[Welcome] First-run flag set');
+};
+
 window.updateAISettings = async function () {
   document.body.classList.add('ai-active');
   console.log('[AI Settings] AI Search button is always visible');

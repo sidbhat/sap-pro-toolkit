@@ -49,9 +49,56 @@ window.renderEnvironments = async function() {
     tbody.innerHTML = `
       <tr class="empty-row">
         <td colspan="2">
-          <div class="empty-state">
-            <p data-i18n="noEnvironments">No saved environments</p>
-            <button class="btn btn-secondary btn-sm" id="addEnvBtnInline" data-i18n="addCurrentInstance">+ Add Current Instance</button>
+          <div class="empty-state-enhanced">
+            <div class="empty-state-header">
+              <div class="empty-state-icon">🌐</div>
+              <h3 class="empty-state-title">No Saved Environments</h3>
+              <p class="empty-state-subtitle">Save your SAP instances for quick access</p>
+            </div>
+            
+            <details class="empty-state-guidance">
+              <summary class="guidance-toggle">
+                <span class="chevron-icon">▶</span>
+                <span>How to Get Started</span>
+              </summary>
+              <div class="guidance-content">
+                <div class="guidance-step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h4>Navigate to Your SAP System</h4>
+                    <p>Open any SAP SuccessFactors, S/4HANA, or BTP instance in your browser</p>
+                  </div>
+                </div>
+                
+                <div class="guidance-step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h4>Save the Environment</h4>
+                    <p>Click the <code>+ Environment</code> button or use <code>Cmd+E</code> keyboard shortcut</p>
+                  </div>
+                </div>
+                
+                <div class="guidance-step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <h4>Switch Between Environments</h4>
+                    <p>Use number keys <code>1-5</code> for quick switching, or click the switch icon</p>
+                  </div>
+                </div>
+                
+                <div class="guidance-tip">
+                  <strong>💡 Pro Tip:</strong> Pin frequently-used environments to keep them at the top of your list
+                </div>
+              </div>
+            </details>
+            
+            <button class="btn btn-primary" id="addEnvBtnInline">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add Current Instance
+            </button>
           </div>
         </td>
       </tr>
@@ -283,9 +330,56 @@ window.renderShortcuts = async function() {
     tbody.innerHTML = `
       <tr class="empty-row">
         <td colspan="3">
-          <div class="empty-state">
-            <p data-i18n="noShortcuts">No shortcuts</p>
-            <button class="btn btn-secondary btn-sm" id="addCurrentPageBtnEmpty" data-i18n="addCurrentPage">+ Add Current Page</button>
+          <div class="empty-state-enhanced">
+            <div class="empty-state-header">
+              <div class="empty-state-icon">⚡</div>
+              <h3 class="empty-state-title">No Saved Shortcuts</h3>
+              <p class="empty-state-subtitle">Create quick links to frequently-used SAP pages</p>
+            </div>
+            
+            <details class="empty-state-guidance">
+              <summary class="guidance-toggle">
+                <span class="chevron-icon">▶</span>
+                <span>How to Get Started</span>
+              </summary>
+              <div class="guidance-content">
+                <div class="guidance-step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h4>Navigate to Any SAP Page</h4>
+                    <p>Open a report, form, workflow, or app you use frequently</p>
+                  </div>
+                </div>
+                
+                <div class="guidance-step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h4>Save as Shortcut</h4>
+                    <p>Click <code>+ Shortcut</code> button or use <code>Cmd+D</code> keyboard shortcut</p>
+                  </div>
+                </div>
+                
+                <div class="guidance-step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <h4>Open from Any Environment</h4>
+                    <p>Shortcuts work across all environments - click to navigate instantly</p>
+                  </div>
+                </div>
+                
+                <div class="guidance-tip">
+                  <strong>💡 Pro Tip:</strong> Use AI-powered shortcut suggestions to automatically generate name and icon
+                </div>
+              </div>
+            </details>
+            
+            <button class="btn btn-primary" id="addCurrentPageBtnEmpty">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add Current Page
+            </button>
           </div>
         </td>
       </tr>
@@ -415,9 +509,56 @@ window.renderNotes = async function() {
     tbody.innerHTML = `
       <tr class="empty-row">
         <td colspan="3">
-          <div class="empty-state">
-            <p data-i18n="noNotes">No notes</p>
-            <button class="btn btn-secondary btn-sm" id="addNoteBtnEmpty" data-i18n="addNote">+ Add Note</button>
+          <div class="empty-state-enhanced">
+            <div class="empty-state-header">
+              <div class="empty-state-icon">📝</div>
+              <h3 class="empty-state-title">No Saved Notes</h3>
+              <p class="empty-state-subtitle">Store documentation, prompts, and code snippets</p>
+            </div>
+            
+            <details class="empty-state-guidance">
+              <summary class="guidance-toggle">
+                <span class="chevron-icon">▶</span>
+                <span>How to Get Started</span>
+              </summary>
+              <div class="guidance-content">
+                <div class="guidance-step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h4>Create a Note</h4>
+                    <p>Click <code>+ Note</code> button or use <code>Cmd+N</code> keyboard shortcut</p>
+                  </div>
+                </div>
+                
+                <div class="guidance-step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h4>Choose Note Type</h4>
+                    <p>Select <strong>Note</strong> for general documentation or <strong>AI Prompt</strong> for testing prompts</p>
+                  </div>
+                </div>
+                
+                <div class="guidance-step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <h4>Use AI Enhancement</h4>
+                    <p>For AI Prompts, test against real models and refine your prompts interactively</p>
+                  </div>
+                </div>
+                
+                <div class="guidance-tip">
+                  <strong>💡 Pro Tip:</strong> Pin important notes to keep them accessible across all profiles
+                </div>
+              </div>
+            </details>
+            
+            <button class="btn btn-primary" id="addNoteBtnEmpty">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add Note
+            </button>
           </div>
         </td>
       </tr>

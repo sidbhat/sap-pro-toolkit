@@ -62,7 +62,7 @@
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
               <polyline points="22,6 12,13 2,6" />
             </svg>
-            <span id="currentProfileName">Default</span>
+            <span id="currentProfileName">Global</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9" />
             </svg>
@@ -1271,6 +1271,94 @@
 
   <!-- Main panel script (depends on all modules above) -->
   <script src="side-panel.js"></script>
+
+  <!-- Welcome Modal (First-Run Experience) -->
+  <div class="modal" id="welcomeModal">
+    <div class="modal-content modal-welcome">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="6" fill="url(#gradientModalWelcome)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
+            <defs>
+              <linearGradient id="gradientModalWelcome" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <h3>Welcome to SF Pro Toolkit</h3>
+        </div>
+        <button class="icon-btn" id="closeWelcomeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="welcome-intro">
+          Your productivity companion for SAP environments. Here's what you can do:
+        </p>
+
+        <!-- 5 Key Capabilities Grid -->
+        <div class="welcome-capabilities">
+          <div class="welcome-capability">
+            <div class="capability-icon">🌐</div>
+            <h4>Environment Management</h4>
+            <p>Switch instantly between Production, Preview, Sales, and Sandbox instances</p>
+          </div>
+
+          <div class="welcome-capability">
+            <div class="capability-icon">📋</div>
+            <h4>Smart Shortcuts</h4>
+            <p>Save external links with AI-generated summaries and organize by tags</p>
+          </div>
+
+          <div class="welcome-capability">
+            <div class="capability-icon">✨</div>
+            <h4>AI-Powered Tools</h4>
+            <p>Test Joule prompts with live AI models (OpenAI, Anthropic, SAP AI Core) - configure in Settings first</p>
+          </div>
+
+          <div class="welcome-capability">
+            <div class="capability-icon">📊</div>
+            <h4>Profile System</h4>
+            <p>Organize by solution (SuccessFactors, S/4HANA, BTP) with specialized resources</p>
+          </div>
+
+          <div class="welcome-capability">
+            <div class="capability-icon">🔍</div>
+            <h4>Diagnostics & Search</h4>
+            <p>Generate system reports and search across all items with AI insights</p>
+          </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="welcome-cta">
+          <p class="welcome-cta-text">Ready to get started?</p>
+          <div class="welcome-cta-buttons">
+            <button class="btn btn-secondary" id="welcomeLearnMoreBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              Learn More
+            </button>
+            <button class="btn btn-accent" id="welcomeSettingsBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2" />
+              </svg>
+              Open Settings
+            </button>
+            <button class="btn btn-primary" id="welcomeGotItBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Got It!
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
