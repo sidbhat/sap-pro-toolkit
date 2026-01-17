@@ -159,6 +159,13 @@ window.renderSomething = function() {
 
 ## 🔍 DUPLICATE CODE PREVENTION
 
+### CRITICAL: Always Check for Duplicates Before Adding Code
+
+**The Duplicate Code Bug Pattern** (2026-01-16):
+- **Bug**: Local function definitions in `side-panel.js` duplicated centralized window-level functions from modular files
+- **Impact**: Caused confusion, maintenance overhead, and potential inconsistencies
+- **Root Cause**: Not checking for existing implementations before writing new code
+
 ### Before Writing ANY Function
 
 **Search for existing implementations:**
@@ -172,9 +179,33 @@ grep -rn "querySelector.*toggle\|classList.*add" --include="*.js" .
 
 # Find functions that do similar things
 grep -rn "addEventListener.*click" --include="*.js" panel/
+
+# Check if function already exists as window-level export
+grep -rn "window\.functionName\s*=" --include="*.js" .
 ```
 
 **If found**: Reuse or refactor into shared utility, don't duplicate!
+
+### Duplicate Prevention Checklist
+
+Before adding any function, verify:
+- [ ] Function doesn't already exist in modular files (state.js, ui-render.js, actions.js)
+- [ ] Similar functionality not available via window.* exports
+- [ ] No conflicting implementations across files
+- [ ] If modifying existing function, update in ONE canonical location only
+
+### Where Functions Should Live
+
+**Modular Architecture**:
+```
+panel/state.js       → State management (load/set functions for data)
+panel/ui-render.js   → Rendering functions (render* functions for UI)
+panel/actions.js     → CRUD operations (save/edit/delete functions)
+panel/main.js        → Initialization and event wiring
+panel/side-panel.js  → Should ONLY wire up events, NOT define functions
+```
+
+**Golden Rule**: `side-panel.js` should use `window.functionName()`, never define new implementations
 
 ---
 
@@ -183,23 +214,70 @@ grep -rn "addEventListener.*click" --include="*.js" panel/
 #### ❌ Same Function in Multiple Files
 
 ```javascript
-// ❌ BAD: toggleSection() in both actions.js AND side-panel.js
-// panel/actions.js
-window.toggleSection = function(id) { /* ... */ }
+// ❌ BAD: loadShortcuts() in both state.js AND side-panel.js
+// panel/state.js
+window.loadShortcuts = async function() { /* ... */ }
 
 // panel/side-panel.js  
-window.toggleSection = function(id) { /* ... */ }  // ❌ DUPLICATE!
+async function loadShortcuts() { /* ... */ }  // ❌ LOCAL DUPLICATE!
 ```
 
-**Solution**: Keep ONE canonical version, remove duplicates
+**Solution**: Keep ONE canonical version in modular file, remove local duplicates
 
 ```javascript
-// ✅ GOOD: Single source of truth in actions.js
-// panel/actions.js
-window.toggleSection = function(id) { /* ... */ }
+// ✅ GOOD: Single source of truth in state.js
+// panel/state.js
+window.loadShortcuts = async function() { /* ... */ }
 
 // panel/side-panel.js
-// Use window.toggleSection (already defined in actions.js)
+// Use window.loadShortcuts() - no local definition needed!
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.loadShortcuts();  // ✅ Uses centralized version
+});
+```
+
+#### ❌ Missing Duplicate Checks in CRUD Operations
+
+```javascript
+// ❌ BAD: No duplicate check before saving
+window.saveShortcut = async function() {
+  const url = document.getElementById('shortcutPath').value.trim();
+  
+  // Missing: Check if shortcut with this URL already exists!
+  const newShortcut = { id: `shortcut-${Date.now()}`, url, name };
+  // ... save logic
+}
+```
+
+**Solution**: Always check for duplicates based on unique identifier
+
+```javascript
+// ✅ GOOD: Prevent duplicates with explicit check
+window.saveShortcut = async function() {
+  const url = document.getElementById('shortcutPath').value.trim();
+  const editId = modal.getAttribute('data-edit-id');
+  
+  // DUPLICATE CHECK: Prevent duplicate shortcuts by URL
+  const duplicateShortcut = window.shortcuts.find(s => s.url === url && s.id !== editId);
+  if (duplicateShortcut) {
+    if (window.showToast) window.showToast(`Shortcut already exists: "${duplicateShortcut.name}"`, 'warning');
+    return;
+  }
+  
+  // ... save logic
+}
+```
+
+**Duplicate Check Pattern for All CRUD Operations**:
+```javascript
+// Environments: Check by hostname (unless editing same environment)
+const duplicate = window.environments.find(e => e.hostname === hostname && e.id !== editId);
+
+// Shortcuts: Check by URL (unless editing same shortcut)
+const duplicate = window.shortcuts.find(s => s.url === url && s.id !== editId);
+
+// Notes: Check by title (unless editing same note) - optional, allow duplicate titles
+// const duplicate = window.notes.find(n => n.title === title && n.id !== editId);
 ```
 
 ---

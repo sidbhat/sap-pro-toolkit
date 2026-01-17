@@ -84,13 +84,24 @@ window.quickSwitchToEnvironment = async function(envIndex) {
 
 // ==================== CRUD - ENVIRONMENTS ====================
 
-window.openAddEnvironmentModal = async function() {
+window.openAddEnvironmentModal = function() {
   const modal = document.getElementById('addEnvModal');
-  
-  // Fetch FRESH current page data
+  modal.classList.add('active');
+};
+
+window.addCurrentPageAsEnvironment = async function() {
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
   
-  if (tab && tab.url) {
+  if (!tab || !tab.url) {
+    if (window.showToast) window.showToast('No active tab found', 'warning');
+    return;
+  }
+  
+  // Open modal FIRST
+  window.openAddEnvironmentModal();
+  
+  // THEN populate with current page data (ensures form fields exist)
+  setTimeout(() => {
     // Use currentPageData if available, otherwise parse from tab
     const pageData = window.currentPageData || {
       hostname: new URL(tab.url).hostname,
@@ -99,22 +110,28 @@ window.openAddEnvironmentModal = async function() {
       solutionType: null
     };
     
-    document.getElementById('envHostname').value = pageData.hostname || '';
-    const envType = pageData.environment || 'production';
-    document.getElementById('envType').value = envType;
+    const hostnameField = document.getElementById('envHostname');
+    const typeField = document.getElementById('envType');
+    const nameField = document.getElementById('envName');
     
-    let suggestedName = typeof ENV_LABELS !== 'undefined' ? ENV_LABELS[envType] : envType;
-    if (pageData.datacenter && pageData.datacenter !== 'Unknown') {
-      suggestedName += ` ${pageData.datacenter}`;
+    if (hostnameField && typeField && nameField) {
+      hostnameField.value = pageData.hostname || '';
+      const envType = pageData.environment || 'production';
+      typeField.value = envType;
+      
+      let suggestedName = typeof ENV_LABELS !== 'undefined' ? ENV_LABELS[envType] : envType;
+      if (pageData.datacenter && pageData.datacenter !== 'Unknown') {
+        suggestedName += ` ${pageData.datacenter}`;
+      }
+      nameField.value = suggestedName.trim();
+      
+      if (typeof updateCompanyIdFieldVisibility === 'function') {
+        updateCompanyIdFieldVisibility(pageData.solutionType);
+      }
+    } else {
+      console.error('[Add Environment] Form fields not found after modal open');
     }
-    document.getElementById('envName').value = suggestedName.trim();
-    
-    if (typeof updateCompanyIdFieldVisibility === 'function') {
-      updateCompanyIdFieldVisibility(pageData.solutionType);
-    }
-  }
-  
-  modal.classList.add('active');
+  }, 50);
 };
 
 window.closeAddEnvironmentModal = function() {
@@ -155,7 +172,9 @@ window.deleteEnvironment = async function(id) {
   const storageKey = `environments_${window.currentProfile}`;
   await chrome.storage.local.set({ [storageKey]: newEnvs });
   
-  window.renderEnvironments();
+  // BUG FIX: Reload data from storage before rendering
+  await window.loadEnvironments();
+  await window.renderEnvironments();
   if (window.showToast) window.showToast('Environment deleted', 'success');
 };
 
@@ -222,6 +241,9 @@ window.saveEnvironment = async function() {
     notes
   };
   
+  console.log('[Save Environment] Creating/updating environment:', envObject);
+  console.log('[Save Environment] Current profile:', window.currentProfile);
+  
   try {
     let newEnvs;
     if (editId) {
@@ -234,12 +256,25 @@ window.saveEnvironment = async function() {
       if (window.showToast) window.showToast('Environment saved ✓', 'success');
     }
     
+    console.log('[Save Environment] New environments array:', newEnvs);
+    console.log('[Save Environment] Array length:', newEnvs.length);
+    
     window.setEnvironments(newEnvs);
     
     const storageKey = `environments_${window.currentProfile}`;
+    console.log('[Save Environment] Storage key:', storageKey);
+    console.log('[Save Environment] Writing to storage...');
+    
     await chrome.storage.local.set({ [storageKey]: newEnvs });
     
-    window.renderEnvironments();
+    // Verify what was actually written
+    const verification = await chrome.storage.local.get(storageKey);
+    console.log('[Save Environment] ✅ Verification - storage contains:', verification[storageKey]);
+    console.log('[Save Environment] ✅ Verification - length:', verification[storageKey]?.length);
+    
+    // BUG FIX: Reload data from storage before rendering
+    await window.loadEnvironments();
+    await window.renderEnvironments();
     window.closeAddEnvironmentModal();
   } catch (error) {
     console.error('Failed to save environment:', error);
@@ -307,7 +342,9 @@ window.deleteShortcut = async function(id) {
   const storageKey = `shortcuts_${window.currentProfile}`;
   await chrome.storage.local.set({ [storageKey]: newShortcuts });
   
-  window.renderShortcuts();
+  // BUG FIX: Reload data from storage before rendering
+  await window.loadShortcuts();
+  await window.renderShortcuts();
   if (window.showToast) window.showToast('Shortcut deleted', 'success');
 };
 
@@ -350,7 +387,9 @@ window.saveShortcut = async function() {
   const storageKey = `shortcuts_${window.currentProfile}`;
   await chrome.storage.local.set({ [storageKey]: newShortcuts });
   
-  window.renderShortcuts();
+  // BUG FIX: Reload data from storage before rendering
+  await window.loadShortcuts();
+  await window.renderShortcuts();
   window.closeAddShortcutModal();
 };
 
@@ -497,7 +536,9 @@ window.deleteNote = async function(id) {
   const storageKey = `notes_${window.currentProfile}`;
   await chrome.storage.local.set({ [storageKey]: newNotes });
   
-  window.renderNotes();
+  // BUG FIX: Reload data from storage before rendering
+  await window.loadNotes();
+  await window.renderNotes();
   if (window.showToast) window.showToast('Note deleted', 'success');
 };
 
@@ -574,7 +615,9 @@ window.saveNote = async function() {
   const storageKey = `notes_${window.currentProfile}`;
   await chrome.storage.local.set({ [storageKey]: newNotes });
   
-  window.renderNotes();
+  // BUG FIX: Reload data from storage before rendering
+  await window.loadNotes();
+  await window.renderNotes();
   window.closeAddNoteModal();
 };
 
@@ -785,7 +828,7 @@ window.togglePin = async function(id, type = 'environment') {
   
   await chrome.storage.local.set({ [storageKey]: collection });
   
-  renderFunction();
+  await renderFunction();
   
   const message = item.pinned ? `${itemLabel} pinned ⭐` : `${itemLabel} unpinned`;
   if (window.showToast) window.showToast(message, 'success');
@@ -794,13 +837,23 @@ window.togglePin = async function(id, type = 'environment') {
 // ==================== PROFILE SWITCHING ====================
 
 window.switchProfile = async function(profileId) {
+  console.log('[Switch Profile] Called with profileId:', profileId);
+  console.log('[Switch Profile] Current profile:', window.currentProfile);
+  console.log('[Switch Profile] Available profiles:', window.availableProfiles.map(p => ({ id: p.id, name: p.name })));
+  
   if (profileId === window.currentProfile) {
+    console.log('[Switch Profile] Same as current profile, closing menu');
     document.getElementById('profileMenu')?.classList.remove('active');
     return;
   }
   
   const profile = window.availableProfiles.find(p => p.id === profileId);
+  console.log('[Switch Profile] Found profile:', profile);
+  
   if (!profile) {
+    console.error('[Switch Profile] Profile not found in availableProfiles!');
+    console.error('[Switch Profile] Searched for:', profileId);
+    console.error('[Switch Profile] Available IDs:', window.availableProfiles.map(p => p.id));
     if (window.showToast) window.showToast('Profile not found', 'error');
     return;
   }
@@ -809,16 +862,21 @@ window.switchProfile = async function(profileId) {
     await chrome.storage.local.set({ activeProfile: profileId });
     window.setCurrentProfile(profileId);
     
+    // BUG FIX: Clear stale global state before loading new profile data
+    window.setEnvironments([]);
+    window.setShortcuts([]);
+    window.setNotes([]);
+    
     document.getElementById('currentProfileName').textContent = profile.name;
     
     await window.loadShortcuts();
     await window.loadEnvironments();
     await window.loadNotes();
     
-    window.renderShortcuts();
-    window.renderEnvironments();
-    window.renderNotes();
-    window.renderProfileMenu();
+    await window.renderShortcuts();
+    await window.renderEnvironments();
+    await window.renderNotes();
+    await window.renderProfileMenu();
     document.getElementById('profileMenu')?.classList.remove('active');
     
     if (window.showToast) window.showToast(`Switched to ${profile.name}`, 'success');
@@ -984,6 +1042,415 @@ window.filterContent = function(searchTerm) {
   });
 };
 
+// ==================== PROFILE MANAGEMENT ====================
+
+/**
+ * Opens the new profile modal
+ */
+window.openNewProfileModal = function() {
+  const modal = document.getElementById('newProfileModal');
+  if (!modal) {
+    console.error('[New Profile] Modal not found');
+    return;
+  }
+  
+  // Reset form
+  document.getElementById('newProfileName').value = '';
+  document.getElementById('newProfileDesc').value = '';
+  document.getElementById('newProfileIcon').value = '';
+  
+  // Reset character counters
+  const nameCounter = document.getElementById('newProfileNameCounter');
+  const descCounter = document.getElementById('newProfileDescCounter');
+  if (nameCounter) nameCounter.textContent = '0/100';
+  if (descCounter) descCounter.textContent = '0/200';
+  
+  modal.classList.add('active');
+  
+  // Focus on name field
+  setTimeout(() => {
+    document.getElementById('newProfileName')?.focus();
+  }, 100);
+};
+
+/**
+ * Closes the new profile modal
+ */
+window.closeNewProfileModal = function() {
+  const modal = document.getElementById('newProfileModal');
+  if (!modal) return;
+  
+  modal.classList.remove('active');
+  document.getElementById('newProfileForm')?.reset();
+};
+
+/**
+ * Creates a new custom profile
+ */
+window.createCustomProfile = async function(profileId, profileName, importData = null) {
+  try {
+    console.log('[Create Profile] Starting...', { profileId, profileName });
+    
+    // Get custom profiles from storage (stored as array)
+    const result = await chrome.storage.local.get('customProfiles');
+    const customProfiles = result.customProfiles || [];
+    
+    // Check if profile already exists
+    if (customProfiles.some(p => p.id === profileId)) {
+      if (window.showToast) window.showToast('Profile already exists', 'warning');
+      return false;
+    }
+    
+    // Get profile metadata from form or importData
+    let icon = '📁';
+    let description = '';
+    
+    if (importData && typeof importData === 'object') {
+      icon = importData.profileIcon || importData.icon || '📁';
+      description = importData.profileDescription || importData.description || '';
+    } else {
+      const iconInput = document.getElementById('newProfileIcon');
+      const descInput = document.getElementById('newProfileDesc');
+      if (iconInput) icon = iconInput.value.trim() || '📁';
+      if (descInput) description = descInput.value.trim();
+    }
+    
+    // Create new profile object
+    const newProfile = {
+      id: profileId,
+      name: profileName,
+      icon: icon,
+      description: description,
+      file: null, // Custom profiles don't have JSON files
+      createdAt: Date.now()
+    };
+    
+    // Add to custom profiles array
+    customProfiles.push(newProfile);
+    await chrome.storage.local.set({ customProfiles });
+    
+    // Add to available profiles in memory
+    window.availableProfiles.push(newProfile);
+    
+    console.log('[Create Profile] Profile added to storage and availableProfiles');
+    
+    // Initialize storage for new profile
+    const shortcutsKey = `shortcuts_${profileId}`;
+    const environmentsKey = `environments_${profileId}`;
+    const notesKey = `notes_${profileId}`;
+    
+    if (importData && typeof importData === 'object') {
+      // Import data if provided
+      await chrome.storage.local.set({
+        [shortcutsKey]: importData.shortcuts || [],
+        [environmentsKey]: importData.environments || [],
+        [notesKey]: importData.notes || []
+      });
+    } else {
+      // Initialize empty arrays for new profiles
+      await chrome.storage.local.set({
+        [shortcutsKey]: [],
+        [environmentsKey]: [],
+        [notesKey]: []
+      });
+    }
+    
+    console.log('[Create Profile] Profile created successfully:', newProfile);
+    
+    // Re-render profile menu to show new profile
+    if (window.renderProfileMenu) {
+      await window.renderProfileMenu();
+    }
+    
+    // Close modal if not importing
+    if (!importData && window.closeNewProfileModal) {
+      window.closeNewProfileModal();
+    }
+    
+    // Switch to new profile (this will also re-render the menu)
+    await window.switchProfile(profileId);
+    
+    if (window.showToast) window.showToast(`Profile "${profileName}" created ✓`, 'success');
+    
+    return true;
+    
+  } catch (error) {
+    console.error('[Create Profile] Failed:', error);
+    if (window.showToast) window.showToast(`Failed to create profile: ${error.message}`, 'error');
+    return false;
+  }
+};
+
+/**
+ * Deletes a custom profile
+ */
+window.deleteCustomProfile = async function(profileId) {
+  try {
+    console.log('[Delete Profile] Starting...', profileId);
+    
+    // Get profile info
+    const profile = window.availableProfiles.find(p => p.id === profileId);
+    if (!profile) {
+      if (window.showToast) window.showToast('Profile not found', 'error');
+      return;
+    }
+    
+    // Safety check: can't delete system profiles
+    const systemProfiles = ['profile-global', 'profile-successfactors', 'profile-s4hana', 'profile-btp', 'profile-executive', 'profile-golive', 'profile-ai-joule'];
+    if (systemProfiles.includes(profileId)) {
+      if (window.showToast) window.showToast('Cannot delete system profiles', 'error');
+      return;
+    }
+    
+    // Safety check: can't delete active profile
+    if (profileId === window.currentProfile) {
+      if (window.showToast) window.showToast('Switch to another profile before deleting', 'warning');
+      return;
+    }
+    
+    // Confirmation dialog
+    const confirmed = confirm(
+      `Delete profile "${profile.name}"?\n\n` +
+      `This will permanently remove:\n` +
+      `• The profile itself\n` +
+      `• All environments in this profile\n` +
+      `• All shortcuts in this profile\n` +
+      `• All notes in this profile\n\n` +
+      `This action cannot be undone.`
+    );
+    
+    if (!confirmed) return;
+    
+    // Remove from custom profiles array
+    const result = await chrome.storage.local.get('customProfiles');
+    const customProfiles = (result.customProfiles || []).filter(p => p.id !== profileId);
+    await chrome.storage.local.set({ customProfiles });
+    
+    // Remove profile data from storage
+    const shortcutsKey = `shortcuts_${profileId}`;
+    const environmentsKey = `environments_${profileId}`;
+    const notesKey = `notes_${profileId}`;
+    const solutionsKey = `solutions_${profileId}`;
+    
+    await chrome.storage.local.remove([shortcutsKey, environmentsKey, notesKey, solutionsKey]);
+    
+    // Remove from available profiles
+    window.availableProfiles = window.availableProfiles.filter(p => p.id !== profileId);
+    
+    // Re-render profile menu
+    await window.renderProfileMenu();
+    
+    if (window.showToast) window.showToast(`Profile "${profile.name}" deleted`, 'success');
+    
+    console.log('[Delete Profile] Profile deleted successfully');
+    
+  } catch (error) {
+    console.error('[Delete Profile] Failed:', error);
+    if (window.showToast) window.showToast(`Failed to delete profile: ${error.message}`, 'error');
+  }
+};
+
+/**
+ * Saves a new profile from the modal form
+ */
+window.saveNewProfile = async function() {
+  const nameInput = document.getElementById('newProfileName');
+  const descInput = document.getElementById('newProfileDesc');
+  const iconInput = document.getElementById('newProfileIcon');
+  
+  if (!nameInput) {
+    console.error('[Save New Profile] Name input not found');
+    return;
+  }
+  
+  const name = nameInput.value.trim();
+  const description = descInput ? descInput.value.trim() : '';
+  const icon = iconInput ? iconInput.value.trim() : '📁';
+  
+  if (!name) {
+    if (window.showToast) window.showToast('Profile name is required', 'warning');
+    nameInput.focus();
+    return;
+  }
+  
+  // Generate profile ID
+  const profileId = `custom-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+  
+  // Check if profile with this ID already exists
+  if (window.availableProfiles.some(p => p.id === profileId)) {
+    if (window.showToast) window.showToast('Profile with this name already exists', 'warning');
+    nameInput.focus();
+    return;
+  }
+  
+  // Create the profile
+  const success = await window.createCustomProfile(profileId, name);
+  
+  if (success) {
+    // Update profile metadata with description and icon
+    const result = await chrome.storage.local.get('customProfiles');
+    const customProfiles = result.customProfiles || [];
+    const profile = customProfiles.find(p => p.id === profileId);
+    
+    if (profile) {
+      profile.description = description;
+      profile.icon = icon || '📁';
+      await chrome.storage.local.set({ customProfiles });
+      
+      // Update in availableProfiles
+      const availProfile = window.availableProfiles.find(p => p.id === profileId);
+      if (availProfile) {
+        availProfile.description = description;
+        availProfile.icon = icon || '📁';
+      }
+    }
+  }
+};
+
+// ==================== IMPORT/EXPORT ====================
+
+/**
+ * Exports current profile data with metadata
+ */
+window.exportCurrentProfile = async function() {
+  try {
+    const profile = window.availableProfiles.find(p => p.id === window.currentProfile);
+    if (!profile) {
+      if (window.showToast) window.showToast('Profile not found', 'error');
+      return;
+    }
+    
+    const profileName = profile.name.toLowerCase().replace(/\s+/g, '-');
+    const isCustom = window.currentProfile.startsWith('custom-');
+    
+    // Get solutions data
+    const storageKey = `solutions_${window.currentProfile}`;
+    const solutionsResult = await chrome.storage.local.get(storageKey);
+    let exportSolutions = solutionsResult[storageKey];
+    
+    if (!exportSolutions) {
+      const profileData = await window.loadProfileData(window.currentProfile);
+      exportSolutions = profileData.solutions || [];
+    }
+    
+    // Build export data with profile metadata
+    const exportData = {
+      version: '1.0',
+      exportType: 'single-profile',
+      exportDate: new Date().toISOString(),
+      profileId: window.currentProfile,
+      profileName: profile.name,
+      profileIcon: profile.icon || '📁',
+      profileDescription: profile.description || '',
+      profileType: isCustom ? 'custom' : 'system',
+      environments: window.environments,
+      shortcuts: window.shortcuts,
+      notes: window.notes,
+      solutions: exportSolutions
+    };
+    
+    const jsonStr = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const timestamp = new Date().toISOString().split('T')[0];
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sf-pro-toolkit-${profileName}-${timestamp}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    
+    const itemCount = window.shortcuts.length + window.environments.length + window.notes.length;
+    const qaCount = exportSolutions?.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0) || 0;
+    if (window.showToast) window.showToast(`Exported ${profile.name}: ${itemCount} items + ${qaCount} Quick Actions ✓`, 'success');
+    
+  } catch (error) {
+    console.error('[Export Current Profile] Failed:', error);
+    if (window.showToast) window.showToast('Failed to export profile', 'error');
+  }
+};
+
+/**
+ * Exports all profiles as a full backup
+ */
+window.exportAllProfiles = async function() {
+  try {
+    console.log('[Export All] Starting full backup export...');
+    
+    // Get all custom profiles
+    const result = await chrome.storage.local.get('customProfiles');
+    const customProfiles = result.customProfiles || [];
+    
+    // Collect data for ALL profiles (system + custom)
+    const profilesData = {};
+    
+    for (const profile of window.availableProfiles) {
+      const profileId = profile.id;
+      
+      // Get data from storage
+      const shortcutsKey = `shortcuts_${profileId}`;
+      const environmentsKey = `environments_${profileId}`;
+      const notesKey = `notes_${profileId}`;
+      const solutionsKey = `solutions_${profileId}`;
+      
+      const data = await chrome.storage.local.get([shortcutsKey, environmentsKey, notesKey, solutionsKey]);
+      
+      profilesData[profileId] = {
+        environments: data[environmentsKey] || [],
+        shortcuts: data[shortcutsKey] || [],
+        notes: data[notesKey] || [],
+        solutions: data[solutionsKey] || []
+      };
+    }
+    
+    // Build full backup export
+    const exportData = {
+      version: '1.0',
+      exportType: 'full-backup',
+      exportDate: new Date().toISOString(),
+      customProfiles: customProfiles,
+      profilesData: profilesData
+    };
+    
+    const jsonStr = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const timestamp = new Date().toISOString().split('T')[0];
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sf-pro-toolkit-full-backup-${timestamp}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    
+    // Calculate totals
+    let totalItems = 0;
+    let totalQA = 0;
+    
+    Object.values(profilesData).forEach(data => {
+      totalItems += (data.environments?.length || 0) + (data.shortcuts?.length || 0) + (data.notes?.length || 0);
+      data.solutions?.forEach(sol => {
+        totalQA += sol.quickActions?.length || 0;
+      });
+    });
+    
+    if (window.showToast) {
+      window.showToast(
+        `Full backup exported ✓\n${window.availableProfiles.length} profiles, ${totalItems} items, ${totalQA} Quick Actions`,
+        'success'
+      );
+    }
+    
+    console.log('[Export All] Backup exported successfully');
+    
+  } catch (error) {
+    console.error('[Export All] Failed:', error);
+    if (window.showToast) window.showToast('Failed to export backup', 'error');
+  }
+};
+
 // ==================== IMPORT/EXPORT ====================
 
 window.exportJsonToFile = async function() {
@@ -1054,12 +1521,27 @@ window.handleFileImport = async function(event) {
       return;
     }
     
+    // Detect import type: full backup or single profile
+    if (data.exportType === 'full-backup') {
+      // FULL BACKUP IMPORT
+      await handleFullBackupImport(data, event);
+      return;
+    }
+    
+    // SINGLE PROFILE IMPORT (with metadata)
+    if (data.exportType === 'single-profile' && data.profileId) {
+      await handleSingleProfileImport(data, event);
+      return;
+    }
+    
+    // LEGACY IMPORT (old format without metadata)
     if (!data.shortcuts && !data.environments && !data.notes) {
       if (window.showToast) window.showToast('Invalid file structure. Expected shortcuts, environments, or notes.', 'error');
       event.target.value = '';
       return;
     }
     
+    // Handle legacy custom profile import
     if (data.profileType === 'custom' && data.profileName) {
       const profileId = `custom-${data.profileName.toLowerCase().replace(/\s+/g, '-')}`;
       const profileExists = window.availableProfiles.some(p => p.id === profileId);
@@ -1145,9 +1627,9 @@ window.handleFileImport = async function(event) {
       }
     }
     
-    window.renderShortcuts();
-    window.renderEnvironments();
-    window.renderNotes();
+    await window.renderShortcuts();
+    await window.renderEnvironments();
+    await window.renderNotes();
     
     if (importCount === 0) {
       if (window.showToast) window.showToast('No new items to import (all items already exist)', 'warning');
@@ -1165,6 +1647,217 @@ window.handleFileImport = async function(event) {
   event.target.value = '';
 };
 
+/**
+ * Handles full backup import
+ */
+async function handleFullBackupImport(data, event) {
+  try {
+    console.log('[Import Full Backup] Starting...');
+    
+    if (!data.customProfiles || !data.profilesData) {
+      if (window.showToast) window.showToast('Invalid backup file structure', 'error');
+      event.target.value = '';
+      return;
+    }
+    
+    const customProfilesCount = data.customProfiles.length;
+    let totalItems = 0;
+    
+    Object.values(data.profilesData).forEach(profileData => {
+      totalItems += (profileData.environments?.length || 0);
+      totalItems += (profileData.shortcuts?.length || 0);
+      totalItems += (profileData.notes?.length || 0);
+    });
+    
+    const confirmed = confirm(
+      `📦 Restore Full Backup?\n\n` +
+      `This will restore:\n` +
+      `• ${customProfilesCount} custom profile(s)\n` +
+      `• ${totalItems} total items across all profiles\n\n` +
+      `Existing custom profiles and data will be replaced.\n` +
+      `System profiles (Global, SuccessFactors, etc.) will be updated.\n\n` +
+      `Continue with restore?`
+    );
+    
+    if (!confirmed) {
+      event.target.value = '';
+      return;
+    }
+    
+    // Restore custom profiles
+    await chrome.storage.local.set({ customProfiles: data.customProfiles });
+    
+    // Restore all profile data
+    const storageUpdates = {};
+    
+    for (const [profileId, profileData] of Object.entries(data.profilesData)) {
+      storageUpdates[`shortcuts_${profileId}`] = profileData.shortcuts || [];
+      storageUpdates[`environments_${profileId}`] = profileData.environments || [];
+      storageUpdates[`notes_${profileId}`] = profileData.notes || [];
+      
+      if (profileData.solutions && profileData.solutions.length > 0) {
+        storageUpdates[`solutions_${profileId}`] = profileData.solutions;
+      }
+    }
+    
+    await chrome.storage.local.set(storageUpdates);
+    
+    // Reload available profiles
+    const result = await chrome.storage.local.get('customProfiles');
+    const hardcodedProfiles = window.availableProfiles.filter(p => 
+      !p.id.startsWith('custom-')
+    );
+    window.availableProfiles = [...hardcodedProfiles, ...(result.customProfiles || [])];
+    
+    // Reload current profile data
+    await window.loadShortcuts();
+    await window.loadEnvironments();
+    await window.loadNotes();
+    await window.loadSolutions();
+    
+    // Re-render everything
+    await window.renderShortcuts();
+    await window.renderEnvironments();
+    await window.renderNotes();
+    await window.renderProfileMenu();
+    
+    if (window.showToast) {
+      window.showToast(
+        `Full backup restored ✓\n${customProfilesCount} custom profiles, ${totalItems} items`,
+        'success'
+      );
+    }
+    
+    console.log('[Import Full Backup] Restore complete');
+    
+  } catch (error) {
+    console.error('[Import Full Backup] Failed:', error);
+    if (window.showToast) window.showToast(`Backup restore failed: ${error.message}`, 'error');
+  }
+  
+  event.target.value = '';
+}
+
+/**
+ * Handles single profile import with metadata
+ */
+async function handleSingleProfileImport(data, event) {
+  try {
+    console.log('[Import Single Profile] Starting...', data.profileName);
+    
+    const isCustom = data.profileType === 'custom';
+    const profileId = data.profileId;
+    
+    // Check if it's a custom profile that doesn't exist yet
+    if (isCustom && !window.availableProfiles.some(p => p.id === profileId)) {
+      const confirmed = confirm(
+        `📦 Create New Profile?\n\n` +
+        `Profile: ${data.profileName}\n` +
+        `Type: ${data.profileType}\n` +
+        `Items: ${data.shortcuts?.length || 0} shortcuts, ${data.environments?.length || 0} environments, ${data.notes?.length || 0} notes\n\n` +
+        `Create profile and import data?`
+      );
+      
+      if (confirmed) {
+        await window.createCustomProfile(profileId, data.profileName, data);
+        event.target.value = '';
+        return;
+      } else {
+        event.target.value = '';
+        return;
+      }
+    }
+    
+    // Profile exists - ask if want to import into it
+    const profile = window.availableProfiles.find(p => p.id === profileId);
+    const profileName = profile ? profile.name : data.profileName;
+    
+    const confirmed = confirm(
+      `Import into "${profileName}"?\n\n` +
+      `${data.shortcuts?.length || 0} shortcuts\n` +
+      `${data.environments?.length || 0} environments\n` +
+      `${data.notes?.length || 0} notes\n\n` +
+      `Duplicate items will be skipped.`
+    );
+    
+    if (!confirmed) {
+      event.target.value = '';
+      return;
+    }
+    
+    // Switch to target profile if different
+    if (profileId !== window.currentProfile) {
+      await window.switchProfile(profileId);
+    }
+    
+    // Import data (merge with existing)
+    const importSummary = [];
+    let importCount = 0;
+    
+    if (data.shortcuts && Array.isArray(data.shortcuts)) {
+      const newShortcuts = data.shortcuts.filter(imported => 
+        !window.shortcuts.some(existing => existing.url === imported.url)
+      );
+      const combined = [...newShortcuts, ...window.shortcuts];
+      window.setShortcuts(combined);
+      const storageKey = `shortcuts_${profileId}`;
+      await chrome.storage.local.set({ [storageKey]: combined });
+      importCount += newShortcuts.length;
+      if (newShortcuts.length > 0) importSummary.push(`${newShortcuts.length} shortcuts`);
+    }
+    
+    if (data.environments && Array.isArray(data.environments)) {
+      const newEnvs = data.environments.filter(imported =>
+        !window.environments.some(existing => existing.hostname === imported.hostname)
+      );
+      const combined = [...newEnvs, ...window.environments];
+      window.setEnvironments(combined);
+      const storageKey = `environments_${profileId}`;
+      await chrome.storage.local.set({ [storageKey]: combined });
+      importCount += newEnvs.length;
+      if (newEnvs.length > 0) importSummary.push(`${newEnvs.length} environments`);
+    }
+    
+    if (data.notes && Array.isArray(data.notes)) {
+      const newNotes = data.notes.filter(imported =>
+        !window.notes.some(existing => existing.title === imported.title)
+      );
+      const combined = [...newNotes, ...window.notes];
+      window.setNotes(combined);
+      const storageKey = `notes_${profileId}`;
+      await chrome.storage.local.set({ [storageKey]: combined });
+      importCount += newNotes.length;
+      if (newNotes.length > 0) importSummary.push(`${newNotes.length} notes`);
+    }
+    
+    if (data.solutions && Array.isArray(data.solutions)) {
+      const storageKey = `solutions_${profileId}`;
+      await chrome.storage.local.set({ [storageKey]: data.solutions });
+      if (profileId === window.currentProfile) {
+        window.setSolutions(data.solutions);
+      }
+      const qaCount = data.solutions.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0);
+      if (qaCount > 0) importSummary.push(`${qaCount} Quick Actions`);
+    }
+    
+    window.renderShortcuts();
+    window.renderEnvironments();
+    window.renderNotes();
+    
+    if (importCount === 0 && importSummary.length === 0) {
+      if (window.showToast) window.showToast('No new items to import', 'warning');
+    } else {
+      const summary = importSummary.join(', ');
+      if (window.showToast) window.showToast(`Imported ${summary} into ${profileName} ✓`, 'success');
+    }
+    
+  } catch (error) {
+    console.error('[Import Single Profile] Failed:', error);
+    if (window.showToast) window.showToast(`Import failed: ${error.message}`, 'error');
+  }
+  
+  event.target.value = '';
+}
 // ==================== THEME TOGGLE ====================
 
 window.toggleTheme = async function() {

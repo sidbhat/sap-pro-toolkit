@@ -57,7 +57,7 @@ window.renderEnvironments = async function() {
       </tr>
     `;
     document.getElementById('addEnvBtnInline')?.addEventListener('click', () => {
-      if (window.openAddEnvironmentModal) window.openAddEnvironmentModal();
+      if (window.addCurrentPageAsEnvironment) window.addCurrentPageAsEnvironment();
     });
     return;
   }
@@ -196,11 +196,10 @@ window.renderEnvironments = async function() {
   }).join('');
   
   attachEnvironmentListeners();
-  updateSectionCounts();
   
-  // Re-initialize collapsible sections after render (restore event listeners)
-  if (window.initializeCollapsibleSections) {
-    await window.initializeCollapsibleSections();
+  // Update counts (data already fresh from reload before render)
+  if (window.updateSectionCounts) {
+    window.updateSectionCounts();
   }
 };
 
@@ -260,7 +259,7 @@ function attachEnvironmentListeners() {
     });
   });
   
-  document.querySelectorAll('.delete-btn').forEach(btn => {
+  document.querySelectorAll('.env-row .delete-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
@@ -277,7 +276,7 @@ function attachEnvironmentListeners() {
 
 // ==================== UI RENDERING - SHORTCUTS ====================
 
-window.renderShortcuts = function() {
+window.renderShortcuts = async function() {
   const tbody = document.getElementById('shortcutsList');
   
   if (window.shortcuts.length === 0) {
@@ -349,11 +348,10 @@ window.renderShortcuts = function() {
   }).join('');
   
   attachShortcutListeners();
-  updateSectionCounts();
   
-  // Re-initialize collapsible sections after render (restore event listeners)
-  if (window.initializeCollapsibleSections) {
-    window.initializeCollapsibleSections();
+  // Update counts (data already fresh from reload before render)
+  if (window.updateSectionCounts) {
+    window.updateSectionCounts();
   }
 };
 
@@ -405,7 +403,7 @@ function attachShortcutListeners() {
 
 // ==================== UI RENDERING - NOTES ====================
 
-window.renderNotes = function() {
+window.renderNotes = async function() {
   const tbody = document.getElementById('notesList');
   
   if (!tbody) {
@@ -497,11 +495,10 @@ window.renderNotes = function() {
   }).join('');
   
   attachNoteListeners();
-  updateSectionCounts();
   
-  // Re-initialize collapsible sections after render (restore event listeners)
-  if (window.initializeCollapsibleSections) {
-    window.initializeCollapsibleSections();
+  // Update counts (data already fresh from reload before render)
+  if (window.updateSectionCounts) {
+    window.updateSectionCounts();
   }
 };
 
@@ -556,41 +553,110 @@ function attachNoteListeners() {
 
 window.renderProfileMenu = async function() {
   const menu = document.getElementById('profileMenu');
-  if (!menu) return;
-  
+  if (!menu) {
+    console.error('[Profile Menu] Menu element not found!');
+    return;
+  }
+
   const result = await chrome.storage.local.get('hiddenProfiles');
   const hiddenProfiles = result.hiddenProfiles || [];
+
+  // Remove duplicates from availableProfiles first (using Set to track unique IDs)
+  const uniqueProfileIds = new Set();
+  const uniqueProfiles = [];
   
-  const visibleProfiles = window.availableProfiles.filter(p => !hiddenProfiles.includes(p.id));
+  for (const profile of window.availableProfiles) {
+    if (!uniqueProfileIds.has(profile.id)) {
+      uniqueProfileIds.add(profile.id);
+      uniqueProfiles.push(profile);
+    }
+  }
   
-  menu.innerHTML = visibleProfiles.map(profile => {
+  const visibleProfiles = uniqueProfiles.filter(p => !hiddenProfiles.includes(p.id));
+
+  // Get list of system (hardcoded) profile IDs
+  const systemProfiles = ['profile-global', 'profile-successfactors', 'profile-s4hana', 'profile-btp', 'profile-executive', 'profile-golive', 'profile-ai-joule'];
+
+  // Build profile menu items
+  const profileItems = visibleProfiles.map(profile => {
     const isActive = profile.id === window.currentProfile;
+    const isCustom = !systemProfiles.includes(profile.id);
     const icon = profile.icon || '📁';
     const description = profile.description || '';
-    
+
+    // CRITICAL: Delete button should ONLY show if:
+    // 1. Profile is custom (not system)
+    // 2. Profile is NOT currently active
+    const showDeleteBtn = isCustom && !isActive;
+
+    // Wrap profile item and delete button in a container for proper positioning
     return `
-      <button class="profile-menu-item ${isActive ? 'active' : ''}" data-profile-id="${profile.id}">
-        <span class="profile-icon">${icon}</span>
-        <div class="profile-info">
-          <div class="profile-name">${profile.name}</div>
-          ${description ? `<div class="profile-desc">${description}</div>` : ''}
-        </div>
-        ${isActive ? window.SVGRenderer.renderCheckIcon(14) : ''}
-      </button>
+      <div class="profile-menu-item-wrapper">
+        <button class="profile-menu-item ${isActive ? 'active' : ''}" data-profile-id="${profile.id}">
+          <span class="profile-icon">${icon}</span>
+          <div class="profile-info">
+            <div class="profile-name">${profile.name}</div>
+            ${description ? `<div class="profile-desc">${description}</div>` : ''}
+          </div>
+          ${isActive ? '<span class="profile-check">' + window.SVGRenderer.renderCheckIcon(14) + '</span>' : ''}
+        </button>
+        ${showDeleteBtn ? `<button class="icon-btn danger delete-profile-btn" data-profile-id="${profile.id}" title="Delete profile"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>` : ''}
+      </div>
     `;
   }).join('');
+
+  // Add "New Profile" button at bottom
+  const newProfileButton = `
+    <button class="profile-menu-item profile-menu-new" id="newProfileMenuBtn" style="border-top: 1px solid var(--border); margin-top: 4px; padding-top: 12px;">
+      <span class="profile-icon">➕</span>
+      <div class="profile-info">
+        <div class="profile-name">New Profile</div>
+      </div>
+    </button>
+  `;
   
-  menu.querySelectorAll('.profile-menu-item').forEach(item => {
+  menu.innerHTML = profileItems + newProfileButton;
+  
+  // Attach click handlers for profile switching (NO cloning - was breaking switching)
+  menu.querySelectorAll('.profile-menu-item:not(.profile-menu-new)').forEach(item => {
     item.addEventListener('click', (e) => {
-      e.stopPropagation();
+      // Don't switch if clicking delete button
+      if (e.target.closest('.delete-profile-btn')) return;
+      
       const profileId = item.getAttribute('data-profile-id');
+      console.log('[Profile Switch] Switching to:', profileId);
       if (window.switchProfile) window.switchProfile(profileId);
     });
   });
+  
+  // Attach delete handlers for custom profiles
+  menu.querySelectorAll('.delete-profile-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const profileId = btn.getAttribute('data-profile-id');
+      console.log('[Profile Delete] Deleting:', profileId);
+      if (window.deleteCustomProfile) await window.deleteCustomProfile(profileId);
+    });
+  });
+  
+  // Attach handler for "New Profile" button
+  const newProfileBtn = document.getElementById('newProfileMenuBtn');
+  if (newProfileBtn) {
+    newProfileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      console.log('[Profile Menu] Opening new profile modal');
+      if (window.openNewProfileModal) window.openNewProfileModal();
+    });
+  }
 };
 
 // ==================== SECTION COUNT UPDATES ====================
 
+/**
+ * Updates section counts using current global state
+ * NOTE: Render functions reload data before calling this, so counts are accurate
+ */
 window.updateSectionCounts = function() {
   const envCount = document.querySelector('.section[data-section="environments"] .section-count');
   if (envCount) {

@@ -146,3 +146,47 @@
   opacity: 0.8;
 }
 
+/* Profile menu item wrapper (contains profile button + delete button) */
+.profile-menu-item-wrapper {
+  position: relative;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.profile-menu-item-wrapper:last-child {
+  border-bottom: none;
+}
+
+/* Adjust profile-menu-item when inside wrapper - add padding for delete button */
+.profile-menu-item-wrapper .profile-menu-item {
+  width: 100%;
+  border-bottom: none;
+  padding-right: 40px; /* Space for delete button */
+}
+
+/* Delete button positioned on the right */
+.delete-profile-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 6px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-profile-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.delete-profile-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--error);
+}

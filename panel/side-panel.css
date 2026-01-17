@@ -3002,12 +3002,32 @@ html {
 }
 
 .empty-state-card {
-  grid-column: 1 / -1;
-  padding: 32px;
   text-align: center;
+  padding: var(--space-xl);
+  color: var(--text-secondary);
   background: var(--bg-secondary);
-  border: 1px dashed var(--border);
   border-radius: var(--radius-md);
+  margin: var(--space-md) 0;
+}
+
+/* Empty state styling for inline Add buttons in tables */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin: 0;
+}
+
+.empty-state .btn {
+  margin: 0 auto;
 }
 
 .empty-state-card p {

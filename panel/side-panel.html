@@ -970,15 +970,15 @@
             </h4>
             <div class="form-group" style="margin-bottom: 0;">
               <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
-                Download all your data as a JSON file for backup or sharing
+                Export all profiles as a full backup
               </small>
-              <button class="btn btn-primary btn-block" id="exportAllBtn">
+              <button class="btn btn-accent btn-block" id="exportAllBtn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                   <polyline points="17 8 12 3 7 8"/>
                   <line x1="12" y1="3" x2="12" y2="15"/>
                 </svg>
-                Export All Data
+                Export All Profiles (Full Backup)
               </button>
             </div>
           </div>
@@ -1009,6 +1009,31 @@
             </div>
           </div>
           
+          <!-- Reset Profile Section (NEW) -->
+          <div class="api-key-section">
+            <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              Reset Profile Data
+            </h4>
+            <div class="form-group" style="margin-bottom: 0;">
+              <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
+                Clear current profile data and reload from default JSON file
+              </small>
+              <button class="btn btn-danger btn-block" id="resetProfileBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <polyline points="1 20 1 14 7 14"/>
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                </svg>
+                Reset Current Profile
+              </button>
+            </div>
+          </div>
+          
           <!-- Security Notice -->
           <div style="margin-top: 24px; padding: 12px; background: rgba(var(--accent-rgb), 0.1); border-radius: 6px; border-left: 3px solid var(--accent-color);">
             <p style="margin: 0; font-size: 11px; color: var(--text-secondary);">
@@ -1020,8 +1045,8 @@
     </div>
   </div>
 
-  <!-- Profile Edit Modal -->
-  <div class="modal" id="editProfileModal">
+  <!-- New Profile Modal -->
+  <div class="modal" id="newProfileModal">
     <div class="modal-content">
       <div class="modal-header">
         <div class="modal-header-title">
@@ -1035,58 +1060,38 @@
               </linearGradient>
             </defs>
           </svg>
-          <h3 id="profileModalTitle">Create Profile</h3>
+          <h3>✨ New Profile</h3>
         </div>
-        <button class="icon-btn" id="closeProfileModal">&times;</button>
+        <button class="icon-btn" id="closeNewProfileModal">&times;</button>
       </div>
       <div class="modal-body">
-        <form id="profileForm">
+        <form id="newProfileForm">
           <div class="form-group">
-            <label for="profileName">
+            <label for="newProfileName">
               Profile Name <span class="required-asterisk">*</span>
+              <span class="char-counter" id="newProfileNameCounter">0/100</span>
             </label>
-            <input type="text" id="profileName" placeholder="e.g., Project Alpha" required>
+            <input type="text" id="newProfileName" placeholder="e.g., My Custom Profile" required maxlength="100">
           </div>
           <div class="form-group">
-            <label for="profileDesc">Description</label>
-            <textarea id="profileDesc" rows="2" placeholder="Brief description..."></textarea>
+            <label for="newProfileDesc">
+              Description
+              <span class="char-counter" id="newProfileDescCounter">0/200</span>
+            </label>
+            <textarea id="newProfileDesc" rows="2" placeholder="Optional description..." maxlength="200"></textarea>
           </div>
           <div class="form-group">
-            <label for="profileIcon">Icon</label>
-            <select id="profileIcon">
-              <option value="💼">💼 Briefcase</option>
-              <option value="🎯">🎯 Target</option>
-              <option value="🚀">🚀 Rocket</option>
-              <option value="📦">📦 Package</option>
-              <option value="🔧">🔧 Wrench</option>
-              <option value="⚡">⚡ Lightning</option>
-              <option value="🌟">🌟 Star</option>
-              <option value="📊">📊 Chart</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="profileBase">Base Profile</label>
-            <select id="profileBase">
-              <option value="profile-global">Global</option>
-              <option value="profile-successfactors">SuccessFactors</option>
-              <option value="profile-s4hana">S/4HANA</option>
-              <option value="profile-btp">BTP & Integration</option>
-            </select>
+            <label for="newProfileIcon">Icon Emoji</label>
+            <input type="text" id="newProfileIcon" placeholder="e.g., 🎯, 📁, 💼, 🚀" maxlength="2" style="font-size: 18px;">
             <small style="color: var(--text-secondary); font-size: 11px; display: block; margin-top: 4px;">
-              Inherit Quick Actions from base profile
+              Enter a single emoji character (optional, defaults to 📁)
             </small>
-          </div>
-          <div class="form-group checkbox" id="copyQuickActionsGroup" style="display: none;">
-            <label>
-              <input type="checkbox" id="profileCopyQuickActions" checked>
-              Copy Quick Actions from source profile
-            </label>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="cancelProfileBtn">Cancel</button>
-        <button class="btn btn-primary" id="saveProfileBtn">Save</button>
+        <button class="btn btn-secondary" id="cancelNewProfileBtn">Cancel</button>
+        <button class="btn btn-primary" id="saveNewProfileBtn">Create Profile</button>
       </div>
     </div>
   </div>
@@ -1263,11 +1268,13 @@
   <script src="validation.js"></script>
   <script src="toolkit-core.js"></script>
   
-  <!-- Modular scripts (must be loaded before side-panel.js) -->
+  <!-- Modular scripts (must be loaded before main.js and side-panel.js) -->
   <script src="state.js"></script>
   <script src="ui-render.js"></script>
   <script src="actions.js"></script>
   <script src="ai-features.js"></script>
+  
+  <!-- Main initialization (depends on all modules above) -->
   <script src="main.js"></script>
 
   <!-- Main panel script (depends on all modules above) -->

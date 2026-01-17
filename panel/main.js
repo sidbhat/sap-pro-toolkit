@@ -64,6 +64,14 @@ async function init() {
     window.availableProfiles.length = 0;
     window.availableProfiles.push(...profileDefinitions);
 
+    // Load custom profiles from storage
+    const customProfilesResult = await chrome.storage.local.get('customProfiles');
+    const customProfiles = customProfilesResult.customProfiles || [];
+    if (customProfiles.length > 0) {
+      window.availableProfiles.push(...customProfiles);
+      console.log(`[Init] Loaded ${customProfiles.length} custom profile(s)`);
+    }
+
     // Load active profile
     const result = await chrome.storage.local.get('activeProfile');
     const activeProfile = result.activeProfile || 'profile-global';
@@ -87,10 +95,10 @@ async function init() {
     await window.loadTheme();
 
     // Render UI FIRST (so buttons exist in DOM)
-    window.renderShortcuts();
-    window.renderEnvironments();
-    window.renderNotes();
-    window.renderProfileMenu();
+    await window.renderShortcuts();
+    await window.renderEnvironments();
+    await window.renderNotes();
+    await window.renderProfileMenu();
     await window.renderPopularNotes();
 
     // Update diagnostics button state
@@ -142,9 +150,11 @@ async function init() {
 // ==================== EVENT LISTENERS ====================
 
 function setupEventListeners() {
+  console.log('[Event Listeners] Starting setupEventListeners...');
+  
   // Environment actions
-  document.getElementById('addEnvBtn')?.addEventListener('click', window.openAddEnvironmentModal);
-  document.getElementById('addEnvBtnInline')?.addEventListener('click', window.openAddEnvironmentModal);
+  document.getElementById('addEnvBtn')?.addEventListener('click', window.addCurrentPageAsEnvironment);
+  document.getElementById('addEnvBtnInline')?.addEventListener('click', window.addCurrentPageAsEnvironment);
   document.getElementById('closeAddEnvModal')?.addEventListener('click', window.closeAddEnvironmentModal);
   document.getElementById('cancelAddEnvBtn')?.addEventListener('click', window.closeAddEnvironmentModal);
   document.getElementById('saveEnvBtn')?.addEventListener('click', window.saveEnvironment);
@@ -194,10 +204,14 @@ function setupEventListeners() {
 
   // Settings modal
   document.getElementById('footerSettingsBtn')?.addEventListener('click', () => {
-    document.getElementById('settingsModal')?.classList.add('active');
+    if (window.openSettingsModal) {
+      window.openSettingsModal();
+    }
   });
   document.getElementById('closeSettingsModal')?.addEventListener('click', () => {
-    document.getElementById('settingsModal')?.classList.remove('active');
+    if (window.closeSettingsModal) {
+      window.closeSettingsModal();
+    }
   });
 
   // AI Diagnostics modal
@@ -263,56 +277,81 @@ function setupEventListeners() {
   });
 
   // Import/Export
-  document.getElementById('exportAllBtn')?.addEventListener('click', window.exportJsonToFile);
+  document.getElementById('exportCurrentProfileBtn')?.addEventListener('click', window.exportCurrentProfile);
+  document.getElementById('exportAllBtn')?.addEventListener('click', window.exportAllProfiles);
   document.getElementById('importJsonBtn')?.addEventListener('click', () => {
     document.getElementById('importFileInput')?.click();
   });
   document.getElementById('importFileInput')?.addEventListener('change', window.handleFileImport);
 
+  // New Profile modal
+  const closeNewProfileBtn = document.getElementById('closeNewProfileModal');
+  const cancelNewProfileBtn = document.getElementById('cancelNewProfileBtn');
+  const saveNewProfileBtn = document.getElementById('saveNewProfileBtn');
+  
+  console.log('[Event Listeners] New Profile modal buttons:', {
+    closeBtn: !!closeNewProfileBtn,
+    cancelBtn: !!cancelNewProfileBtn,
+    saveBtn: !!saveNewProfileBtn,
+    closeFn: !!window.closeNewProfileModal,
+    saveFn: !!window.saveNewProfile
+  });
+  
+  if (closeNewProfileBtn) {
+    closeNewProfileBtn.addEventListener('click', () => {
+      console.log('[New Profile] Close button clicked');
+      if (window.closeNewProfileModal) window.closeNewProfileModal();
+    });
+  }
+  
+  if (cancelNewProfileBtn) {
+    cancelNewProfileBtn.addEventListener('click', () => {
+      console.log('[New Profile] Cancel button clicked');
+      if (window.closeNewProfileModal) window.closeNewProfileModal();
+    });
+  }
+  
+  if (saveNewProfileBtn) {
+    saveNewProfileBtn.addEventListener('click', () => {
+      console.log('[New Profile] Save button clicked');
+      if (window.saveNewProfile) window.saveNewProfile();
+    });
+  }
+
+  // Character counters for new profile modal
+  const newProfileName = document.getElementById('newProfileName');
+  const newProfileDesc = document.getElementById('newProfileDesc');
+  const nameCounter = document.getElementById('newProfileNameCounter');
+  const descCounter = document.getElementById('newProfileDescCounter');
+  
+  if (newProfileName && nameCounter) {
+    newProfileName.addEventListener('input', () => {
+      const length = newProfileName.value.length;
+      nameCounter.textContent = `${length}/100`;
+      if (length > 100) {
+        nameCounter.style.color = 'var(--error)';
+      } else {
+        nameCounter.style.color = 'var(--text-secondary)';
+      }
+    });
+  }
+  
+  if (newProfileDesc && descCounter) {
+    newProfileDesc.addEventListener('input', () => {
+      const length = newProfileDesc.value.length;
+      descCounter.textContent = `${length}/200`;
+      if (length > 200) {
+        descCounter.style.color = 'var(--error)';
+      } else {
+        descCounter.style.color = 'var(--text-secondary)';
+      }
+    });
+  }
+
   // Theme toggle
   document.getElementById('footerThemeBtn')?.addEventListener('click', window.toggleTheme);
 
-  // OSS Note search
-  document.getElementById('ossNoteBtn')?.addEventListener('click', () => {
-    const form = document.getElementById('ossNoteSearchForm');
-    if (form) {
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    }
-  });
-  document.getElementById('closeOssSearchBtn')?.addEventListener('click', () => {
-    document.getElementById('ossNoteSearchForm').style.display = 'none';
-  });
-  document.getElementById('openOssNoteInlineBtn')?.addEventListener('click', () => {
-    const noteNumber = document.getElementById('ossNoteInputInline')?.value.trim();
-    if (noteNumber) {
-      window.openPopularOssNote(noteNumber);
-    }
-  });
-  document.getElementById('copyOssUrlBtn')?.addEventListener('click', () => {
-    const noteNumber = document.getElementById('ossNoteInputInline')?.value.trim();
-    if (noteNumber) {
-      const url = `https://launchpad.support.sap.com/#/notes/${noteNumber}`;
-      navigator.clipboard.writeText(url);
-      if (window.showToast) window.showToast('OSS Note URL copied ✓', 'success');
-    }
-  });
-  document.getElementById('addOssShortcutBtn')?.addEventListener('click', () => {
-    const noteNumber = document.getElementById('ossNoteInputInline')?.value.trim();
-    if (noteNumber) {
-      window.openAddShortcutModal();
-      document.getElementById('shortcutName').value = `SAP Note ${noteNumber}`;
-      document.getElementById('shortcutPath').value = `https://launchpad.support.sap.com/#/notes/${noteNumber}`;
-      document.getElementById('shortcutIcon').value = 'document';
-    } else {
-      if (window.showToast) window.showToast('Enter an OSS Note number first', 'warning');
-    }
-  });
-  document.getElementById('togglePopularNotes')?.addEventListener('click', () => {
-    const grid = document.getElementById('popularNotesGrid');
-    if (grid) {
-      grid.style.display = grid.style.display === 'none' ? 'grid' : 'none';
-    }
-  });
+  // OSS Note event listeners are handled in side-panel.js (complete implementation with toggleOssNoteSearch)
 
   // Search functionality
   document.getElementById('clearSearch')?.addEventListener('click', () => {

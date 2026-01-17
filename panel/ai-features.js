@@ -3,13 +3,13 @@
 
 // ==================== AI DIAGNOSTICS ====================
 
-window.showDiagnosticsModal = async function() {
+window.showDiagnosticsModal = async function () {
   const modal = document.getElementById('diagnosticsModal');
   const contentDiv = document.getElementById('diagnosticsContent');
-  
+
   modal.removeAttribute('data-ai-report');
   modal.removeAttribute('data-page-title');
-  
+
   // Add null checks for buttons that may not exist in modal
   const saveBtn = document.getElementById('saveDiagnosticsBtn');
   const downloadBtn = document.getElementById('downloadDiagnosticsBtn');
@@ -25,12 +25,12 @@ window.showDiagnosticsModal = async function() {
   `;
 };
 
-window.closeDiagnosticsModal = function() {
+window.closeDiagnosticsModal = function () {
   document.getElementById('diagnosticsModal').classList.remove('active');
 };
 
 
-window.regenerateDiagnosticsWithAI = async function() {
+window.regenerateDiagnosticsWithAI = async function () {
   if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
     if (window.showToast) window.showToast('AI features not available. Please configure in Settings.', 'error');
     return;
@@ -44,7 +44,7 @@ window.regenerateDiagnosticsWithAI = async function() {
 
   const contentDiv = document.getElementById('diagnosticsContent');
   const modal = document.getElementById('diagnosticsModal');
-  
+
   contentDiv.innerHTML = `
     <div class="diagnostics-ai-enhanced">
       <div style="display: flex; align-items: center; gap: 12px; padding: 16px;">
@@ -68,7 +68,7 @@ window.regenerateDiagnosticsWithAI = async function() {
     } catch (injectError) {
       console.warn('[AI Diagnostics] Content script injection failed, proceeding with URL-based analysis:', injectError.message);
     }
-    
+
     await new Promise(resolve => setTimeout(resolve, 300));
 
     const scrapedData = await new Promise((resolve) => {
@@ -92,10 +92,10 @@ window.regenerateDiagnosticsWithAI = async function() {
     });
 
     if (window.loadCurrentPageData) await window.loadCurrentPageData();
-    const standardDiag = window.currentPageData && typeof formatDiagnosticsReport === 'function' && typeof gatherDiagnostics === 'function' 
-      ? formatDiagnosticsReport(await gatherDiagnostics(window.currentPageData)) 
+    const standardDiag = window.currentPageData && typeof formatDiagnosticsReport === 'function' && typeof gatherDiagnostics === 'function'
+      ? formatDiagnosticsReport(await gatherDiagnostics(window.currentPageData))
       : 'Standard diagnostics not available for this page.';
-    
+
     const prompt = buildDiagnosticsPrompt(standardDiag, scrapedData, window.currentPageData);
     const result = await window.ToolkitCore.testPromptWithModel(prompt);
 
@@ -104,7 +104,7 @@ window.regenerateDiagnosticsWithAI = async function() {
     }
 
     const formattedResponse = markdownToHTML(result.content);
-    
+
     modal.setAttribute('data-ai-report', result.content);
     modal.setAttribute('data-page-title', scrapedData.title || tab.title);
 
@@ -131,7 +131,7 @@ window.regenerateDiagnosticsWithAI = async function() {
     console.error('[AI Diagnostics] Failed:', error);
     if (window.showToast) window.showToast(`AI diagnostics failed: ${error.message}`, 'error');
     contentDiv.innerHTML = `<p style="color: var(--env-production);">Failed to generate AI diagnostics. Please try again.</p>`;
-    
+
     const saveBtn = document.getElementById('saveDiagnosticsBtn');
     const downloadBtn = document.getElementById('downloadDiagnosticsBtn');
     if (saveBtn) saveBtn.style.display = 'none';
@@ -145,7 +145,7 @@ window.regenerateDiagnosticsWithAI = async function() {
   }
 };
 
-window.saveDiagnosticsAsNote = async function() {
+window.saveDiagnosticsAsNote = async function () {
   const modal = document.getElementById('diagnosticsModal');
   const reportContent = modal.getAttribute('data-ai-report');
   const pageTitle = modal.getAttribute('data-page-title') || 'Untitled Page';
@@ -172,7 +172,7 @@ window.saveDiagnosticsAsNote = async function() {
 
     const newNotes = [...window.notes, newNote];
     window.setNotes(newNotes);
-    
+
     const storageKey = `notes_${window.currentProfile}`;
     await chrome.storage.local.set({ [storageKey]: newNotes });
 
@@ -184,7 +184,7 @@ window.saveDiagnosticsAsNote = async function() {
   }
 };
 
-window.downloadDiagnosticsReport = async function() {
+window.downloadDiagnosticsReport = async function () {
   const modal = document.getElementById('diagnosticsModal');
   const reportContent = modal.getAttribute('data-ai-report');
 
@@ -320,49 +320,49 @@ ${consoleErrors.length > 5 ? '🔴 **HIGH ERROR RATE** - System stability concer
 
 function detectPageType(url) {
   if (!url) return 'Unknown';
-  
+
   if (url.includes('sapsf.com') || url.includes('successfactors')) return 'SuccessFactors';
   if (url.includes('s4hana') || url.includes('.ondemand.com')) return 'S/4HANA';
   if (url.includes('hana.ondemand') || url.includes('cfapps') || url.includes('build.cloud.sap')) return 'SAP BTP';
   if (url.includes('ibp.cloud.sap') || url.includes('ibplanning')) return 'SAP IBP';
-  
+
   if (url.includes('salesforce.com')) return 'Salesforce';
   if (url.includes('workday.com')) return 'Workday';
   if (url.includes('oracle.com')) return 'Oracle';
   if (url.includes('microsoft.com') || url.includes('office.com')) return 'Microsoft';
   if (url.includes('github.com')) return 'GitHub';
   if (url.includes('stackoverflow.com')) return 'Stack Overflow';
-  
+
   if (url.includes('localhost') || url.includes('127.0.0.1')) return 'Local Development';
   if (url.startsWith('chrome://') || url.startsWith('edge://')) return 'Browser Internal';
-  
+
   return 'Web Application';
 }
 
 // ==================== AI SEARCH ====================
 
-window.performAISearch = async function(query) {
+window.performAISearch = async function (query) {
   console.log('[AI Search] Starting with query:', query);
-  
+
   if (!document.body.classList.contains('ai-active')) {
     if (window.showToast) window.showToast('AI features are disabled. Configure API keys in Settings.', 'warning');
     return;
   }
-  
+
   if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
     if (window.showToast) window.showToast('AI features not available', 'error');
     return;
   }
-  
+
   try {
     const aiInsightsBar = document.getElementById('aiInsightsBar');
     const aiInsightsContent = document.getElementById('aiInsightsContent');
-    
+
     if (!aiInsightsBar || !aiInsightsContent) {
       console.error('[AI Search] Insights bar elements not found');
       return;
     }
-    
+
     aiInsightsBar.style.display = 'block';
     aiInsightsContent.innerHTML = `
       <div style="display: flex; align-items: center; gap: 12px; padding: 12px;">
@@ -370,25 +370,25 @@ window.performAISearch = async function(query) {
         <span>🔍 Analyzing toolkit data across all profiles...</span>
       </div>
     `;
-    
+
     console.log('[AI Search] Building comprehensive context...');
     const context = await buildComprehensiveContext(query);
-    
+
     const prompt = buildEnhancedPrompt(query, context);
     console.log('[AI Search] Prompt built with', context.stats.totalItems, 'items analyzed');
-    
+
     const result = await window.ToolkitCore.testPromptWithModel(prompt);
-    
+
     if (!result || !result.content) {
       throw new Error('No response from AI');
     }
-    
+
     displayEnhancedAISearchResults(query, result.content, context);
-    
+
   } catch (error) {
     console.error('[AI Search] Failed:', error);
     if (window.showToast) window.showToast(`AI search failed: ${error.message}`, 'error');
-    
+
     const aiInsightsBar = document.getElementById('aiInsightsBar');
     if (aiInsightsBar) aiInsightsBar.style.display = 'none';
   } finally {
@@ -402,13 +402,13 @@ window.performAISearch = async function(query) {
 
 async function buildComprehensiveContext(query) {
   console.log('[AI Search Context] Loading all profile data...');
-  
+
   const allData = await window.loadAllProfilesData();
   const currentPageInfo = window.currentPageData;
   const activeProfile = window.currentProfile;
   const allProfiles = window.availableProfiles;
   const allSolutions = window.solutions;
-  
+
   const groupByProfile = (items) => {
     const grouped = {};
     items.forEach(item => {
@@ -424,14 +424,14 @@ async function buildComprehensiveContext(query) {
     });
     return grouped;
   };
-  
+
   const environmentsByProfile = groupByProfile(allData.environments);
   const shortcutsByProfile = groupByProfile(allData.shortcuts);
   const notesByProfile = groupByProfile(allData.notes);
-  
+
   const context = {
     query: query,
-    
+
     activeProfile: {
       id: activeProfile,
       name: allProfiles.find(p => p.id === activeProfile)?.name || 'Unknown',
@@ -442,7 +442,7 @@ async function buildComprehensiveContext(query) {
         notes: window.notes.length
       }
     },
-    
+
     allProfiles: allProfiles.map(p => ({
       id: p.id,
       name: p.name,
@@ -450,11 +450,11 @@ async function buildComprehensiveContext(query) {
       description: p.description || '',
       type: p.type
     })),
-    
+
     environmentsByProfile: environmentsByProfile,
     shortcutsByProfile: shortcutsByProfile,
     notesByProfile: notesByProfile,
-    
+
     currentContext: {
       onSAPSystem: !!currentPageInfo,
       solutionType: currentPageInfo?.solutionType || 'none',
@@ -462,7 +462,7 @@ async function buildComprehensiveContext(query) {
       datacenter: currentPageInfo?.datacenter || 'Unknown',
       environment: currentPageInfo?.environment || 'Unknown'
     },
-    
+
     quickActions: allSolutions.map(s => ({
       solution: s.name,
       solutionId: s.id,
@@ -473,7 +473,7 @@ async function buildComprehensiveContext(query) {
         path: qa.path
       }))
     })),
-    
+
     stats: {
       totalProfiles: allProfiles.length,
       totalEnvironments: allData.environments.length,
@@ -483,7 +483,7 @@ async function buildComprehensiveContext(query) {
       totalItems: allData.environments.length + allData.shortcuts.length + allData.notes.length
     }
   };
-  
+
   console.log('[AI Search Context] Built comprehensive context:', {
     profiles: context.stats.totalProfiles,
     items: context.stats.totalItems,
@@ -492,38 +492,38 @@ async function buildComprehensiveContext(query) {
     notes: context.stats.totalNotes,
     quickActions: context.stats.totalQuickActions
   });
-  
+
   return context;
 }
 
 function buildEnhancedPrompt(query, context) {
-  const profilesList = context.allProfiles.map(p => 
+  const profilesList = context.allProfiles.map(p =>
     `  • ${p.icon} ${p.name} (${p.type}) - ${p.description}`
   ).join('\n');
-  
+
   const envsByProfile = Object.entries(context.environmentsByProfile).map(([profileId, data]) => {
     const items = data.items.slice(0, 5);
     return `  ${data.profileIcon} ${data.profileName} (${data.items.length}):
 ${items.map(env => `    - ${env.name} (${env.type}) - ${env.hostname}`).join('\n')}`;
   }).join('\n');
-  
+
   const shortcutsByProfile = Object.entries(context.shortcutsByProfile).map(([profileId, data]) => {
     const items = data.items.slice(0, 5);
     return `  ${data.profileIcon} ${data.profileName} (${data.items.length}):
 ${items.map(sc => `    - ${sc.name}`).join('\n')}`;
   }).join('\n');
-  
+
   const notesByProfile = Object.entries(context.notesByProfile).map(([profileId, data]) => {
     const items = data.items.slice(0, 5);
     return `  ${data.profileIcon} ${data.profileName} (${data.items.length}):
 ${items.map(note => `    - ${note.title} (${note.noteType || 'note'})`).join('\n')}`;
   }).join('\n');
-  
+
   const quickActionsList = context.quickActions
     .filter(qa => qa.actionsCount > 0)
     .map(qa => `  ⚡ ${qa.solution} (${qa.actionsCount}): ${qa.actions.slice(0, 3).map(a => a.name).join(', ')}${qa.actionsCount > 3 ? '...' : ''}`)
     .join('\n');
-  
+
   const prompt = `You are an intelligent search assistant for SAP Pro Toolkit, a productivity tool for SAP professionals.
 
 ## YOUR MISSION
@@ -588,11 +588,11 @@ Provide your analysis now:`;
 
 function displayEnhancedAISearchResults(query, response, context) {
   const aiInsightsContent = document.getElementById('aiInsightsContent');
-  
+
   if (!aiInsightsContent) return;
-  
+
   const formattedResponse = markdownToHTML(response);
-  
+
   const html = `
     <div style="padding: 12px;">
       <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
@@ -610,53 +610,53 @@ function displayEnhancedAISearchResults(query, response, context) {
       </div>
     </div>
   `;
-  
+
   aiInsightsContent.innerHTML = html;
   if (window.showToast) window.showToast('AI search complete ✓', 'success');
 }
 
 // ==================== AI PROMPTS ====================
 
-window.handleRunAIPrompt = async function() {
+window.handleRunAIPrompt = async function () {
   const content = document.getElementById('noteContent').value.trim();
-  
+
   if (!content) {
     if (window.showToast) window.showToast('Please enter prompt content first', 'warning');
     return;
   }
-  
+
   if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
     console.error('[AI] ToolkitCore or testPromptWithModel not available');
     if (window.showToast) window.showToast('AI features not available - ToolkitCore missing', 'error');
     return;
   }
-  
+
   try {
-    
+
     const pricingData = await loadLLMPricing();
-    
+
     const result = await window.ToolkitCore.testPromptWithModel(content);
-    
+
     if (!result) {
       if (window.showToast) window.showToast('No response from AI', 'warning');
       return;
     }
-    
+
     const modelPricing = pricingData ? lookupModelPricing(result.model, pricingData) : null;
-    
+
     let costs, modelData;
-    
+
     if (modelPricing && result.usage?.inputTokens && result.usage?.outputTokens) {
       const inputCost = (result.usage.inputTokens / 1000) * modelPricing.input;
       const outputCost = (result.usage.outputTokens / 1000) * modelPricing.output;
       const totalCost = inputCost + outputCost;
-      
+
       costs = {
         inputCost: inputCost.toFixed(4),
         outputCost: outputCost.toFixed(4),
         totalCost: totalCost.toFixed(4)
       };
-      
+
       modelData = {
         provider: result.provider,
         model: result.model,
@@ -664,7 +664,7 @@ window.handleRunAIPrompt = async function() {
         outputCostPer1K: modelPricing.output,
         disclaimer: modelPricing.disclaimer || null
       };
-      
+
       console.log('[AI] Calculated costs from pricing data:', costs);
     } else {
       costs = {
@@ -672,17 +672,17 @@ window.handleRunAIPrompt = async function() {
         outputCost: (result.usage?.cost ? (parseFloat(result.usage.cost) / 2).toFixed(4) : '0.0000'),
         totalCost: result.usage?.cost || '0.0000'
       };
-      
+
       modelData = {
         provider: result.provider,
         model: result.model,
         inputCostPer1K: 0,
         outputCostPer1K: 0
       };
-      
+
       console.warn('[AI] No pricing data found, using fallback costs');
     }
-    
+
     const estimateResult = {
       modelId: result.model,
       modelData: modelData,
@@ -692,9 +692,9 @@ window.handleRunAIPrompt = async function() {
       isEstimate: false,
       responseContent: result.content
     };
-    
+
     showEstimateResults(estimateResult);
-    
+
   } catch (error) {
     console.error('[AI] Prompt execution failed:', error);
     if (window.showToast) window.showToast(`AI test failed: ${error.message}`, 'error');
@@ -703,9 +703,9 @@ window.handleRunAIPrompt = async function() {
 
 let llmPricingData = null;
 
-async function loadLLMPricing() {
+window.loadLLMPricing = async function () {
   if (llmPricingData) return llmPricingData;
-  
+
   try {
     const response = await fetch(chrome.runtime.getURL('resources/llm-pricing.json'));
     llmPricingData = await response.json();
@@ -718,11 +718,11 @@ async function loadLLMPricing() {
   }
 }
 
-function lookupModelPricing(modelId, pricingData) {
+window.lookupModelPricing = function (modelId, pricingData) {
   if (!modelId || !pricingData || !pricingData.models) return null;
-  
+
   const modelLower = modelId.toLowerCase();
-  
+
   const keywordMap = {
     'sonnet-4.5': 'claude-3-5-sonnet-20240620',
     'sonnet-3.5': 'claude-3-5-sonnet-20240620',
@@ -734,7 +734,7 @@ function lookupModelPricing(modelId, pricingData) {
     'gpt-3.5': 'gpt-3.5-turbo',
     'gpt-35': 'gpt-3.5-turbo'
   };
-  
+
   for (const [keyword, pricingKey] of Object.entries(keywordMap)) {
     if (modelLower.includes(keyword)) {
       if (modelLower.includes('sap') || modelLower.includes('ai-core') || modelLower.includes('anthropic--') || modelLower.includes('openai--')) {
@@ -743,7 +743,7 @@ function lookupModelPricing(modelId, pricingData) {
           'sap-ai-core-gpt-35-turbo',
           'sap-ai-core-claude-3-sonnet'
         ];
-        
+
         for (const sapKey of sapVariants) {
           if (sapKey.includes(keyword.replace('.', '')) || sapKey.includes(keyword.split('-')[0])) {
             if (pricingData.models[sapKey]) {
@@ -753,24 +753,24 @@ function lookupModelPricing(modelId, pricingData) {
           }
         }
       }
-      
+
       if (pricingData.models[pricingKey]) {
         console.log('[AI Pricing] Matched base model:', modelId, '→', pricingKey);
         return pricingData.models[pricingKey];
       }
     }
   }
-  
+
   console.warn('[AI Pricing] No pricing found for model:', modelId);
   return null;
 }
 
 function calculateReadingTime(text) {
   if (!text) return '< 1 min read';
-  
+
   const words = text.trim().split(/\s+/).length;
   const minutes = Math.ceil(words / 200);
-  
+
   if (minutes < 1) return '< 1 min read';
   if (minutes === 1) return '1 min read';
   return `${minutes} min read`;
@@ -780,16 +780,16 @@ function showEstimateResults(result) {
   const modal = document.getElementById('aiTestResultsModal');
   const titleEl = document.getElementById('aiTestResultsTitle');
   const contentEl = document.getElementById('aiTestResultsContent');
-  
+
   if (!modal || !titleEl || !contentEl) {
     console.error('[AI] Results modal elements not found');
     return;
   }
-  
+
   titleEl.textContent = '✨ AI Response';
-  
+
   const readingTime = calculateReadingTime(result.responseContent);
-  
+
   const metadataBadges = `
     <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
       <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; font-size: 11px; font-weight: 600; color: #10B981;">
@@ -803,7 +803,7 @@ function showEstimateResults(result) {
       </span>
     </div>
   `;
-  
+
   const html = `
     ${metadataBadges}
     
@@ -822,38 +822,38 @@ function showEstimateResults(result) {
       </div>
     </div>
   `;
-  
+
   contentEl.innerHTML = html;
-  
+
   modal.dataset.responseContent = result.responseContent || '';
   modal.dataset.modelName = result.modelData.model || result.modelId;
   modal.dataset.provider = result.modelData.provider || 'Unknown';
   modal.dataset.inputTokens = result.inputTokens;
   modal.dataset.outputTokens = result.outputTokens;
   modal.dataset.totalCost = result.costs.totalCost;
-  
+
   modal.classList.add('active');
-  
+
   const saveBtn = modal.querySelector('#saveAiResponseBtn');
   const copyBtn = modal.querySelector('#copyAiResponseBtn');
   const calcBtn = modal.querySelector('#openEnterpriseCalcBtn');
-  
+
   if (saveBtn) {
     saveBtn.onclick = () => saveAIResponseAsNote(result);
   }
-  
+
   if (copyBtn) {
     copyBtn.onclick = copyAIResponseToClipboard;
   }
-  
+
   if (calcBtn) {
     calcBtn.onclick = () => openEnterpriseCalculator(result);
   }
 }
 
-window.saveAIResponseAsNote = async function(fallbackResult) {
+window.saveAIResponseAsNote = async function (fallbackResult) {
   const modal = document.getElementById('aiTestResultsModal');
-  
+
   let responseContent = modal.dataset.responseContent;
   let modelName = modal.dataset.modelName;
   let provider = modal.dataset.provider;
@@ -863,25 +863,25 @@ window.saveAIResponseAsNote = async function(fallbackResult) {
 
   if (!responseContent || !modelName) {
     if (fallbackResult && fallbackResult.responseContent) {
-        responseContent = fallbackResult.responseContent;
-        modelName = fallbackResult.modelData.model;
-        provider = fallbackResult.modelData.provider;
-        inputTokens = fallbackResult.inputTokens;
-        outputTokens = fallbackResult.outputTokens;
-        totalCost = fallbackResult.costs.totalCost;
+      responseContent = fallbackResult.responseContent;
+      modelName = fallbackResult.modelData.model;
+      provider = fallbackResult.modelData.provider;
+      inputTokens = fallbackResult.inputTokens;
+      outputTokens = fallbackResult.outputTokens;
+      totalCost = fallbackResult.costs.totalCost;
     } else {
       if (window.showToast) window.showToast('No response content to save', 'warning');
       return;
     }
   }
-  
+
   try {
     const timestamp = new Date().toLocaleString();
     const dateStamp = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const title = `AI Response - ${dateStamp}`;
-    
+
     const cleanResponse = stripMarkdown(responseContent);
-    
+
     let costLine = totalCost ? `Cost: $${totalCost}\n` : '';
 
     const content = `${cleanResponse}
@@ -891,7 +891,7 @@ Model: ${provider} - ${modelName}
 Input Tokens: ${Number(inputTokens).toLocaleString()}
 Output Tokens: ${Number(outputTokens).toLocaleString()}
 ${costLine}Generated: ${timestamp}`;
-    
+
     const noteObject = {
       id: `note-${Date.now()}`,
       title,
@@ -905,25 +905,25 @@ ${costLine}Generated: ${timestamp}`;
         provider: provider
       }
     };
-    
+
     const newNotes = [...window.notes, noteObject];
     window.setNotes(newNotes);
-    
+
     const storageKey = `notes_${window.currentProfile}`;
     await chrome.storage.local.set({ [storageKey]: newNotes });
-    
+
     window.renderNotes();
     window.closeAiTestResultsModal();
-    
+
     if (window.showToast) window.showToast('AI response saved as note ✓', 'success');
-    
+
   } catch (error) {
     console.error('[Save AI Response] Failed:', error);
     if (window.showToast) window.showToast(`Failed to save: ${error.message}`, 'error');
   }
 };
 
-window.copyAIResponseToClipboard = async function() {
+window.copyAIResponseToClipboard = async function () {
   const modal = document.getElementById('aiTestResultsModal');
   const responseContent = modal.dataset.responseContent;
 
@@ -953,7 +953,7 @@ window.copyAIResponseToClipboard = async function() {
   }
 };
 
-window.closeAiTestResultsModal = function() {
+window.closeAiTestResultsModal = function () {
   const modal = document.getElementById('aiTestResultsModal');
   if (modal) {
     modal.classList.remove('active');
@@ -962,23 +962,23 @@ window.closeAiTestResultsModal = function() {
 
 // ==================== ENTERPRISE CALCULATOR ====================
 
-window.openEnterpriseCalculator = function(testResult) {
+window.openEnterpriseCalculator = function (testResult) {
   const modal = document.getElementById('enterpriseCalculatorModal');
   const contentEl = document.getElementById('enterpriseCalculatorContent');
-  
+
   if (!modal || !contentEl) {
     console.error('[Enterprise Calc] Modal elements not found');
     if (window.showToast) window.showToast('Enterprise calculator not available', 'error');
     return;
   }
-  
+
   closeAiTestResultsModal();
-  
+
   const noteContent = document.getElementById('noteContent')?.value.trim() || '';
-  
+
   modal.setAttribute('data-original-prompt', noteContent);
   modal.setAttribute('data-ai-response', testResult.responseContent || '');
-  
+
   const html = `
     <div class="enterprise-calc-form">
       <h4 style="margin-bottom: 16px; color: var(--text-primary);">Scale Parameters</h4>
@@ -1015,18 +1015,18 @@ window.openEnterpriseCalculator = function(testResult) {
       </div>
     </div>
   `;
-  
+
   contentEl.innerHTML = html;
-  
+
   modal.setAttribute('data-test-input-tokens', testResult.inputTokens);
   modal.setAttribute('data-test-model', testResult.modelData.model);
   modal.setAttribute('data-test-provider', testResult.modelData.provider);
   modal.setAttribute('data-test-response', testResult.responseContent || '');
-  
+
   document.getElementById('calculateEnterpriseBtn')?.addEventListener('click', () => {
     calculateEnterpriseProjections(testResult);
   });
-  
+
   modal.classList.add('active');
 }
 
@@ -1035,25 +1035,25 @@ function calculateEnterpriseProjections(testResult) {
   const queriesPerDay = parseInt(document.getElementById('enterpriseQueriesPerDay').value) || 5;
   const workingDays = parseInt(document.getElementById('enterpriseWorkingDays').value) || 250;
   const outputTokens = parseInt(document.getElementById('enterpriseOutputTokens').value) || testResult.outputTokens;
-  
+
   const annualQueries = numUsers * queriesPerDay * workingDays;
-  
+
   const annualInputTokens = testResult.inputTokens * annualQueries;
   const annualOutputTokens = outputTokens * annualQueries;
-  
+
   const costPerQuery = parseFloat(testResult.costs.totalCost) || 0;
   const annualCost = costPerQuery * annualQueries;
   const monthlyCost = annualCost / 12;
-  
+
   const modal = document.getElementById('enterpriseCalculatorModal');
   const originalPrompt = modal.getAttribute('data-original-prompt') || '';
   const aiResponse = modal.getAttribute('data-ai-response') || testResult.responseContent || '';
-  
+
   const resultsDiv = document.getElementById('enterpriseResults');
   const resultsContent = document.getElementById('enterpriseResultsContent');
-  
+
   if (!resultsDiv || !resultsContent) return;
-  
+
   let contextHTML = '';
   if (originalPrompt || aiResponse) {
     contextHTML = `
@@ -1086,7 +1086,7 @@ function calculateEnterpriseProjections(testResult) {
       </div>
     `;
   }
-  
+
   const html = `
     ${contextHTML}
     
@@ -1154,14 +1154,14 @@ function calculateEnterpriseProjections(testResult) {
       <strong style="color: #F59E0B;">⚠️ Cost Estimates Disclaimer:</strong> Pricing shown is indicative only, based on publicly available model provider rates (OpenAI, Anthropic) sourced from LiteLLM pricing database. These are NOT official SAP prices. This tool is not affiliated with or endorsed by SAP SE. Actual costs depend on your specific agreements, volume discounts, and enterprise contracts. For official pricing, contact your provider or SAP directly.
     </div>
   `;
-  
+
   resultsContent.innerHTML = html;
   resultsDiv.style.display = 'block';
-  
+
   const exportBtn = document.getElementById('exportEnterpriseReportBtn');
   if (exportBtn) {
     exportBtn.style.display = 'inline-flex';
-    
+
     exportBtn.onclick = () => {
       exportEnterpriseReport({
         testResult,
@@ -1178,19 +1178,19 @@ function calculateEnterpriseProjections(testResult) {
       });
     };
   }
-  
+
   if (window.showToast) window.showToast('Projections calculated ✓', 'success');
 };
 
 function exportEnterpriseReport(data) {
   const timestamp = new Date().toISOString().split('T')[0];
-  
+
   const modal = document.getElementById('enterpriseCalculatorModal');
   const originalPrompt = modal.getAttribute('data-original-prompt') || '';
   const aiResponse = data.testResult.responseContent || '';
-  
+
   const cleanResponse = stripMarkdown(aiResponse);
-  
+
   const report = `SAP Pro Toolkit - Enterprise AI Cost Projection
 Generated: ${new Date().toLocaleString()}
 
@@ -1261,25 +1261,25 @@ Official Pricing Contact: Contact your provider or SAP directly for official pri
 
 Last Updated: 2026-01-13
 `;
-  
+
   const blob = new Blob([report], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
-  
+
   const a = document.createElement('a');
   a.href = url;
   a.download = `enterprise-ai-cost-projection-${timestamp}.txt`;
   a.click();
-  
+
   URL.revokeObjectURL(url);
-  
+
   if (window.showToast) window.showToast('Report exported ✓', 'success');
 }
 
-window.closeEnterpriseCalculatorModal = function() {
+window.closeEnterpriseCalculatorModal = function () {
   const modal = document.getElementById('enterpriseCalculatorModal');
   if (modal) {
     modal.classList.remove('active');
-    
+
     const exportBtn = document.getElementById('exportEnterpriseReportBtn');
     if (exportBtn) exportBtn.style.display = 'none';
   }
@@ -1287,21 +1287,21 @@ window.closeEnterpriseCalculatorModal = function() {
 
 // ==================== AI SHORTCUT CREATION ====================
 
-window.addShortcutWithAI = async function() {
+window.addShortcutWithAI = async function () {
   if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
     if (window.showToast) window.showToast('AI features not available', 'error');
     return;
   }
-  
+
   try {
     if (window.openAddShortcutModal) window.openAddShortcutModal();
-    
+
     const notesField = document.getElementById('shortcutNotes');
-    
+
     notesField.value = '⏳ Analyzing current page...';
     notesField.style.background = 'rgba(16, 185, 129, 0.1)';
     notesField.style.borderColor = '#10B981';
-    
+
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     if (!tab || !tab.url) {
       notesField.value = '';
@@ -1310,7 +1310,7 @@ window.addShortcutWithAI = async function() {
       if (window.showToast) window.showToast('No active tab found', 'warning');
       return;
     }
-    
+
     if (tab.url.startsWith('chrome://') || tab.url.startsWith('edge://') || tab.url.startsWith('about:')) {
       notesField.value = '';
       notesField.style.background = '';
@@ -1320,7 +1320,7 @@ window.addShortcutWithAI = async function() {
       document.getElementById('shortcutPath').value = tab.url;
       return;
     }
-    
+
     notesField.value = '⏳ Preparing to scrape page...';
     try {
       await chrome.scripting.executeScript({
@@ -1331,9 +1331,9 @@ window.addShortcutWithAI = async function() {
     } catch (injectError) {
       console.log('[AI Shortcut] Content script already present or injection failed:', injectError);
     }
-    
+
     await new Promise(resolve => setTimeout(resolve, 300));
-    
+
     notesField.value = '⏳ Scraping page content...';
     const scrapedData = await new Promise((resolve) => {
       chrome.tabs.sendMessage(tab.id, { action: 'scrapePageForShortcut' }, (response) => {
@@ -1345,26 +1345,26 @@ window.addShortcutWithAI = async function() {
         }
       });
     });
-    
+
     console.log('[AI Shortcut] Scraped data:', scrapedData);
-    
+
     document.getElementById('shortcutPath').value = scrapedData.url;
-    
+
     notesField.value = '⏳ Enhancing title...';
     const enhancedTitle = await enhanceTitle(scrapedData.title, scrapedData.content);
     document.getElementById('shortcutName').value = enhancedTitle;
-    
+
     notesField.value = '⏳ Generating AI summary...';
     const summary = await generatePageSummary(scrapedData.title, scrapedData.url, scrapedData.content);
-    
+
     notesField.value = summary;
     notesField.style.background = '';
     notesField.style.borderColor = '';
-    
+
     document.getElementById('shortcutIcon').value = '8';
-    
+
     if (window.showToast) window.showToast('✨ AI summary generated ✓', 'success');
-    
+
   } catch (error) {
     console.error('[AI Shortcut] Failed:', error);
     const notesField = document.getElementById('shortcutNotes');
@@ -1390,17 +1390,17 @@ async function enhanceTitle(originalTitle, pageContent) {
     'main page',
     'portal'
   ];
-  
+
   const titleLower = originalTitle.toLowerCase().trim();
   const isVague = vagueTitles.some(vague => titleLower === vague || titleLower.startsWith(vague + ' '));
-  
+
   if (!isVague) {
     console.log('[Title Enhancement] Title is specific, keeping original:', originalTitle);
     return originalTitle;
   }
-  
+
   console.log('[Title Enhancement] Vague title detected, enhancing:', originalTitle);
-  
+
   try {
     const prompt = `Based on this page content, generate a more descriptive title (max 50 characters). 
 Current title: "${originalTitle}"
@@ -1409,19 +1409,19 @@ Page content preview:
 ${pageContent.substring(0, 500)}
 
 Provide only the enhanced title, nothing else.`;
-    
+
     const result = await window.ToolkitCore.testPromptWithModel(prompt);
-    
+
     if (result && result.content) {
       const enhancedTitle = result.content.trim().replace(/^["']|["']$/g, '');
       console.log('[Title Enhancement] Enhanced title:', enhancedTitle);
       return enhancedTitle.substring(0, 50);
     }
-    
+
   } catch (error) {
     console.warn('[Title Enhancement] Failed, using original:', error);
   }
-  
+
   return originalTitle;
 }
 
@@ -1429,7 +1429,7 @@ async function generatePageSummary(title, url, content) {
   if (!content || content.length < 50) {
     return `${title}\n\nURL: ${url}`;
   }
-  
+
   try {
     const prompt = `Summarize this page in 2-3 concise sentences (max 200 words). Focus on what the page is about and its key information.
 
@@ -1440,15 +1440,15 @@ Content:
 ${content}
 
 Provide only the summary, no preamble.`;
-    
+
     const result = await window.ToolkitCore.testPromptWithModel(prompt);
-    
+
     if (result && result.content) {
       return result.content.trim();
     }
-    
+
     return `${title}\n\n${content.substring(0, 200)}...`;
-    
+
   } catch (error) {
     console.error('[AI Summary] Failed:', error);
     return `${title}\n\n${content.substring(0, 200)}...`;
@@ -1457,11 +1457,11 @@ Provide only the summary, no preamble.`;
 
 // ==================== MARKDOWN UTILITIES ====================
 
-window.markdownToHTML = function(markdown) {
+window.markdownToHTML = function (markdown) {
   if (!markdown) return '';
-  
+
   let html = markdown;
-  
+
   html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
   html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
   html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
@@ -1471,16 +1471,16 @@ window.markdownToHTML = function(markdown) {
   html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-  
+
   const lines = html.split('\n');
   let inList = false;
   let listType = null;
   const processedLines = [];
-  
+
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const trimmed = line.trim();
-    
+
     if (/^\d+\.\s/.test(trimmed)) {
       if (!inList || listType !== 'ol') {
         if (inList) processedLines.push(`</${listType}>`);
@@ -1505,7 +1505,7 @@ window.markdownToHTML = function(markdown) {
         inList = false;
         listType = null;
       }
-      
+
       if (trimmed && !trimmed.startsWith('<')) {
         processedLines.push(`<p>${line}</p>`);
       } else {
@@ -1513,19 +1513,19 @@ window.markdownToHTML = function(markdown) {
       }
     }
   }
-  
+
   if (inList) {
     processedLines.push(`</${listType}>`);
   }
-  
+
   return processedLines.join('\n');
 };
 
-window.stripMarkdown = function(markdown) {
+window.stripMarkdown = function (markdown) {
   if (!markdown) return '';
-  
+
   let text = markdown;
-  
+
   text = text.replace(/```[\s\S]*?```/g, '');
   text = text.replace(/`([^`]+)`/g, '$1');
   text = text.replace(/^#{1,6}\s+/gm, '');
@@ -1538,18 +1538,18 @@ window.stripMarkdown = function(markdown) {
   text = text.replace(/^[-*•]\s+/gm, '• ');
   text = text.replace(/^\d+\.\s+/gm, '');
   text = text.replace(/\n{3,}/g, '\n\n');
-  
+
   return text.trim();
 };
 
 // ==================== AI FEATURE VISIBILITY ====================
 
-window.showAITestButtons = function() {
+window.showAITestButtons = function () {
   const aiBtn = document.getElementById('enhanceWithAIBtn');
   if (aiBtn) aiBtn.style.display = 'inline-flex';
 };
 
-window.hideAITestButtons = function() {
+window.hideAITestButtons = function () {
   const aiBtn = document.getElementById('enhanceWithAIBtn');
   if (aiBtn) aiBtn.style.display = 'none';
 };
