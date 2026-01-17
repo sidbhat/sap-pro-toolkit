@@ -171,6 +171,7 @@ function setupEventListeners() {
   document.getElementById('addNoteBtn')?.addEventListener('click', window.openAddNoteModal);
   document.getElementById('addNoteBtnEmpty')?.addEventListener('click', window.openAddNoteModal);
   document.getElementById('closeAddNoteModal')?.addEventListener('click', window.closeAddNoteModal);
+  document.getElementById('cancelAddNoteBtn')?.addEventListener('click', window.closeAddNoteModal);
   document.getElementById('saveNoteBtn')?.addEventListener('click', window.saveNote);
   document.getElementById('downloadNoteBtn')?.addEventListener('click', () => {
     const modal = document.getElementById('addNoteModal');

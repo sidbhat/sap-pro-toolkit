@@ -126,23 +126,28 @@
   justify-content: flex-end;
 }
 
-/* Ensure all buttons in modal footer have consistent dimensions */
+/* Ensure all buttons in modal footer have consistent dimensions - CRITICAL: Override ALL size modifiers */
 .modal-footer .btn,
 .modal-footer .btn-sm,
+.modal-footer .btn-lg,
 .modal-footer .btn-primary,
 .modal-footer .btn-secondary,
 .modal-footer .btn-accent,
 .modal-footer .btn-ai,
-.modal-footer .btn-danger {
-  height: 36px;
-  min-height: 36px;
+.modal-footer .btn-danger,
+.modal-footer button[class*="btn"] {
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
   min-width: 100px;
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  padding: 10px 16px;
-  font-size: 13px;
-  font-weight: 600;
+  padding: 10px 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  box-sizing: border-box !important;
 }
 
 /* Primary action buttons (Save) get emphasis */
@@ -155,12 +160,34 @@
 }
 
 /* Utility buttons in left section - same height as action buttons for consistency */
-.modal-footer .modal-footer-left .btn {
+.modal-footer .modal-footer-left .btn,
+.modal-footer .modal-footer-left .btn-sm {
   min-width: 80px;
-  height: 36px;
-  min-height: 36px;
-  padding: 10px 12px;
-  font-size: 13px;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 10px 12px !important;
+  font-size: 13px !important;
+}
+
+/* Icon buttons in left section - same 36px height for perfect alignment */
+.modal-footer .modal-footer-left .icon-btn {
+  width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  min-width: 36px !important;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Right section buttons - ensure consistent height */
+.modal-footer .modal-footer-right .btn,
+.modal-footer .modal-footer-right .btn-sm {
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 10px 16px !important;
+  font-size: 13px !important;
 }
 
 /* AI buttons maintain green theme */
