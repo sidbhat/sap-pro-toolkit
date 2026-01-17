@@ -1873,16 +1873,32 @@ window.resetProfile = async function() {
       return;
     }
 
-    // Confirm with user
-    const confirmed = confirm(
-      `🔄 Reset Profile Data?\n\n` +
-      `Profile: ${profile.name}\n\n` +
-      `This will:\n` +
-      `• Clear all shortcuts, environments, and notes\n` +
-      `• Reload default data from ${profile.file}\n\n` +
-      `This action cannot be undone. Continue?`
-    );
+    // Check if custom profile (no default JSON file to reload from)
+    const isCustomProfile = !profile.file;
+    
+    // Different confirmation messages for custom vs system profiles
+    let confirmMessage;
+    if (isCustomProfile) {
+      confirmMessage = 
+        `🔄 Clear Custom Profile Data?\n\n` +
+        `Profile: ${profile.name}\n\n` +
+        `This will permanently delete:\n` +
+        `• All shortcuts\n` +
+        `• All environments\n` +
+        `• All notes\n\n` +
+        `Custom profiles have no default data to restore.\n` +
+        `This action cannot be undone. Continue?`;
+    } else {
+      confirmMessage = 
+        `🔄 Reset Profile Data?\n\n` +
+        `Profile: ${profile.name}\n\n` +
+        `This will:\n` +
+        `• Clear all shortcuts, environments, and notes\n` +
+        `• Reload default data from ${profile.file}\n\n` +
+        `This action cannot be undone. Continue?`;
+    }
 
+    const confirmed = confirm(confirmMessage);
     if (!confirmed) return;
 
     console.log(`[Reset Profile] Resetting ${profile.id}...`);
