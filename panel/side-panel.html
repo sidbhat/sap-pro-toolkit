@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SF Pro Toolkit</title>
   <link rel="stylesheet" href="side-panel.css">
 </head>
+
 <body>
-<!-- 
+  <!-- 
   ===== SF PRO TOOLKIT BRANDING STANDARDS =====
   
   LOGO USAGE:
@@ -36,19 +38,19 @@
       <div class="header-content">
         <button class="icon-btn icon-btn--transparent-light" id="helpBtn" data-i18n-title="helpBtn" title="Help">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
           </svg>
         </button>
         <div class="header-title-group">
           <svg class="header-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradient1)"/>
-            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradient1)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
             <defs>
               <linearGradient id="gradient1" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0070F2"/>
-                <stop offset="1" stop-color="#0054A6"/>
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
               </linearGradient>
             </defs>
           </svg>
@@ -57,12 +59,12 @@
         <div class="profile-switcher">
           <button class="profile-dropdown" id="profileDropdownBtn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-              <polyline points="22,6 12,13 2,6"/>
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
             </svg>
             <span id="currentProfileName">Default</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="6 9 12 15 18 9"/>
+              <polyline points="6 9 12 15 18 9" />
             </svg>
           </button>
           <div class="profile-menu" id="profileMenu">
@@ -75,17 +77,13 @@
     <!-- Global Search -->
     <div class="search-bar">
       <div class="search-input-wrapper">
-        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.35-4.35"/>
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
         </svg>
-        <input 
-          type="text" 
-          id="globalSearch" 
-          class="search-input" 
-          placeholder="Search all items..."
-          data-i18n-placeholder="globalSearchPlaceholder"
-        >
+        <input type="text" id="globalSearch" class="search-input" placeholder="Search all items..."
+          data-i18n-placeholder="globalSearchPlaceholder">
         <button class="icon-btn" id="clearSearch" style="display: none; height: 24px; width: 24px;">×</button>
       </div>
       <button class="btn btn-accent btn-sm" id="aiSearchBtn" title="Perform AI-powered search (Cmd+Shift+S)">
@@ -97,7 +95,8 @@
     <div class="ai-insights-bar" id="aiInsightsBar" style="display: none;">
       <div class="ai-insights-header">
         <span class="ai-insights-title">✨ AI INSIGHTS</span>
-        <button class="icon-btn" id="closeAiInsights" title="Clear AI search" style="height: 24px; width: 24px;">×</button>
+        <button class="icon-btn" id="closeAiInsights" title="Clear AI search"
+          style="height: 24px; width: 24px;">×</button>
       </div>
       <div class="ai-insights-content" id="aiInsightsContent">
         <!-- Populated dynamically -->
@@ -108,8 +107,9 @@
     <section class="section" data-section="environments">
       <div class="section-header">
         <button class="section-toggle-btn" data-section="environments" title="Collapse section">
-          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="6 9 12 15 18 9"/>
+          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9" />
           </svg>
         </button>
         <div>
@@ -118,12 +118,12 @@
         </div>
         <button class="btn-add" id="addEnvBtn" data-title="Add Environment">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
         </button>
       </div>
-      
+
       <div class="section-content">
         <div class="table-container">
           <table class="data-table" id="environmentsTable">
@@ -146,183 +146,167 @@
     <section class="section" data-section="shortcuts">
       <div class="section-header">
         <button class="section-toggle-btn" data-section="shortcuts" title="Collapse section">
-          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="6 9 12 15 18 9"/>
+          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9" />
           </svg>
         </button>
         <div>
           <h2 class="section-title">SHORTCUTS <span class="section-count"></span></h2>
           <p class="section-desc">External links and reference information</p>
         </div>
-        <button class="btn btn-accent btn-sm" id="ossNoteBtn" title="Search OSS Note" style="padding: 6px 10px; font-size: 12px; margin-right: 8px;">
+        <button class="btn btn-accent btn-sm" id="ossNoteBtn" title="Search OSS Note"
+          style="padding: 6px 10px; font-size: 12px; margin-right: 8px;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
           </svg>
           OSS Note
         </button>
         <button class="btn-add" id="addShortcutBtn" data-title="Add Shortcut" title="Add shortcut">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
         </button>
-        <button class="btn btn-ai btn-sm" id="addShortcutWithAIBtn" data-title="Add with AI" title="Add shortcut with AI summary (scrapes current page)" style="margin-left: 8px;">
+        <button class="btn btn-ai btn-sm" id="addShortcutWithAIBtn" data-title="Add with AI"
+          title="Add shortcut with AI summary (scrapes current page)" style="margin-left: 8px;">
           ✨ AI
         </button>
       </div>
-      
-      <!-- Shortcuts Content -->
+
       <div class="section-content">
         <!-- OSS Note Search Form (Hidden by default) -->
         <div id="ossNoteSearchForm" class="oss-search-form" style="display: none;">
           <div class="oss-search-header">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
-          </svg>
-          <span>Search SAP OSS Note</span>
-        </div>
-        
-        <!-- Popular Notes Section -->
-        <div class="popular-notes-section" id="popularNotesSection">
-          <div class="popular-notes-header">
-            <span class="popular-notes-title">🔥 Popular Notes</span>
-            <button class="toggle-popular-btn" id="togglePopularNotes" type="button" title="Toggle popular notes">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="6 9 12 15 18 9"/>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <span>Search SAP OSS Note</span>
+          </div>
+
+          <input type="text" id="ossNoteInputInline" placeholder="Enter OSS Note #" class="oss-search-input">
+          <div class="oss-search-actions">
+            <button class="btn btn-primary btn-sm" id="openOssNoteInlineBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              Open
+            </button>
+            <button class="btn btn-secondary btn-sm" id="copyOssUrlBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+              Copy URL
+            </button>
+            <button class="btn btn-secondary btn-sm" id="addOssShortcutBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Add Shortcut
+            </button>
+            <button class="icon-btn" id="closeOssSearchBtn" title="Close">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
           </div>
-          <div class="popular-notes-grid" id="popularNotesGrid">
-            <!-- Dynamically populated -->
-          </div>
         </div>
-        
-        <input 
-          type="text" 
-          id="ossNoteInputInline" 
-          placeholder="Enter OSS Note number (e.g., 3123456)"
-          class="oss-search-input"
-        >
-        <div class="oss-search-actions">
-          <button class="btn btn-primary btn-sm" id="openOssNoteInlineBtn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-              <polyline points="15 3 21 3 21 9"/>
-              <line x1="10" y1="14" x2="21" y2="3"/>
-            </svg>
-            Open
-          </button>
-          <button class="btn btn-secondary btn-sm" id="copyOssUrlBtn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            Copy URL
-          </button>
-          <button class="btn btn-secondary btn-sm" id="addOssShortcutBtn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="5" x2="12" y2="19"/>
-              <line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            Add Shortcut
-          </button>
-          <button class="icon-btn" id="closeOssSearchBtn" title="Close" style="margin-left: auto;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
-        </div>
-        </div>
-        
+
         <div class="table-container">
-          <table class="data-table" id="shortcutsTable">
-            <tbody id="shortcutsList">
-              <tr class="empty-row">
-                <td colspan="4">
-                  <div class="empty-state">
-                    <p>No shortcuts</p>
-                    <button class="btn btn-secondary btn-sm" id="addCurrentPageBtnEmpty">+ Add Current Page</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <table class="data-table" id="shortcutsTable">
+          <tbody id="shortcutsList">
+            <tr class="empty-row">
+              <td colspan="4">
+                <div class="empty-state">
+                  <p>No shortcuts</p>
+                  <button class="btn btn-secondary btn-sm" id="addCurrentPageBtnEmpty">+ Add Current Page</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </section>
+  </div>
+  </section>
 
-    <!-- Notes Section -->
-    <section class="section" data-section="notes">
-      <div class="section-header">
-        <button class="section-toggle-btn" data-section="notes" title="Collapse section">
-          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <div>
-          <h2 class="section-title">SCRATCH NOTES <span class="section-count"></span></h2>
-          <p class="section-desc">Store temporary IDs, URLs, and reference information</p>
-        </div>
-        <button class="btn-add" id="addNoteBtn" data-title="Add Note" title="Add Note">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-        </button>
+  <!-- Notes Section -->
+  <section class="section" data-section="notes">
+    <div class="section-header">
+      <button class="section-toggle-btn" data-section="notes" title="Collapse section">
+        <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2.5">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+      <div>
+        <h2 class="section-title">SCRATCH NOTES <span class="section-count"></span></h2>
+        <p class="section-desc">Store temporary IDs, URLs, and reference information</p>
       </div>
-      
-      <!-- Notes Content -->
-      <div class="section-content">
-        <div class="table-container">
-          <table class="data-table" id="notesTable">
-            <tbody id="notesList">
-              <tr class="empty-row">
-                <td colspan="4">
-                  <div class="empty-state">
-                    <p>No notes</p>
-                    <button class="btn btn-secondary btn-sm" id="addNoteBtnEmpty">+ Add Note</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+      <button class="btn-add" id="addNoteBtn" data-title="Add Note" title="Add Note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+      </button>
+    </div>
 
-    <!-- Sticky Footer -->
-    <footer class="sticky-footer">
-      <div class="footer-top-row">
-        <button class="footer-btn" id="footerSettingsBtn" title="Settings">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"/>
-          </svg>
-          <span class="footer-btn-label">Settings</span>
-        </button>
-        <button class="footer-btn" id="footerDiagnosticsBtn" title="Diagnostics">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="16" x2="12" y2="12"/>
-            <line x1="12" y1="8" x2="12.01" y2="8"/>
-          </svg>
-          <span class="footer-btn-label">Diagnostics</span>
-        </button>
-        <button class="footer-btn" id="footerThemeBtn" title="Toggle Theme" data-theme-active="false">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-          <span class="footer-btn-label">Theme</span>
-        </button>
+    <!-- Notes Content -->
+    <div class="section-content">
+      <div class="table-container">
+        <table class="data-table" id="notesTable">
+          <tbody id="notesList">
+            <tr class="empty-row">
+              <td colspan="4">
+                <div class="empty-state">
+                  <p>No notes</p>
+                  <button class="btn btn-secondary btn-sm" id="addNoteBtnEmpty">+ Add Note</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      
-    </footer>
+    </div>
+  </section>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast"></div>
+  <!-- Sticky Footer -->
+  <footer class="sticky-footer">
+    <div class="footer-top-row">
+      <button class="footer-btn" id="footerSettingsBtn" title="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2" />
+        </svg>
+        <span class="footer-btn-label">Settings</span>
+      </button>
+      <button class="footer-btn" id="footerDiagnosticsBtn" title="Diagnostics">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12.01" y2="8" />
+        </svg>
+        <span class="footer-btn-label">Diagnostics</span>
+      </button>
+      <button class="footer-btn" id="footerThemeBtn" title="Toggle Theme" data-theme-active="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+        <span class="footer-btn-label">Theme</span>
+      </button>
+    </div>
+
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
   </div>
 
   <!-- Add Environment Modal -->
@@ -331,12 +315,12 @@
       <div class="modal-header">
         <div class="modal-header-title">
           <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradientModal1)"/>
-            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradientModal1)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
             <defs>
               <linearGradient id="gradientModal1" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0070F2"/>
-                <stop offset="1" stop-color="#0054A6"/>
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
               </linearGradient>
             </defs>
           </svg>
@@ -351,7 +335,8 @@
               <span data-i18n="environmentName">Environment Name</span> <span class="required-asterisk">*</span>
               <span class="char-counter" id="envNameCounter">0/100</span>
             </label>
-            <input type="text" id="envName" data-i18n-placeholder="environmentNamePlaceholder" placeholder="e.g., Production DC68" required>
+            <input type="text" id="envName" data-i18n-placeholder="environmentNamePlaceholder"
+              placeholder="e.g., Production DC68" required>
           </div>
           <div class="form-group">
             <label for="envType">
@@ -369,7 +354,8 @@
               <span data-i18n="hostname">Hostname</span> <span class="required-asterisk">*</span>
               <span class="char-counter" id="envHostnameCounter">0/255</span>
             </label>
-            <input type="text" id="envHostname" data-i18n-placeholder="hostnamePlaceholder" placeholder="hcm-us20.hr.cloud.sap" required>
+            <input type="text" id="envHostname" data-i18n-placeholder="hostnamePlaceholder"
+              placeholder="hcm-us20.hr.cloud.sap" required>
             <small style="color: var(--text-secondary); font-size: 11px; display: block; margin-top: 4px;">
               Enter SAP hostname without https:// (e.g., hcm-us20.hr.cloud.sap)
             </small>
@@ -379,7 +365,8 @@
               Notes (optional)
               <span class="char-counter" id="envNotesCounter">0/500</span>
             </label>
-            <textarea id="envNotes" rows="2" placeholder="e.g., Test users, credentials, special configuration..."></textarea>
+            <textarea id="envNotes" rows="2"
+              placeholder="e.g., Test users, credentials, special configuration..."></textarea>
           </div>
         </form>
       </div>
@@ -396,12 +383,12 @@
       <div class="modal-header">
         <div class="modal-header-title">
           <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradientModal2)"/>
-            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradientModal2)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
             <defs>
               <linearGradient id="gradientModal2" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0070F2"/>
-                <stop offset="1" stop-color="#0054A6"/>
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
               </linearGradient>
             </defs>
           </svg>
@@ -433,7 +420,8 @@
               Notes
               <span class="char-counter" id="shortcutNotesCounter">0/5000</span>
             </label>
-            <textarea id="shortcutNotes" rows="8" maxlength="5000" placeholder="Optional description or AI-generated summary..."></textarea>
+            <textarea id="shortcutNotes" rows="8" maxlength="5000"
+              placeholder="Optional description or AI-generated summary..."></textarea>
           </div>
           <div class="form-group">
             <label for="shortcutTags">
@@ -447,45 +435,8 @@
           </div>
           <div class="form-group">
             <label for="shortcutIcon">Icon</label>
-            <select id="shortcutIcon">
-              <optgroup label="📚 Documentation & Learning">
-                <option value="map">🗺️ Map/Roadmap</option>
-                <option value="document">📝 Document</option>
-                <option value="page">📄 Page</option>
-                <option value="learning">📚 Learning</option>
-                <option value="training">🎓 Training</option>
-                <option value="demo">🎪 Demo/Walkthrough</option>
-              </optgroup>
-              <optgroup label="⚙️ Administration">
-                <option value="settings">⚙️ Settings</option>
-                <option value="security">🔐 Security</option>
-                <option value="credentials">🔑 Credentials</option>
-                <option value="tools">🛠️ Tools</option>
-              </optgroup>
-              <optgroup label="💰 Business">
-                <option value="pricing">💰 Pricing/Cost</option>
-                <option value="analytics">📊 Analytics</option>
-                <option value="target">🎯 Target/Goal</option>
-                <option value="company">🏢 Company/Customer</option>
-              </optgroup>
-              <optgroup label="🌐 Navigation">
-                <option value="link">🔗 Link</option>
-                <option value="external">🌐 External Link</option>
-                <option value="preview-eye">👁️ Preview</option>
-                <option value="datacenter">🌍 Datacenter/Region</option>
-              </optgroup>
-              <optgroup label="🔔 System & Technology">
-                <option value="alert">🔔 Alert/Notification</option>
-                <option value="success">✅ Success/Verified</option>
-                <option value="warning">⚠️ Warning</option>
-                <option value="sync">🔄 Sync/Restore</option>
-                <option value="ai">✨ AI/Joule</option>
-                <option value="package">📦 Package/Module</option>
-              </optgroup>
-              <optgroup label="👥 People">
-                <option value="people">👥 People/Teams</option>
-              </optgroup>
-            </select>
+            <div id="shortcutIconPicker" class="icon-picker-container"></div>
+            <input type="hidden" id="shortcutIcon" value="link">
           </div>
         </form>
       </div>
@@ -502,12 +453,12 @@
       <div class="modal-header">
         <div class="modal-header-title">
           <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradientModal3)"/>
-            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradientModal3)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
             <defs>
               <linearGradient id="gradientModal3" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0070F2"/>
-                <stop offset="1" stop-color="#0054A6"/>
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
               </linearGradient>
             </defs>
           </svg>
@@ -524,7 +475,7 @@
             </label>
             <input type="text" id="noteTitle" placeholder="e.g., Test User IDs" required>
           </div>
-          
+
           <div class="form-group">
             <label>Note Type <span class="required-asterisk">*</span></label>
             <div class="note-type-selector">
@@ -540,7 +491,7 @@
               </label>
             </div>
           </div>
-          
+
           <div class="form-group">
             <label for="noteContent">
               Content
@@ -551,57 +502,30 @@
               No character limit. Soft warning at 5000+ characters.
             </small>
           </div>
-          
+
           <div class="form-group">
             <label for="noteIcon">Icon</label>
-            <select id="noteIcon">
-              <optgroup label="📝 Notes & Documentation">
-                <option value="note">📝 Note</option>
-                <option value="clipboard">📋 Clipboard</option>
-                <option value="document">📄 Document</option>
-                <option value="page">📃 Page</option>
-              </optgroup>
-              <optgroup label="🔑 Security & Access">
-                <option value="key">🔑 Key/Credential</option>
-                <option value="security">🔐 Security</option>
-                <option value="credentials">🔓 Credentials</option>
-              </optgroup>
-              <optgroup label="🔗 Links & References">
-                <option value="link">🔗 Link</option>
-                <option value="external">🌐 External Link</option>
-              </optgroup>
-              <optgroup label="⚙️ Settings & Config">
-                <option value="settings">⚙️ Settings</option>
-                <option value="tools">🛠️ Tools</option>
-              </optgroup>
-              <optgroup label="💡 Ideas & Alerts">
-                <option value="idea">💡 Idea</option>
-                <option value="warning">⚠️ Warning</option>
-                <option value="alert">🚨 Alert</option>
-              </optgroup>
-              <optgroup label="✨ AI & Special">
-                <option value="ai">✨ AI/Joule</option>
-              </optgroup>
-            </select>
+            <div id="noteIconPicker" class="icon-picker-container"></div>
+            <input type="hidden" id="noteIcon" value="note">
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="downloadNoteBtn" title="Download note as text file" style="display: none;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
+        <button class="icon-btn" id="downloadNoteBtn" title="Download note as text file" aria-label="Download"
+          style="display: none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          Download
         </button>
-        <button class="btn btn-secondary" id="prettifyNoteBtn" title="Format note with consistent spacing">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="4 7 4 4 20 4 20 7"/>
-            <line x1="9" y1="20" x2="15" y2="20"/>
-            <line x1="12" y1="4" x2="12" y2="20"/>
+        <button class="icon-btn" id="copyNoteContentBtn" title="Copy content to clipboard" aria-label="Copy">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
           </svg>
-          Format
         </button>
         <button class="btn btn-ai" id="enhanceWithAIBtn" style="display: none;" title="Run your prompt with AI">
           ✨ AI
@@ -617,12 +541,12 @@
       <div class="modal-header">
         <div class="modal-header-title">
           <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradientModalAI)"/>
-            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradientModalAI)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
             <defs>
               <linearGradient id="gradientModalAI" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0070F2"/>
-                <stop offset="1" stop-color="#0054A6"/>
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
               </linearGradient>
             </defs>
           </svg>
@@ -638,24 +562,24 @@
       <div class="modal-footer">
         <button class="btn btn-primary" id="saveAiResponseBtn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-            <polyline points="17 21 17 13 7 13 7 21"/>
-            <polyline points="7 3 7 8 15 8"/>
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+            <polyline points="17 21 17 13 7 13 7 21" />
+            <polyline points="7 3 7 8 15 8" />
           </svg>
           Save as Note
         </button>
         <button class="btn btn-primary" id="copyAiResponseBtn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
           </svg>
           Copy
         </button>
         <button class="btn btn-accent" id="openEnterpriseCalcBtn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-            <line x1="3" y1="9" x2="21" y2="9"/>
-            <line x1="9" y1="21" x2="9" y2="9"/>
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <line x1="3" y1="9" x2="21" y2="9" />
+            <line x1="9" y1="21" x2="9" y2="9" />
           </svg>
           Calculator
         </button>
@@ -669,12 +593,12 @@
       <div class="modal-header">
         <div class="modal-header-title">
           <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradientModalEnterprise)"/>
-            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradientModalEnterprise)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
             <defs>
               <linearGradient id="gradientModalEnterprise" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0070F2"/>
-                <stop offset="1" stop-color="#0054A6"/>
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
               </linearGradient>
             </defs>
           </svg>
@@ -690,9 +614,9 @@
       <div class="modal-footer">
         <button class="btn btn-primary" id="exportEnterpriseReportBtn" style="display: none;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/>
-            <line x1="12" y1="3" x2="12" y2="15"/>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
           </svg>
           Export Report
         </button>
@@ -706,12 +630,12 @@
       <div class="modal-header">
         <div class="modal-header-title">
           <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradientModal4)"/>
-            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradientModal4)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
             <defs>
               <linearGradient id="gradientModal4" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0070F2"/>
-                <stop offset="1" stop-color="#0054A6"/>
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
               </linearGradient>
             </defs>
           </svg>
@@ -726,7 +650,7 @@
           <button class="settings-tab" data-tab="api-keys">🔑 API Keys</button>
           <button class="settings-tab" data-tab="backup">📦 Import/Export</button>
         </div>
-        
+
         <!-- Tab 1: Quick Actions (Editable Text Fields) -->
         <div class="settings-tab-content active" id="quick-actions-tab">
           <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
@@ -738,15 +662,15 @@
           <div class="qa-save-footer" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
             <button class="btn btn-primary btn-block" id="saveAllQaBtn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                <polyline points="17 21 17 13 7 13 7 21"/>
-                <polyline points="7 3 7 8 15 8"/>
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
               </svg>
               Save All Changes
             </button>
           </div>
         </div>
-        
+
         <!-- Tab 2: API Keys (NEW - Phase 6) -->
         <div class="settings-tab-content" id="api-keys-tab">
           <div class="form-group-toggle">
@@ -756,184 +680,224 @@
               <span class="slider round"></span>
             </label>
           </div>
-          <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px; margin-bottom: 20px;">
-            Globally enable or disable AI-powered features. When disabled, all AI-related buttons and options will be hidden.
+          <small
+            style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px; margin-bottom: 20px;">
+            Globally enable or disable AI-powered features. When disabled, all AI-related buttons and options will be
+            hidden.
           </small>
 
           <div id="apiKeysContainer">
             <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
               Configure your API keys for live AI testing. Keys are encrypted and stored locally.
             </p>
-            
+
             <!-- OpenAI API Key -->
             <div class="api-key-section">
-            <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 6v6l4 2"/>
-              </svg>
-              OpenAI API Key
-            </h4>
-            <div class="form-group" style="margin-bottom: 8px;">
-              <input type="password" id="apiKeyopenaiInput" placeholder="sk-..." class="api-key-input">
-              <button class="btn btn-secondary btn-sm" id="testOpenAIBtn" style="margin-top: 8px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"/>
+              <h4
+                style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
                 </svg>
-                Test Connection
-              </button>
-              <button class="btn btn-danger btn-sm" id="clearOpenAIBtn" style="margin-top: 8px; margin-left: 8px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="18" y1="6" x2="6" y2="18"/>
-                  <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-                Clear
-              </button>
-            </div>
-            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 16px;">
-              Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" style="color: var(--accent-color);">platform.openai.com/api-keys</a>
-            </small>
-          </div>
-          
-          <!-- Anthropic API Key -->
-          <div class="api-key-section">
-            <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-              </svg>
-              Anthropic API Key
-            </h4>
-            <div class="form-group" style="margin-bottom: 8px;">
-              <input type="password" id="apiKeyanthropicInput" placeholder="sk-ant-..." class="api-key-input">
-              <button class="btn btn-secondary btn-sm" id="testAnthropicBtn" style="margin-top: 8px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-                Test Connection
-              </button>
-              <button class="btn btn-danger btn-sm" id="clearAnthropicBtn" style="margin-top: 8px; margin-left: 8px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="18" y1="6" x2="6" y2="18"/>
-                  <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-                Clear
-              </button>
-            </div>
-            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 16px;">
-              Get your API key from <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color: var(--accent-color);">console.anthropic.com/settings/keys</a>
-            </small>
-          </div>
-          
-          <!-- Max Tokens Configuration (NEW) -->
-          <div class="api-key-section">
-            <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 6v6l4 2"/>
-              </svg>
-              Response Length
-            </h4>
-            <div class="form-group" style="margin-bottom: 8px;">
-              <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">
-                Maximum Tokens per Response
-              </label>
-              <input type="number" id="maxTokensDefault" min="100" max="128000" step="100" value="4096" placeholder="4096" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
-              <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
-                Controls response length for all AI models (100-128000 tokens). Default: 4096. Higher values = longer responses but higher costs. Most models support up to 4096 tokens.
+                OpenAI API Key
+              </h4>
+              <div class="form-group" style="margin-bottom: 8px;">
+                <input type="password" id="apiKeyopenaiInput" placeholder="sk-..." class="api-key-input">
+                <button class="btn btn-secondary btn-sm" id="testOpenAIBtn" style="margin-top: 8px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  Test Connection
+                </button>
+                <button class="btn btn-danger btn-sm" id="clearOpenAIBtn" style="margin-top: 8px; margin-left: 8px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                  Clear
+                </button>
+              </div>
+              <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 16px;">
+                Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank"
+                  style="color: var(--accent-color);">platform.openai.com/api-keys</a>
               </small>
             </div>
-            <button class="btn btn-secondary btn-sm" id="saveMaxTokensBtn" style="margin-top: 8px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                <polyline points="17 21 17 13 7 13 7 21"/>
-                <polyline points="7 3 7 8 15 8"/>
-              </svg>
-              Save Setting
-            </button>
-      </div>
-            
+
+            <!-- Anthropic API Key -->
+            <div class="api-key-section">
+              <h4
+                style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                </svg>
+                Anthropic API Key
+              </h4>
+              <div class="form-group" style="margin-bottom: 8px;">
+                <input type="password" id="apiKeyanthropicInput" placeholder="sk-ant-..." class="api-key-input">
+                <button class="btn btn-secondary btn-sm" id="testAnthropicBtn" style="margin-top: 8px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  Test Connection
+                </button>
+                <button class="btn btn-danger btn-sm" id="clearAnthropicBtn" style="margin-top: 8px; margin-left: 8px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                  Clear
+                </button>
+              </div>
+              <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 16px;">
+                Get your API key from <a href="https://console.anthropic.com/settings/keys" target="_blank"
+                  style="color: var(--accent-color);">console.anthropic.com/settings/keys</a>
+              </small>
+            </div>
+
+            <!-- Max Tokens Configuration (NEW) -->
+            <div class="api-key-section">
+              <h4
+                style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+                Response Length
+              </h4>
+              <div class="form-group" style="margin-bottom: 8px;">
+                <label
+                  style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">
+                  Maximum Tokens per Response
+                </label>
+                <input type="number" id="maxTokensDefault" min="100" max="128000" step="100" value="4096"
+                  placeholder="4096"
+                  style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+                <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
+                  Controls response length for all AI models (100-128000 tokens). Default: 4096. Higher values = longer
+                  responses but higher costs. Most models support up to 4096 tokens.
+                </small>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="saveMaxTokensBtn" style="margin-top: 8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
+                </svg>
+                Save Setting
+              </button>
+            </div>
+
             <!-- AI Core Client Id -->
             <div class="form-group" style="margin-bottom: 12px;">
-              <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Client Id</label>
-              <input type="password" id="sapAiCoreClientId" placeholder="Enter client ID" value="" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <label
+                style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI
+                Core Client Id</label>
+              <input type="password" id="sapAiCoreClientId" placeholder="Enter client ID" value="" class="api-key-input"
+                style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
               <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
                 Enter your SAP AI Core client ID from your service key.
               </small>
             </div>
-            
+
             <!-- AI Core Client Secret -->
             <div class="form-group" style="margin-bottom: 12px;">
-              <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Client Secret</label>
-              <input type="password" id="sapAiCoreClientSecret" placeholder="Enter client secret" value="" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <label
+                style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI
+                Core Client Secret</label>
+              <input type="password" id="sapAiCoreClientSecret" placeholder="Enter client secret" value=""
+                class="api-key-input"
+                style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
               <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
                 Enter your SAP AI Core client secret from your service key.
               </small>
             </div>
-            
+
             <!-- AI Core Base URL -->
             <div class="form-group" style="margin-bottom: 12px;">
-              <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Base URL</label>
-              <input type="text" id="sapAiCoreBaseUrl" placeholder="Enter AI Core API base URL" value="" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <label
+                style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI
+                Core Base URL</label>
+              <input type="text" id="sapAiCoreBaseUrl" placeholder="Enter AI Core API base URL" value=""
+                class="api-key-input"
+                style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
             </div>
-            
+
             <!-- AI Core Auth URL -->
             <div class="form-group" style="margin-bottom: 12px;">
-              <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Auth URL</label>
-              <input type="text" id="sapAiCoreAuthUrl" placeholder="Enter OAuth token endpoint URL" value="" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <label
+                style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI
+                Core Auth URL</label>
+              <input type="text" id="sapAiCoreAuthUrl" placeholder="Enter OAuth token endpoint URL" value=""
+                class="api-key-input"
+                style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
             </div>
-            
+
             <!-- AI Core Resource Group -->
             <div class="form-group" style="margin-bottom: 16px;">
-              <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI Core Resource Group</label>
-              <input type="text" id="sapAiCoreResourceGroup" placeholder="default" value="default" class="api-key-input" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
+              <label
+                style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">AI
+                Core Resource Group</label>
+              <input type="text" id="sapAiCoreResourceGroup" placeholder="default" value="default" class="api-key-input"
+                style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); font-size: 12px;">
             </div>
-            
+
             <!-- Storage Notice -->
             <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
-              These credentials are stored locally and only used to make API requests from this extension. <a href="https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/create-deployment-for-generative-ai-model-in-sap-ai-core" target="_blank" style="color: var(--accent-color);">SAP AI Core Setup Guide</a>
+              These credentials are stored locally and only used to make API requests from this extension. <a
+                href="https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/create-deployment-for-generative-ai-model-in-sap-ai-core"
+                target="_blank" style="color: var(--accent-color);">SAP AI Core Setup Guide</a>
             </small>
-            
+
             <!-- Model Dropdown (populated after connection) -->
             <div class="form-group" style="margin-bottom: 12px;">
-              <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Deployed Models</label>
-              <select id="sapAiCoreModel" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-secondary); color: var(--text-primary); font-size: 12px;" disabled>
+              <label
+                style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Deployed
+                Models</label>
+              <select id="sapAiCoreModel"
+                style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-secondary); color: var(--text-primary); font-size: 12px;"
+                disabled>
                 <option value="">Connect to load deployed models...</option>
               </select>
               <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px;">
                 Only shows RUNNING deployments from your resource group. Click "Connect" or "Refresh" to update.
               </small>
             </div>
-            
+
             <!-- Action Buttons (3 buttons same row) -->
             <div style="display: flex; gap: 8px; margin-top: 12px;">
               <button class="btn btn-secondary btn-sm" id="testSAPAICoreBtn" style="flex: 1;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"/>
+                  <polyline points="20 6 9 17 4 12" />
                 </svg>
                 Connect & Load Models
               </button>
               <button class="btn btn-accent btn-sm" id="saveSAPAICoreBtn" title="Save configuration" style="flex: 1;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                  <polyline points="17 21 17 13 7 13 7 21"/>
-                  <polyline points="7 3 7 8 15 8"/>
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
                 </svg>
                 Save
               </button>
-              <button class="btn btn-danger btn-sm" id="clearSAPAICoreBtn" title="Clear all configuration" style="flex: 1;">
+              <button class="btn btn-danger btn-sm" id="clearSAPAICoreBtn" title="Clear all configuration"
+                style="flex: 1;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="18" y1="6" x2="6" y2="18"/>
-                  <line x1="6" y1="6" x2="18" y2="18"/>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
                 Clear
               </button>
             </div>
-            
+
             <!-- Primary Model Indicator (Hidden by default, shown when model is saved) -->
-            <div id="sapAiCorePrimaryIndicator" style="display: none; margin-top: 12px; padding: 10px 12px; background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10B981; border-radius: 4px;">
-              <div style="font-size: 11px; color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+            <div id="sapAiCorePrimaryIndicator"
+              style="display: none; margin-top: 12px; padding: 10px 12px; background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10B981; border-radius: 4px;">
+              <div
+                style="font-size: 11px; color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 6px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="#10B981" stroke="#10B981" stroke-width="2">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                 </svg>
                 <span>Primary Model: <span id="primaryModelName">-</span></span>
               </div>
@@ -941,108 +905,115 @@
                 This model will be used by default for all AI features (Test, AI Prompts)
               </div>
             </div>
-          
-            <div style="margin-top: 24px; padding: 12px; background: rgba(var(--accent-rgb), 0.1); border-radius: 6px; border-left: 3px solid var(--accent-color);">
+
+            <div
+              style="margin-top: 24px; padding: 12px; background: rgba(var(--accent-rgb), 0.1); border-radius: 6px; border-left: 3px solid var(--accent-color);">
               <p style="margin: 0; font-size: 11px; color: var(--text-secondary);">
-                🔒 <strong>Security</strong>: API keys are encrypted using AES-256-GCM and stored locally in your browser.
+                🔒 <strong>Security</strong>: API keys are encrypted using AES-256-GCM and stored locally in your
+                browser.
                 Keys are never sent to external servers except the API providers you configure.
               </p>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Tab 3: Import/Export -->
+      <div class="settings-tab-content" id="backup-tab">
+        <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
+          Backup and restore your configuration including environments, shortcuts, notes, and Quick Actions.
+        </p>
+
+        <!-- Export Section -->
+        <div class="api-key-section">
+          <h4
+            style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            Export Configuration
+          </h4>
+          <div class="form-group" style="margin-bottom: 0;">
+            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
+              Export all profiles as a full backup
+            </small>
+            <button class="btn btn-accent btn-block" id="exportAllBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              Export All Profiles (Full Backup)
+            </button>
+          </div>
         </div>
-        
-        <!-- Tab 3: Import/Export -->
-        <div class="settings-tab-content" id="backup-tab">
-          <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
-            Backup and restore your configuration including environments, shortcuts, notes, and Quick Actions.
+
+        <!-- Import Section -->
+        <div class="api-key-section">
+          <h4
+            style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Import Configuration
+          </h4>
+          <div class="form-group" style="margin-bottom: 0;">
+            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
+              Import previously exported JSON file to restore your configuration
+            </small>
+            <button class="btn btn-secondary btn-block" id="importJsonBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Import JSON File
+            </button>
+            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+          </div>
+        </div>
+
+        <!-- Reset Profile Section (NEW) -->
+        <div class="api-key-section">
+          <h4
+            style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10" />
+              <polyline points="1 20 1 14 7 14" />
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+            </svg>
+            Reset Profile Data
+          </h4>
+          <div class="form-group" style="margin-bottom: 0;">
+            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
+              Clear current profile data and reload from default JSON file
+            </small>
+            <button class="btn btn-danger btn-block" id="resetProfileBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10" />
+                <polyline points="1 20 1 14 7 14" />
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+              </svg>
+              Reset Current Profile
+            </button>
+          </div>
+        </div>
+
+        <!-- Security Notice -->
+        <div
+          style="margin-top: 24px; padding: 12px; background: rgba(var(--accent-rgb), 0.1); border-radius: 6px; border-left: 3px solid var(--accent-color);">
+          <p style="margin: 0; font-size: 11px; color: var(--text-secondary);">
+            🔒 <strong>Security</strong>: Exported files contain your configuration in plain text. Store them securely
+            and do not share files containing sensitive information.
           </p>
-          
-          <!-- Export Section -->
-          <div class="api-key-section">
-            <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="17 8 12 3 7 8"/>
-                <line x1="12" y1="3" x2="12" y2="15"/>
-              </svg>
-              Export Configuration
-            </h4>
-            <div class="form-group" style="margin-bottom: 0;">
-              <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
-                Export all profiles as a full backup
-              </small>
-              <button class="btn btn-accent btn-block" id="exportAllBtn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="17 8 12 3 7 8"/>
-                  <line x1="12" y1="3" x2="12" y2="15"/>
-                </svg>
-                Export All Profiles (Full Backup)
-              </button>
-            </div>
-          </div>
-          
-          <!-- Import Section -->
-          <div class="api-key-section">
-            <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              Import Configuration
-            </h4>
-            <div class="form-group" style="margin-bottom: 0;">
-              <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
-                Import previously exported JSON file to restore your configuration
-              </small>
-              <button class="btn btn-secondary btn-block" id="importJsonBtn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="7 10 12 15 17 10"/>
-                  <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                Import JSON File
-              </button>
-              <input type="file" id="importFileInput" accept=".json" style="display: none;">
-            </div>
-          </div>
-          
-          <!-- Reset Profile Section (NEW) -->
-          <div class="api-key-section">
-            <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="23 4 23 10 17 10"/>
-                <polyline points="1 20 1 14 7 14"/>
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-              </svg>
-              Reset Profile Data
-            </h4>
-            <div class="form-group" style="margin-bottom: 0;">
-              <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
-                Clear current profile data and reload from default JSON file
-              </small>
-              <button class="btn btn-danger btn-block" id="resetProfileBtn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="23 4 23 10 17 10"/>
-                  <polyline points="1 20 1 14 7 14"/>
-                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-                </svg>
-                Reset Current Profile
-              </button>
-            </div>
-          </div>
-          
-          <!-- Security Notice -->
-          <div style="margin-top: 24px; padding: 12px; background: rgba(var(--accent-rgb), 0.1); border-radius: 6px; border-left: 3px solid var(--accent-color);">
-            <p style="margin: 0; font-size: 11px; color: var(--text-secondary);">
-              🔒 <strong>Security</strong>: Exported files contain your configuration in plain text. Store them securely and do not share files containing sensitive information.
-            </p>
-          </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <!-- New Profile Modal -->
@@ -1051,12 +1022,12 @@
       <div class="modal-header">
         <div class="modal-header-title">
           <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradientModalProfile)"/>
-            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradientModalProfile)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
             <defs>
               <linearGradient id="gradientModalProfile" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0070F2"/>
-                <stop offset="1" stop-color="#0054A6"/>
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
               </linearGradient>
             </defs>
           </svg>
@@ -1081,11 +1052,9 @@
             <textarea id="newProfileDesc" rows="2" placeholder="Optional description..." maxlength="200"></textarea>
           </div>
           <div class="form-group">
-            <label for="newProfileIcon">Icon Emoji</label>
-            <input type="text" id="newProfileIcon" placeholder="e.g., 🎯, 📁, 💼, 🚀" maxlength="2" style="font-size: 18px;">
-            <small style="color: var(--text-secondary); font-size: 11px; display: block; margin-top: 4px;">
-              Enter a single emoji character (optional, defaults to 📁)
-            </small>
+            <label for="newProfileIcon">Icon</label>
+            <div id="profileIconPicker" class="icon-picker-container"></div>
+            <input type="hidden" id="newProfileIcon" value="folder">
           </div>
         </form>
       </div>
@@ -1102,12 +1071,12 @@
       <div class="modal-header">
         <div class="modal-header-title">
           <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradientModal5)"/>
-            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradientModal5)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
             <defs>
               <linearGradient id="gradientModal5" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0070F2"/>
-                <stop offset="1" stop-color="#0054A6"/>
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
               </linearGradient>
             </defs>
           </svg>
@@ -1117,26 +1086,32 @@
       </div>
       <div class="modal-body">
         <p style="font-size: 12px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 20px;">
-          SAP Pro Toolkit helps SAP professionals work more efficiently by providing quick access to environments, shortcuts, and diagnostic tools.
+          SAP Pro Toolkit helps SAP professionals work more efficiently by providing quick access to environments,
+          shortcuts, and diagnostic tools.
         </p>
-        
-        <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">Key Features</h4>
+
+        <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">Key Features
+        </h4>
         <ul style="font-size: 12px; line-height: 1.8; color: var(--text-secondary); margin: 0; padding-left: 20px;">
           <li><strong>Side Panel</strong>: Always accessible on the right side while you work</li>
           <li><strong>Environment Switching</strong>: Quickly switch between Production, Preview, Sales instances</li>
           <li><strong>Pin Environments</strong>: ⭐ Star icon to pin favorite environments to the top</li>
           <li><strong>Usage Tracking</strong>: See when you last accessed each environment and how often</li>
           <li><strong>Environment Notes</strong>: Add custom notes to environments (test users, configs, etc.)</li>
-          <li><strong>Profile System</strong>: Organize configurations by profile (Global, SuccessFactors, S/4HANA, BTP, etc.)</li>
-          <li><strong>New Content Notifications</strong>: Get notified when profile content is updated (📋 toast notification)</li>
+          <li><strong>Profile System</strong>: Organize configurations by profile (Global, SuccessFactors, S/4HANA, BTP,
+            etc.)</li>
+          <li><strong>New Content Notifications</strong>: Get notified when profile content is updated (📋 toast
+            notification)</li>
           <li><strong>Smart URLs</strong>: Supports absolute external URLs for shortcuts</li>
-          <li><strong>Scratch Notes</strong>: Store temporary IDs, URLs, and reference information with formatting tools</li>
+          <li><strong>Scratch Notes</strong>: Store temporary IDs, URLs, and reference information with formatting tools
+          </li>
           <li><strong>JSON Import/Export</strong>: Backup and share your configuration</li>
           <li><strong>System Diagnostics</strong>: Generate detailed reports for troubleshooting</li>
           <li><strong>Multi-language Support</strong>: Available in 10+ languages</li>
         </ul>
-        
-        <h4 style="font-size: 13px; font-weight: 600; margin: 20px 0 10px; color: var(--text-primary);">⌨️ Keyboard Shortcuts</h4>
+
+        <h4 style="font-size: 13px; font-weight: 600; margin: 20px 0 10px; color: var(--text-primary);">⌨️ Keyboard
+          Shortcuts</h4>
         <div class="keyboard-shortcuts-grid">
           <div class="shortcut-item">
             <kbd id="modKey1">⌘</kbd><kbd>K</kbd>
@@ -1179,7 +1154,7 @@
             <span class="shortcut-desc">Close modal/clear search</span>
           </div>
         </div>
-        
+
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" id="closeHelpBtn">Got it!</button>
@@ -1193,12 +1168,12 @@
       <div class="modal-header">
         <div class="modal-header-title">
           <svg class="modal-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradientModalDiag)"/>
-            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <rect width="32" height="32" rx="6" fill="url(#gradientModalDiag)" />
+            <path d="M9 12h14M9 16h14M9 20h10" stroke="white" stroke-width="2" stroke-linecap="round" />
             <defs>
               <linearGradient id="gradientModalDiag" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0070F2"/>
-                <stop offset="1" stop-color="#0054A6"/>
+                <stop stop-color="#0070F2" />
+                <stop offset="1" stop-color="#0054A6" />
               </linearGradient>
             </defs>
           </svg>
@@ -1213,26 +1188,28 @@
       </div>
       <div class="modal-footer">
         <div class="modal-footer-left">
-          <button class="btn btn-secondary" id="saveDiagnosticsBtn" style="display: none;" title="Save diagnostics as note">
+          <button class="btn btn-secondary" id="saveDiagnosticsBtn" style="display: none;"
+            title="Save diagnostics as note">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-              <polyline points="17 21 17 13 7 13 7 21"/>
-              <polyline points="7 3 7 8 15 8"/>
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
             </svg>
             Save
           </button>
-          <button class="btn btn-secondary" id="downloadDiagnosticsBtn" style="display: none;" title="Download diagnostics report">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7 10 12 15 17 10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
+          <button class="btn btn-secondary" id="downloadDiagnosticsBtn" style="display: none;"
+            title="Download diagnostics report">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
             Download
           </button>
         </div>
         <div class="modal-footer-right">
-          <button class="btn btn-ai" id="regenerateDiagnosticsWithAIBtn" 
-                  title="Enhance diagnostics with AI analysis">
+          <button class="btn btn-ai" id="regenerateDiagnosticsWithAIBtn" title="Enhance diagnostics with AI analysis">
             ✨ AI
           </button>
         </div>
@@ -1260,24 +1237,26 @@
   <!-- Markdown rendering libraries (loaded locally to comply with CSP) -->
   <script src="vendor/marked.min.js"></script>
   <script src="vendor/purify.min.js"></script>
-  
+
   <!-- Core utilities (must be loaded before side-panel.js) -->
   <script src="crypto-utils.js"></script>
   <script src="sap-icon-library.js"></script>
+  <script src="icon-picker.js"></script>
   <script src="svg-renderer.js"></script>
   <script src="validation.js"></script>
   <script src="toolkit-core.js"></script>
-  
+
   <!-- Modular scripts (must be loaded before main.js and side-panel.js) -->
   <script src="state.js"></script>
   <script src="ui-render.js"></script>
   <script src="actions.js"></script>
   <script src="ai-features.js"></script>
-  
+
   <!-- Main initialization (depends on all modules above) -->
   <script src="main.js"></script>
 
   <!-- Main panel script (depends on all modules above) -->
   <script src="side-panel.js"></script>
 </body>
+
 </html>

@@ -99,25 +99,31 @@ function setupSearchFilter() {
 /**
  * Toggle OSS Note search form visibility
  */
-async function toggleOssNoteSearch() {
+window.toggleOssNoteSearch = async function() {
+  console.log('[OSS Note] toggleOssNoteSearch called');
   const form = document.getElementById('ossNoteSearchForm');
   if (form) {
+    console.log('[OSS Note] Form found, current display:', form.style.display);
     form.style.display = form.style.display === 'none' ? 'flex' : 'none';
     if (form.style.display === 'flex') {
       document.getElementById('ossNoteInputInline')?.focus();
     }
+    console.log('[OSS Note] Form display set to:', form.style.display);
+  } else {
+    console.error('[OSS Note] Form element not found!');
   }
-}
+};
 
 /**
  * Open OSS Note from inline input
  */
-function openOssNoteInline() {
+window.openOssNoteInline = function() {
+  console.log('[OSS Note] openOssNoteInline called');
   const input = document.getElementById('ossNoteInputInline');
   const noteNumber = input?.value.trim();
 
   if (!noteNumber) {
-    showToast('Please enter an OSS Note number', 'warning');
+    if (window.showToast) window.showToast('Please enter an OSS Note number', 'warning');
     return;
   }
 
@@ -125,13 +131,13 @@ function openOssNoteInline() {
   const cleanNumber = noteNumber.replace(/\D/g, '');
 
   if (!cleanNumber) {
-    showToast('Invalid OSS Note number', 'error');
+    if (window.showToast) window.showToast('Invalid OSS Note number', 'error');
     return;
   }
 
   const ossUrl = `https://launchpad.support.sap.com/#/notes/${cleanNumber}`;
   chrome.tabs.create({ url: ossUrl });
-  showToast(`Opening OSS Note ${cleanNumber} ✓`, 'success');
+  if (window.showToast) window.showToast(`Opening OSS Note ${cleanNumber} ✓`, 'success');
 
   // Clear input and hide form
   if (input) input.value = '';
@@ -141,12 +147,13 @@ function openOssNoteInline() {
 /**
  * Copy OSS Note URL to clipboard
  */
-async function copyOssNoteUrl() {
+window.copyOssNoteUrl = async function() {
+  console.log('[OSS Note] copyOssNoteUrl called');
   const input = document.getElementById('ossNoteInputInline');
   const noteNumber = input?.value.trim().replace(/\D/g, '');
 
   if (!noteNumber) {
-    showToast('Please enter an OSS Note number first', 'warning');
+    if (window.showToast) window.showToast('Please enter an OSS Note number first', 'warning');
     return;
   }
 
@@ -154,22 +161,23 @@ async function copyOssNoteUrl() {
 
   try {
     await navigator.clipboard.writeText(ossUrl);
-    showToast('OSS Note URL copied ✓', 'success');
+    if (window.showToast) window.showToast('OSS Note URL copied ✓', 'success');
   } catch (error) {
     console.error('[Copy OSS URL] Failed:', error);
-    showToast('Failed to copy URL', 'error');
+    if (window.showToast) window.showToast('Failed to copy URL', 'error');
   }
 }
 
 /**
  * Add OSS Note as a shortcut
  */
-async function addOssNoteAsShortcut() {
+window.addOssNoteAsShortcut = async function() {
+  console.log('[OSS Note] addOssNoteAsShortcut called');
   const input = document.getElementById('ossNoteInputInline');
   const noteNumber = input?.value.trim().replace(/\D/g, '');
 
   if (!noteNumber) {
-    showToast('Please enter an OSS Note number first', 'warning');
+    if (window.showToast) window.showToast('Please enter an OSS Note number first', 'warning');
     return;
   }
 
@@ -191,7 +199,7 @@ async function addOssNoteAsShortcut() {
   await chrome.storage.local.set({ [storageKey]: newShortcuts });
 
   window.renderShortcuts();
-  showToast(`OSS Note ${noteNumber} added as shortcut ✓`, 'success');
+  if (window.showToast) window.showToast(`OSS Note ${noteNumber} added as shortcut ✓`, 'success');
 
   // Clear input and hide form
   if (input) input.value = '';
@@ -712,32 +720,6 @@ async function exportJsonToFile() {
 
 // Collapsible sections are now handled by window.initializeCollapsibleSections() in actions.js
 // No local implementation needed here
-
-/**
- * Update section count badges to show number of items
- */
-window.updateSectionCounts = function () {
-  // Update environments count
-  const envCount = document.querySelector('.section[data-section="environments"] .section-count');
-  if (envCount) {
-    const count = environments.length;
-    envCount.textContent = count > 0 ? `(${count})` : '';
-  }
-
-  // Update shortcuts count
-  const shortcutsCount = document.querySelector('.section[data-section="shortcuts"] .section-count');
-  if (shortcutsCount) {
-    const count = shortcuts.length;
-    shortcutsCount.textContent = count > 0 ? `(${count})` : '';
-  }
-
-  // Update notes count
-  const notesCount = document.querySelector('.section[data-section="notes"] .section-count');
-  if (notesCount) {
-    const count = notes.length;
-    notesCount.textContent = count > 0 ? `(${count})` : '';
-  }
-};
 
 // ==================== EVENT LISTENERS ====================
 
@@ -1424,78 +1406,6 @@ function showEstimateResults(result) {
  * to ensure the visible response is saved.
  * @param {Object} fallbackResult - Optional fallback AI test result object if dataset is missing.
  */
-async function saveAIResponseAsNote(fallbackResult) {
-  const modal = document.getElementById('aiTestResultsModal');
-
-  // Prioritize reading from the modal's dataset attributes
-  let responseContent = modal.dataset.responseContent;
-  let modelName = modal.dataset.modelName;
-  let provider = modal.dataset.provider;
-  let inputTokens = modal.dataset.inputTokens;
-  let outputTokens = modal.dataset.outputTokens;
-  let totalCost = modal.dataset.totalCost; // may not be available
-
-  // Fallback to the argument if dataset is not available
-  if (!responseContent || !modelName) {
-    if (fallbackResult && fallbackResult.responseContent) {
-      responseContent = fallbackResult.responseContent;
-      modelName = fallbackResult.modelData.model;
-      provider = fallbackResult.modelData.provider;
-      inputTokens = fallbackResult.inputTokens;
-      outputTokens = fallbackResult.outputTokens;
-      totalCost = fallbackResult.costs.totalCost;
-    } else {
-      showToast('No response content to save', 'warning');
-      return;
-    }
-  }
-
-  try {
-    const timestamp = new Date().toLocaleString();
-    const title = `AI Response - ${provider} ${modelName}`;
-
-    const cleanResponse = stripMarkdown(responseContent);
-
-    let costLine = totalCost ? `Cost: $${totalCost}\n` : '';
-
-    const content = `${cleanResponse}
-
----
-Model: ${provider} - ${modelName}
-Input Tokens: ${Number(inputTokens).toLocaleString()}
-Output Tokens: ${Number(outputTokens).toLocaleString()}
-${costLine}Generated: ${timestamp}`;
-
-    const noteObject = {
-      id: `note-${Date.now()}`,
-      title,
-      content,
-      icon: 'ai',
-      noteType: 'ai-prompt',
-      tags: ['ai', 'llm-response', provider ? provider.toLowerCase() : 'ai'],
-      timestamp: Date.now(),
-      aiConfig: {
-        defaultModel: modelName,
-        provider: provider
-      }
-    };
-
-    notes.push(noteObject);
-
-    const storageKey = `notes_${currentProfile}`;
-    await chrome.storage.local.set({ [storageKey]: notes });
-
-    window.renderNotes();
-    closeAiTestResultsModal();
-
-    showToast('Response saved as a note ✓', 'success');
-
-  } catch (error) {
-    console.error('[Save AI Response] Failed:', error);
-    showToast(`Failed to save: ${error.message}`, 'error');
-  }
-}
-
 /**
  * Copies the AI response from the modal to the clipboard.
  * Reads content directly from the modal's dataset for robustness.

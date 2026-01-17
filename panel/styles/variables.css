@@ -28,7 +28,7 @@
   --text-primary: #32363A;
   --text-secondary: #6A6D70;
   --text-tertiary: #89919A;
-  --border: #D9D9D9;
+  --border: #E5E7EB;
   --border-light: #E8E8E8;
   
   /* Glassmorphism */
@@ -47,10 +47,14 @@
   --space-lg: 20px;
   --space-xl: 24px;
   
-  /* Border Radius */
+  /* Border Radius (Fiori Horizon Standard) */
   --radius-sm: 4px;
-  --radius-md: 6px;
+  --radius-md: 8px;
   --radius-lg: 8px;
+  
+  /* Fiori Quartz Light Shadows (opt-in for future use) */
+  --shadow-card-rest: 0 0 2px 0 rgba(0,0,0,0.1), 0 2px 4px 0 rgba(0,0,0,0.1);
+  --shadow-card-hover: 0 0 2px 0 rgba(0,0,0,0.1), 0 8px 16px 0 rgba(0,0,0,0.1);
   
   /* Fluid Typography */
   --font-xs: clamp(10px, 2vw, 11px);
@@ -75,15 +79,25 @@
   --border-light: #3A4248;
   
   /* Vibrant blue for dark mode - better contrast and visibility */
-  --primary: #3B9EFF;
+  --primary: #6AB6E8;
   --primary-dark: #1E7FE0;
-  --primary-glow: rgba(59, 158, 255, 0.25);
+  --primary-glow: rgba(106, 182, 232, 0.25);
+  
+  /* Environment Type Colors - Pastel variants for dark mode readability */
+  --env-production: #FF8989;
+  --env-preview: #6AD786;
+  --env-sales: #F9C663;
+  --env-sandbox: #D0A6F0;
   
   /* Glassmorphism Dark */
   --glass-bg: rgba(29, 35, 42, 0.95);
   --glass-border: rgba(255, 255, 255, 0.12);
   
-  --accent-rgb: 59, 158, 255;
+  /* Disable shadows in dark mode (rely on borders) */
+  --shadow-card-rest: none;
+  --shadow-card-hover: none;
+  
+  --accent-rgb: 106, 182, 232;
 }
 
 /* Auto Mode - Default to Light Theme */
@@ -103,13 +117,23 @@
     --border: #4A5560;
     --border-light: #3A4248;
     
-    --primary: #3B9EFF;
+    --primary: #6AB6E8;
     --primary-dark: #1E7FE0;
-    --primary-glow: rgba(59, 158, 255, 0.25);
+    --primary-glow: rgba(106, 182, 232, 0.25);
+    
+    /* Environment Type Colors - Pastel variants for dark mode readability */
+    --env-production: #FF8989;
+    --env-preview: #6AD786;
+    --env-sales: #F9C663;
+    --env-sandbox: #D0A6F0;
     
     --glass-bg: rgba(29, 35, 42, 0.95);
     --glass-border: rgba(255, 255, 255, 0.12);
     
-    --accent-rgb: 59, 158, 255;
+    /* Disable shadows in dark mode (rely on borders) */
+    --shadow-card-rest: none;
+    --shadow-card-hover: none;
+    
+    --accent-rgb: 106, 182, 232;
   }
 }

@@ -154,12 +154,13 @@
   order: 99; /* Always last in right section */
 }
 
-/* Utility buttons in left section are smaller */
+/* Utility buttons in left section - same height as action buttons for consistency */
 .modal-footer .modal-footer-left .btn {
   min-width: 80px;
-  height: 32px;
-  padding: 8px 12px;
-  font-size: 12px;
+  height: 36px;
+  min-height: 36px;
+  padding: 10px 12px;
+  font-size: 13px;
 }
 
 /* AI buttons maintain green theme */

@@ -303,7 +303,7 @@ window.renderShortcuts = async function() {
   });
   
   tbody.innerHTML = sortedShortcuts.map(shortcut => {
-    const displayIcon = typeof renderSAPIcon === 'function' ? renderSAPIcon(shortcut.icon, 'shortcut', 16) : '📄';
+    const displayIcon = typeof renderSAPIcon === 'function' ? renderSAPIcon(shortcut.icon, 'universal', 16) : '📄';
     
     return `
       <tr class="shortcut-row" data-shortcut-id="${shortcut.id}" data-url="${shortcut.url}">
@@ -438,7 +438,7 @@ window.renderNotes = async function() {
     const contentPreview = note.content 
       ? (note.content.length > 60 ? note.content.substring(0, 60) + '...' : note.content)
       : '';
-    const displayIcon = typeof renderSAPIcon === 'function' ? renderSAPIcon(note.icon, 'note', 16) : '📝';
+    const displayIcon = typeof renderSAPIcon === 'function' ? renderSAPIcon(note.icon, 'universal', 16) : '📝';
     
     const noteType = note.noteType || 'note';
     const noteTypeLabels = {
@@ -581,7 +581,7 @@ window.renderProfileMenu = async function() {
   const profileItems = visibleProfiles.map(profile => {
     const isActive = profile.id === window.currentProfile;
     const isCustom = !systemProfiles.includes(profile.id);
-    const icon = profile.icon || '📁';
+    const iconId = profile.icon || 'folder';
     const description = profile.description || '';
 
     // CRITICAL: Delete button should ONLY show if:
@@ -589,11 +589,20 @@ window.renderProfileMenu = async function() {
     // 2. Profile is NOT currently active
     const showDeleteBtn = isCustom && !isActive;
 
+    // Render icon using SAPIconLibrary for proper SVG rendering
+    let iconSVG = iconId; // Fallback to text
+    if (window.SAPIconLibrary) {
+      const iconObj = window.SAPIconLibrary.getIconById(iconId, 'universal');
+      if (iconObj) {
+        iconSVG = window.SAPIconLibrary.renderIconSVG(iconObj, 18);
+      }
+    }
+
     // Wrap profile item and delete button in a container for proper positioning
     return `
       <div class="profile-menu-item-wrapper">
         <button class="profile-menu-item ${isActive ? 'active' : ''}" data-profile-id="${profile.id}">
-          <span class="profile-icon">${icon}</span>
+          <span class="profile-icon">${iconSVG}</span>
           <div class="profile-info">
             <div class="profile-name">${profile.name}</div>
             ${description ? `<div class="profile-desc">${description}</div>` : ''}

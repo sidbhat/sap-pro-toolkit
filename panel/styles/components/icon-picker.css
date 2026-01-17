@@ -1,0 +1,67 @@
+/**
+ * Icon Picker Component Styles
+ * 
+ * Slack-style visual icon selector
+ * 2 rows x 5 columns grid layout
+ */
+
+.icon-picker-container {
+  margin-bottom: 16px;
+}
+
+.icon-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 36px;
+  gap: 6px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 100%;
+}
+
+.icon-picker-btn {
+  width: 100%;
+  height: 36px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: var(--bg-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  padding: 0;
+  color: var(--text-primary);
+}
+
+.icon-picker-btn:hover {
+  background: var(--hover);
+  transform: scale(1.08);
+  border-color: var(--border-hover, var(--border));
+}
+
+.icon-picker-btn:active {
+  transform: scale(0.98);
+}
+
+.icon-picker-btn.selected {
+  border-color: var(--accent-color);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-width: 3px;
+}
+
+.icon-picker-btn svg {
+  pointer-events: none;
+}
+
+/* Focus styles for accessibility */
+.icon-picker-btn:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.icon-picker-btn:focus:not(:focus-visible) {
+  outline: none;
+}

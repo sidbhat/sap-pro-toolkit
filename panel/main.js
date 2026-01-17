@@ -10,51 +10,51 @@ async function init() {
   try {
     // Define available profiles (hardcoded list of profile files)
     const profileDefinitions = [
-      { 
-        id: 'profile-global', 
-        name: 'Global', 
+      {
+        id: 'profile-global',
+        name: 'Global',
         file: 'profile-global.json',
         icon: '🌐',
         description: 'Universal SAP shortcuts and resources across all solutions'
       },
-      { 
-        id: 'profile-successfactors', 
-        name: 'SuccessFactors', 
+      {
+        id: 'profile-successfactors',
+        name: 'SuccessFactors',
         file: 'profile-successfactors-public.json',
         icon: '👥',
         description: 'SuccessFactors HCM tools, shortcuts, and Joule prompts'
       },
-      { 
-        id: 'profile-s4hana', 
-        name: 'S/4HANA', 
+      {
+        id: 'profile-s4hana',
+        name: 'S/4HANA',
         file: 'profile-s4hana.json',
         icon: '🏭',
         description: 'S/4HANA Cloud ERP, Fiori apps, and Clean Core resources'
       },
-      { 
-        id: 'profile-btp', 
-        name: 'BTP', 
+      {
+        id: 'profile-btp',
+        name: 'BTP',
         file: 'profile-btp.json',
         icon: '☁️',
         description: 'SAP Business Technology Platform and development tools'
       },
-      { 
-        id: 'profile-executive', 
-        name: 'Executive', 
+      {
+        id: 'profile-executive',
+        name: 'Executive',
         file: 'profile-executive.json',
         icon: '📊',
         description: 'Strategic resources for SAP leadership and decision makers'
       },
-      { 
-        id: 'profile-golive', 
-        name: 'Go-Live', 
+      {
+        id: 'profile-golive',
+        name: 'Go-Live',
         file: 'profile-golive.json',
         icon: '🚀',
         description: 'Critical checklists for S/4HANA go-live and cutover'
       },
-      { 
-        id: 'profile-ai-joule', 
-        name: 'AI & Joule', 
+      {
+        id: 'profile-ai-joule',
+        name: 'AI & Joule',
         file: 'profile-ai-joule.json',
         icon: '✨',
         description: 'SAP AI, Joule, Generative AI Hub, and prompt engineering'
@@ -75,7 +75,7 @@ async function init() {
     // Load active profile
     const result = await chrome.storage.local.get('activeProfile');
     const activeProfile = result.activeProfile || 'profile-global';
-    
+
     // Set current profile using window object
     window.setCurrentProfile(activeProfile);
 
@@ -151,7 +151,7 @@ async function init() {
 
 function setupEventListeners() {
   console.log('[Event Listeners] Starting setupEventListeners...');
-  
+
   // Environment actions
   document.getElementById('addEnvBtn')?.addEventListener('click', window.addCurrentPageAsEnvironment);
   document.getElementById('addEnvBtnInline')?.addEventListener('click', window.addCurrentPageAsEnvironment);
@@ -160,7 +160,7 @@ function setupEventListeners() {
   document.getElementById('saveEnvBtn')?.addEventListener('click', window.saveEnvironment);
 
   // Shortcut actions
-  document.getElementById('addShortcutBtn')?.addEventListener('click', window.openAddShortcutModal);
+  document.getElementById('addShortcutBtn')?.addEventListener('click', window.addCurrentPageAsShortcut);
   document.getElementById('addCurrentPageBtnEmpty')?.addEventListener('click', window.addCurrentPageAsShortcut);
   document.getElementById('closeAddShortcutModal')?.addEventListener('click', window.closeAddShortcutModal);
   document.getElementById('cancelAddShortcutBtn')?.addEventListener('click', window.closeAddShortcutModal);
@@ -175,11 +175,11 @@ function setupEventListeners() {
   document.getElementById('downloadNoteBtn')?.addEventListener('click', () => {
     const modal = document.getElementById('addNoteModal');
     const editId = modal?.getAttribute('data-edit-id');
-    
+
     // Check if this is after an AI response (content in textarea differs from stored note)
     const noteTitle = document.getElementById('noteTitle')?.value.trim();
     const noteContent = document.getElementById('noteContent')?.value.trim();
-    
+
     if (noteContent && noteTitle) {
       // Download current content from textarea (which may be AI response)
       window.downloadCurrentNoteContent(noteTitle, noteContent);
@@ -188,7 +188,7 @@ function setupEventListeners() {
       window.downloadNote(editId);
     }
   });
-  document.getElementById('prettifyNoteBtn')?.addEventListener('click', window.prettifyNote);
+  document.getElementById('copyNoteContentBtn')?.addEventListener('click', window.copyNoteFromModal);
   document.getElementById('enhanceWithAIBtn')?.addEventListener('click', window.handleRunAIPrompt);
 
   // Help modal
@@ -283,7 +283,7 @@ function setupEventListeners() {
     document.getElementById('importFileInput')?.click();
   });
   document.getElementById('importFileInput')?.addEventListener('change', window.handleFileImport);
-  
+
   // Reset Profile
   document.getElementById('resetProfileBtn')?.addEventListener('click', window.resetProfile);
 
@@ -291,7 +291,7 @@ function setupEventListeners() {
   const closeNewProfileBtn = document.getElementById('closeNewProfileModal');
   const cancelNewProfileBtn = document.getElementById('cancelNewProfileBtn');
   const saveNewProfileBtn = document.getElementById('saveNewProfileBtn');
-  
+
   console.log('[Event Listeners] New Profile modal buttons:', {
     closeBtn: !!closeNewProfileBtn,
     cancelBtn: !!cancelNewProfileBtn,
@@ -299,21 +299,21 @@ function setupEventListeners() {
     closeFn: !!window.closeNewProfileModal,
     saveFn: !!window.saveNewProfile
   });
-  
+
   if (closeNewProfileBtn) {
     closeNewProfileBtn.addEventListener('click', () => {
       console.log('[New Profile] Close button clicked');
       if (window.closeNewProfileModal) window.closeNewProfileModal();
     });
   }
-  
+
   if (cancelNewProfileBtn) {
     cancelNewProfileBtn.addEventListener('click', () => {
       console.log('[New Profile] Cancel button clicked');
       if (window.closeNewProfileModal) window.closeNewProfileModal();
     });
   }
-  
+
   if (saveNewProfileBtn) {
     saveNewProfileBtn.addEventListener('click', () => {
       console.log('[New Profile] Save button clicked');
@@ -326,7 +326,7 @@ function setupEventListeners() {
   const newProfileDesc = document.getElementById('newProfileDesc');
   const nameCounter = document.getElementById('newProfileNameCounter');
   const descCounter = document.getElementById('newProfileDescCounter');
-  
+
   if (newProfileName && nameCounter) {
     newProfileName.addEventListener('input', () => {
       const length = newProfileName.value.length;
@@ -338,7 +338,7 @@ function setupEventListeners() {
       }
     });
   }
-  
+
   if (newProfileDesc && descCounter) {
     newProfileDesc.addEventListener('input', () => {
       const length = newProfileDesc.value.length;
@@ -354,7 +354,12 @@ function setupEventListeners() {
   // Theme toggle
   document.getElementById('footerThemeBtn')?.addEventListener('click', window.toggleTheme);
 
-  // OSS Note event listeners are handled in side-panel.js (complete implementation with toggleOssNoteSearch)
+  // OSS Note actions
+  document.getElementById('ossNoteBtn')?.addEventListener('click', window.toggleOssNoteSearch);
+  document.getElementById('openOssNoteInlineBtn')?.addEventListener('click', window.openOssNoteInline);
+  document.getElementById('copyOssUrlBtn')?.addEventListener('click', window.copyOssNoteUrl);
+  document.getElementById('addOssShortcutBtn')?.addEventListener('click', window.addOssNoteAsShortcut);
+  document.getElementById('closeOssSearchBtn')?.addEventListener('click', window.toggleOssNoteSearch);
 
   // Search functionality
   document.getElementById('clearSearch')?.addEventListener('click', () => {
@@ -448,21 +453,35 @@ function setupKeyboardShortcuts() {
 // ==================== SEARCH ====================
 
 function setupSearch() {
-  const searchInput = document.getElementById('quickSearch');
-  
+  const searchInput = document.getElementById('globalSearch');
+  const clearBtn = document.getElementById('clearSearch');
+
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       const searchTerm = e.target.value.trim();
-      window.filterContent(searchTerm);
+      if (clearBtn) clearBtn.style.display = searchTerm ? 'flex' : 'none';
+      if (window.filterContent) window.filterContent(searchTerm);
     });
 
     // Clear search on Escape
     searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         searchInput.value = '';
-        window.filterContent('');
+        if (clearBtn) clearBtn.style.display = 'none';
+        if (window.filterContent) window.filterContent('');
         searchInput.blur();
       }
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+      }
+      clearBtn.style.display = 'none';
+      if (window.filterContent) window.filterContent('');
     });
   }
 }
@@ -485,7 +504,7 @@ function setupTabSwitching() {
       tabContents.forEach(content => {
         if (content.id === targetTab) {
           content.classList.add('active');
-          
+
           // Load Quick Actions data when switching to that tab
           if (targetTab === 'quick-actions-tab') {
             window.renderAllProfilesQuickActions();
@@ -502,12 +521,12 @@ function setupTabSwitching() {
 
 function setupNoteTypeHandlers() {
   const noteTypeRadios = document.querySelectorAll('input[name="noteType"]');
-  
+
   noteTypeRadios.forEach(radio => {
     radio.addEventListener('change', (e) => {
       const noteType = e.target.value;
       const modelGroup = document.getElementById('modelSelectorGroup');
-      
+
       if (noteType === 'ai-prompt') {
         if (modelGroup) modelGroup.style.display = 'block';
         window.showAITestButtons();
@@ -524,11 +543,11 @@ function setupNoteTypeHandlers() {
 function setupNoteCharCounter() {
   const noteContent = document.getElementById('noteContent');
   const counter = document.getElementById('noteContentCounter');
-  
+
   if (noteContent && counter) {
     noteContent.addEventListener('input', () => {
       const length = noteContent.value.length;
-      
+
       if (length >= 5000) {
         counter.classList.add('char-warning');
         counter.textContent = `${length.toLocaleString()} (⚠️ Large note)`;

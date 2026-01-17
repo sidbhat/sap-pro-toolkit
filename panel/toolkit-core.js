@@ -84,30 +84,37 @@ const COUNTRY_FLAGS = {
 /**
  * Render SAP icon as SVG (new system)
  */
-function renderSAPIcon(iconValue, iconType = 'shortcut', size = 16) {
+function renderSAPIcon(iconId, iconType = 'universal', size = 16) {
   if (typeof window.SAPIconLibrary === 'undefined') {
     // Fallback to emoji if library not loaded
     const fallbackEmojis = {
-      'shortcut': '🗺️',
+      'universal': '📌',
+      'shortcut': '🔗',
       'note': '📝',
       'environment': '🌐'
     };
     return `<span style="font-size: ${size}px;">${fallbackEmojis[iconType] || '📌'}</span>`;
   }
   
-  const icon = window.SAPIconLibrary.getIconByValue(iconValue, iconType);
+  // Get icon by ID
+  const icon = window.SAPIconLibrary.getIconById(iconId, iconType);
+  if (!icon) {
+    // Fallback if icon not found
+    return `<span style="font-size: ${size}px;">📌</span>`;
+  }
+  
   return window.SAPIconLibrary.renderIconSVG(icon, size);
 }
 
 /**
- * Suggest icon based on content (new feature)
+ * Suggest default icon based on context
  */
-function suggestIconForContent(name, notes, tags, iconType = 'shortcut') {
+function suggestIconForContent(context = 'note') {
   if (typeof window.SAPIconLibrary === 'undefined') {
-    return iconType === 'note' ? '0' : '8'; // Default indices
+    return window.SAPIconLibrary.getDefaultIcon(context);
   }
   
-  return window.SAPIconLibrary.suggestIcon(name, notes, tags, iconType);
+  return window.SAPIconLibrary.getDefaultIcon(context);
 }
 
 // ==================== ENVIRONMENT DETECTION ====================
