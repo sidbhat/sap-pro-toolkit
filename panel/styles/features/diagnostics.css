@@ -10,7 +10,6 @@
   border-radius: var(--radius-md);
   max-height: 600px;
   overflow-y: auto;
-  min-height: 400px;
 }
 
 /* AI-Enhanced Diagnostics View - Green Theme */
@@ -77,4 +76,3 @@
   padding: var(--space-xl);
   color: var(--text-secondary);
 }
-

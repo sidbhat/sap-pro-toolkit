@@ -64,7 +64,8 @@
         "resources/profile-s4hana.json",
         "resources/profile-btp.json",
         "resources/profile-executive.json",
-        "resources/profile-golive.json"
+        "resources/profile-golive.json",
+        "panel/prompts/*.txt"
       ],
       "matches": [
         "<all_urls>"

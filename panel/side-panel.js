@@ -967,11 +967,28 @@ function extractActionableItems(response, context) {
 
 /**
  * Setup close button for AI insights bar
+ * Also clears the search text when closing
  */
 document.getElementById('closeAiInsights')?.addEventListener('click', () => {
   const aiInsightsBar = document.getElementById('aiInsightsBar');
+  const searchInput = document.getElementById('globalSearch');
+  const clearBtn = document.getElementById('clearSearch');
+  
   if (aiInsightsBar) {
     aiInsightsBar.style.display = 'none';
+  }
+  
+  // Clear search text and hide clear button
+  if (searchInput) {
+    searchInput.value = '';
+  }
+  if (clearBtn) {
+    clearBtn.style.display = 'none';
+  }
+  
+  // Refresh content to show all items
+  if (window.filterContent) {
+    window.filterContent('');
   }
 });
 

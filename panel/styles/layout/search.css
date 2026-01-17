@@ -9,11 +9,14 @@
   gap: var(--space-sm);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
+  flex-wrap: nowrap; /* Prevent wrapping */
 }
 
 .search-input-wrapper {
   position: relative;
-  flex-grow: 1;
+  flex: 1 1 auto;
+  min-width: 0; /* Allow flexbox to shrink below content size */
+  max-width: calc(100% - 80px); /* Reserve 80px for AI button (~60px) + gap (8px) + buffer (12px) */
 }
 
 .search-icon {
@@ -27,18 +30,52 @@
 
 .search-input {
   width: 100%;
-  padding: 8px 32px 8px 36px; /* Reduced padding */
+  padding: 8px 40px 8px 36px; /* Increased right padding to 40px for clear button */
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  font-size: 12px; /* Reduced font size */
+  font-size: 12px;
   font-family: inherit;
   background: var(--bg-primary);
   color: var(--text-primary);
   transition: all 0.2s ease;
+  box-sizing: border-box; /* Ensure padding is included in width */
 }
 
 .search-input:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.search-input-wrapper #clearSearch {
+  position: absolute;
+  right: 10px; /* Moved slightly more right for better spacing */
+  top: 50%;
+  transform: translateY(-50%);
+  height: 24px;
+  width: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  z-index: 1; /* Ensure clear button is above input */
+}
+
+.search-input-wrapper #clearSearch:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+  border-radius: var(--radius-sm);
+}
+
+/* AI Search Button - Prevent Shrinking */
+.search-bar #aiSearchBtn {
+  flex-shrink: 0; /* Never shrink the AI button */
+  white-space: nowrap; /* Keep text on one line */
 }

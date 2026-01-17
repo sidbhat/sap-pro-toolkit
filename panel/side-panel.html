@@ -84,9 +84,10 @@
         </svg>
         <input type="text" id="globalSearch" class="search-input" placeholder="Search all items..."
           data-i18n-placeholder="globalSearchPlaceholder">
-        <button class="icon-btn" id="clearSearch" style="display: none; height: 24px; width: 24px;">×</button>
+        <button class="icon-btn" id="clearSearch" style="display: none;">×</button>
       </div>
-      <button class="btn btn-ai btn-sm" id="aiSearchBtn" title="Perform AI-powered search (Cmd+Shift+S)" aria-label="AI Search">
+      <button class="btn btn-ai btn-sm" id="aiSearchBtn" title="Perform AI-powered search (Cmd+Shift+S)"
+        aria-label="AI Search">
         ✨ AI
       </button>
     </div>
@@ -170,7 +171,8 @@
           </svg>
         </button>
         <button class="btn btn-ai btn-sm" id="addShortcutWithAIBtn" data-title="Add with AI"
-          title="Add shortcut with AI summary (scrapes current page)" aria-label="Add Shortcut with AI" style="margin-left: 8px;">
+          title="Add shortcut with AI summary (scrapes current page)" aria-label="Add Shortcut with AI"
+          style="margin-left: 8px;">
           ✨ AI
         </button>
       </div>
@@ -221,92 +223,92 @@
         </div>
 
         <div class="table-container">
-        <table class="data-table" id="shortcutsTable">
-          <tbody id="shortcutsList">
-            <tr class="empty-row">
-              <td colspan="4">
-                <div class="empty-state">
-                  <p>No shortcuts</p>
-                  <button class="btn btn-secondary btn-sm" id="addCurrentPageBtnEmpty">+ Add Current Page</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          <table class="data-table" id="shortcutsTable">
+            <tbody id="shortcutsList">
+              <tr class="empty-row">
+                <td colspan="4">
+                  <div class="empty-state">
+                    <p>No shortcuts</p>
+                    <button class="btn btn-secondary btn-sm" id="addCurrentPageBtnEmpty">+ Add Current Page</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-  </div>
-  </section>
+    </section>
 
-  <!-- Notes Section -->
-  <section class="section" data-section="notes">
-    <div class="section-header">
-      <button class="section-toggle-btn" data-section="notes" title="Collapse section">
-        <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2.5">
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </button>
-      <div>
-        <h2 class="section-title">SCRATCH NOTES <span class="section-count"></span></h2>
-        <p class="section-desc">Store temporary IDs, URLs, and reference information</p>
+    <!-- Notes Section -->
+    <section class="section" data-section="notes">
+      <div class="section-header">
+        <button class="section-toggle-btn" data-section="notes" title="Collapse section">
+          <svg class="section-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+        <div>
+          <h2 class="section-title">SCRATCH NOTES <span class="section-count"></span></h2>
+          <p class="section-desc">Store temporary IDs, URLs, and reference information</p>
+        </div>
+        <button class="btn-add" id="addNoteBtn" data-title="Add Note" title="Add Note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
       </div>
-      <button class="btn-add" id="addNoteBtn" data-title="Add Note" title="Add Note">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="12" y1="5" x2="12" y2="19" />
-          <line x1="5" y1="12" x2="19" y2="12" />
-        </svg>
-      </button>
-    </div>
 
-    <!-- Notes Content -->
-    <div class="section-content">
-      <div class="table-container">
-        <table class="data-table" id="notesTable">
-          <tbody id="notesList">
-            <tr class="empty-row">
-              <td colspan="4">
-                <div class="empty-state">
-                  <p>No notes</p>
-                  <button class="btn btn-secondary btn-sm" id="addNoteBtnEmpty">+ Add Note</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Notes Content -->
+      <div class="section-content">
+        <div class="table-container">
+          <table class="data-table" id="notesTable">
+            <tbody id="notesList">
+              <tr class="empty-row">
+                <td colspan="4">
+                  <div class="empty-state">
+                    <p>No notes</p>
+                    <button class="btn btn-secondary btn-sm" id="addNoteBtnEmpty">+ Add Note</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Sticky Footer -->
-  <footer class="sticky-footer">
-    <div class="footer-top-row">
-      <button class="footer-btn" id="footerSettingsBtn" title="Settings">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="3" />
-          <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2" />
-        </svg>
-        <span class="footer-btn-label">Settings</span>
-      </button>
-      <button class="footer-btn" id="footerDiagnosticsBtn" title="Diagnostics">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="16" x2="12" y2="12" />
-          <line x1="12" y1="8" x2="12.01" y2="8" />
-        </svg>
-        <span class="footer-btn-label">Diagnostics</span>
-      </button>
-      <button class="footer-btn" id="footerThemeBtn" title="Toggle Theme" data-theme-active="false">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-        </svg>
-        <span class="footer-btn-label">Theme</span>
-      </button>
-    </div>
+    <!-- Sticky Footer -->
+    <footer class="sticky-footer">
+      <div class="footer-top-row">
+        <button class="footer-btn" id="footerSettingsBtn" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2" />
+          </svg>
+          <span class="footer-btn-label">Settings</span>
+        </button>
+        <button class="footer-btn" id="footerDiagnosticsBtn" title="Diagnostics">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+          <span class="footer-btn-label">Diagnostics</span>
+        </button>
+        <button class="footer-btn" id="footerThemeBtn" title="Toggle Theme" data-theme-active="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <span class="footer-btn-label">Theme</span>
+        </button>
+      </div>
 
-  </footer>
+    </footer>
 
-  <!-- Toast Notification -->
-  <div class="toast" id="toast"></div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
   </div>
 
   <!-- Add Environment Modal -->
@@ -512,7 +514,8 @@
       </div>
       <div class="modal-footer">
         <div class="modal-footer-left">
-          <button class="icon-btn" id="downloadNoteBtn" title="Download note as text file" aria-label="Download" style="display: none;">
+          <button class="icon-btn" id="downloadNoteBtn" title="Download note as text file" aria-label="Download"
+            style="display: none;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -530,7 +533,8 @@
         </div>
         <div class="modal-footer-right">
           <button class="btn btn-secondary" id="cancelAddNoteBtn">Cancel</button>
-          <button class="btn btn-ai" id="enhanceWithAIBtn" style="display: none;" title="Enhance note with AI" aria-label="Enhance with AI">
+          <button class="btn btn-ai" id="enhanceWithAIBtn" style="display: none;" title="Enhance note with AI"
+            aria-label="Enhance with AI">
             ✨ AI
           </button>
           <button class="btn btn-primary" id="saveNoteBtn">Save</button>
@@ -565,14 +569,16 @@
       </div>
       <div class="modal-footer">
         <div class="modal-footer-left">
-          <button class="btn btn-secondary" id="copyAiResponseBtn" title="Copy response to clipboard" aria-label="Copy Response">
+          <button class="btn btn-secondary" id="copyAiResponseBtn" title="Copy response to clipboard"
+            aria-label="Copy Response">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
             </svg>
             Copy
           </button>
-          <button class="btn btn-secondary" id="openEnterpriseCalcBtn" title="Open enterprise calculator" aria-label="Open Calculator">
+          <button class="btn btn-secondary" id="openEnterpriseCalcBtn" title="Open enterprise calculator"
+            aria-label="Open Calculator">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
               <line x1="3" y1="9" x2="21" y2="9" />
@@ -582,7 +588,8 @@
           </button>
         </div>
         <div class="modal-footer-right">
-          <button class="btn btn-primary" id="saveAiResponseBtn" title="Save AI response as note" aria-label="Save as Note">
+          <button class="btn btn-primary" id="saveAiResponseBtn" title="Save AI response as note"
+            aria-label="Save as Note">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
               <polyline points="17 21 17 13 7 13 7 21" />
@@ -621,7 +628,8 @@
       </div>
       <div class="modal-footer">
         <div class="modal-footer-left">
-          <button class="btn btn-secondary" id="exportEnterpriseReportBtn" style="display: none;" title="Export report as note" aria-label="Export Report">
+          <button class="btn btn-secondary" id="exportEnterpriseReportBtn" style="display: none;"
+            title="Export report as note" aria-label="Export Report">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="17 8 12 3 7 8" />
@@ -1222,7 +1230,8 @@
           </button>
         </div>
         <div class="modal-footer-right">
-          <button class="btn btn-ai" id="regenerateDiagnosticsWithAIBtn" title="Enhance diagnostics with AI analysis" aria-label="AI Diagnostics">
+          <button class="btn btn-ai" id="regenerateDiagnosticsWithAIBtn" title="Enhance diagnostics with AI analysis"
+            aria-label="AI Diagnostics">
             ✨ AI
           </button>
         </div>
@@ -1235,15 +1244,6 @@
     <div class="loading-modal-content">
       <div class="spinner-large"></div>
       <p class="loading-message" id="loadingMessage">Loading...</p>
-    </div>
-  </div>
-
-  <!-- AI Blocking Overlay - Prevents interaction during AI operations -->
-  <div id="aiBlockingOverlay">
-    <div class="ai-blocking-content">
-      <div class="spinner-large"></div>
-      <div class="ai-blocking-message" id="aiBlockingMessage">Generating insights.....</div>
-      <div class="ai-blocking-subtitle">Please wait, do not close this window</div>
     </div>
   </div>
 
@@ -1263,6 +1263,7 @@
   <script src="state.js"></script>
   <script src="ui-render.js"></script>
   <script src="actions.js"></script>
+  <script src="prompt-loader.js"></script>
   <script src="ai-features.js"></script>
 
   <!-- Main initialization (depends on all modules above) -->
