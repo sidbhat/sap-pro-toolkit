@@ -283,6 +283,9 @@ function setupEventListeners() {
     document.getElementById('importFileInput')?.click();
   });
   document.getElementById('importFileInput')?.addEventListener('change', window.handleFileImport);
+  
+  // Reset Profile
+  document.getElementById('resetProfileBtn')?.addEventListener('click', window.resetProfile);
 
   // New Profile modal
   const closeNewProfileBtn = document.getElementById('closeNewProfileModal');

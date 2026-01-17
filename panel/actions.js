@@ -1858,6 +1858,90 @@ async function handleSingleProfileImport(data, event) {
   
   event.target.value = '';
 }
+
+// ==================== RESET PROFILE ====================
+
+/**
+ * Reset current profile data by clearing storage and reloading from default JSON file
+ * Clears shortcuts, environments, and notes for the current profile
+ */
+window.resetProfile = async function() {
+  try {
+    const profile = window.availableProfiles.find(p => p.id === window.currentProfile);
+    if (!profile) {
+      if (window.showToast) window.showToast('Current profile not found', 'error');
+      return;
+    }
+
+    // Confirm with user
+    const confirmed = confirm(
+      `🔄 Reset Profile Data?\n\n` +
+      `Profile: ${profile.name}\n\n` +
+      `This will:\n` +
+      `• Clear all shortcuts, environments, and notes\n` +
+      `• Reload default data from ${profile.file}\n\n` +
+      `This action cannot be undone. Continue?`
+    );
+
+    if (!confirmed) return;
+
+    console.log(`[Reset Profile] Resetting ${profile.id}...`);
+
+    // Clear current profile data from storage
+    const shortcutsKey = `shortcuts_${window.currentProfile}`;
+    const environmentsKey = `environments_${window.currentProfile}`;
+    const notesKey = `notes_${window.currentProfile}`;
+
+    await chrome.storage.local.remove([shortcutsKey, environmentsKey, notesKey]);
+
+    // Clear in-memory data
+    window.setShortcuts([]);
+    window.setEnvironments([]);
+    window.setNotes([]);
+
+    // Reload profile data from JSON file
+    if (profile.file) {
+      try {
+        const response = await fetch(chrome.runtime.getURL(`resources/${profile.file}`));
+        if (response.ok) {
+          const profileData = await response.json();
+
+          // Load shortcuts
+          if (profileData.shortcuts) {
+            window.setShortcuts(profileData.shortcuts);
+            await chrome.storage.local.set({ [shortcutsKey]: profileData.shortcuts });
+          }
+
+          // Load notes
+          if (profileData.notes) {
+            window.setNotes(profileData.notes);
+            await chrome.storage.local.set({ [notesKey]: profileData.notes });
+          }
+
+          console.log(`[Reset Profile] Reloaded data from ${profile.file}`);
+        }
+      } catch (error) {
+        console.error(`[Reset Profile] Failed to reload from ${profile.file}:`, error);
+      }
+    }
+
+    // Re-render UI
+    await window.renderShortcuts();
+    await window.renderEnvironments();
+    await window.renderNotes();
+
+    if (window.showToast) {
+      window.showToast(`Profile "${profile.name}" reset successfully ✓`, 'success');
+    }
+
+    console.log(`[Reset Profile] ✅ Reset complete`);
+
+  } catch (error) {
+    console.error('[Reset Profile] Failed:', error);
+    if (window.showToast) window.showToast(`Reset failed: ${error.message}`, 'error');
+  }
+};
+
 // ==================== THEME TOGGLE ====================
 
 window.toggleTheme = async function() {
