@@ -4690,28 +4690,7 @@ html {
   font-size: 15px;
   line-height: 1.8;
   color: var(--text-primary);
-  max-height: 600px;
-  overflow-y: auto;
   letter-spacing: 0.3px;
-}
-
-/* Enhanced scrollbar for response content */
-.llm-response-content::-webkit-scrollbar {
-  width: 10px;
-}
-
-.llm-response-content::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 5px;
-}
-
-.llm-response-content::-webkit-scrollbar-thumb {
-  background: var(--env-preview);
-  border-radius: 5px;
-}
-
-.llm-response-content::-webkit-scrollbar-thumb:hover {
-  background: #0D9468;
 }
 
 .llm-loading-card {

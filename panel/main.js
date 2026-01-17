@@ -491,7 +491,7 @@ function setupEventListeners() {
   document.getElementById('openOssNoteInlineBtn')?.addEventListener('click', window.openOssNoteInline);
   document.getElementById('copyOssUrlBtn')?.addEventListener('click', window.copyOssNoteUrl);
   document.getElementById('addOssShortcutBtn')?.addEventListener('click', window.addOssNoteAsShortcut);
-  document.getElementById('closeOssSearchBtn')?.addEventListener('click', window.toggleOssNoteSearch);
+  document.getElementById('closeOssSearchBtn')?.addEventListener('click', window.closeOssNoteSearch);
 
   // Search functionality
   document.getElementById('clearSearch')?.addEventListener('click', () => {

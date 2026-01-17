@@ -104,13 +104,28 @@ window.toggleOssNoteSearch = async function () {
   const form = document.getElementById('ossNoteSearchForm');
   if (form) {
     console.log('[OSS Note] Form found, current display:', form.style.display);
-    form.style.display = form.style.display === 'none' ? 'flex' : 'none';
-    if (form.style.display === 'flex') {
+    const isHidden = form.style.display === 'none' || form.style.display === '';
+    form.style.display = isHidden ? 'flex' : 'none';
+    if (isHidden) {
       document.getElementById('ossNoteInputInline')?.focus();
     }
     console.log('[OSS Note] Form display set to:', form.style.display);
   } else {
     console.error('[OSS Note] Form element not found!');
+  }
+};
+
+/**
+ * Close OSS Note search form
+ */
+window.closeOssNoteSearch = function () {
+  console.log('[OSS Note] closeOssNoteSearch called');
+  const form = document.getElementById('ossNoteSearchForm');
+  if (form) {
+    form.style.display = 'none';
+    // Clear input when closing
+    const input = document.getElementById('ossNoteInputInline');
+    if (input) input.value = '';
   }
 };
 
@@ -1033,20 +1048,9 @@ function hideAITestButtons() {
   if (aiBtn) aiBtn.style.display = 'none';
 }
 
-/**
- * Setup AI test button handlers
- */
-function setupAITestButtonHandlers() {
-  // Main AI button (triggers LLM call)
-  document.getElementById('enhanceWithAIBtn')?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    await handleRunAIPrompt();
-  });
-
-  // AI Test Results modal close buttons
-  document.getElementById('closeAiTestResultsModal')?.addEventListener('click', closeAiTestResultsModal);
-  document.getElementById('closeAiTestResultsBtn')?.addEventListener('click', closeAiTestResultsModal);
-}
+// setupAITestButtonHandlers() removed - event listeners now in main.js
+// This prevents duplicate handlers and ensures window.handleRunAIPrompt is called
+// (the version with loading UI fixes from ai-features.js)
 
 // ==================== AI COST ESTIMATOR - PHASE 4 IMPLEMENTATION ====================
 // lookupModelPricing() is now in ai-features.js as part of AI cost estimation
@@ -1087,108 +1091,9 @@ function calculateCost(inputTokens, outputTokens, pricing) {
   };
 }
 
-/**
- * Handle AI button click - runs the prompt with LLM
- * This is the main entry point for AI functionality
- */
-async function handleRunAIPrompt() {
-  const content = document.getElementById('noteContent').value.trim();
-
-  if (!content) {
-    showToast('Please enter prompt content first', 'warning');
-    return;
-  }
-
-  // Check if ToolkitCore is loaded and has AI functions
-  if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
-    console.error('[AI] ToolkitCore or testPromptWithModel not available');
-    showToast('AI features not available - ToolkitCore missing', 'error');
-    return;
-  }
-
-  try {
-    // Show blocking overlay during AI processing
-    const overlay = document.getElementById('aiBlockingOverlay');
-    if (overlay) overlay.classList.add('active');
-
-    // Load pricing data
-    const pricingData = await loadLLMPricing();
-
-    // Call the test function from ToolkitCore
-    const result = await window.ToolkitCore.testPromptWithModel(content);
-
-    if (!result) {
-      showToast('No response from AI', 'warning');
-      return;
-    }
-
-    // Lookup model pricing using fuzzy matching
-    const modelPricing = pricingData ? lookupModelPricing(result.model, pricingData) : null;
-
-    let costs, modelData;
-
-    if (modelPricing && result.usage?.inputTokens && result.usage?.outputTokens) {
-      // Calculate costs from pricing data
-      const inputCost = (result.usage.inputTokens / 1000) * modelPricing.input;
-      const outputCost = (result.usage.outputTokens / 1000) * modelPricing.output;
-      const totalCost = inputCost + outputCost;
-
-      costs = {
-        inputCost: inputCost.toFixed(4),
-        outputCost: outputCost.toFixed(4),
-        totalCost: totalCost.toFixed(4)
-      };
-
-      modelData = {
-        provider: result.provider,
-        model: result.model,
-        inputCostPer1K: modelPricing.input,
-        outputCostPer1K: modelPricing.output,
-        disclaimer: modelPricing.disclaimer || null
-      };
-
-      console.log('[AI] Calculated costs from pricing data:', costs);
-    } else {
-      // Fallback: use API-provided cost or default to 0
-      costs = {
-        inputCost: (result.usage?.cost ? (parseFloat(result.usage.cost) / 2).toFixed(4) : '0.0000'),
-        outputCost: (result.usage?.cost ? (parseFloat(result.usage.cost) / 2).toFixed(4) : '0.0000'),
-        totalCost: result.usage?.cost || '0.0000'
-      };
-
-      modelData = {
-        provider: result.provider,
-        model: result.model,
-        inputCostPer1K: 0,
-        outputCostPer1K: 0
-      };
-
-      console.warn('[AI] No pricing data found, using fallback costs');
-    }
-
-    // Transform result to match existing showEstimateResults format
-    const estimateResult = {
-      modelId: result.model,
-      modelData: modelData,
-      inputTokens: result.usage?.inputTokens || 0,
-      outputTokens: result.usage?.outputTokens || 0,
-      costs: costs,
-      isEstimate: false, // This is a live test, not an estimate
-      responseContent: result.content // Store actual response content
-    };
-
-    // Use existing modal display function
-    showEstimateResults(estimateResult);
-
-  } catch (error) {
-    console.error('[AI] Prompt execution failed:', error);
-    showToast(`AI test failed: ${error.message}`, 'error');
-  } finally {
-    // Always hide overlay when done
-    const overlay = document.getElementById('aiBlockingOverlay');
-    if (overlay) overlay.classList.remove('active');
-  }
-}
+// handleRunAIPrompt() is now in ai-features.js as window.handleRunAIPrompt
+// This function includes loading UI with spinner and grayed-out textarea
+// Uses window.handleRunAIPrompt from ai-features.js (DO NOT duplicate here)
 
 // calculateReadingTime() - uses window.calculateReadingTime from ai-features.js
 

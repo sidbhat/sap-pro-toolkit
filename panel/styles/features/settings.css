@@ -1749,6 +1749,29 @@ html {
 
 /* ==================== LLM RESPONSE CARDS (Green Theme) ==================== */
 
+.llm-response-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.llm-response-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #10B981;
+  white-space: nowrap;
+}
+
 .llm-response-card {
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.12) 100%);
   border-left: 3px solid var(--env-preview);
