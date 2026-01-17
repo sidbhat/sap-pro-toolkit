@@ -163,13 +163,13 @@
   padding-right: 40px; /* Space for delete button */
 }
 
-/* Delete button positioned on the right */
+/* Delete button positioned exactly where the checkbox appears */
 .delete-profile-btn {
   position: absolute;
-  right: 8px;
+  right: var(--space-md);  /* Same right position as profile-check */
   top: 50%;
   transform: translateY(-50%);
-  padding: 6px;
+  padding: 4px;
   border-radius: 4px;
   background: transparent;
   border: none;
@@ -179,6 +179,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: var(--space-sm);  /* Same margin as profile-check */
 }
 
 .delete-profile-btn:hover {
