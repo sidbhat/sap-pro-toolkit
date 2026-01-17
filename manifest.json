@@ -12,7 +12,16 @@
     "scripting"
   ],
   "host_permissions": [
-    "<all_urls>"
+    "https://*.sapsf.com/*",
+    "https://*.sapsf.cn/*",
+    "https://*.sapcloud.cn/*",
+    "https://*.successfactors.com/*",
+    "https://*.successfactors.eu/*",
+    "https://*.sapsf.eu/*",
+    "https://*.s4hana.ondemand.com/*",
+    "https://*.s4hana.cloud.sap/*",
+    "https://*.hana.ondemand.com/*",
+    "https://*.sap.com/*"
   ],
   "action": {
     "default_icon": {

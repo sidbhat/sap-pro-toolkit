@@ -65,15 +65,81 @@ The extension requires specific permissions to function:
 **Purpose:** Enable environment switching and context-aware features  
 **Security:** Extension only works on authorized SAP domains  
 
-## Third-Party Services
+## AI Features & Third-Party Providers
 
-**We do not use any third-party services:**
+**Optional AI Features (User-Controlled):**
+
+The extension includes **optional** AI-powered features that you must explicitly enable and configure:
+
+### AI Feature Overview
+- **AI Search:** Intelligent search recommendations
+- **Page Diagnostics:** AI-powered page analysis
+- **AI Shortcut Creation:** Automated shortcut generation
+- **Note Enhancement:** AI-powered note refinement
+
+### Third-Party AI Providers (Your Choice)
+When you choose to use AI features, you can select one of these providers:
+
+**1. OpenAI**
+- **What's sent:** Search queries, page metadata, or note content (only when you trigger AI features)
+- **Privacy Policy:** https://openai.com/privacy
+- **Data Retention:** Per OpenAI's API data usage policy (typically 30 days)
+- **Your Control:** You provide and can delete API keys anytime
+
+**2. Anthropic**
+- **What's sent:** Search queries, page metadata, or note content (only when you trigger AI features)
+- **Privacy Policy:** https://www.anthropic.com/privacy
+- **Data Retention:** Per Anthropic's API data usage policy (typically 90 days)
+- **Your Control:** You provide and can delete API keys anytime
+
+**3. SAP AI Core**
+- **What's sent:** Search queries, page metadata, or note content (only when you trigger AI features)
+- **Privacy Policy:** https://www.sap.com/about/trust-center/agreements.html
+- **Data Retention:** Controlled by your SAP contract
+- **Your Control:** You configure and manage credentials
+
+### Important AI Privacy Details
+
+**Manual Trigger Only:**
+- AI features NEVER run automatically
+- You must explicitly click "AI Search", "Diagnostics", or "Enhance with AI" buttons
+- No background data collection or processing
+
+**Data Sent to AI Providers:**
+- ✅ Search query text (when using AI Search)
+- ✅ Page URL, title, console errors (when using Diagnostics)
+- ✅ Page content summary (when using AI Shortcut creation)
+- ✅ Note content (when enhancing notes with AI)
+- ❌ NO browsing history
+- ❌ NO personal information
+- ❌ NO SAP credentials
+- ❌ NO automatic tracking
+
+**API Key Storage:**
+- Encrypted in local browser storage using Chrome's crypto API
+- Never transmitted except to your chosen AI provider
+- You can delete keys anytime in Settings > API Keys
+
+**Disable AI Features:**
+- Don't configure API keys = AI features completely disabled
+- Clear API keys in Settings to stop using AI
+- Extension works fully without AI features
+
+**See Full AI Transparency:**
+For complete details on AI features, see [AI-TRANSPARENCY.md](AI-TRANSPARENCY.md) which includes:
+- EU AI Act compliance information
+- Detailed data flow diagrams
+- AI limitations and risks
+- Your rights and controls
+
+### Non-AI Third-Party Services
+
+**We do not use these services:**
 - No analytics (Google Analytics, etc.)
 - No tracking pixels
 - No advertising networks
 - No data brokers
-- No cloud storage services
-- No external APIs
+- No cloud storage services (except optional AI providers above)
 - No telemetry or crash reporting
 
 ## SAP Platform Integration

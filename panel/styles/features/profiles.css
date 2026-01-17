@@ -148,6 +148,8 @@
 
 /* Profile menu item wrapper (contains profile button + delete button) */
 .profile-menu-item-wrapper {
+  display: flex;
+  align-items: center;
   position: relative;
   border-bottom: 1px solid var(--border-light);
 }
@@ -156,30 +158,26 @@
   border-bottom: none;
 }
 
-/* Adjust profile-menu-item when inside wrapper - add padding for delete button */
+
+/* Adjust profile-menu-item when inside wrapper */
 .profile-menu-item-wrapper .profile-menu-item {
-  width: 100%;
+  flex: 1;
   border-bottom: none;
-  padding-right: 40px; /* Space for delete button */
 }
 
-/* Delete button positioned exactly where the checkbox appears */
+/* Delete button - positioned via flexbox in wrapper */
 .delete-profile-btn {
-  position: absolute;
-  right: var(--space-md);  /* Same right position as profile-check */
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 4px;
+  flex-shrink: 0;
+  padding: 6px;
+  margin-right: var(--space-sm);
   border-radius: 4px;
   background: transparent;
   border: none;
   cursor: pointer;
   transition: all 0.15s ease;
-  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: var(--space-sm);  /* Same margin as profile-check */
 }
 
 .delete-profile-btn:hover {

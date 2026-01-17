@@ -73,6 +73,47 @@
   animation: pulse 0.6s ease-in-out;
 }
 
+/* Highlight pulse animation for newly created items */
+@keyframes highlight-pulse {
+  0% { 
+    background: var(--bg-primary); 
+    transform: scale(1);
+  }
+  50% { 
+    background: rgba(16, 185, 129, 0.15); 
+    transform: scale(1.02);
+  }
+  100% { 
+    background: var(--bg-primary); 
+    transform: scale(1);
+  }
+}
+
+.newly-created {
+  animation: highlight-pulse 1.5s ease-in-out;
+  border-left: 4px solid #10B981 !important;
+}
+
+/* Dark mode variant */
+[data-theme="dark"] .newly-created {
+  animation: highlight-pulse-dark 1.5s ease-in-out;
+}
+
+@keyframes highlight-pulse-dark {
+  0% { 
+    background: var(--bg-secondary); 
+    transform: scale(1);
+  }
+  50% { 
+    background: rgba(16, 185, 129, 0.25); 
+    transform: scale(1.02);
+  }
+  100% { 
+    background: var(--bg-secondary); 
+    transform: scale(1);
+  }
+}
+
 /* Glow effect for primary actions */
 .btn-primary:hover,
 .icon-btn.primary:hover {
@@ -196,4 +237,3 @@
   cursor: pointer;
   margin: 0;
 }
-

@@ -99,7 +99,7 @@ function setupSearchFilter() {
 /**
  * Toggle OSS Note search form visibility
  */
-window.toggleOssNoteSearch = async function() {
+window.toggleOssNoteSearch = async function () {
   console.log('[OSS Note] toggleOssNoteSearch called');
   const form = document.getElementById('ossNoteSearchForm');
   if (form) {
@@ -117,7 +117,7 @@ window.toggleOssNoteSearch = async function() {
 /**
  * Open OSS Note from inline input
  */
-window.openOssNoteInline = function() {
+window.openOssNoteInline = function () {
   console.log('[OSS Note] openOssNoteInline called');
   const input = document.getElementById('ossNoteInputInline');
   const noteNumber = input?.value.trim();
@@ -147,7 +147,7 @@ window.openOssNoteInline = function() {
 /**
  * Copy OSS Note URL to clipboard
  */
-window.copyOssNoteUrl = async function() {
+window.copyOssNoteUrl = async function () {
   console.log('[OSS Note] copyOssNoteUrl called');
   const input = document.getElementById('ossNoteInputInline');
   const noteNumber = input?.value.trim().replace(/\D/g, '');
@@ -171,7 +171,7 @@ window.copyOssNoteUrl = async function() {
 /**
  * Add OSS Note as a shortcut
  */
-window.addOssNoteAsShortcut = async function() {
+window.addOssNoteAsShortcut = async function () {
   console.log('[OSS Note] addOssNoteAsShortcut called');
   const input = document.getElementById('ossNoteInputInline');
   const noteNumber = input?.value.trim().replace(/\D/g, '');
@@ -222,7 +222,7 @@ async function togglePopularNotes() {
  * Open settings modal (window function for cross-file access)
  * Shows modal immediately, initializes content in background
  */
-window.openSettingsModal = function() {
+window.openSettingsModal = function () {
   const modal = document.getElementById('settingsModal');
   if (!modal) {
     console.error('[Settings] Modal element not found!');
@@ -244,23 +244,23 @@ window.openSettingsModal = function() {
 async function initializeSettingsContent() {
   try {
     console.log('[Settings] Starting background initialization...');
-    
+
     // Run all initializations in parallel, catch errors individually
     await Promise.allSettled([
-      Promise.resolve(initializeAPIKeysTab()).catch(err => 
+      Promise.resolve(initializeAPIKeysTab()).catch(err =>
         console.warn('[Settings] API Keys tab init failed:', err)
       ),
-      Promise.resolve(initializeBackupTab()).catch(err => 
+      Promise.resolve(initializeBackupTab()).catch(err =>
         console.warn('[Settings] Backup tab init failed:', err)
       ),
-      loadQuickActionsTab().catch(err => 
+      loadQuickActionsTab().catch(err =>
         console.warn('[Settings] Quick Actions tab init failed:', err)
       ),
-      loadSavedAPIKeys().catch(err => 
+      loadSavedAPIKeys().catch(err =>
         console.warn('[Settings] Load API keys failed:', err)
       )
     ]);
-    
+
     console.log('[Settings] Background initialization complete');
   } catch (error) {
     console.error('[Settings] Initialization error:', error);
@@ -271,7 +271,7 @@ async function initializeSettingsContent() {
 /**
  * Close settings modal (window function for cross-file access)
  */
-window.closeSettingsModal = function() {
+window.closeSettingsModal = function () {
   document.getElementById('settingsModal')?.classList.remove('active');
 };
 
@@ -973,11 +973,11 @@ document.getElementById('closeAiInsights')?.addEventListener('click', () => {
   const aiInsightsBar = document.getElementById('aiInsightsBar');
   const searchInput = document.getElementById('globalSearch');
   const clearBtn = document.getElementById('clearSearch');
-  
+
   if (aiInsightsBar) {
     aiInsightsBar.style.display = 'none';
   }
-  
+
   // Clear search text and hide clear button
   if (searchInput) {
     searchInput.value = '';
@@ -985,7 +985,7 @@ document.getElementById('closeAiInsights')?.addEventListener('click', () => {
   if (clearBtn) {
     clearBtn.style.display = 'none';
   }
-  
+
   // Refresh content to show all items
   if (window.filterContent) {
     window.filterContent('');
@@ -1063,134 +1063,10 @@ function estimateTokens(text) {
   return Math.ceil(text.length / 4);
 }
 
-/**
- * Convert markdown text to clean HTML
- * Reusable utility for all AI/LLM response rendering
- * @param {string} markdown - Raw markdown text
- * @returns {string} Clean HTML string
- */
-function markdownToHTML(markdown) {
-  if (!markdown) return '';
-
-  let html = markdown;
-
-  // Convert code blocks first (```code```)
-  html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-
-  // Convert inline code (`code`)
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-  // Convert headers (# H1, ## H2, ### H3)
-  html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-  html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-  html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-
-  // Convert horizontal rules (---)
-  html = html.replace(/^---+$/gm, '<hr>');
-
-  // Convert bold (**text** or __text__)
-  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
-
-  // Convert links ([text](url))
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-
-  // Convert lists (bullet points)
-  const lines = html.split('\n');
-  let inList = false;
-  let listType = null;
-  const processedLines = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const trimmed = line.trim();
-
-    // Numbered list
-    if (/^\d+\.\s/.test(trimmed)) {
-      if (!inList || listType !== 'ol') {
-        if (inList) processedLines.push(`</${listType}>`);
-        processedLines.push('<ol>');
-        inList = true;
-        listType = 'ol';
-      }
-      processedLines.push(`<li>${trimmed.replace(/^\d+\.\s/, '')}</li>`);
-    }
-    // Bullet list (-, *, •)
-    else if (/^[-*•]\s/.test(trimmed)) {
-      if (!inList || listType !== 'ul') {
-        if (inList) processedLines.push(`</${listType}>`);
-        processedLines.push('<ul>');
-        inList = true;
-        listType = 'ul';
-      }
-      processedLines.push(`<li>${trimmed.replace(/^[-*•]\s/, '')}</li>`);
-    }
-    // Regular line
-    else {
-      if (inList) {
-        processedLines.push(`</${listType}>`);
-        inList = false;
-        listType = null;
-      }
-
-      // Convert paragraphs (non-empty lines that aren't headers/hr/lists)
-      if (trimmed && !trimmed.startsWith('<')) {
-        processedLines.push(`<p>${line}</p>`);
-      } else {
-        processedLines.push(line);
-      }
-    }
-  }
-
-  // Close any open list
-  if (inList) {
-    processedLines.push(`</${listType}>`);
-  }
-
-  return processedLines.join('\n');
-}
-
-/**
- * Strip markdown formatting to produce clean plain text
- * Used for saving notes and exporting to text files
- * @param {string} markdown - Raw markdown text
- * @returns {string} Clean plain text
- */
-function stripMarkdown(markdown) {
-  if (!markdown) return '';
-
-  let text = markdown;
-
-  // Remove code blocks
-  text = text.replace(/```[\s\S]*?```/g, '');
-
-  // Remove inline code backticks
-  text = text.replace(/`([^`]+)`/g, '$1');
-
-  // Remove headers (keep text only)
-  text = text.replace(/^#{1,6}\s+/gm, '');
-
-  // Remove horizontal rules
-  text = text.replace(/^---+$/gm, '');
-
-  // Remove bold/italic markers
-  text = text.replace(/\*\*([^*]+)\*\*/g, '$1');
-  text = text.replace(/__([^_]+)__/g, '$1');
-  text = text.replace(/\*([^*]+)\*/g, '$1');
-  text = text.replace(/_([^_]+)_/g, '$1');
-
-  // Remove links (keep text only)
-  text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
-
-  // Clean up list markers
-  text = text.replace(/^[-*•]\s+/gm, '• ');
-  text = text.replace(/^\d+\.\s+/gm, '');
-
-  // Clean up excessive whitespace
-  text = text.replace(/\n{3,}/g, '\n\n');
-
-  return text.trim();
-}
+// markdownToHTML() - uses window.markdownToHTML from ai-features.js
+// stripMarkdown() - uses window.stripMarkdown from ai-features.js
+const markdownToHTML = window.markdownToHTML;
+const stripMarkdown = window.stripMarkdown;
 
 /**
  * Calculate cost for given tokens and pricing
@@ -1314,22 +1190,7 @@ async function handleRunAIPrompt() {
   }
 }
 
-/**
- * Calculate reading time estimate from text
- * Average reading speed: 200 words per minute
- * @param {string} text - Text to analyze
- * @returns {string} Reading time estimate (e.g., "2 min read")
- */
-function calculateReadingTime(text) {
-  if (!text) return '< 1 min read';
-
-  const words = text.trim().split(/\s+/).length;
-  const minutes = Math.ceil(words / 200);
-
-  if (minutes < 1) return '< 1 min read';
-  if (minutes === 1) return '1 min read';
-  return `${minutes} min read`;
-}
+// calculateReadingTime() - uses window.calculateReadingTime from ai-features.js
 
 /**
  * Show estimate results in modal with premium content display
@@ -1349,7 +1210,7 @@ function showEstimateResults(result) {
   titleEl.textContent = '✨ AI Response';
 
   // Calculate reading time from response content
-  const readingTime = calculateReadingTime(result.responseContent);
+  const readingTime = window.calculateReadingTime(result.responseContent);
 
   // Build metadata badges for response header
   const metadataBadges = `

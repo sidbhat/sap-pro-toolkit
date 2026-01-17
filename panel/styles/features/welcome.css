@@ -1,65 +1,106 @@
 /* Welcome Modal Styles */
 
+.welcome-intro {
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .welcome-capabilities {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-bottom: 24px;
 }
 
-.capability-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 10px 12px;
+.welcome-capability {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "icon title"
+    "icon text";
+  column-gap: 12px;
+  row-gap: 2px;
+  padding: 12px;
   background: var(--bg-secondary);
   border-radius: 8px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-light);
   transition: all 0.2s ease;
+  align-items: center;
 }
 
-.capability-card:hover {
-  border-color: var(--primary-color);
-  background: var(--bg-hover);
+.welcome-capability:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary-glow);
+  transform: translateY(-1px);
 }
 
 .capability-icon {
-  font-size: 16px;
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  grid-area: icon;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(var(--primary-rgb), 0.1);
-  border-radius: 6px;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  margin-top: 2px;
 }
 
-.capability-content {
-  flex: 1;
-  min-width: 0; /* Allow text wrapping within content area */
-}
-
-.capability-content h4 {
-  font-size: 12px;
+.welcome-capability h4 {
+  grid-area: title;
+  font-size: 13px;
   font-weight: 600;
-  margin: 0 0 3px 0;
+  margin: 0;
   color: var(--text-primary);
   line-height: 1.3;
+  align-self: end;
 }
 
-.capability-content p {
+.welcome-capability p {
+  grid-area: text;
   font-size: 11px;
   margin: 0;
   color: var(--text-secondary);
   line-height: 1.4;
 }
 
-/* Button styling for welcome modal */
-#welcomeModal .btn-block {
+/* CTA Section */
+.welcome-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+.welcome-cta-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.welcome-cta-buttons {
+  display: flex;
+  gap: 8px;
   width: 100%;
+}
+
+.welcome-cta-buttons .btn {
+  flex: 1;
   justify-content: center;
 }
 
-#welcomeModal .modal-footer {
-  padding: 20px 24px;
+/* Modal specific tweaks */
+#welcomeModal .modal-body {
+  padding: 24px;
+}
+
+#welcomeModal .modal-header {
+  border-bottom: 1px solid var(--border-light);
 }

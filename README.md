@@ -199,7 +199,6 @@ Generate comprehensive diagnostic reports for troubleshooting and support ticket
   - One-click pin/unpin functionality
   - Pinned items automatically sort to top of lists
 - ⌨️ **NEW**: Enhanced keyboard shortcuts
-  - `Cmd+J` to add new shortcut (changed from Cmd+Shift+N)
   - `Cmd+E` to add new environment
   - `Cmd+Shift+1/2/3` for quick environment switching
   - All shortcuts now work reliably via document listeners
@@ -293,9 +292,7 @@ Boost your productivity with keyboard shortcuts:
 | Shortcut | Action |
 |----------|--------|
 | `Cmd+K` (Mac) / `Ctrl+K` (Windows) | Focus search bar |
-| `Cmd+J` (Mac) / `Ctrl+J` (Windows) | Add new shortcut |
 | `Cmd+E` (Mac) / `Ctrl+E` (Windows) | Add new environment |
-| `Cmd+M` (Mac) / `Ctrl+M` (Windows) | Add new note |
 | `Cmd+Shift+1/2/3` (Mac) / `Ctrl+Shift+1/2/3` (Windows) | Quick switch to environment 1/2/3 |
 | `↑` `↓` Arrow keys | Navigate items |
 | `Tab` | Navigate buttons |

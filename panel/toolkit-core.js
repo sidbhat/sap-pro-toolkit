@@ -361,7 +361,7 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
       document.getElementById('globalSearch')?.focus();
     }
     
-    // Cmd/Ctrl + J → New shortcut (changed from Cmd+Shift+N)
+    // Cmd/Ctrl + J → New shortcut
     if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
       e.preventDefault();
       if (callbacks.addShortcut) callbacks.addShortcut();

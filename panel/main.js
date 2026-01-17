@@ -72,6 +72,40 @@ async function init() {
       console.log(`[Init] Loaded ${customProfiles.length} custom profile(s)`);
     }
 
+    // Check for Starter Profile generation (First Run Experience)
+    const starterCheck = await chrome.storage.local.get('starterProfileCreated');
+    if (customProfiles.length === 0 && !starterCheck.starterProfileCreated) {
+      console.log('[Init] Creating Starter Profile...');
+      try {
+        const response = await fetch('../resources/starter-profile.json');
+        if (response.ok) {
+          const starterData = await response.json();
+          const starterId = 'custom-starter';
+
+          // Create the profile
+          if (window.createCustomProfile) {
+            await window.createCustomProfile(starterId, starterData.profileName, starterData);
+
+            // Mark as created so we don't recreate it if deleted
+            await chrome.storage.local.set({ starterProfileCreated: true });
+
+            // If active profile is still default global, maybe switch to starter? 
+            // The requirement said "Default Profile: Blank vs. Starter".
+            // If we want it to be the default *viewed* profile, we should switch to it.
+            // But let's stick to just creating it for now, unless the user explicitly said "Start them with examples".
+            // "Strategy: Provide a 'Demo Profile' that is pre-loaded by default."
+            // If we switch to it, we might annoy users who want Global. 
+            // But "Default Profile" implies it should be the active one?
+            // "Should the default be a blank slate or a 'starter' box?"
+            // I'll stick to just creating it. The user can switch. 
+            // Actually, if it's "pre-loaded by default", just having it available is enough.
+          }
+        }
+      } catch (e) {
+        console.error('[Init] Failed to create starter profile:', e);
+      }
+    }
+
     // Load active profile
     const result = await chrome.storage.local.get('activeProfile');
     const activeProfile = result.activeProfile || 'profile-global';
@@ -180,13 +214,13 @@ function setupEventListeners() {
     document.getElementById('welcomeModal')?.classList.remove('active');
     if (window.showToast) window.showToast('Welcome! Let\'s get started 🚀', 'success');
   });
-  
+
   document.getElementById('welcomeLearnMoreBtn')?.addEventListener('click', async () => {
     await window.markWelcomeSeen();
     document.getElementById('welcomeModal')?.classList.remove('active');
     document.getElementById('helpModal')?.classList.add('active');
   });
-  
+
   document.getElementById('welcomeSettingsBtn')?.addEventListener('click', async () => {
     await window.markWelcomeSeen();
     document.getElementById('welcomeModal')?.classList.remove('active');
@@ -199,22 +233,35 @@ function setupEventListeners() {
   document.getElementById('closeAddNoteModal')?.addEventListener('click', window.closeAddNoteModal);
   document.getElementById('cancelAddNoteBtn')?.addEventListener('click', window.closeAddNoteModal);
   document.getElementById('saveNoteBtn')?.addEventListener('click', window.saveNote);
-  document.getElementById('downloadNoteBtn')?.addEventListener('click', () => {
-    const modal = document.getElementById('addNoteModal');
-    const editId = modal?.getAttribute('data-edit-id');
+  // Note download dropdown
+  const noteDropdown = document.getElementById('noteDownloadDropdown');
+  const noteDropdownBtn = document.getElementById('noteDownloadBtn');
+  const noteDropdownMenu = document.getElementById('noteDownloadMenu');
 
-    // Check if this is after an AI response (content in textarea differs from stored note)
-    const noteTitle = document.getElementById('noteTitle')?.value.trim();
-    const noteContent = document.getElementById('noteContent')?.value.trim();
-
-    if (noteContent && noteTitle) {
-      // Download current content from textarea (which may be AI response)
-      window.downloadCurrentNoteContent(noteTitle, noteContent);
-    } else if (editId) {
-      // Fallback: download stored note
-      window.downloadNote(editId);
-    }
+  noteDropdownBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    noteDropdown?.classList.toggle('open');
   });
+
+  noteDropdownMenu?.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      const format = e.currentTarget.dataset.format;
+      const noteTitle = document.getElementById('noteTitle')?.value.trim() || 'note';
+      const noteContent = document.getElementById('noteContent')?.value.trim();
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+      if (noteContent && window.downloadFile) {
+        window.downloadFile({
+          content: noteContent,
+          filename: `${noteTitle.replace(/[^a-zA-Z0-9]/g, '-')}-${timestamp}`,
+          format: format,
+          title: noteTitle
+        });
+      }
+      noteDropdown?.classList.remove('open');
+    });
+  });
+
   document.getElementById('copyNoteContentBtn')?.addEventListener('click', window.copyNoteFromModal);
   document.getElementById('enhanceWithAIBtn')?.addEventListener('click', window.handleRunAIPrompt);
 
@@ -248,7 +295,36 @@ function setupEventListeners() {
   document.getElementById('copyAllDiagnosticsBtn')?.addEventListener('click', window.copyAllDiagnostics);
   document.getElementById('regenerateDiagnosticsWithAIBtn')?.addEventListener('click', window.regenerateDiagnosticsWithAI);
   document.getElementById('saveDiagnosticsBtn')?.addEventListener('click', window.saveDiagnosticsAsNote);
-  document.getElementById('downloadDiagnosticsBtn')?.addEventListener('click', window.downloadDiagnosticsReport);
+
+  // Diagnostics download dropdown
+  const diagDropdown = document.getElementById('diagnosticsDownloadDropdown');
+  const diagDropdownBtn = document.getElementById('diagnosticsDownloadBtn');
+  const diagDropdownMenu = document.getElementById('diagnosticsDownloadMenu');
+
+  diagDropdownBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    diagDropdown?.classList.toggle('open');
+  });
+
+  diagDropdownMenu?.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      const format = e.currentTarget.dataset.format;
+      const modal = document.getElementById('diagnosticsModal');
+      const content = modal?.getAttribute('data-ai-report');
+      const pageTitle = modal?.getAttribute('data-page-title') || 'Diagnostics Report';
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+      if (content && window.downloadFile) {
+        window.downloadFile({
+          content: content,
+          filename: `diagnostics-${timestamp}`,
+          format: format,
+          title: pageTitle
+        });
+      }
+      diagDropdown?.classList.remove('open');
+    });
+  });
 
   // AI Search
   document.getElementById('aiSearchBtn')?.addEventListener('click', () => {
@@ -271,6 +347,35 @@ function setupEventListeners() {
   document.getElementById('saveAiResponseBtn')?.addEventListener('click', window.saveAIResponseAsNote);
   document.getElementById('copyAiResponseBtn')?.addEventListener('click', window.copyAIResponseToClipboard);
   document.getElementById('openEnterpriseCalcBtn')?.addEventListener('click', window.openEnterpriseCalculator);
+
+  // AI Results download dropdown
+  const aiResultsDropdown = document.getElementById('aiResultsDownloadDropdown');
+  const aiResultsDropdownBtn = document.getElementById('aiResultsDownloadBtn');
+  const aiResultsDropdownMenu = document.getElementById('aiResultsDownloadMenu');
+
+  aiResultsDropdownBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    aiResultsDropdown?.classList.toggle('open');
+  });
+
+  aiResultsDropdownMenu?.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      const format = e.currentTarget.dataset.format;
+      const modal = document.getElementById('aiTestResultsModal');
+      const content = modal?.dataset?.responseContent;
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+      if (content && window.downloadFile) {
+        window.downloadFile({
+          content: content,
+          filename: `ai-response-${timestamp}`,
+          format: format,
+          title: 'AI Response'
+        });
+      }
+      aiResultsDropdown?.classList.remove('open');
+    });
+  });
 
   // Enterprise Calculator modal
   document.getElementById('closeEnterpriseCalculatorModal')?.addEventListener('click', window.closeEnterpriseCalculatorModal);
@@ -434,7 +539,7 @@ function setupKeyboardShortcuts() {
     // Cmd/Ctrl + K: Quick search
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();
-      document.getElementById('quickSearch')?.focus();
+      document.getElementById('globalSearch')?.focus();
     }
 
     // Cmd/Ctrl + E: Add environment
@@ -443,17 +548,6 @@ function setupKeyboardShortcuts() {
       window.openAddEnvironmentModal();
     }
 
-    // Cmd/Ctrl + D: Add shortcut
-    if ((e.metaKey || e.ctrlKey) && e.key === 'd') {
-      e.preventDefault();
-      window.addCurrentPageAsShortcut();
-    }
-
-    // Cmd/Ctrl + N: Add note
-    if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
-      e.preventDefault();
-      window.openAddNoteModal();
-    }
 
     // Cmd/Ctrl + I: AI Search
     if ((e.metaKey || e.ctrlKey) && e.key === 'i') {
@@ -587,5 +681,12 @@ function setupNoteCharCounter() {
 }
 
 // ==================== START INITIALIZATION ====================
+
+// Close any open dropdowns when clicking outside
+document.addEventListener('click', () => {
+  document.querySelectorAll('.download-dropdown.open').forEach(dropdown => {
+    dropdown.classList.remove('open');
+  });
+});
 
 document.addEventListener('DOMContentLoaded', init);

@@ -514,15 +514,21 @@
       </div>
       <div class="modal-footer">
         <div class="modal-footer-left">
-          <button class="icon-btn" id="downloadNoteBtn" title="Download note as text file" aria-label="Download"
-            style="display: none;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-          </button>
+          <div class="download-dropdown" id="noteDownloadDropdown" style="display: none;">
+            <button class="icon-btn dropdown-toggle" id="noteDownloadBtn" title="Download note" aria-label="Download">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+            </button>
+            <div class="dropdown-menu" id="noteDownloadMenu">
+              <button class="dropdown-item" data-format="txt">📄 Plain Text (.txt)</button>
+              <button class="dropdown-item" data-format="md">📝 Markdown (.md)</button>
+              <button class="dropdown-item" data-format="html">🌐 HTML (.html)</button>
+            </div>
+          </div>
           <button class="icon-btn" id="copyNoteContentBtn" title="Copy content to clipboard" aria-label="Copy">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
@@ -577,6 +583,22 @@
             </svg>
             Copy
           </button>
+          <div class="download-dropdown" id="aiResultsDownloadDropdown">
+            <button class="btn btn-secondary dropdown-toggle" id="aiResultsDownloadBtn" title="Download response">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download ▾
+            </button>
+            <div class="dropdown-menu" id="aiResultsDownloadMenu">
+              <button class="dropdown-item" data-format="txt">📄 Plain Text (.txt)</button>
+              <button class="dropdown-item" data-format="md">📝 Markdown (.md)</button>
+              <button class="dropdown-item" data-format="html">🌐 HTML (.html)</button>
+            </div>
+          </div>
           <button class="btn btn-secondary" id="openEnterpriseCalcBtn" title="Open enterprise calculator"
             aria-label="Open Calculator">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -628,15 +650,22 @@
       </div>
       <div class="modal-footer">
         <div class="modal-footer-left">
-          <button class="btn btn-secondary" id="exportEnterpriseReportBtn" style="display: none;"
-            title="Export report as note" aria-label="Export Report">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-            Export Report
-          </button>
+          <div class="download-dropdown" id="enterpriseReportDownloadDropdown" style="display: none;">
+            <button class="btn btn-secondary dropdown-toggle" id="enterpriseReportDownloadBtn" title="Download report">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download ▾
+            </button>
+            <div class="dropdown-menu" id="enterpriseReportDownloadMenu">
+              <button class="dropdown-item" data-format="txt">📄 Plain Text (.txt)</button>
+              <button class="dropdown-item" data-format="md">📝 Markdown (.md)</button>
+              <button class="dropdown-item" data-format="html">🌐 HTML (.html)</button>
+            </div>
+          </div>
         </div>
         <div class="modal-footer-right">
           <button class="btn btn-secondary" id="closeEnterpriseCalculatorBtn">Close</button>
@@ -667,33 +696,13 @@
       <div class="modal-body">
         <!-- Tab Navigation -->
         <div class="settings-tabs">
-          <button class="settings-tab active" data-tab="quick-actions">⚡ Quick Actions</button>
-          <button class="settings-tab" data-tab="api-keys">🔑 API Keys</button>
+          <button class="settings-tab active" data-tab="api-keys">🔑 API Keys</button>
+          <button class="settings-tab" data-tab="quick-actions">⚡ Quick Actions</button>
           <button class="settings-tab" data-tab="backup">📦 Import/Export</button>
         </div>
 
-        <!-- Tab 1: Quick Actions (Editable Text Fields) -->
-        <div class="settings-tab-content active" id="quick-actions-tab">
-          <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
-            Edit Quick Action names and paths, then click "Save All Changes" below.
-          </p>
-          <div id="qaEditableList">
-            <!-- Populated dynamically with editable text fields -->
-          </div>
-          <div class="qa-save-footer" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
-            <button class="btn btn-primary btn-block" id="saveAllQaBtn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                <polyline points="17 21 17 13 7 13 7 21" />
-                <polyline points="7 3 7 8 15 8" />
-              </svg>
-              Save All Changes
-            </button>
-          </div>
-        </div>
-
-        <!-- Tab 2: API Keys (NEW - Phase 6) -->
-        <div class="settings-tab-content" id="api-keys-tab">
+        <!-- Tab 1: API Keys (NEW - Phase 6) -->
+        <div class="settings-tab-content active" id="api-keys-tab">
           <div class="form-group-toggle">
             <label for="enableAiFeatures" class="toggle-switch-label">✨ Enable AI Features</label>
             <label class="switch">
@@ -937,104 +946,123 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Tab 3: Import/Export -->
-      <div class="settings-tab-content" id="backup-tab">
-        <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
-          Backup and restore your configuration including environments, shortcuts, notes, and Quick Actions.
-        </p>
+        <!-- Tab 2: Quick Actions (Editable Text Fields) -->
+        <div class="settings-tab-content" id="quick-actions-tab">
+          <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
+            Edit Quick Action names and paths, then click "Save All Changes" below.
+          </p>
+          <div id="qaEditableList">
+            <!-- Populated dynamically with editable text fields -->
+          </div>
+          <div class="qa-save-footer" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
+            <button class="btn btn-primary btn-block" id="saveAllQaBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+              </svg>
+              Save All Changes
+            </button>
+          </div>
+        </div>
 
-        <!-- Export Section -->
-        <div class="api-key-section">
-          <h4
-            style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-            Export Configuration
-          </h4>
-          <div class="form-group" style="margin-bottom: 0;">
-            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
-              Export all profiles as a full backup
-            </small>
-            <button class="btn btn-accent btn-block" id="exportAllBtn">
+        <!-- Tab 3: Import/Export -->
+        <div class="settings-tab-content" id="backup-tab">
+          <p style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);">
+            Backup and restore your configuration including environments, shortcuts, notes, and Quick Actions.
+          </p>
+
+          <!-- Export Section -->
+          <div class="api-key-section">
+            <h4
+              style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="17 8 12 3 7 8" />
                 <line x1="12" y1="3" x2="12" y2="15" />
               </svg>
-              Export All Profiles (Full Backup)
-            </button>
+              Export Configuration
+            </h4>
+            <div class="form-group" style="margin-bottom: 0;">
+              <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
+                Export all profiles as a full backup
+              </small>
+              <button class="btn btn-accent btn-block" id="exportAllBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                Export All Profiles (Full Backup)
+              </button>
+            </div>
           </div>
-        </div>
 
-        <!-- Import Section -->
-        <div class="api-key-section">
-          <h4
-            style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Import Configuration
-          </h4>
-          <div class="form-group" style="margin-bottom: 0;">
-            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
-              Import previously exported JSON file to restore your configuration
-            </small>
-            <button class="btn btn-secondary btn-block" id="importJsonBtn">
+          <!-- Import Section -->
+          <div class="api-key-section">
+            <h4
+              style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
-              Import JSON File
-            </button>
-            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+              Import Configuration
+            </h4>
+            <div class="form-group" style="margin-bottom: 0;">
+              <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
+                Import previously exported JSON file to restore your configuration
+              </small>
+              <button class="btn btn-secondary btn-block" id="importJsonBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Import JSON File
+              </button>
+              <input type="file" id="importFileInput" accept=".json" style="display: none;">
+            </div>
           </div>
-        </div>
 
-        <!-- Reset Profile Section (NEW) -->
-        <div class="api-key-section">
-          <h4
-            style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="23 4 23 10 17 10" />
-              <polyline points="1 20 1 14 7 14" />
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-            </svg>
-            Reset Profile Data
-          </h4>
-          <div class="form-group" style="margin-bottom: 0;">
-            <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
-              Clear current profile data and reload from default JSON file
-            </small>
-            <button class="btn btn-danger btn-block" id="resetProfileBtn">
+          <!-- Reset Profile Section (NEW) -->
+          <div class="api-key-section">
+            <h4
+              style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="23 4 23 10 17 10" />
                 <polyline points="1 20 1 14 7 14" />
                 <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
               </svg>
-              Reset Current Profile
-            </button>
+              Reset Profile Data
+            </h4>
+            <div class="form-group" style="margin-bottom: 0;">
+              <small style="font-size: 10px; color: var(--text-tertiary); display: block; margin-bottom: 12px;">
+                Clear current profile data and reload from default JSON file
+              </small>
+              <button class="btn btn-danger btn-block" id="resetProfileBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10" />
+                  <polyline points="1 20 1 14 7 14" />
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                </svg>
+                Reset Current Profile
+              </button>
+            </div>
           </div>
-        </div>
 
-        <!-- Security Notice -->
-        <div
-          style="margin-top: 24px; padding: 12px; background: rgba(var(--accent-rgb), 0.1); border-radius: 6px; border-left: 3px solid var(--accent-color);">
-          <p style="margin: 0; font-size: 11px; color: var(--text-secondary);">
-            🔒 <strong>Security</strong>: Exported files contain your configuration in plain text. Store them securely
-            and do not share files containing sensitive information.
-          </p>
+          <!-- Security Notice -->
+          <div
+            style="margin-top: 24px; padding: 12px; background: rgba(var(--accent-rgb), 0.1); border-radius: 6px; border-left: 3px solid var(--accent-color);">
+            <p style="margin: 0; font-size: 11px; color: var(--text-secondary);">
+              🔒 <strong>Security</strong>: Exported files contain your configuration in plain text. Store them securely
+              and do not share files containing sensitive information.
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 
   <!-- New Profile Modal -->
@@ -1114,7 +1142,7 @@
         <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">Key Features
         </h4>
         <ul style="font-size: 12px; line-height: 1.8; color: var(--text-secondary); margin: 0; padding-left: 20px;">
-          <li><strong>Side Panel</strong>: Always accessible on the right side while you work</li>
+          <li><strong>Side Panel</strong>: Always accessible while you work (can be positioned on either side)</li>
           <li><strong>Environment Switching</strong>: Quickly switch between Production, Preview, Sales instances</li>
           <li><strong>Pin Environments</strong>: ⭐ Star icon to pin favorite environments to the top</li>
           <li><strong>Usage Tracking</strong>: See when you last accessed each environment and how often</li>
@@ -1126,9 +1154,11 @@
           <li><strong>Smart URLs</strong>: Supports absolute external URLs for shortcuts</li>
           <li><strong>Scratch Notes</strong>: Store temporary IDs, URLs, and reference information with formatting tools
           </li>
+          <li><strong>AI Search</strong>: Search across all bookmarks, systems, and notes with AI-powered insights</li>
+          <li><strong>AI Prompts</strong>: Test and refine prompts with live AI models (OpenAI, Anthropic, SAP AI Core)
+          </li>
+          <li><strong>AI Diagnostics</strong>: Generate intelligent page analysis and troubleshooting reports</li>
           <li><strong>JSON Import/Export</strong>: Backup and share your configuration</li>
-          <li><strong>System Diagnostics</strong>: Generate detailed reports for troubleshooting</li>
-          <li><strong>Multi-language Support</strong>: Available in 10+ languages</li>
         </ul>
 
         <h4 style="font-size: 13px; font-weight: 600; margin: 20px 0 10px; color: var(--text-primary);">⌨️ Keyboard
@@ -1139,24 +1169,16 @@
             <span class="shortcut-desc">Focus search bar</span>
           </div>
           <div class="shortcut-item">
-            <kbd id="modKey2">⌘</kbd><kbd>J</kbd>
-            <span class="shortcut-desc">Add shortcut from current page</span>
-          </div>
-          <div class="shortcut-item">
-            <kbd id="modKey3">⌘</kbd><kbd>E</kbd>
+            <kbd id="modKey2">⌘</kbd><kbd>E</kbd>
             <span class="shortcut-desc">Add current environment</span>
           </div>
           <div class="shortcut-item">
-            <kbd id="modKey4">⌘</kbd><kbd>Shift</kbd><kbd>1</kbd>
+            <kbd id="modKey3">⌘</kbd><kbd>Shift</kbd><kbd>1</kbd>
             <span class="shortcut-desc">Quick switch to 1st environment</span>
           </div>
           <div class="shortcut-item">
-            <kbd id="modKey5">⌘</kbd><kbd>Shift</kbd><kbd>2</kbd>
+            <kbd id="modKey4">⌘</kbd><kbd>Shift</kbd><kbd>2</kbd>
             <span class="shortcut-desc">Quick switch to 2nd environment</span>
-          </div>
-          <div class="shortcut-item">
-            <kbd id="modKey6">⌘</kbd><kbd>M</kbd>
-            <span class="shortcut-desc">Add new note</span>
           </div>
           <div class="shortcut-item">
             <kbd>↑</kbd><kbd>↓</kbd>
@@ -1218,16 +1240,22 @@
             </svg>
             Save
           </button>
-          <button class="btn btn-secondary" id="downloadDiagnosticsBtn" style="display: none;"
-            title="Download diagnostics report">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Download
-          </button>
+          <div class="download-dropdown" id="diagnosticsDownloadDropdown" style="display: none;">
+            <button class="btn btn-secondary dropdown-toggle" id="diagnosticsDownloadBtn" title="Download report">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download ▾
+            </button>
+            <div class="dropdown-menu" id="diagnosticsDownloadMenu">
+              <button class="dropdown-item" data-format="txt">📄 Plain Text (.txt)</button>
+              <button class="dropdown-item" data-format="md">📝 Markdown (.md)</button>
+              <button class="dropdown-item" data-format="html">🌐 HTML (.html)</button>
+            </div>
+          </div>
         </div>
         <div class="modal-footer-right">
           <button class="btn btn-ai" id="regenerateDiagnosticsWithAIBtn" title="Enhance diagnostics with AI analysis"

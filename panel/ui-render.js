@@ -3,26 +3,26 @@
 
 // ==================== UI RENDERING - ENVIRONMENTS ====================
 
-window.renderEnvironments = async function() {
+window.renderEnvironments = async function (newlyCreatedId = null) {
   const tbody = document.getElementById('environmentList');
-  
+
   // Remove any existing Quick Actions banner first
   const section = document.querySelector('.section[data-section="environments"]');
   if (section) {
     const existingBanner = section.querySelector('.quick-actions-banner');
     if (existingBanner) existingBanner.remove();
   }
-  
+
   // Detect current SAP system and load Quick Actions from GLOBAL solutions storage
   if (window.currentPageData && window.currentPageData.solutionType) {
     const solutionType = window.currentPageData.solutionType;
-    
+
     const solution = window.solutions.find(s => s.id === solutionType);
-    
+
     if (solution && solution.quickActions && solution.quickActions.length > 0) {
       const quickActions = solution.quickActions.slice(0, 5);
       const solutionLabel = solution.name || solutionType.toUpperCase();
-      
+
       const quickActionsHTML = `
         <div class="quick-actions-banner" style="margin-bottom: 12px; padding: 12px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.12) 100%); border-left: 3px solid var(--env-preview); border-radius: 6px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
@@ -37,14 +37,14 @@ window.renderEnvironments = async function() {
           </div>
         </div>
       `;
-      
+
       if (section) {
         section.insertAdjacentHTML('afterbegin', quickActionsHTML);
         attachQuickActionBadgeHandlers(quickActions);
       }
     }
   }
-  
+
   if (window.environments.length === 0) {
     tbody.innerHTML = `
       <tr class="empty-row">
@@ -63,27 +63,18 @@ window.renderEnvironments = async function() {
               </summary>
               <div class="guidance-content">
                 <div class="guidance-step">
-                  <div class="step-number">1</div>
-                  <div class="step-content">
-                    <h4>Navigate to Your SAP System</h4>
-                    <p>Open any SAP SuccessFactors, S/4HANA, or BTP instance in your browser</p>
-                  </div>
+                  <h4 data-step-number="1">Navigate to Your SAP System</h4>
+                  <p>Open any SAP SuccessFactors, S/4HANA, or BTP instance in your browser</p>
                 </div>
                 
                 <div class="guidance-step">
-                  <div class="step-number">2</div>
-                  <div class="step-content">
-                    <h4>Save the Environment</h4>
-                    <p>Click the <code>+ Environment</code> button or use <code>Cmd+E</code> keyboard shortcut</p>
-                  </div>
+                  <h4 data-step-number="2">Save the Environment</h4>
+                  <p>Click the <code>+ Environment</code> button or use <code>Cmd+E</code> keyboard shortcut</p>
                 </div>
                 
                 <div class="guidance-step">
-                  <div class="step-number">3</div>
-                  <div class="step-content">
-                    <h4>Switch Between Environments</h4>
-                    <p>Use number keys <code>1-5</code> for quick switching, or click the switch icon</p>
-                  </div>
+                  <h4 data-step-number="3">Switch Between Environments</h4>
+                  <p>Use <code>Cmd+Shift+1-2</code> for quick switching, or click the switch icon</p>
                 </div>
                 
                 <div class="guidance-tip">
@@ -106,34 +97,36 @@ window.renderEnvironments = async function() {
     document.getElementById('addEnvBtnInline')?.addEventListener('click', () => {
       if (window.addCurrentPageAsEnvironment) window.addCurrentPageAsEnvironment();
     });
+    // Auto-collapse empty section
+    window.autoCollapseEmptySection?.('environments');
     return;
   }
-  
+
   let currentHostname = null;
   let solutionType = null;
   let currentUrl = null;
-  
+
   if (window.currentPageData) {
     currentHostname = window.currentPageData.hostname;
     solutionType = window.currentPageData.solutionType;
     currentUrl = window.currentPageData.url;
   }
-  
+
   const sortedEnvs = [...window.environments].sort((a, b) => {
     if (a.pinned && !b.pinned) return -1;
     if (!a.pinned && b.pinned) return 1;
-    
+
     const aIsActive = currentHostname && currentHostname === a.hostname;
     const bIsActive = currentHostname && currentHostname === b.hostname;
     if (aIsActive && !bIsActive) return -1;
     if (!aIsActive && bIsActive) return 1;
-    
+
     return 0;
   });
-  
+
   tbody.innerHTML = sortedEnvs.map(env => {
     const isActive = currentHostname && currentHostname === env.hostname;
-    
+
     const envTypeColors = {
       production: '#EF4444',
       preview: '#10B981',
@@ -141,10 +134,10 @@ window.renderEnvironments = async function() {
       sandbox: '#A855F7'
     };
     const borderColor = envTypeColors[env.type] || '#D9D9D9';
-    
+
     const theme = document.body.getAttribute('data-theme') || 'light';
     const iconHTML = window.SVGRenderer.renderEnvironmentIcon(env.type, 18, theme);
-    
+
     let metaLine = '';
     if (window.currentPageData && isActive) {
       const parts = [];
@@ -155,29 +148,29 @@ window.renderEnvironments = async function() {
         const flag = window.currentPageData.country && typeof COUNTRY_FLAGS !== 'undefined' && COUNTRY_FLAGS[window.currentPageData.country] ? COUNTRY_FLAGS[window.currentPageData.country] : '';
         parts.push(`${flag} ${window.currentPageData.region}`);
       }
-      
+
       const urlParams = typeof extractAllUrlParameters === 'function' ? extractAllUrlParameters(currentUrl || '', window.currentPageData) : {};
       if (urlParams.company) {
         parts.push(`Company: ${urlParams.company}`);
       }
-      
+
       metaLine = parts.join(' • ');
     }
-    
+
     let line2HTML = '';
     if (isActive && metaLine) {
       line2HTML = `<div class="env-hostname">${metaLine}</div>`;
     } else {
       line2HTML = `<div class="env-hostname">${env.hostname}</div>`;
     }
-    
+
     let line3HTML = '';
     if (env.notes) {
       line3HTML = `<div class="env-notes">${env.notes}</div>`;
     } else if (env.lastAccessed && !isActive) {
       const daysSinceAccess = Math.floor((Date.now() - env.lastAccessed) / (1000 * 60 * 60 * 24));
       const accessCount = env.accessCount || 0;
-      
+
       let usageText = '';
       if (daysSinceAccess === 0) {
         usageText = `Used today`;
@@ -192,16 +185,18 @@ window.renderEnvironments = async function() {
         const months = Math.floor(daysSinceAccess / 30);
         usageText = `Used ${months} ${months === 1 ? 'month' : 'months'} ago`;
       }
-      
+
       if (accessCount > 1) {
         usageText += ` • ${accessCount} times`;
       }
-      
+
       line3HTML = `<div class="env-usage-stats">${usageText}</div>`;
     }
-    
+
+    const isNewlyCreated = newlyCreatedId && env.id === newlyCreatedId;
+
     return `
-      <tr class="env-row ${env.type}-env ${isActive ? 'active-row active-env-card' : ''}" data-env-id="${env.id}" style="border-left: 4px solid ${borderColor};">
+      <tr class="env-row ${env.type}-env ${isActive ? 'active-row active-env-card' : ''} ${isNewlyCreated ? 'newly-created' : ''}" data-env-id="${env.id}" style="border-left: 4px solid ${borderColor};">
         <td class="env-name-cell">
           <div class="env-name">
             <span class="status-dot ${env.type} ${isActive ? 'active' : ''}">${iconHTML}</span>
@@ -241,9 +236,19 @@ window.renderEnvironments = async function() {
       </tr>
     `;
   }).join('');
-  
+
   attachEnvironmentListeners();
-  
+
+  // Remove .newly-created class after animation completes (2000ms)
+  if (newlyCreatedId) {
+    setTimeout(() => {
+      const newRow = document.querySelector(`.env-row[data-env-id="${newlyCreatedId}"]`);
+      if (newRow) {
+        newRow.classList.remove('newly-created');
+      }
+    }, 2000);
+  }
+
   // Update counts (data already fresh from reload before render)
   if (window.updateSectionCounts) {
     window.updateSectionCounts();
@@ -256,21 +261,21 @@ function attachQuickActionBadgeHandlers(quickActions) {
       e.stopPropagation();
       const actionId = badge.getAttribute('data-action-id');
       const actionPath = badge.getAttribute('data-action-path');
-      
+
       const action = { id: actionId, path: actionPath };
-      
+
       try {
         const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
         if (!tab) return;
-        
+
         const targetUrl = typeof buildQuickActionUrl === 'function' ? buildQuickActionUrl(action, window.currentPageData, tab.url) : '';
-        
+
         console.log('[Quick Action] Navigating to:', actionId);
         console.log('[Quick Action] Target URL:', targetUrl);
-        
+
         await chrome.tabs.update(tab.id, { url: targetUrl });
         if (window.showToast) window.showToast(`Navigating to ${badge.textContent.trim()}...`, 'success');
-        
+
       } catch (error) {
         console.error('[Quick Action] Navigation failed:', error);
         if (window.showToast) window.showToast('Failed to navigate', 'error');
@@ -288,7 +293,7 @@ function attachEnvironmentListeners() {
       if (window.togglePin) await window.togglePin(id, type);
     });
   });
-  
+
   document.querySelectorAll('.switch-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const hostname = btn.getAttribute('data-hostname');
@@ -296,7 +301,7 @@ function attachEnvironmentListeners() {
       if (window.switchEnvironment) window.switchEnvironment(hostname, type);
     });
   });
-  
+
   document.querySelectorAll('.env-row .edit-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -305,7 +310,7 @@ function attachEnvironmentListeners() {
       if (window.editEnvironment) window.editEnvironment(id);
     });
   });
-  
+
   document.querySelectorAll('.env-row .delete-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -313,7 +318,7 @@ function attachEnvironmentListeners() {
       if (window.deleteEnvironment) window.deleteEnvironment(id);
     });
   });
-  
+
   document.querySelectorAll('.env-name, .env-hostname').forEach(el => {
     if (el.scrollWidth > el.clientWidth) {
       el.setAttribute('title', el.textContent);
@@ -323,9 +328,9 @@ function attachEnvironmentListeners() {
 
 // ==================== UI RENDERING - SHORTCUTS ====================
 
-window.renderShortcuts = async function() {
+window.renderShortcuts = async function (newlyCreatedId = null) {
   const tbody = document.getElementById('shortcutsList');
-  
+
   if (window.shortcuts.length === 0) {
     tbody.innerHTML = `
       <tr class="empty-row">
@@ -344,27 +349,18 @@ window.renderShortcuts = async function() {
               </summary>
               <div class="guidance-content">
                 <div class="guidance-step">
-                  <div class="step-number">1</div>
-                  <div class="step-content">
-                    <h4>Navigate to Any SAP Page</h4>
-                    <p>Open a report, form, workflow, or app you use frequently</p>
-                  </div>
+                  <h4 data-step-number="1">Navigate to Any SAP Page</h4>
+                  <p>Open a report, form, workflow, or app you use frequently</p>
                 </div>
                 
                 <div class="guidance-step">
-                  <div class="step-number">2</div>
-                  <div class="step-content">
-                    <h4>Save as Shortcut</h4>
-                    <p>Click <code>+ Shortcut</code> button or use <code>Cmd+D</code> keyboard shortcut</p>
-                  </div>
+                  <h4 data-step-number="2">Save as Shortcut</h4>
+                  <p>Click <code>+ Shortcut</code> button to save</p>
                 </div>
                 
                 <div class="guidance-step">
-                  <div class="step-number">3</div>
-                  <div class="step-content">
-                    <h4>Open from Any Environment</h4>
-                    <p>Shortcuts work across all environments - click to navigate instantly</p>
-                  </div>
+                  <h4 data-step-number="3">Open from Any Environment</h4>
+                  <p>Shortcuts work across all environments - click to navigate instantly</p>
                 </div>
                 
                 <div class="guidance-tip">
@@ -387,20 +383,23 @@ window.renderShortcuts = async function() {
     document.getElementById('addCurrentPageBtnEmpty')?.addEventListener('click', () => {
       if (window.addCurrentPageAsShortcut) window.addCurrentPageAsShortcut();
     });
+    // Auto-collapse empty section
+    window.autoCollapseEmptySection?.('shortcuts');
     return;
   }
-  
+
   const sortedShortcuts = [...window.shortcuts].sort((a, b) => {
     if (a.pinned && !b.pinned) return -1;
     if (!a.pinned && b.pinned) return 1;
     return 0;
   });
-  
+
   tbody.innerHTML = sortedShortcuts.map(shortcut => {
     const displayIcon = typeof renderSAPIcon === 'function' ? renderSAPIcon(shortcut.icon, 'universal', 16) : '📄';
-    
+    const isNewlyCreated = newlyCreatedId && shortcut.id === newlyCreatedId;
+
     return `
-      <tr class="shortcut-row" data-shortcut-id="${shortcut.id}" data-url="${shortcut.url}">
+      <tr class="shortcut-row ${isNewlyCreated ? 'newly-created' : ''}" data-shortcut-id="${shortcut.id}" data-url="${shortcut.url}">
         <td class="shortcut-icon-cell">
           <span class="shortcut-icon">${displayIcon}</span>
         </td>
@@ -440,9 +439,19 @@ window.renderShortcuts = async function() {
       </tr>
     `;
   }).join('');
-  
+
   attachShortcutListeners();
-  
+
+  // Remove .newly-created class after animation completes (2000ms)
+  if (newlyCreatedId) {
+    setTimeout(() => {
+      const newRow = document.querySelector(`.shortcut-row[data-shortcut-id="${newlyCreatedId}"]`);
+      if (newRow) {
+        newRow.classList.remove('newly-created');
+      }
+    }, 2000);
+  }
+
   // Update counts (data already fresh from reload before render)
   if (window.updateSectionCounts) {
     window.updateSectionCounts();
@@ -458,7 +467,7 @@ function attachShortcutListeners() {
       if (window.togglePin) await window.togglePin(id, type);
     });
   });
-  
+
   document.querySelectorAll('.go-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -471,7 +480,7 @@ function attachShortcutListeners() {
       }
     });
   });
-  
+
   document.querySelectorAll('.shortcut-row .edit-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -479,7 +488,7 @@ function attachShortcutListeners() {
       if (window.editShortcut) window.editShortcut(id);
     });
   });
-  
+
   document.querySelectorAll('.shortcut-row .delete-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -487,7 +496,7 @@ function attachShortcutListeners() {
       if (window.deleteShortcut) window.deleteShortcut(id);
     });
   });
-  
+
   document.querySelectorAll('.shortcut-name, .shortcut-notes').forEach(el => {
     if (el.scrollWidth > el.clientWidth) {
       el.setAttribute('title', el.textContent);
@@ -497,14 +506,14 @@ function attachShortcutListeners() {
 
 // ==================== UI RENDERING - NOTES ====================
 
-window.renderNotes = async function() {
+window.renderNotes = async function (newlyCreatedId = null) {
   const tbody = document.getElementById('notesList');
-  
+
   if (!tbody) {
     console.error('[Notes] notesList tbody element not found!');
     return;
   }
-  
+
   if (window.notes.length === 0) {
     tbody.innerHTML = `
       <tr class="empty-row">
@@ -523,27 +532,18 @@ window.renderNotes = async function() {
               </summary>
               <div class="guidance-content">
                 <div class="guidance-step">
-                  <div class="step-number">1</div>
-                  <div class="step-content">
-                    <h4>Create a Note</h4>
-                    <p>Click <code>+ Note</code> button or use <code>Cmd+N</code> keyboard shortcut</p>
-                  </div>
+                  <h4 data-step-number="1">Create a Note</h4>
+                  <p>Click <code>+ Note</code> button to create</p>
                 </div>
                 
                 <div class="guidance-step">
-                  <div class="step-number">2</div>
-                  <div class="step-content">
-                    <h4>Choose Note Type</h4>
-                    <p>Select <strong>Note</strong> for general documentation or <strong>AI Prompt</strong> for testing prompts</p>
-                  </div>
+                  <h4 data-step-number="2">Choose Note Type</h4>
+                  <p>Select <strong>Note</strong> for general documentation or <strong>AI Prompt</strong> for testing prompts</p>
                 </div>
                 
                 <div class="guidance-step">
-                  <div class="step-number">3</div>
-                  <div class="step-content">
-                    <h4>Use AI Enhancement</h4>
-                    <p>For AI Prompts, test against real models and refine your prompts interactively</p>
-                  </div>
+                  <h4 data-step-number="3">Use AI Enhancement</h4>
+                  <p>For AI Prompts, test against real models and refine your prompts interactively</p>
                 </div>
                 
                 <div class="guidance-tip">
@@ -566,21 +566,24 @@ window.renderNotes = async function() {
     document.getElementById('addNoteBtnEmpty')?.addEventListener('click', () => {
       if (window.openAddNoteModal) window.openAddNoteModal();
     });
+    // Auto-collapse empty section
+    window.autoCollapseEmptySection?.('notes');
     return;
   }
-  
+
   const sortedNotes = [...window.notes].sort((a, b) => {
     if (a.pinned && !b.pinned) return -1;
     if (!a.pinned && b.pinned) return 1;
     return 0;
   });
-  
+
   tbody.innerHTML = sortedNotes.map(note => {
-    const contentPreview = note.content 
+    const contentPreview = note.content
       ? (note.content.length > 60 ? note.content.substring(0, 60) + '...' : note.content)
       : '';
     const displayIcon = typeof renderSAPIcon === 'function' ? renderSAPIcon(note.icon, 'universal', 16) : '📝';
-    
+    const isNewlyCreated = newlyCreatedId && note.id === newlyCreatedId;
+
     const noteType = note.noteType || 'note';
     const noteTypeLabels = {
       'note': '📝 Note',
@@ -589,16 +592,16 @@ window.renderNotes = async function() {
       'code': '💻 Code'
     };
     const noteTypeBadge = `<div class="note-type-badge"><span class="note-type-label">${noteTypeLabels[noteType]}</span></div>`;
-    
+
     const editButtonHTML = `<button class="icon-btn primary edit-btn" data-id="${note.id}" title="Edit" tabindex="0">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
       </svg>
     </button>`;
-    
+
     return `
-      <tr class="note-row" data-note-id="${note.id}">
+      <tr class="note-row ${isNewlyCreated ? 'newly-created' : ''}" data-note-id="${note.id}">
         <td class="note-icon-cell">
           <span class="note-icon">${displayIcon}</span>
         </td>
@@ -634,9 +637,19 @@ window.renderNotes = async function() {
       </tr>
     `;
   }).join('');
-  
+
   attachNoteListeners();
-  
+
+  // Remove .newly-created class after animation completes (2000ms)
+  if (newlyCreatedId) {
+    setTimeout(() => {
+      const newRow = document.querySelector(`.note-row[data-note-id="${newlyCreatedId}"]`);
+      if (newRow) {
+        newRow.classList.remove('newly-created');
+      }
+    }, 2000);
+  }
+
   // Update counts (data already fresh from reload before render)
   if (window.updateSectionCounts) {
     window.updateSectionCounts();
@@ -652,7 +665,7 @@ function attachNoteListeners() {
       if (window.togglePin) await window.togglePin(id, type);
     });
   });
-  
+
   document.querySelectorAll('.note-row .copy-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
@@ -660,7 +673,7 @@ function attachNoteListeners() {
       if (window.copyNoteContent) await window.copyNoteContent(id, btn);
     });
   });
-  
+
   document.querySelectorAll('.note-row .edit-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -668,7 +681,7 @@ function attachNoteListeners() {
       if (window.editNote) window.editNote(id);
     });
   });
-  
+
   document.querySelectorAll('.note-row .delete-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -676,13 +689,13 @@ function attachNoteListeners() {
       if (window.deleteNote) window.deleteNote(id);
     });
   });
-  
+
   if (document.body.classList.contains('ai-active')) {
     document.querySelectorAll('.ai-prompt-btn').forEach(btn => {
       btn.style.display = 'flex';
     });
   }
-  
+
   document.querySelectorAll('.note-title, .note-preview').forEach(el => {
     if (el.scrollWidth > el.clientWidth) {
       el.setAttribute('title', el.textContent);
@@ -692,7 +705,7 @@ function attachNoteListeners() {
 
 // ==================== PROFILE MENU RENDERING ====================
 
-window.renderProfileMenu = async function() {
+window.renderProfileMenu = async function () {
   const menu = document.getElementById('profileMenu');
   if (!menu) {
     console.error('[Profile Menu] Menu element not found!');
@@ -705,14 +718,14 @@ window.renderProfileMenu = async function() {
   // Remove duplicates from availableProfiles first (using Set to track unique IDs)
   const uniqueProfileIds = new Set();
   const uniqueProfiles = [];
-  
+
   for (const profile of window.availableProfiles) {
     if (!uniqueProfileIds.has(profile.id)) {
       uniqueProfileIds.add(profile.id);
       uniqueProfiles.push(profile);
     }
   }
-  
+
   const visibleProfiles = uniqueProfiles.filter(p => !hiddenProfiles.includes(p.id));
 
   // Get list of system (hardcoded) profile IDs
@@ -764,21 +777,21 @@ window.renderProfileMenu = async function() {
       </div>
     </button>
   `;
-  
+
   menu.innerHTML = profileItems + newProfileButton;
-  
+
   // Attach click handlers for profile switching (NO cloning - was breaking switching)
   menu.querySelectorAll('.profile-menu-item:not(.profile-menu-new)').forEach(item => {
     item.addEventListener('click', (e) => {
       // Don't switch if clicking delete button
       if (e.target.closest('.delete-profile-btn')) return;
-      
+
       const profileId = item.getAttribute('data-profile-id');
       console.log('[Profile Switch] Switching to:', profileId);
       if (window.switchProfile) window.switchProfile(profileId);
     });
   });
-  
+
   // Attach delete handlers for custom profiles
   menu.querySelectorAll('.delete-profile-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
@@ -789,7 +802,7 @@ window.renderProfileMenu = async function() {
       if (window.deleteCustomProfile) await window.deleteCustomProfile(profileId);
     });
   });
-  
+
   // Attach handler for "New Profile" button
   const newProfileBtn = document.getElementById('newProfileMenuBtn');
   if (newProfileBtn) {
@@ -807,19 +820,19 @@ window.renderProfileMenu = async function() {
  * Updates section counts using current global state
  * NOTE: Render functions reload data before calling this, so counts are accurate
  */
-window.updateSectionCounts = function() {
+window.updateSectionCounts = function () {
   const envCount = document.querySelector('.section[data-section="environments"] .section-count');
   if (envCount) {
     const count = window.environments.length;
     envCount.textContent = count > 0 ? `(${count})` : '';
   }
-  
+
   const shortcutsCount = document.querySelector('.section[data-section="shortcuts"] .section-count');
   if (shortcutsCount) {
     const count = window.shortcuts.length;
     shortcutsCount.textContent = count > 0 ? `(${count})` : '';
   }
-  
+
   const notesCount = document.querySelector('.section[data-section="notes"] .section-count');
   if (notesCount) {
     const count = window.notes.length;
@@ -829,34 +842,34 @@ window.updateSectionCounts = function() {
 
 // ==================== DIAGNOSTICS BUTTON UPDATE ====================
 
-window.updateDiagnosticsButton = function() {
+window.updateDiagnosticsButton = function () {
   const diagnosticsBtn = document.getElementById('footerDiagnosticsBtn');
   if (!diagnosticsBtn) return;
-  
+
   diagnosticsBtn.classList.remove('btn-disabled');
   diagnosticsBtn.setAttribute('title', 'Run Page Diagnostics');
 };
 
 // ==================== POPULAR NOTES RENDERING ====================
 
-window.renderPopularNotes = async function() {
+window.renderPopularNotes = async function () {
   const grid = document.getElementById('popularNotesGrid');
   if (!grid) return;
-  
+
   const popularNotes = await getPopularNotesForProfile();
-  
+
   if (popularNotes.length === 0) {
     grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 12px; color: var(--text-secondary); font-size: 11px;">No popular notes available</div>';
     return;
   }
-  
+
   grid.innerHTML = popularNotes.map(note => `
     <button class="popular-note-btn" data-note-number="${note.number}" title="${note.description}">
       <div class="popular-note-number">#${note.number}</div>
       <div class="popular-note-title">${note.title}</div>
     </button>
   `).join('');
-  
+
   grid.querySelectorAll('.popular-note-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
       e.preventDefault();
@@ -869,52 +882,52 @@ window.renderPopularNotes = async function() {
 async function getPopularNotesForProfile() {
   const data = typeof window.loadPopularOssNotes === 'function' ? await window.loadPopularOssNotes() : null;
   if (!data) return [];
-  
+
   if (window.currentProfile === 'profile-successfactors') {
     return [...(data.successfactors || []), ...(data.universal || [])];
   }
-  
+
   if (window.currentProfile === 'profile-s4hana') {
     return [...(data.s4hana || []), ...(data.universal || [])];
   }
-  
+
   if (window.currentProfile === 'profile-btp') {
     return [...(data.btp || []), ...(data.universal || [])];
   }
-  
+
   return data.universal || [];
 }
 
 // ==================== QUICK ACTIONS RENDERING ====================
 
-window.renderAllProfilesQuickActions = async function() {
+window.renderAllProfilesQuickActions = async function () {
   const listContainer = document.getElementById('qaEditableList');
   if (!listContainer) return;
-  
+
   try {
     console.log('[Render QA] Starting render...');
     console.log('[Render QA] Current solutions in memory:', window.solutions);
-    
+
     const baseSolutions = window.solutions;
-    
+
     if (baseSolutions.length === 0) {
       listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-secondary);">No Quick Actions configured in solutions.json</div>';
       return;
     }
-    
+
     let allHTML = '';
-    
+
     for (const solution of baseSolutions) {
       const quickActions = solution.quickActions || [];
-      
+
       allHTML += `
         <div class="qa-solution-group" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border);">
           <h3 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px;">
             ${solution.name || solution.id} (${quickActions.length})
           </h3>
-          ${quickActions.length === 0 ? 
-            '<div style="padding: 12px; color: var(--text-secondary); font-size: 11px;">No Quick Actions</div>' :
-            quickActions.map(qa => `
+          ${quickActions.length === 0 ?
+          '<div style="padding: 12px; color: var(--text-secondary); font-size: 11px;">No Quick Actions</div>' :
+          quickActions.map(qa => `
               <div class="qa-edit-row" data-qa-id="${qa.id}" data-solution-id="${solution.id}" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                 <div>
                   <label style="display: block; font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Name:</label>
@@ -938,12 +951,12 @@ window.renderAllProfilesQuickActions = async function() {
                 </div>
               </div>
             `).join('')
-          }
+        }
         </div>
       `;
     }
     listContainer.innerHTML = allHTML;
-    
+
   } catch (error) {
     console.error('[Quick Actions Tab] Failed to load:', error);
     listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--env-production);">Failed to load</div>';

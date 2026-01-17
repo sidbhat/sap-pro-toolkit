@@ -116,7 +116,7 @@ const ENVIRONMENT_ICONS = {
 // ============================================================================
 
 const DEFAULT_ICONS = {
-  profile: 'folder',
+  profile: 'people',
   shortcut: 'link',
   note: 'note',
   environment: 'production'
@@ -144,9 +144,9 @@ function getIconById(iconId, iconType = 'universal') {
   if (iconType === 'environment') {
     return ENVIRONMENT_ICONS[iconId] || ENVIRONMENT_ICONS.production;
   }
-  
+
   const icon = UNIVERSAL_ICONS.find(icon => icon.id === iconId);
-  return icon || UNIVERSAL_ICONS[0]; // Fallback to first icon
+  return icon || null; // Return null if not found, allows emoji fallback
 }
 
 /**
@@ -167,10 +167,10 @@ function getDefaultIcon(context) {
  */
 function renderIconSVG(icon, size = 16, color = null) {
   if (!icon) return '';
-  
+
   const fillColor = color || icon.color || 'currentColor';
   const viewBox = icon.viewBox || '0 0 24 24';
-  
+
   return `<svg width="${size}" height="${size}" viewBox="${viewBox}" fill="${fillColor}" xmlns="http://www.w3.org/2000/svg" aria-label="${icon.label}">
     <path d="${icon.path}"/>
   </svg>`;

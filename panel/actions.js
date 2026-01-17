@@ -5,6 +5,16 @@
 
 window.navigateToShortcut = async function (url) {
   try {
+    // Track usage for shortcut (find by URL)
+    const shortcut = window.shortcuts.find(s => s.url === url);
+    if (shortcut) {
+      shortcut.lastAccessed = Date.now();
+      shortcut.accessCount = (shortcut.accessCount || 0) + 1;
+
+      const storageKey = `shortcuts_${window.currentProfile}`;
+      await chrome.storage.local.set({ [storageKey]: window.shortcuts });
+    }
+
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     if (tab && tab.id) {
       await chrome.tabs.update(tab.id, { url: url });
@@ -231,6 +241,8 @@ window.saveEnvironment = async function () {
 
   try {
     let newEnvs;
+    let newlyCreatedId = null;
+
     if (editId) {
       newEnvs = window.environments.filter(e => e.id !== editId);
       newEnvs.push(envObject);
@@ -238,6 +250,7 @@ window.saveEnvironment = async function () {
       modal.removeAttribute('data-edit-id');
     } else {
       newEnvs = [...window.environments, envObject];
+      newlyCreatedId = envObject.id;
       if (window.showToast) window.showToast('Environment saved ✓', 'success');
     }
 
@@ -259,7 +272,7 @@ window.saveEnvironment = async function () {
 
     // BUG FIX: Reload data from storage before rendering
     await window.loadEnvironments();
-    await window.renderEnvironments();
+    await window.renderEnvironments(newlyCreatedId);
     window.closeAddEnvironmentModal();
   } catch (error) {
     console.error('Failed to save environment:', error);
@@ -293,7 +306,7 @@ window.addCurrentPageAsShortcut = async function () {
 window.openAddShortcutModal = function () {
   const modal = document.getElementById('addShortcutModal');
   modal.classList.add('active');
-  
+
   // Initialize icon picker with correct function call
   if (window.initIconPicker) {
     window.initIconPicker('shortcutIconPicker', 'shortcutIcon', 'link');
@@ -383,6 +396,8 @@ window.saveShortcut = async function () {
   const editId = modal.getAttribute('data-edit-id');
 
   let newShortcuts;
+  let newlyCreatedId = null;
+
   if (editId) {
     newShortcuts = window.shortcuts.filter(s => s.id !== editId);
     newShortcuts.push({ id: editId, name, url, notes, icon, tags });
@@ -391,6 +406,7 @@ window.saveShortcut = async function () {
   } else {
     const newShortcut = { id: `shortcut-${Date.now()}`, name, url, notes, icon, tags };
     newShortcuts = [...window.shortcuts, newShortcut];
+    newlyCreatedId = newShortcut.id;
     if (window.showToast) window.showToast('Shortcut saved ✓', 'success');
   }
 
@@ -401,7 +417,7 @@ window.saveShortcut = async function () {
 
   // BUG FIX: Reload data from storage before rendering
   await window.loadShortcuts();
-  await window.renderShortcuts();
+  await window.renderShortcuts(newlyCreatedId);
   window.closeAddShortcutModal();
 };
 
@@ -438,7 +454,7 @@ window.openAddNoteModal = function () {
 
   const modal = document.getElementById('addNoteModal');
   modal.classList.add('active');
-  
+
   // Initialize icon picker with correct function call
   if (window.initIconPicker) {
     window.initIconPicker('noteIconPicker', 'noteIcon', 'note');
@@ -478,6 +494,13 @@ window.editNote = async function (id) {
     if (window.showToast) window.showToast('Note not found. Try reloading the extension.', 'error');
     return;
   }
+
+  // Track usage when note is accessed/edited
+  note.lastAccessed = Date.now();
+  note.accessCount = (note.accessCount || 0) + 1;
+
+  const storageKey = `notes_${window.currentProfile}`;
+  await chrome.storage.local.set({ [storageKey]: window.notes });
 
   console.log('[Edit Note] Opening note:', { id, note });
 
@@ -526,7 +549,7 @@ window.editNote = async function (id) {
   }
 
   modal.classList.add('active');
-  
+
   // Initialize icon picker with current note's icon
   if (window.initIconPicker) {
     window.initIconPicker('noteIconPicker', 'noteIcon', note.icon || 'note');
@@ -623,6 +646,8 @@ window.saveNote = async function () {
   }
 
   let newNotes;
+  let newlyCreatedId = null;
+
   if (editId) {
     newNotes = window.notes.filter(n => n.id !== editId);
     newNotes.push(noteObject);
@@ -630,6 +655,7 @@ window.saveNote = async function () {
     modal.removeAttribute('data-edit-id');
   } else {
     newNotes = [...window.notes, noteObject];
+    newlyCreatedId = noteObject.id;
     if (window.showToast) window.showToast('Note saved ✓', 'success');
   }
 
@@ -640,7 +666,7 @@ window.saveNote = async function () {
 
   // BUG FIX: Reload data from storage before rendering
   await window.loadNotes();
-  await window.renderNotes();
+  await window.renderNotes(newlyCreatedId);
   window.closeAddNoteModal();
 };
 
@@ -665,6 +691,7 @@ window.copyNoteContent = async function (id, btn) {
   }
 };
 
+// Legacy wrapper - uses downloadFile() utility
 window.downloadNote = async function (id) {
   const note = window.notes.find(n => n.id === id);
   if (!note) {
@@ -672,11 +699,8 @@ window.downloadNote = async function (id) {
     return;
   }
 
-  try {
-    const timestamp = new Date().toISOString().split('T')[0];
-    const timeStr = new Date().toISOString().split('T')[1].split('.')[0].replace(/:/g, '-');
-
-    const fileContent = `${note.title}
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const content = `${note.title}
 ${note.timestamp ? `Created: ${new Date(note.timestamp).toLocaleString()}` : ''}
 ${note.noteType ? `Type: ${note.noteType}` : ''}
 
@@ -687,39 +711,26 @@ ${note.content || ''}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `;
 
-    const blob = new Blob([fileContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
+  const safeTitle = note.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .substring(0, 50);
 
-    const safeTitle = note.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .substring(0, 50);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `note-${safeTitle}-${timestamp}-${timeStr}.txt`;
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-    if (window.showToast) window.showToast('Note downloaded ✓', 'success');
-
-  } catch (error) {
-    console.error('[Download Note] Failed:', error);
-    if (window.showToast) window.showToast(`Failed to download: ${error.message}`, 'error');
-  }
+  window.downloadFile({
+    content: content,
+    filename: `note-${safeTitle}-${timestamp}`,
+    format: 'txt',
+    title: note.title
+  });
 };
 
+// Legacy wrapper - uses downloadFile() utility
 window.downloadCurrentNoteContent = async function (title, content) {
-  try {
-    const timestamp = new Date().toISOString().split('T')[0];
-    const timeStr = new Date().toISOString().split('T')[1].split('.')[0].replace(/:/g, '-');
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const prefixedTitle = title.startsWith('AI Response') ? title : `AI Response - ${title}`;
 
-    // Add "AI Response" prefix if content looks like AI output
-    const prefixedTitle = title.startsWith('AI Response') ? title : `AI Response - ${title}`;
-
-    const fileContent = `${prefixedTitle}
+  const formattedContent = `${prefixedTitle}
 Generated: ${new Date().toLocaleString()}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -729,26 +740,18 @@ ${content}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `;
 
-    const blob = new Blob([fileContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
+  const safeTitle = prefixedTitle
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .substring(0, 50);
 
-    const safeTitle = prefixedTitle
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .substring(0, 50);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${safeTitle}-${timestamp}-${timeStr}.txt`;
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-    if (window.showToast) window.showToast('AI response downloaded ✓', 'success');
-
-  } catch (error) {
-  }
+  window.downloadFile({
+    content: formattedContent,
+    filename: `${safeTitle}-${timestamp}`,
+    format: 'txt',
+    title: prefixedTitle
+  });
 };
 
 window.copyNoteFromModal = async function () {
@@ -1046,7 +1049,7 @@ window.openNewProfileModal = function () {
   if (descCounter) descCounter.textContent = '0/200';
 
   modal.classList.add('active');
-  
+
   // Initialize icon picker with correct function call
   if (window.initIconPicker) {
     window.initIconPicker('profileIconPicker', 'newProfileIcon', 'folder');
@@ -1513,115 +1516,38 @@ window.handleFileImport = async function (event) {
       return;
     }
 
-    // SINGLE PROFILE IMPORT (with metadata)
-    if (data.exportType === 'single-profile' && data.profileId) {
-      await handleSingleProfileImport(data, event);
-      return;
-    }
-
-    // LEGACY IMPORT (old format without metadata)
+    // Validate that file has data to import
     if (!data.shortcuts && !data.environments && !data.notes) {
       if (window.showToast) window.showToast('Invalid file structure. Expected shortcuts, environments, or notes.', 'error');
       event.target.value = '';
       return;
     }
 
-    // Handle legacy custom profile import
-    if (data.profileType === 'custom' && data.profileName) {
-      const profileId = `custom-${data.profileName.toLowerCase().replace(/\s+/g, '-')}`;
-      const profileExists = window.availableProfiles.some(p => p.id === profileId);
+    // SIMPLIFIED IMPORT LOGIC: Always create new custom profile
+    // Generate auto-incremented profile name
+    let baseName = data.profileName || 'Imported Profile';
+    let profileName = baseName;
+    let counter = 1;
 
-      if (!profileExists) {
-        const confirmed = confirm(
-          `📦 Create New Profile?\n\n` +
-          `Profile Name: ${data.profileName}\n` +
-          `Items: ${data.shortcuts?.length || 0} shortcuts, ${data.environments?.length || 0} environments, ${data.notes?.length || 0} notes\n\n` +
-          `Options:\n` +
-          `• OK = Create new profile and switch to it\n` +
-          `• Cancel = Import into current profile (${window.availableProfiles.find(p => p.id === window.currentProfile)?.name})`
-        );
+    // Keep incrementing until we find an unused name
+    while (window.availableProfiles.some(p => p.name === profileName)) {
+      profileName = `${baseName} ${counter}`;
+      counter++;
+    }
 
-        if (confirmed) {
-          if (window.createCustomProfile) await window.createCustomProfile(profileId, data.profileName, data);
-          event.target.value = '';
-          return;
-        }
-      } else {
-        const confirmed = confirm(
-          `Profile "${data.profileName}" already exists.\n\n` +
-          `Switch to this profile and import data?`
-        );
+    // Generate profile ID from name
+    const profileId = `custom-${profileName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
 
-        if (confirmed) {
-          await window.switchProfile(profileId);
-        } else {
-          event.target.value = '';
-          return;
-        }
+    console.log('[Import] Creating new custom profile:', { profileName, profileId });
+
+    // Create new custom profile with imported data
+    const success = await window.createCustomProfile(profileId, profileName, data);
+
+    if (success) {
+      const itemCount = (data.shortcuts?.length || 0) + (data.environments?.length || 0) + (data.notes?.length || 0);
+      if (window.showToast) {
+        window.showToast(`Imported ${itemCount} items into new profile "${profileName}" ✓`, 'success');
       }
-    }
-
-    const importSummary = [];
-    let importCount = 0;
-
-    if (data.shortcuts && Array.isArray(data.shortcuts)) {
-      const newShortcuts = data.shortcuts.filter(imported =>
-        !window.shortcuts.some(existing => existing.url === imported.url)
-      );
-      const combined = [...newShortcuts, ...window.shortcuts];
-      window.setShortcuts(combined);
-      const storageKey = `shortcuts_${window.currentProfile}`;
-      await chrome.storage.local.set({ [storageKey]: combined });
-      importCount += newShortcuts.length;
-      if (newShortcuts.length > 0) importSummary.push(`${newShortcuts.length} shortcuts`);
-    }
-
-    if (data.environments && Array.isArray(data.environments)) {
-      const newEnvs = data.environments.filter(imported =>
-        !window.environments.some(existing => existing.hostname === imported.hostname)
-      );
-      const combined = [...newEnvs, ...window.environments];
-      window.setEnvironments(combined);
-
-      const storageKey = `environments_${window.currentProfile}`;
-      await chrome.storage.local.set({ [storageKey]: combined });
-      importCount += newEnvs.length;
-      if (newEnvs.length > 0) importSummary.push(`${newEnvs.length} environments`);
-    }
-
-    if (data.notes && Array.isArray(data.notes)) {
-      const newNotes = data.notes.filter(imported =>
-        !window.notes.some(existing => existing.title === imported.title)
-      );
-      const combined = [...newNotes, ...window.notes];
-      window.setNotes(combined);
-      const storageKey = `notes_${window.currentProfile}`;
-      await chrome.storage.local.set({ [storageKey]: combined });
-      importCount += newNotes.length;
-      if (newNotes.length > 0) importSummary.push(`${newNotes.length} notes`);
-    }
-
-    if (data.solutions && Array.isArray(data.solutions)) {
-      const storageKey = `solutions_${window.currentProfile}`;
-      await chrome.storage.local.set({ [storageKey]: data.solutions });
-      window.setSolutions(data.solutions);
-
-      const qaCount = data.solutions.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0);
-      if (qaCount > 0) {
-        importSummary.push(`${qaCount} Quick Actions`);
-      }
-    }
-
-    await window.renderShortcuts();
-    await window.renderEnvironments();
-    await window.renderNotes();
-
-    if (importCount === 0) {
-      if (window.showToast) window.showToast('No new items to import (all items already exist)', 'warning');
-    } else {
-      const summary = importSummary.join(', ');
-      const targetProfile = window.availableProfiles.find(p => p.id === window.currentProfile);
-      if (window.showToast) window.showToast(`Imported ${summary} into ${targetProfile?.name || 'current profile'} ✓`, 'success');
     }
 
   } catch (error) {
@@ -1975,6 +1901,25 @@ window.toggleTheme = async function () {
 };
 
 // ==================== COLLAPSIBLE SECTIONS ====================
+
+// Auto-collapse empty sections (called after render when section has no items)
+window.autoCollapseEmptySection = async function (sectionId) {
+  const section = document.querySelector(`.section[data-section="${sectionId}"]`);
+  if (!section) return;
+
+  // Only collapse if already expanded - don't force expand if user collapsed
+  const isCurrentlyCollapsed = section.classList.contains('collapsed');
+  if (isCurrentlyCollapsed) return; // Already collapsed, skip
+
+  // Collapse the section
+  section.classList.add('collapsed');
+
+  // Persist the collapsed state
+  const result = await chrome.storage.local.get('sectionStates');
+  const sectionStates = result.sectionStates || {};
+  sectionStates[sectionId] = true; // true = collapsed (inverted: false = expanded)
+  await chrome.storage.local.set({ sectionStates });
+};
 
 window.toggleSection = async function (sectionId) {
   const section = document.querySelector(`.section[data-section="${sectionId}"]`);

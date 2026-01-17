@@ -87,41 +87,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.6.1] - 2026-01-12
-### Fixed
-- 🐛 **Profile Loading Architecture**: Fixed "All Profiles" and Settings modal behavior
-  - Individual profiles now load only their own data (no automatic Global merging)
-  - "All Profiles" mode aggregates data from all profiles for read-only viewing
-  - Settings modal Quick Actions editor shows ALL profiles' data regardless of current selection
-  - Added missing `loadActiveProfile()` function preventing initialization errors
-  - Fixed `ReferenceError: loadActiveProfile is not defined`
-- 🐛 **Go-Live Profile Shortcuts**: Removed incorrect S/4HANA transaction codes
-  - Deleted 10 misplaced shortcuts (SM21, SM37, ST04, ST22, ST03N, SXI_MONITOR, STMS, SU01, SM35, SAP Support Launchpad)
-  - Changed "shortcuts" array to "globalShortcuts" (empty array)
-  - Profile now focuses on go-live specific guides and checklists
-
-### Changed
-- **Profile Data Model**: Complete architectural change for Settings independence
-  - `loadProfileData()`: Loads only specific profile, no Global merging
-  - `loadShortcuts()` and `loadEnvironments()`: Aggregate all profiles only in "All Profiles" mode
-  - `renderAllProfilesQuickActions()`: New function for Settings showing all profiles
-  - `saveAllQuickActions()`: Saves changes across multiple profiles
-  - Settings completely decoupled from profile selection (as per user requirement)
-
-### Security
-- ✅ Passed comprehensive 18-check security audit
-  - No credentials, passwords, or API keys found
-  - Customer data (SFSALES IDs) safely in .gitignored file
-  - No person IDs or internal emails exposed
-  - Content moderation passed (no negative SAP messaging)
-  - XSS/injection risks acceptable (innerHTML uses internal storage only)
-
-### Documentation
-- Updated STORAGE-GUIDE.md explaining profile architecture
-- Cleaned emoji prefixes from note titles in all profile JSON files
-
----
-
 ## [1.6.0] - 2026-01-12
 ### Added
 - ⭐ **Universal Pin/Favorite System**: Pin any item to top of lists
@@ -132,7 +97,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Unified `togglePin(id, type)` function handles all three types
   - Toast notifications confirm pin/unpin actions
 - ⌨️ **Enhanced Keyboard Shortcuts**: More productive hotkeys
-  - `Cmd/Ctrl+J`: Add new shortcut (changed from Cmd+Shift+N)
   - `Cmd/Ctrl+E`: Add new environment
   - `Cmd/Ctrl+Shift+1/2/3`: Quick switch to environments 1/2/3
   - All shortcuts now work reliably via document listeners
@@ -166,6 +130,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🐛 **Chrome Manifest Error**: Exceeded 4 shortcut limit
   - Removed all Chrome command shortcuts from manifest.json
   - Now handle shortcuts via JavaScript only
+- 🐛 **Removed Note/Shortcut Keyboard Shortcuts**: Cleaned up unused hotkeys
+  - Removed `Cmd/Ctrl+D` for adding shortcuts
+  - Removed `Cmd/Ctrl+N` for adding notes
+  - Updated all documentation to reflect current shortcuts only
 
 ### Security
 - ✅ Passed 18-check security audit before commit
@@ -249,8 +217,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Post-it note style interface
 - ⌨️ **Keyboard Shortcuts**: Productivity shortcuts throughout extension
   - `Cmd/Ctrl+K`: Focus search bar
-  - `Cmd/Ctrl+Shift+N`: Add new shortcut
-  - `Cmd/Ctrl+M`: Add new note
+  - `Cmd/Ctrl+E`: Add environment
   - Arrow keys for navigation, Enter to open, Esc to close
 - 🎨 **Simplified Icon Selector**: Streamlined icon selection without descriptions
 - 🚩 **Country Flags**: Visual datacenter location indicators with flag emojis
@@ -263,8 +230,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **CMD+K Badge**: Brightened for better visibility in dark mode
 - **Help Documentation**: Updated with new features and keyboard shortcuts
 
-### Fixed
-- **Keyboard Shortcut Conflict**: Changed new shortcut hotkey from `Cmd+N` to `Cmd+Shift+N`
 - **Download Button Visibility**: Fixed timing issue in note edit mode
 
 ### Security
