@@ -1,10 +1,10 @@
 # 📦 Community Profile Database
 
-Welcome to the SF Pro Toolkit Community Profile Database! This collection of curated profiles enables rapid configuration of the toolkit for different SAP solutions, roles, and use cases.
+Welcome to the SAP Pro Toolkit Community Profile Database! This collection of curated profiles enables rapid configuration of the toolkit for different SAP solutions, roles, and use cases.
 
 ## 🎯 What are Profiles?
 
-Profiles are JSON configuration files that pre-configure the SF Pro Toolkit with:
+Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit with:
 - **Quick Actions**: Deep links to common workflows
 - **Shortcuts**: Frequently accessed URLs and documentation
 - **Environments**: Pre-configured SAP system templates
@@ -145,7 +145,7 @@ Profiles are JSON configuration files that pre-configure the SF Pro Toolkit with
 
 ### Method 1: Import via Extension UI
 
-1. Open SF Pro Toolkit side panel
+1. Open SAP Pro Toolkit side panel
 2. Click **⚙️ Settings** → **Profile Management**
 3. Click **Import Profile**
 4. Select a profile JSON file from the `resources/` directory

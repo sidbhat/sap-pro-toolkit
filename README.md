@@ -1,6 +1,6 @@
-# SF Pro Toolkit Website
+# SAP Pro Toolkit Website
 
-This is the documentation website for SF Pro Toolkit, built with [Nextra](https://nextra.site/).
+This is the documentation website for SAP Pro Toolkit, built with [Nextra](https://nextra.site/).
 
 ## 🚀 Getting Started
 

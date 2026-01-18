@@ -1,6 +1,6 @@
 # i18n Keys Reference for Translation
 
-This document lists ALL i18n keys used in the SF Pro Toolkit extension, organized by file and category.
+This document lists ALL i18n keys used in the SAP Pro Toolkit extension, organized by file and category.
 
 **Last Updated**: 2026-01-18  
 **Total Keys**: ~140 keys  
