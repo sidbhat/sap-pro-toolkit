@@ -1,6 +1,16 @@
 // SF Pro Toolkit - State Management Module
 // Global state variables and data loading/saving logic
 
+// ==================== DEFAULT SAP ICONS ====================
+
+// Default SAP icons for each entity type
+window.DEFAULT_ICONS = {
+  environment: 'production',  // Matches ENVIRONMENT_ICONS.production in sap-icon-library.js
+  shortcut: 'link',           // Matches UNIVERSAL_ICONS 'link'
+  note: 'note',               // Matches UNIVERSAL_ICONS 'note'
+  profile: 'people'           // Matches UNIVERSAL_ICONS 'people'
+};
+
 // ==================== STATE VARIABLES ====================
 
 window.currentPageData = null;
@@ -69,6 +79,25 @@ window.loadShortcuts = async function () {
   });
 
   window.shortcuts = result[storageKey] || [];
+  
+  // Apply default icons to shortcuts missing iconType
+  let needsSave = false;
+  window.shortcuts = window.shortcuts.map(shortcut => {
+    if (!shortcut.iconType) {
+      needsSave = true;
+      return {
+        ...shortcut,
+        icon: shortcut.icon || window.DEFAULT_ICONS.shortcut,
+        iconType: 'sap'
+      };
+    }
+    return shortcut;
+  });
+  
+  if (needsSave) {
+    await chrome.storage.local.set({ [storageKey]: window.shortcuts });
+    console.log('[Load Shortcuts] Applied default SAP icons to', window.shortcuts.length, 'shortcuts');
+  }
 
   if (!result[initKey] && window.shortcuts.length === 0) {
     console.log('[Load Shortcuts] First load - trying to load from profile JSON...');
@@ -125,6 +154,25 @@ window.loadEnvironments = async function () {
     await chrome.storage.local.set({ [storageKey]: window.environments });
     console.log('[Load Environments] Saved to storage');
   }
+  
+  // Apply default icons to environments missing iconType
+  let needsSave = false;
+  window.environments = window.environments.map(env => {
+    if (!env.iconType) {
+      needsSave = true;
+      return {
+        ...env,
+        icon: env.icon || window.DEFAULT_ICONS.environment,
+        iconType: 'sap'
+      };
+    }
+    return env;
+  });
+  
+  if (needsSave) {
+    await chrome.storage.local.set({ [storageKey]: window.environments });
+    console.log('[Load Environments] Applied default SAP icons to', window.environments.length, 'environments');
+  }
 
   console.log(`[Load Environments] ✅ Final count: ${window.environments.length} environments`);
 };
@@ -155,20 +203,26 @@ window.loadNotes = async function () {
 
   let needsSave = false;
   window.notes = window.notes.map(note => {
+    let updated = { ...note };
+    
     if (!note.noteType) {
       console.log('[Notes Migration] Adding missing noteType to:', note.title);
+      updated.noteType = 'note';
       needsSave = true;
-      return {
-        ...note,
-        noteType: 'note'
-      };
     }
-    return note;
+    
+    if (!note.iconType) {
+      updated.icon = note.icon || window.DEFAULT_ICONS.note;
+      updated.iconType = 'sap';
+      needsSave = true;
+    }
+    
+    return updated;
   });
 
   if (needsSave) {
     await chrome.storage.local.set({ [storageKey]: window.notes });
-    console.log('[Notes Migration] Saved', window.notes.length, 'notes with noteType field');
+    console.log('[Notes Migration] Saved', window.notes.length, 'notes with noteType and iconType fields');
   }
 
   console.log(`[Notes] Loaded ${window.notes.length} notes for profile: ${window.currentProfile}`);

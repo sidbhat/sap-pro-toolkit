@@ -224,6 +224,10 @@ window.saveEnvironment = async function () {
   document.getElementById('envHostname').value = hostname;
 
   const notes = document.getElementById('envNotes').value.trim();
+  
+  // Get icon from icon picker or use default
+  const iconInput = document.getElementById('envIcon');
+  const icon = iconInput ? iconInput.value.trim() : '';
 
   const modal = document.getElementById('addEnvModal');
   const editId = modal.getAttribute('data-edit-id');
@@ -233,7 +237,9 @@ window.saveEnvironment = async function () {
     name,
     type,
     hostname,
-    notes
+    notes,
+    icon: icon || window.DEFAULT_ICONS.environment,
+    iconType: 'sap'
   };
 
   console.log('[Save Environment] Creating/updating environment:', envObject);
@@ -345,7 +351,7 @@ window.editShortcut = function (id) {
   nameEl.value = shortcut.name;
   pathEl.value = shortcut.url;
   notesEl.value = shortcut.notes || '';
-  iconEl.value = shortcut.icon || '8';
+  iconEl.value = shortcut.icon || window.DEFAULT_ICONS.shortcut;
   tagsEl.value = shortcut.tags ? shortcut.tags.join(', ') : '';
   modalEl.setAttribute('data-edit-id', id);
   if (headerEl) headerEl.textContent = 'Edit Shortcut';
@@ -377,7 +383,8 @@ window.saveShortcut = async function () {
   const name = document.getElementById('shortcutName').value.trim();
   const url = document.getElementById('shortcutPath').value.trim();
   const notes = document.getElementById('shortcutNotes').value.trim();
-  const icon = document.getElementById('shortcutIcon').value || '8';
+  const iconInput = document.getElementById('shortcutIcon');
+  const icon = iconInput ? iconInput.value.trim() : '';
   const tagsInput = document.getElementById('shortcutTags').value.trim();
   const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
 
@@ -400,11 +407,27 @@ window.saveShortcut = async function () {
 
   if (editId) {
     newShortcuts = window.shortcuts.filter(s => s.id !== editId);
-    newShortcuts.push({ id: editId, name, url, notes, icon, tags });
+    newShortcuts.push({ 
+      id: editId, 
+      name, 
+      url, 
+      notes, 
+      icon: icon || window.DEFAULT_ICONS.shortcut, 
+      iconType: 'sap',
+      tags 
+    });
     if (window.showToast) window.showToast('Shortcut updated ✓', 'success');
     modal.removeAttribute('data-edit-id');
   } else {
-    const newShortcut = { id: `shortcut-${Date.now()}`, name, url, notes, icon, tags };
+    const newShortcut = { 
+      id: `shortcut-${Date.now()}`, 
+      name, 
+      url, 
+      notes, 
+      icon: icon || window.DEFAULT_ICONS.shortcut, 
+      iconType: 'sap',
+      tags 
+    };
     newShortcuts = [...window.shortcuts, newShortcut];
     newlyCreatedId = newShortcut.id;
     if (window.showToast) window.showToast('Shortcut saved ✓', 'success');
@@ -433,9 +456,12 @@ window.addCurrentPageAsShortcut = async function () {
   window.openAddShortcutModal();
 
   // THEN populate with current page data (ensures form fields exist)
-  document.getElementById('shortcutName').value = tab.title.substring(0, 50);
-  document.getElementById('shortcutPath').value = tab.url;
-  document.getElementById('shortcutIcon').value = '8';
+  setTimeout(() => {
+    document.getElementById('shortcutName').value = tab.title.substring(0, 50);
+    document.getElementById('shortcutPath').value = tab.url;
+    const iconInput = document.getElementById('shortcutIcon');
+    if (iconInput) iconInput.value = window.DEFAULT_ICONS.shortcut;
+  }, 50);
 };
 
 // ==================== CRUD - NOTES ====================
@@ -523,7 +549,7 @@ window.editNote = async function (id) {
 
   titleEl.value = note.title;
   contentEl.value = note.content || '';
-  iconEl.value = note.icon || '0';
+  iconEl.value = note.icon || window.DEFAULT_ICONS.note;
 
   modal.setAttribute('data-edit-id', id);
   const headerEl = document.querySelector('#addNoteModal .modal-header h3');
@@ -591,7 +617,8 @@ window.deleteNote = async function (id) {
 window.saveNote = async function () {
   const title = document.getElementById('noteTitle').value.trim();
   const content = document.getElementById('noteContent').value.trim();
-  const icon = document.getElementById('noteIcon').value || '0';
+  const iconInput = document.getElementById('noteIcon');
+  const icon = iconInput ? iconInput.value.trim() : '';
 
   const noteTypeRadio = document.querySelector('input[name="noteType"]:checked');
   let noteType = noteTypeRadio ? noteTypeRadio.value : 'note';
@@ -633,7 +660,8 @@ window.saveNote = async function () {
     id: editId || `note-${Date.now()}`,
     title: finalTitle,
     content,
-    icon,
+    icon: icon || window.DEFAULT_ICONS.note,
+    iconType: 'sap',
     noteType,
     timestamp: Date.now()
   };

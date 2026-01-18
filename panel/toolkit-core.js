@@ -85,6 +85,11 @@ const COUNTRY_FLAGS = {
  * Render SAP icon as SVG (new system)
  */
 function renderSAPIcon(iconId, iconType = 'universal', size = 16) {
+  // Strip 'sap-icon://' prefix if present (defensive coding for legacy data)
+  if (iconId && typeof iconId === 'string' && iconId.startsWith('sap-icon://')) {
+    iconId = iconId.replace('sap-icon://', '');
+  }
+  
   if (typeof window.SAPIconLibrary === 'undefined') {
     // Fallback to emoji if library not loaded
     const fallbackEmojis = {
@@ -100,6 +105,7 @@ function renderSAPIcon(iconId, iconType = 'universal', size = 16) {
   const icon = window.SAPIconLibrary.getIconById(iconId, iconType);
   if (!icon) {
     // Fallback if icon not found
+    console.warn(`[Icon Rendering] Icon ID not found: ${iconId} (type: ${iconType})`);
     return `<span style="font-size: ${size}px;">📌</span>`;
   }
   

@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.3] - 2026-01-18
+### Fixed
+- 🔧 **Icon Rendering System**: Corrected icon ID format mismatch (CRITICAL)
+  - Fixed `DEFAULT_ICONS` in panel/state.js to use library IDs instead of URIs
+    - `environment: 'production'` (was `'sap-icon://customer'`)
+    - `shortcut: 'link'` (was `'sap-icon://document-text'`)
+    - `note: 'note'` (was `'sap-icon://write-new-document'`)
+    - `profile: 'people'` (was `'sap-icon://hello-world'`)
+  - Fixed starter profile icons to use correct library IDs
+    - Profile icon: `'ai'` (was `'sap-icon://hello-world'`)
+    - Shortcuts: `'note'`, `'target'` (were `'sap-icon://comment'`, `'sap-icon://map'`)
+    - Environment: `'preview'` (was `'sap-icon://customer'`)
+    - Notes: `'note'` (were `'sap-icon://education'`, `'sap-icon://document-text'`)
+  - Added defensive URI stripping in `renderSAPIcon()` function
+    - Now strips `'sap-icon://'` prefix if present (handles legacy data)
+    - Added console warning when icon ID not found in library
+    - Ensures icons render as SVG instead of emoji fallbacks
+
+### Technical
+- Icon library uses simple IDs: `'note'`, `'link'`, `'folder'`, `'settings'`, `'people'`, `'ai'`, `'target'`, `'analytics'`, `'external'`, `'security'`
+- Environment icons: `'production'`, `'preview'`, `'sales'`, `'sandbox'`
+- Migration logic now applies correct library IDs to existing data
+- All new entities will use proper library IDs going forward
+
+---
+
 ## [1.6.2] - 2026-01-14
 ### Changed
 - ✨ **AI Blocking Overlay**: Enhanced UX during AI operations

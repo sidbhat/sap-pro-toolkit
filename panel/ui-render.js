@@ -395,7 +395,9 @@ window.renderShortcuts = async function (newlyCreatedId = null) {
   });
 
   tbody.innerHTML = sortedShortcuts.map(shortcut => {
-    const displayIcon = typeof renderSAPIcon === 'function' ? renderSAPIcon(shortcut.icon, 'universal', 16) : '📄';
+    // Render SAP icon using window.renderSAPIcon
+    const icon = shortcut.icon || window.DEFAULT_ICONS.shortcut;
+    const displayIcon = window.renderSAPIcon ? window.renderSAPIcon(icon, 16) : '📄';
     const isNewlyCreated = newlyCreatedId && shortcut.id === newlyCreatedId;
 
     return `
@@ -581,7 +583,9 @@ window.renderNotes = async function (newlyCreatedId = null) {
     const contentPreview = note.content
       ? (note.content.length > 60 ? note.content.substring(0, 60) + '...' : note.content)
       : '';
-    const displayIcon = typeof renderSAPIcon === 'function' ? renderSAPIcon(note.icon, 'universal', 16) : '📝';
+    // Render SAP icon using window.renderSAPIcon
+    const icon = note.icon || window.DEFAULT_ICONS.note;
+    const displayIcon = window.renderSAPIcon ? window.renderSAPIcon(icon, 16) : '📝';
     const isNewlyCreated = newlyCreatedId && note.id === newlyCreatedId;
 
     const noteType = note.noteType || 'note';
