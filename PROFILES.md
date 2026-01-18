@@ -17,10 +17,10 @@ Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit wit
 
 **System Profiles** are professionally maintained, pre-tested configurations curated by the SAP Pro Toolkit team. These profiles are regularly updated with the latest features, SAP Notes, and best practices.
 
-**✨ All 8 System Profiles are available in [`resources/`](resources/) directory**
+**✨ All 8 System Profiles are available in [`resources/`](https://github.com/sidbhat/sap-pro-toolkit/tree/main/resources) directory**
 
 ### 1. 🌍 Global Profile
-**File**: [`resources/profile-global.json`](resources/profile-global.json)
+**File**: [`resources/profile-global.json`](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/profile-global.json)
 
 **Purpose**: Universal SAP shortcuts and resources applicable across all SAP solutions
 
@@ -35,7 +35,7 @@ Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit wit
 ---
 
 ### 2. 👥 SuccessFactors Profile
-**File**: [`resources/profile-successfactors-public.json`](resources/profile-successfactors-public.json)
+**File**: [`resources/profile-successfactors-public.json`](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/profile-successfactors-public.json)
 
 **Purpose**: HCM/HR workflows and SuccessFactors-specific resources
 
@@ -57,7 +57,7 @@ Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit wit
 ---
 
 ### 3. 💼 S/4HANA Profile
-**File**: [`resources/profile-s4hana.json`](resources/profile-s4hana.json)
+**File**: [`resources/profile-s4hana.json`](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/profile-s4hana.json)
 
 **Purpose**: ERP & Finance workflows for S/4HANA Cloud and on-premise
 
@@ -73,7 +73,7 @@ Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit wit
 ---
 
 ### 4. ☁️ BTP Profile
-**File**: [`resources/profile-btp.json`](resources/profile-btp.json)
+**File**: [`resources/profile-btp.json`](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/profile-btp.json)
 
 **Purpose**: Business Technology Platform development and integration
 
@@ -89,7 +89,7 @@ Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit wit
 ---
 
 ### 5. 📊 Executive Profile
-**File**: [`resources/profile-executive.json`](resources/profile-executive.json)
+**File**: [`resources/profile-executive.json`](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/profile-executive.json)
 
 **Purpose**: Business value metrics and executive dashboards
 
@@ -104,7 +104,7 @@ Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit wit
 ---
 
 ### 6. 🚀 Go-Live Profile
-**File**: [`resources/profile-golive.json`](resources/profile-golive.json)
+**File**: [`resources/profile-golive.json`](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/profile-golive.json)
 
 **Purpose**: Implementation and go-live checklists
 
@@ -119,7 +119,7 @@ Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit wit
 ---
 
 ### 7. 🤖 AI & Joule Profile
-**File**: [`resources/profile-ai-joule.json`](resources/profile-ai-joule.json)
+**File**: [`resources/profile-ai-joule.json`](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/profile-ai-joule.json)
 
 **Purpose**: Comprehensive Joule AI prompt library and AI capabilities
 
@@ -134,7 +134,7 @@ Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit wit
 ---
 
 ### 8. 🎬 Starter Profile (Template)
-**File**: [`resources/starter-profile.json`](resources/starter-profile.json)
+**File**: [`resources/starter-profile.json`](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/starter-profile.json)
 
 **Purpose**: Empty template for creating custom profiles
 
@@ -184,7 +184,7 @@ We welcome profiles for:
 
 ### Method 2: Download from GitHub
 
-1. Navigate to [`resources/`](resources/) directory
+1. Navigate to [`resources/`](https://github.com/sidbhat/sap-pro-toolkit/tree/main/resources) directory
 2. Click on desired profile JSON file
 3. Click **Raw** button
 4. Right-click → **Save As** to download
@@ -194,7 +194,7 @@ We welcome profiles for:
 
 ```javascript
 // Example: Import SuccessFactors profile via URL
-const profileUrl = 'https://raw.githubusercontent.com/sidbhat/sf-pro-toolkit/main/resources/profile-successfactors-public.json';
+const profileUrl = 'https://raw.githubusercontent.com/sidbhat/sap-pro-toolkit/main/resources/profile-successfactors-public.json';
 // Use extension's import functionality with this URL
 ```
 
@@ -282,7 +282,7 @@ We welcome community-contributed profiles! Your expertise can help thousands of 
 
 ### 1. Create Your Profile
 
-1. Download [`starter-profile.json`](resources/starter-profile.json) as a template
+1. Download [`starter-profile.json`](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/starter-profile.json) as a template
 2. Customize with your shortcuts, environments, and AI prompts
 3. Add your contributor information (see schema below)
 4. Test thoroughly in the SAP Pro Toolkit extension
@@ -329,7 +329,7 @@ We welcome community-contributed profiles! Your expertise can help thousands of 
 
 **Option B: Pull Request** (Advanced)
 1. Fork the repository
-2. Add your profile: `resources/profile-[descriptive-name].json`
+2. Add your profile to: `resources/profile-[descriptive-name].json`
 3. Update this `PROFILES.md` file:
    - Add your profile to the "Community Profiles" section below
    - Include name, description, contributor, and key features
@@ -348,7 +348,7 @@ Your submission will be reviewed for:
 **Typical review time**: 3-5 business days
 
 Once approved, your profile will be:
-1. Added to the [`resources/`](resources/) directory
+1. Added to the [`resources/`](https://github.com/sidbhat/sap-pro-toolkit/tree/main/resources) directory
 2. Listed in this PROFILES.md documentation
 3. Featured in the Community Profile Gallery
 4. Available for download to all SAP Pro Toolkit users
@@ -381,8 +381,8 @@ Be among the first contributors to the SAP Pro Toolkit community profile databas
 ## 📖 Additional Resources
 
 ### Profile Documentation
-- [resources/README.md](resources/README.md) - Complete schema reference & contribution guide
-- [starter-profile.json](resources/starter-profile.json) - Template for creating profiles
+- [resources/README.md](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/README.md) - Complete schema reference & contribution guide
+- [starter-profile.json](https://github.com/sidbhat/sap-pro-toolkit/blob/main/resources/starter-profile.json) - Template for creating profiles
 - This document - Profile catalog and guidelines
 
 ### Extension Documentation
