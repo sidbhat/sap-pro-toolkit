@@ -4,303 +4,1416 @@
     "description": "Name of the extension"
   },
   "extDescription": {
-    "message": "SAP SuccessFactors プロフェッショナル向けの生産性ツールキット",
-    "description": "extDescription translation"
+    "message": "SuccessFactors、S/4HANA、BTPなどのSAPプロフェッショナル向け生産性ツールキット",
+    "description": "Description of the extension"
   },
   "headerTitle": {
     "message": "SAP Pro Toolkit",
-    "description": "Name of the extension"
+    "description": "Main header title"
   },
   "dcInfoBtn": {
     "message": "データセンターディレクトリ",
-    "description": "dcInfoBtn translation"
+    "description": "Datacenter info button tooltip"
   },
   "helpBtn": {
-    "message": "このツールについて・ヘルプ",
-    "description": "helpBtn translation"
+    "message": "ヘルプと情報",
+    "description": "Help button tooltip"
   },
   "contextDetecting": {
     "message": "環境を検出中...",
-    "description": "contextDetecting translation"
+    "description": "Loading message for environment detection"
   },
   "switchEnvironmentTitle": {
-    "message": "環境を切り替える",
-    "description": "switchEnvironmentTitle translation"
+    "message": "環境を切り替え",
+    "description": "Environment section title"
   },
   "noEnvironments": {
-    "message": "保存された環境がまだありません",
-    "description": "noEnvironments translation"
+    "message": "保存された環境はありません",
+    "description": "Empty state message for environments"
   },
   "addCurrentInstance": {
     "message": "現在のインスタンスを追加",
-    "description": "addCurrentInstance translation"
+    "description": "Button to add current instance"
   },
   "addEnvironment": {
     "message": "環境を追加",
-    "description": "addEnvironment translation"
+    "description": "Button to add environment"
   },
   "shortcutsTitle": {
     "message": "ショートカット",
-    "description": "shortcutsTitle translation"
+    "description": "Shortcuts section title"
   },
   "notesTitle": {
-    "message": "クイックノート",
-    "description": "notesTitle translation"
+    "message": "メモ",
+    "description": "Notes section title"
   },
   "selectNote": {
-    "message": "ノートを選択...",
-    "description": "selectNote translation"
+    "message": "メモを選択...",
+    "description": "Placeholder for notes dropdown"
   },
   "addNote": {
-    "message": "ノートを追加",
-    "description": "addNote translation"
+    "message": "メモを追加",
+    "description": "Add note button tooltip"
   },
   "editNote": {
-    "message": "ノートを編集",
-    "description": "editNote translation"
+    "message": "メモを編集",
+    "description": "Edit note button tooltip"
   },
   "deleteNote": {
-    "message": "ノートを削除",
-    "description": "deleteNote translation"
+    "message": "メモを削除",
+    "description": "Delete note button tooltip"
   },
   "copyNote": {
-    "message": "ノート内容をコピー",
-    "description": "copyNote translation"
+    "message": "メモ内容をコピー",
+    "description": "Copy note button tooltip"
   },
   "selectShortcut": {
     "message": "ショートカットを選択...",
-    "description": "selectShortcut translation"
+    "description": "Placeholder for shortcut dropdown"
   },
   "addCurrentPage": {
     "message": "現在のページを追加",
-    "description": "addCurrentPage translation"
+    "description": "Add current page button tooltip"
   },
   "editSelected": {
     "message": "選択項目を編集",
-    "description": "editSelected translation"
+    "description": "Edit shortcut button tooltip"
   },
   "deleteSelected": {
     "message": "選択項目を削除",
-    "description": "deleteSelected translation"
+    "description": "Delete shortcut button tooltip"
   },
   "diagnosticsTitle": {
     "message": "システム診断",
-    "description": "diagnosticsTitle translation"
+    "description": "Diagnostics section title"
   },
   "diagnosticsDescription": {
-    "message": "環境詳細、ユーザーデータ、技術仕様を含む包括的なシステム情報をコピーして、トラブルシューティングとサポートに役立てます。",
-    "description": "diagnosticsDescription translation"
+    "message": "環境詳細、ユーザーデータ、技術仕様を含む包括的なシステム情報をコピーして、トラブルシューティングとサポートに活用できます。",
+    "description": "Diagnostics section description"
   },
   "copyDiagnostics": {
     "message": "診断レポートをコピー",
-    "description": "copyDiagnostics translation"
+    "description": "Copy diagnostics button text"
   },
   "addEnvironmentTitle": {
     "message": "環境を追加",
-    "description": "addEnvironmentTitle translation"
+    "description": "Add environment modal title"
   },
   "editEnvironmentTitle": {
     "message": "環境を編集",
-    "description": "editEnvironmentTitle translation"
+    "description": "Edit environment modal title"
   },
   "environmentName": {
     "message": "環境名",
-    "description": "environmentName translation"
+    "description": "Environment name field label"
   },
   "environmentNamePlaceholder": {
-    "message": "例：本番環境 DC68",
-    "description": "environmentNamePlaceholder translation"
+    "message": "例: 本番環境 DC68",
+    "description": "Environment name field placeholder"
   },
   "environmentType": {
     "message": "環境タイプ",
-    "description": "environmentType translation"
+    "description": "Environment type field label"
   },
   "environmentTypeProduction": {
     "message": "本番",
-    "description": "environmentTypeProduction translation"
+    "description": "Production environment type"
   },
   "environmentTypePreview": {
     "message": "プレビュー",
-    "description": "environmentTypePreview translation"
+    "description": "Preview environment type"
   },
   "environmentTypeSales": {
     "message": "営業/デモ",
-    "description": "environmentTypeSales translation"
+    "description": "Sales/Demo environment type"
   },
   "environmentTypeSandbox": {
     "message": "サンドボックス",
-    "description": "environmentTypeSandbox translation"
+    "description": "Sandbox environment type"
   },
   "hostname": {
     "message": "ホスト名",
-    "description": "hostname translation"
+    "description": "Hostname field label"
   },
   "hostnamePlaceholder": {
-    "message": "例：hcm-us20.hr.cloud.sap",
-    "description": "hostnamePlaceholder translation"
+    "message": "例: hcm-us20.hr.cloud.sap",
+    "description": "Hostname field placeholder"
   },
   "hostnameHelp": {
-    "message": "データセンターはホスト名から自動的に検出されます",
-    "description": "hostnameHelp translation"
+    "message": "データセンターはホスト名から自動検出されます",
+    "description": "Hostname field help text"
   },
   "cancel": {
     "message": "キャンセル",
-    "description": "cancel translation"
+    "description": "Cancel button text"
   },
   "saveEnvironment": {
     "message": "環境を保存",
-    "description": "saveEnvironment translation"
+    "description": "Save environment button text"
   },
   "addShortcutTitle": {
     "message": "ショートカットを追加",
-    "description": "addShortcutTitle translation"
+    "description": "Add shortcut modal title"
   },
   "editShortcutTitle": {
     "message": "ショートカットを編集",
-    "description": "editShortcutTitle translation"
+    "description": "Edit shortcut modal title"
   },
   "shortcutName": {
     "message": "名前",
-    "description": "shortcutName translation"
+    "description": "Shortcut name field label"
   },
   "shortcutNamePlaceholder": {
-    "message": "例：管理センター",
-    "description": "shortcutNamePlaceholder translation"
+    "message": "例: 管理センター",
+    "description": "Shortcut name field placeholder"
   },
   "shortcutUrl": {
     "message": "URL",
-    "description": "shortcutUrl translation"
+    "description": "Shortcut URL field label"
   },
   "shortcutUrlPlaceholder": {
-    "message": "例：https://hcm-us20.hr.cloud.sap/sf/admin",
-    "description": "shortcutUrlPlaceholder translation"
+    "message": "例: https://hcm-us20.hr.cloud.sap/sf/admin",
+    "description": "Shortcut URL field placeholder"
   },
   "shortcutUrlHelp": {
-    "message": "https:// を含む完全な URL を入力してください",
-    "description": "shortcutUrlHelp translation"
+    "message": "https://を含む完全なURLを入力してください",
+    "description": "Shortcut URL field help text"
   },
   "shortcutNotes": {
     "message": "メモ（任意）",
-    "description": "shortcutNotes translation"
+    "description": "Shortcut notes field label"
   },
   "shortcutNotesPlaceholder": {
-    "message": "例：トラブルシューティング用",
-    "description": "shortcutNotesPlaceholder translation"
+    "message": "例: トラブルシューティング用",
+    "description": "Shortcut notes field placeholder"
   },
   "shortcutIcon": {
     "message": "アイコン",
-    "description": "shortcutIcon translation"
+    "description": "Shortcut icon field label"
   },
   "saveShortcut": {
     "message": "ショートカットを保存",
-    "description": "saveShortcut translation"
+    "description": "Save shortcut button text"
   },
   "addNoteTitle": {
-    "message": "ノートを追加",
-    "description": "addNoteTitle translation"
+    "message": "メモを追加",
+    "description": "Add note modal title"
   },
   "editNoteTitle": {
-    "message": "ノートを編集",
-    "description": "editNoteTitle translation"
+    "message": "メモを編集",
+    "description": "Edit note modal title"
   },
   "noteTitle": {
     "message": "タイトル",
-    "description": "noteTitle translation"
+    "description": "Note title field label"
   },
   "noteTitlePlaceholder": {
-    "message": "例：一時 ID、URL、設定",
-    "description": "noteTitlePlaceholder translation"
+    "message": "例: 一時ID、URL、設定",
+    "description": "Note title field placeholder"
   },
   "noteContent": {
     "message": "内容",
-    "description": "noteContent translation"
+    "description": "Note content field label"
   },
   "noteContentPlaceholder": {
-    "message": "ここに一時情報を貼り付け...\\n\\n• ユーザー ID\\n• URL\\n• 設定スニペット\\n• 素早くアクセスが必要なもの",
-    "description": "noteContentPlaceholder translation"
+    "message": "一時的な情報をここに貼り付け...\\n\\n• ユーザーID\\n• URL\\n• 設定スニペット\\n• すぐにアクセスしたいもの",
+    "description": "Note content field placeholder"
   },
   "noteIcon": {
     "message": "アイコン",
-    "description": "noteIcon translation"
+    "description": "Note icon field label"
   },
   "noteColor": {
     "message": "色",
-    "description": "noteColor translation"
+    "description": "Note color field label"
   },
   "saveNote": {
-    "message": "ノートを保存",
-    "description": "saveNote translation"
+    "message": "メモを保存",
+    "description": "Save note button text"
   },
   "dcDirectoryTitle": {
     "message": "グローバルデータセンターディレクトリ",
-    "description": "dcDirectoryTitle translation"
+    "description": "Datacenter directory modal title"
   },
   "dcDirectoryDescription": {
-    "message": "世界中の SAP SuccessFactors データセンターの完全なリスト（場所、クラウドプロバイダー、可用性を含む）。",
-    "description": "dcDirectoryDescription translation"
+    "message": "世界中のSAP SuccessFactorsデータセンターの完全なリスト（場所、クラウドプロバイダー、可用性を含む）。",
+    "description": "Datacenter directory modal description"
   },
   "close": {
     "message": "閉じる",
-    "description": "close translation"
+    "description": "Close button text"
   },
   "helpTitle": {
-    "message": "SAP Pro Toolkit について",
-    "description": "helpTitle translation"
+    "message": "SAP Pro Toolkitについて",
+    "description": "Help modal title"
   },
   "helpFeatures": {
     "message": "3つの主要機能",
-    "description": "helpFeatures translation"
+    "description": "Help features heading"
   },
   "helpFeature1Title": {
     "message": "環境間の切り替え",
-    "description": "helpFeature1Title translation"
+    "description": "Help feature 1 title"
   },
   "helpFeature1Description": {
-    "message": "複数の SAP インスタンス（本番、プレビュー、営業、サンドボックス）を保存し、URL を手動で変更せずに素早く切り替えます。拡張機能は切り替え時に現在のページパスを保持します。",
-    "description": "helpFeature1Description translation"
+    "message": "複数のSAPインスタンス（本番、プレビュー、営業、サンドボックス）を保存し、URLを手動で変更することなく素早く切り替えられます。切り替え時に現在のページパスが保持されます。",
+    "description": "Help feature 1 description"
   },
   "helpFeature2Description": {
-    "message": "管理センター、RBP、プロビジョニング、新機能ドキュメントなど、よく使用される SAP ページへの素早いアクセス。定期的に訪れる SAP URL のカスタムショートカットを作成できます。",
-    "description": "helpFeature2Description translation"
-  },
-  "helpFeature2Description": {
-    "message": "管理センター、RBP、プロビジョニング、新機能ドキュメントなど、よく使用される SF ページへの素早いアクセス。定期的に訪れる SF URL のカスタムショートカットを作成できます。",
-    "description": "helpFeature2Description translation"
+    "message": "管理センター、RBP、プロビジョニング、新機能ドキュメントなど、よく使うSAPページへのクイックアクセス。定期的に訪問するSAP URLにカスタムショートカットを作成できます。",
+    "description": "Help feature 2 description"
   },
   "helpFeature3Title": {
-    "message": "システム診断のコピー",
-    "description": "helpFeature3Title translation"
+    "message": "システム診断をコピー",
+    "description": "Help feature 3 title"
   },
   "helpFeature3Description": {
-    "message": "現在の環境詳細、データセンター情報、ユーザー ID、ブラウザ仕様、技術設定を含む包括的な診断レポートを生成し、トラブルシューティングとサポートチケットに役立てます。",
-    "description": "helpFeature3Description translation"
+    "message": "現在の環境詳細、データセンター情報、ユーザーID、ブラウザ仕様、技術設定を含む包括的な診断レポートを生成し、トラブルシューティングとサポートチケットに活用できます。",
+    "description": "Help feature 3 description"
   },
   "helpProTip": {
-    "message": "プロのヒント",
-    "description": "helpProTip translation"
+    "message": "ヒント",
+    "description": "Help pro tip heading"
   },
   "helpProTipDescription": {
-    "message": "SAP SuccessFactors ページを閲覧中、拡張機能はデータセンター情報と環境タイプを自動的に検出するため、作業中のインスタンスを簡単に追跡できます。",
-    "description": "helpProTipDescription translation"
+    "message": "SAP SuccessFactorsページにいるときは、データセンター情報と環境タイプが自動的に検出されるため、作業中のインスタンスを簡単に追跡できます。",
+    "description": "Help pro tip description"
   },
   "helpGotIt": {
-    "message": "了解しました！",
-    "description": "helpGotIt translation"
+    "message": "了解!",
+    "description": "Help modal close button"
   },
   "switchButton": {
-    "message": "切り替え",
-    "description": "switchButton translation"
+    "message": "切替",
+    "description": "Switch environment button text"
   },
   "editButton": {
     "message": "編集",
-    "description": "editButton translation"
+    "description": "Edit button tooltip"
   },
   "deleteButton": {
     "message": "削除",
-    "description": "deleteButton translation"
+    "description": "Delete button tooltip"
   },
   "required": {
     "message": "*",
     "description": "Required field indicator"
+  },
+  "profileSwitchSuggestion": {
+    "message": "💡 {solutionLabel}にいます - {profileName}プロファイルに切り替えますか？",
+    "description": "Toast message suggesting profile switch"
+  },
+  "confirmDeleteEnvironment": {
+    "message": "環境「{envName}」を削除しますか？",
+    "description": "Confirmation dialog for deleting an environment"
+  },
+  "confirmDeleteShortcut": {
+    "message": "ショートカット「{shortcutName}」を削除しますか？",
+    "description": "Confirmation dialog for deleting a shortcut"
+  },
+  "confirmDeleteNote": {
+    "message": "メモ「{noteTitle}」を削除しますか？",
+    "description": "Confirmation dialog for deleting a note"
+  },
+  "ossNoteCopied": {
+    "message": "OSSノートURLをコピーしました ✓",
+    "description": "Success message when OSS note URL is copied"
+  },
+  "globalSearchPlaceholder": {
+    "message": "環境、ショートカット、メモを検索...",
+    "description": "Placeholder text for global search input"
+  },
+  "enableAutoLogin": {
+    "message": "この環境で自動ログインを有効にする",
+    "description": "Checkbox label for enabling auto-login"
+  },
+  "credentialUsername": {
+    "message": "ユーザー名",
+    "description": "Username field label for credentials"
+  },
+  "credentialUsernamePlaceholder": {
+    "message": "SAPユーザー名",
+    "description": "Username field placeholder"
+  },
+  "credentialPassword": {
+    "message": "パスワード",
+    "description": "Password field label for credentials"
+  },
+  "credentialPasswordPlaceholder": {
+    "message": "SAPパスワード",
+    "description": "Password field placeholder"
+  },
+  "credentialCompanyId": {
+    "message": "会社ID",
+    "description": "Company ID field label for SuccessFactors"
+  },
+  "credentialCompanyIdPlaceholder": {
+    "message": "例: SFPART123456",
+    "description": "Company ID field placeholder"
+  },
+  "clearCache": {
+    "message": "キャッシュをクリアして新規ログインを強制",
+    "description": "Checkbox label for clearing cookies"
+  },
+  "showPassword": {
+    "message": "パスワードを表示",
+    "description": "Tooltip for show password button"
+  },
+  "hidePassword": {
+    "message": "パスワードを非表示",
+    "description": "Tooltip for hide password button"
+  },
+  "credentialsSecurityNotice": {
+    "message": "🔒 資格情報はAES-256-GCMで暗号化され、ブラウザに安全に保存されます。",
+    "description": "Security notice for credential storage"
+  },
+  "credentialsRequiredWarning": {
+    "message": "自動ログインが有効な場合、ユーザー名とパスワードが必要です",
+    "description": "Validation warning for required credentials"
+  },
+  "autoLoginSuccess": {
+    "message": "自動ログイン成功 ✓",
+    "description": "Success notification for auto-login"
+  },
+  "autoLoginFailed": {
+    "message": "自動ログイン失敗",
+    "description": "Error notification for auto-login failure"
+  },
+  "autoLoginSSODetected": {
+    "message": "SSOが検出されました - 手動でログインしてください",
+    "description": "Info notification when SSO is detected"
+  },
+  "autoLoginCompanyIdRequired": {
+    "message": "会社IDが必要ですが設定されていません",
+    "description": "Warning when company ID is needed but missing"
+  },
+  "decryptionFailed": {
+    "message": "資格情報の復号に失敗しました",
+    "description": "Error message when credential decryption fails"
+  },
+  "encryptionFailed": {
+    "message": "資格情報の暗号化に失敗しました",
+    "description": "Error message when credential encryption fails"
+  },
+  "aiSettings": {
+    "message": "AI設定",
+    "description": "AI Settings section"
+  },
+  "enableAiFeatures": {
+    "message": "AI機能を有効にする",
+    "description": "AI Features toggle"
+  },
+  "enableAiFeaturesDesc": {
+    "message": "ツールキット全体でAI機能をグローバルに有効または無効にします。",
+    "description": "Toggle description"
+  },
+  "downloadedAsFormat": {
+    "message": "$1としてダウンロード完了 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadFailed": {
+    "message": "ダウンロード失敗。"
+  },
+  "aiFeaturesRequireConfiguration": {
+    "message": "⚙️ AI機能には設定が必要です"
+  },
+  "configureAPIKeysInSettings": {
+    "message": "💡 設定 → APIキーでOpenAI、Anthropic、またはSAP AI Coreを設定してください"
+  },
+  "aiDiagnosticsOnlySAPDomains": {
+    "message": "ℹ️ AI診断はSAPドメインでのみ利用可能です"
+  },
+  "navigateToSAPPage": {
+    "message": "この機能を使用するにはSAPページ（SuccessFactors、S/4HANA、BTP、またはsap.com）に移動してください"
+  },
+  "noActiveTab": {
+    "message": "アクティブなタブが見つかりません"
+  },
+  "noResponseFromAI": {
+    "message": "AIからの応答がありません"
+  },
+  "noReportContentToSave": {
+    "message": "保存するレポートコンテンツがありません。"
+  },
+  "diagnosticsReportSavedAsNote": {
+    "message": "診断レポートをメモとして保存しました ✓"
+  },
+  "failedSaveReportAsNote": {
+    "message": "レポートをメモとして保存できませんでした。"
+  },
+  "noReportContentToDownload": {
+    "message": "ダウンロードするレポートコンテンツがありません"
+  },
+  "failedLoadAIPromptConfiguration": {
+    "message": "AIプロンプト設定の読み込みに失敗しました"
+  },
+  "aiSearchComplete": {
+    "message": "AI検索完了 ✓"
+  },
+  "pleaseEnterPromptContentFirst": {
+    "message": "最初にプロンプト内容を入力してください"
+  },
+  "aiFeaturesNotAvailableToolkitCoreMissing": {
+    "message": "AI機能は利用できません - ToolkitCoreがありません"
+  },
+  "noteRefinerTemplateMissingRunningRawPrompt": {
+    "message": "ノートリファイナーテンプレートがありません、生プロンプトを実行中"
+  },
+  "failedLoadPricingData": {
+    "message": "価格データの読み込みに失敗しました"
+  },
+  "noResponseContentToSave": {
+    "message": "保存する応答コンテンツがありません"
+  },
+  "aiResponseSavedAsNote": {
+    "message": "AI応答をメモとして保存しました ✓"
+  },
+  "noResponseContentToCopy": {
+    "message": "コピーする応答コンテンツがありません。"
+  },
+  "responseCopiedToClipboard": {
+    "message": "応答をクリップボードにコピーしました ✓"
+  },
+  "failedCopyResponse": {
+    "message": "応答のコピーに失敗しました。"
+  },
+  "enterpriseCalculatorNotAvailable": {
+    "message": "エンタープライズ計算機は利用できません"
+  },
+  "projectionsCalculated": {
+    "message": "予測計算完了 ✓"
+  },
+  "aiFeaturesNotAvailable": {
+    "message": "AI機能は利用できません"
+  },
+  "noActiveTabFound": {
+    "message": "アクティブなタブが見つかりません"
+  },
+  "cannotScrapeBrowserInternalPages": {
+    "message": "ブラウザ内部ページはスクレイピングできません"
+  },
+  "aiShortcutCreationOnlySAPDomains": {
+    "message": "ℹ️ AIショートカット作成はSAPドメインでのみ利用可能です"
+  },
+  "navigateToSAPPageForAIShortcut": {
+    "message": "この機能を使用するにはSAPページ（SuccessFactors、S/4HANA、BTP、またはsap.com）に移動してください"
+  },
+  "aiSummaryGenerated": {
+    "message": "✨ AI要約生成完了 ✓"
+  },
+  "aiShortcutCreationFailed": {
+    "message": "AIショートカット作成に失敗: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterOSSNoteNumber": {
+    "message": "OSSノート番号を入力してください"
+  },
+  "invalidOSSNoteNumber": {
+    "message": "無効なOSSノート番号"
+  },
+  "openingOSSNote": {
+    "message": "OSSノート $1 を開いています ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterOSSNoteNumberFirst": {
+    "message": "最初にOSSノート番号を入力してください"
+  },
+  "ossNoteURLCopied": {
+    "message": "OSSノートURLをコピーしました ✓"
+  },
+  "failedCopyURL": {
+    "message": "URLのコピーに失敗しました"
+  },
+  "ossNoteAddedAsShortcut": {
+    "message": "OSSノート $1 をショートカットとして追加しました ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterAPIKeyFirst": {
+    "message": "最初にAPIキーを入力してください"
+  },
+  "testingOpenAIConnection": {
+    "message": "OpenAI接続をテスト中..."
+  },
+  "openAIConnectionSuccessful": {
+    "message": "OpenAI接続成功 ✓"
+  },
+  "openAIConnectionFailed": {
+    "message": "OpenAI接続失敗 - APIキーを確認してください"
+  },
+  "connectionTestFailed": {
+    "message": "接続テスト失敗"
+  },
+  "openAIAPIKeyCleared": {
+    "message": "OpenAI APIキーを削除しました"
+  },
+  "testingAnthropicConnection": {
+    "message": "Anthropic接続をテスト中..."
+  },
+  "anthropicConnectionSuccessful": {
+    "message": "Anthropic接続成功 ✓"
+  },
+  "anthropicConnectionFailed": {
+    "message": "Anthropic接続失敗 - APIキーを確認してください"
+  },
+  "anthropicAPIKeyCleared": {
+    "message": "Anthropic APIキーを削除しました"
+  },
+  "profileNotFound": {
+    "message": "プロファイルが見つかりません"
+  },
+  "themeChanged": {
+    "message": "テーマ: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiDiagnosticsGenerated": {
+    "message": "✨ AI診断生成完了 ✓"
+  },
+  "aiDiagnosticsFailed": {
+    "message": "AI診断失敗: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiResponseAlreadySaved": {
+    "message": "⚠️ このAI応答は既に保存されています"
+  },
+  "aiSearchFailed": {
+    "message": "AI検索失敗: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiTestFailed": {
+    "message": "AIテスト失敗: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "enterSearchQueryFirst": {
+    "message": "最初に検索クエリを入力してください"
+  },
+  "importedItemsIntoProfile": {
+    "message": "$1を$2にインポートしました ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "importFailed": {
+    "message": "インポート失敗: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportedItemsAndQuickActions": {
+    "message": "$1アイテム + $2クイックアクションをエクスポート ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "failedExportConfiguration": {
+    "message": "設定のエクスポートに失敗しました"
+  },
+  "invalidJSONFile": {
+    "message": "無効なJSONファイル - 解析できません"
+  },
+  "invalidFileStructure": {
+    "message": "無効なファイル構造 - 必須フィールドがありません"
+  },
+  "noNewItemsToImport": {
+    "message": "インポートする新しいアイテムがありません（すべて既存）"
+  },
+  "connectingToSAPAICore": {
+    "message": "SAP AI Coreに接続中..."
+  },
+  "connectedFoundModels": {
+    "message": "接続完了 ✓ $1個のデプロイ済みモデルが見つかりました",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sapAICoreConfigurationSaved": {
+    "message": "SAP AI Core設定を保存しました ✓"
+  },
+  "sapAICoreConfigurationCleared": {
+    "message": "SAP AI Core設定をクリアしました"
+  },
+  "noDeployedModelsFoundInResourceGroup": {
+    "message": "リソースグループにデプロイ済みモデルが見つかりません"
+  },
+  "pleaseSelectDeployedModel": {
+    "message": "デプロイ済みモデルを選択してください"
+  },
+  "pleaseFillAllRequiredFields": {
+    "message": "すべての必須フィールドを入力してください"
+  },
+  "failedClearConfiguration": {
+    "message": "設定のクリアに失敗しました"
+  },
+  "failedToSave": {
+    "message": "保存失敗: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "systemErrorToolkitCoreNotLoaded": {
+    "message": "システムエラー: ToolkitCoreが読み込まれていません"
+  },
+  "maxTokensSet": {
+    "message": "最大トークンを$1に設定 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "reportExported": {
+    "message": "レポートをエクスポートしました ✓"
+  },
+  "navigatingTo": {
+    "message": "$1に移動中...",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiAnalyzeClickToStart": {
+    "message": "「AIで分析」をクリックして開始..."
+  },
+  "aiAnalyzingPage": {
+    "message": "⏳ AIがページを分析中..."
+  },
+  "aiAnalyzingToolkitData": {
+    "message": "⏳ すべてのプロファイルのツールキットデータを分析中..."
+  },
+  "aiAnalyzingPrompt": {
+    "message": "⏳ AIがプロンプトを分析中..."
+  },
+  "aiAnalyzingCurrentPage": {
+    "message": "⏳ 現在のページを分析中..."
+  },
+  "aiPreparingToScrapePage": {
+    "message": "⏳ ページスクレイピングの準備中..."
+  },
+  "aiScrapingPageContent": {
+    "message": "⏳ ページコンテンツをスクレイピング中..."
+  },
+  "aiEnhancingTitle": {
+    "message": "⏳ タイトルを改善中..."
+  },
+  "aiGeneratingSummary": {
+    "message": "⏳ AI要約を生成中..."
+  },
+  "failedGenerateDiagnosticsTryAgain": {
+    "message": "AI診断の生成に失敗しました。もう一度お試しください。"
+  },
+  "scaleParameters": {
+    "message": "スケールパラメータ"
+  },
+  "numberOfUsers": {
+    "message": "ユーザー数"
+  },
+  "queriesPerUserPerDay": {
+    "message": "ユーザーあたりの1日のクエリ数"
+  },
+  "workingDaysPerYear": {
+    "message": "年間営業日数"
+  },
+  "expectedOutputTokens": {
+    "message": "予想出力トークン"
+  },
+  "calculateAnnualProjections": {
+    "message": "年間予測を計算"
+  },
+  "annualCostProjection": {
+    "message": "年間コスト予測"
+  },
+  "contextLabel": {
+    "message": "コンテキスト"
+  },
+  "originalPromptInput": {
+    "message": "📝 元のプロンプト（入力）:"
+  },
+  "aiResponseOutput": {
+    "message": "✨ AI応答（出力）:"
+  },
+  "volumeProjections": {
+    "message": "ボリューム予測"
+  },
+  "costProjections": {
+    "message": "コスト予測"
+  },
+  "assumptionsLabel": {
+    "message": "前提条件:"
+  },
+  "costPerQuery": {
+    "message": "クエリあたりのコスト:"
+  },
+  "monthlyCost": {
+    "message": "月額コスト:"
+  },
+  "annualCost": {
+    "message": "年間コスト:"
+  },
+  "connectToLoadDeployedModels": {
+    "message": "接続してデプロイ済みモデルを読み込み..."
+  },
+  "annualQueries": {
+    "message": "年間クエリ数"
+  },
+  "annualInputTokens": {
+    "message": "年間入力トークン"
+  },
+  "annualOutputTokens": {
+    "message": "年間出力トークン"
+  },
+  "assumptions": {
+    "message": "前提条件"
+  },
+  "editQuickActionsInstructions": {
+    "message": "クイックアクションの名前とパスを編集し、下の「すべての変更を保存」をクリックしてください。"
+  },
+  "noQuickActionsConfigured": {
+    "message": "solutions.jsonにクイックアクションが構成されていません"
+  },
+  "noQuickActions": {
+    "message": "クイックアクションなし"
+  },
+  "failedToLoadData": {
+    "message": "読み込みに失敗しました"
+  },
+  "addedFromOssNoteSearch": {
+    "message": "OSSノート検索から追加"
+  },
+  "ossNoteShortcutName": {
+    "message": "OSSノート $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "largeNoteWarning": {
+    "message": "大きなノート"
+  },
+  "welcomeModalTitle": {
+    "message": "SAP Pro Toolkitへようこそ"
+  },
+  "welcomeTagline": {
+    "message": "SAPコマンドセンター。ワンクリックでどこへでも。"
+  },
+  "welcomeCapabilityEnv": {
+    "message": "環境管理"
+  },
+  "welcomeCapabilityShortcuts": {
+    "message": "スマートショートカット"
+  },
+  "welcomeCapabilityAI": {
+    "message": "AI搭載ツール"
+  },
+  "welcomeCapabilityProfiles": {
+    "message": "プロファイルシステム"
+  },
+  "welcomeCapabilityDiag": {
+    "message": "診断と検索"
+  },
+  "welcomeCTAText": {
+    "message": "始める準備はできましたか？"
+  },
+  "welcomeBtnLearnMore": {
+    "message": "詳細"
+  },
+  "welcomeBtnSettings": {
+    "message": "設定を開く"
+  },
+  "welcomeBtnGotIt": {
+    "message": "了解！"
+  },
+  "helpKeyFeaturesHeading": {
+    "message": "主な機能"
+  },
+  "helpKeyboardShortcutsHeading": {
+    "message": "キーボードショートカット"
+  },
+  "aiDisclaimerDiagnostics": {
+    "message": "この診断レポートはAIがシステム情報を分析して生成したものです。AIは有用な洞察を提供しますが、意思決定を行う前に必ず情報を独自に検証してください。"
+  },
+  "aiDisclaimerExport": {
+    "message": "[NEEDS TRANSLATION] ⚠️ AI-Generated Content: This content was generated using AI language models. Review for accuracy before use in production environments."
+  },
+  "toolkitDisclaimerExport": {
+    "message": "[NEEDS TRANSLATION] Generated by SAP Pro Toolkit - A productivity tool for SAP professionals."
+  },
+  "exportHeaderToolkitNote": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | Note"
+  },
+  "exportHeaderToolkitAINote": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | AI-Generated Note"
+  },
+  "exportHeaderToolkitAIAnalysis": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | AI Analysis"
+  },
+  "environmentSaved": {
+    "message": "環境が保存されました ✓"
+  },
+  "environmentUpdated": {
+    "message": "環境が更新されました ✓"
+  },
+  "environmentDeleted": {
+    "message": "環境が削除されました ✓"
+  },
+  "shortcutSaved": {
+    "message": "ショートカットが保存されました ✓"
+  },
+  "shortcutUpdated": {
+    "message": "ショートカットが更新されました ✓"
+  },
+  "shortcutDeleted": {
+    "message": "ショートカットが削除されました ✓"
+  },
+  "noteSaved": {
+    "message": "ノートが保存されました ✓"
+  },
+  "noteUpdated": {
+    "message": "ノートが更新されました ✓"
+  },
+  "noteDeleted": {
+    "message": "ノートが削除されました ✓"
+  },
+  "noteCopied": {
+    "message": "ノートがコピーされました ✓"
+  },
+  "environmentNameRequired": {
+    "message": "環境名は必須です"
+  },
+  "hostnameRequired": {
+    "message": "ホスト名は必須です"
+  },
+  "invalidSapHostname": {
+    "message": "無効なSAPホスト名形式"
+  },
+  "envNameTooShort": {
+    "message": "環境名が短すぎます（最小2文字）"
+  },
+  "envNameTooLong": {
+    "message": "環境名が長すぎます（最大50文字）"
+  },
+  "hostnameTooShort": {
+    "message": "ホスト名が短すぎます（最小5文字）"
+  },
+  "hostnameTooLong": {
+    "message": "ホスト名が長すぎます（最大100文字）"
+  },
+  "hostnameCannotContainSpaces": {
+    "message": "ホスト名にスペースを含めることはできません"
+  },
+  "hostnameInvalidCharacters": {
+    "message": "ホスト名に無効な文字が含まれています"
+  },
+  "shortcutNameTooShort": {
+    "message": "ショートカット名が短すぎます（最小2文字）"
+  },
+  "shortcutNameTooLong": {
+    "message": "ショートカット名が長すぎます（最大50文字）"
+  },
+  "urlTooShort": {
+    "message": "URLが短すぎます（最小10文字）"
+  },
+  "urlTooLong": {
+    "message": "URLが長すぎます（最大2000文字）"
+  },
+  "urlMustBeExternal": {
+    "message": "URLは外部である必要があります（http://またはhttps://）"
+  },
+  "noteTitleTooShort": {
+    "message": "ノートタイトルが短すぎます（最小2文字）"
+  },
+  "noteTitleTooLong": {
+    "message": "ノートタイトルが長すぎます（最大100文字）"
+  },
+  "enterNoteTitle": {
+    "message": "ノートタイトルを入力してください"
+  },
+  "fillRequiredFields": {
+    "message": "すべての必須フィールドを入力してください"
+  },
+  "failedSaveEnvironment": {
+    "message": "環境の保存に失敗しました"
+  },
+  "failedSwitchEnvironment": {
+    "message": "環境の切り替えに失敗しました"
+  },
+  "failedNavigate": {
+    "message": "ナビゲーションに失敗しました"
+  },
+  "failedToNavigate": {
+    "message": "ページへのナビゲーションに失敗しました"
+  },
+  "failedCopyNote": {
+    "message": "ノートのコピーに失敗しました"
+  },
+  "failedCopyContent": {
+    "message": "コンテンツのコピーに失敗しました"
+  },
+  "failedOpenOSSNote": {
+    "message": "OSSノートを開けませんでした"
+  },
+  "failedSaveQuickActions": {
+    "message": "クイックアクションの保存に失敗しました"
+  },
+  "failedInitialize": {
+    "message": "初期化に失敗しました"
+  },
+  "switchingToEnvironment": {
+    "message": "環境を切り替えています..."
+  },
+  "contentCopied": {
+    "message": "コンテンツがコピーされました ✓"
+  },
+  "noContentToCopy": {
+    "message": "コピーするコンテンツがありません"
+  },
+  "noChangesToSave": {
+    "message": "保存する変更はありません"
+  },
+  "quickActionsSaved": {
+    "message": "クイックアクションが保存されました ✓"
+  },
+  "profileCreated": {
+    "message": "プロファイルが作成されました ✓"
+  },
+  "profileDeleted": {
+    "message": "プロファイルが削除されました ✓"
+  },
+  "switchedToProfile": {
+    "message": "プロファイルに切り替えました"
+  },
+  "profileNameRequired": {
+    "message": "プロファイル名は必須です"
+  },
+  "profileAlreadyExists": {
+    "message": "プロファイルは既に存在します"
+  },
+  "profileNameAlreadyExists": {
+    "message": "プロファイル名は既に存在します"
+  },
+  "currentProfileNotFound": {
+    "message": "現在のプロファイルが見つかりません"
+  },
+  "cannotDeleteSystemProfiles": {
+    "message": "システムプロファイルは削除できません"
+  },
+  "switchProfileBeforeDeleting": {
+    "message": "削除する前に別のプロファイルに切り替えてください"
+  },
+  "failedSwitchProfile": {
+    "message": "プロファイルの切り替えに失敗しました"
+  },
+  "failedCreateProfile": {
+    "message": "プロファイルの作成に失敗しました"
+  },
+  "failedDeleteProfile": {
+    "message": "プロファイルの削除に失敗しました"
+  },
+  "profileResetSuccess": {
+    "message": "プロファイルのリセットに成功しました ✓"
+  },
+  "resetFailed": {
+    "message": "リセットに失敗しました"
+  },
+  "importedIntoProfile": {
+    "message": "プロファイルにインポートしました"
+  },
+  "importedIntoNewProfile": {
+    "message": "新しいプロファイルにインポートしました"
+  },
+  "exportedProfile": {
+    "message": "プロファイルがエクスポートされました ✓"
+  },
+  "exportedDataWithQA": {
+    "message": "クイックアクション付きデータをエクスポートしました ✓"
+  },
+  "failedExportProfile": {
+    "message": "プロファイルのエクスポートに失敗しました"
+  },
+  "fullBackupExported": {
+    "message": "完全バックアップがエクスポートされました ✓"
+  },
+  "fullBackupRestored": {
+    "message": "完全バックアップが復元されました ✓"
+  },
+  "failedExportBackup": {
+    "message": "バックアップのエクスポートに失敗しました"
+  },
+  "backupRestoreFailed": {
+    "message": "バックアップの復元に失敗しました"
+  },
+  "invalidBackupStructure": {
+    "message": "無効なバックアップファイル構造"
+  },
+  "cannotNavigateNoActiveSFInstance": {
+    "message": "ナビゲーションできません - アクティブなSuccessFactorsインスタンスがありません"
+  },
+  "shortcutNotFound": {
+    "message": "ショートカットが見つかりません"
+  },
+  "noteNotFound": {
+    "message": "ノートが見つかりません"
+  },
+  "modalNotFound": {
+    "message": "モーダルが見つかりません"
+  },
+  "noEnvironmentAtPosition": {
+    "message": "位置に環境がありません"
+  },
+  "noEnvironmentsSaved": {
+    "message": "まだ環境が保存されていません"
+  },
+  "formElementsNotFound": {
+    "message": "フォーム要素が見つかりません"
+  },
+  "guideEnvStep1Title": {
+    "message": "SAPインスタンスに移動"
+  },
+  "guideEnvStep1Desc": {
+    "message": "SAP SuccessFactors、S/4HANA、またはBTPインスタンスに移動します"
+  },
+  "guideEnvStep2Title": {
+    "message": "環境を追加"
+  },
+  "guideEnvStep2Desc": {
+    "message": "<code>+ 環境</code>をクリックするか、<code>Cmd+E</code>を使用します"
+  },
+  "guideEnvStep3Title": {
+    "message": "いつでも切り替え"
+  },
+  "guideEnvStep3Desc": {
+    "message": "ページパスを保持しながら環境を素早く切り替えます"
+  },
+  "welcomeGetStarted": {
+    "message": "開始する"
+  },
+  "tooltipPinNote": {
+    "message": "Pin note to top"
+  },
+  "tooltipUnpinEnvironment": {
+    "message": "Unpin environment"
+  },
+  "tooltipUnpinShortcut": {
+    "message": "Unpin shortcut"
+  },
+  "inputTokens": {
+    "message": "Input Tokens"
+  },
+  "guideShortcutStep2Title": {
+    "message": "Add Shortcut"
+  },
+  "emptyNotesSubtitle": {
+    "message": "Store documentation, prompts, and code snippets"
+  },
+  "noteTypeIdea": {
+    "message": "💡 Idea"
+  },
+  "tooltipOpenShortcut": {
+    "message": "Open shortcut"
+  },
+  "model": {
+    "message": "Model"
+  },
+  "noteTypeAIPrompt": {
+    "message": "✨ AI Prompt"
+  },
+  "confirmClearSAPAICore": {
+    "message": "Clear SAP AI Core configuration? This cannot be undone."
+  },
+  "emptyEnvironmentsSubtitle": {
+    "message": "Save your SAP instances for quick access"
+  },
+  "tooltipDeleteProfile": {
+    "message": "Delete profile"
+  },
+  "emptyNotesTitle": {
+    "message": "No Saved Notes"
+  },
+  "aiResponseTitle": {
+    "message": "✨ AI Response"
+  },
+  "confirmProfileExists": {
+    "message": "Profile \"$1\" already exists.\n\nImport items into existing profile?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "guideNoteStep1Desc": {
+    "message": "Jot down IDs, URLs, or quick thoughts"
+  },
+  "aiDisclaimerPage": {
+    "message": "This response was generated by AI analyzing your page. While AI provides helpful insights, always verify information independently before making decisions."
+  },
+  "emptyNotesHowTo": {
+    "message": "How to Get Started"
+  },
+  "emptyShortcutsHowTo": {
+    "message": "How to Get Started"
+  },
+  "aiResponseNoteTitle": {
+    "message": "AI Response - $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "usedMonthsAgo": {
+    "message": "Used $1 months ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyShortcutsTitle": {
+    "message": "No Saved Shortcuts"
+  },
+  "tooltipUnpinNote": {
+    "message": "Unpin note"
+  },
+  "context": {
+    "message": "Context"
+  },
+  "usedToday": {
+    "message": "Used today"
+  },
+  "aiResponseOutputLabel": {
+    "message": "✨ AI Response (Output):"
+  },
+  "accessCount": {
+    "message": "$1 accesses",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "outputTokens": {
+    "message": "Output Tokens"
+  },
+  "emptyEnvironmentsTitle": {
+    "message": "No Saved Environments"
+  },
+  "guideNoteStep2Desc": {
+    "message": "Turn rough notes into polished documentation"
+  },
+  "usedDaysAgo": {
+    "message": "Used $1 days ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyEnvironmentsHowTo": {
+    "message": "How to Get Started"
+  },
+  "noteTypeDocumentation": {
+    "message": "📚 Documentation"
+  },
+  "guideEnvProTip": {
+    "message": "💡 プロのヒント: クイックアクションで特定のSFモジュールに即座にジャンプできます！"
+  },
+  "aiButtonReady": {
+    "message": "✨ AI"
+  },
+  "tooltipDelete": {
+    "message": "Delete"
+  },
+  "guideShortcutStep1Desc": {
+    "message": "Go to the page you want to shortcut"
+  },
+  "tooltipEdit": {
+    "message": "Edit"
+  },
+  "aiDisclaimerGeneric": {
+    "message": "This response was generated by AI. Always verify information independently before making decisions."
+  },
+  "aiDisclaimerToolkit": {
+    "message": "This response was generated by AI analyzing your toolkit data. While AI provides helpful insights, always verify information independently before making decisions."
+  },
+  "guideNoteStep1Title": {
+    "message": "Capture Ideas"
+  },
+  "aiInsightsLabel": {
+    "message": "✨ AI INSIGHTS"
+  },
+  "emptyShortcutsSubtitle": {
+    "message": "Create quick links to frequently-used SAP pages"
+  },
+  "tooltipPinEnvironment": {
+    "message": "Pin environment to top"
+  },
+  "cost": {
+    "message": "Cost"
+  },
+  "aiDisclaimerCostProjection": {
+    "message": "Cost projections based on AI-analyzed token usage. Always verify with your provider for accurate enterprise pricing."
+  },
+  "usedWeeksAgo": {
+    "message": "Used $1 weeks ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "guideShortcutStep2Desc": {
+    "message": "Click <code>+ Shortcut</code> or use <code>Cmd+J</code>"
+  },
+  "tooltipUnpin": {
+    "message": "Unpin"
+  },
+  "tooltipPinShortcut": {
+    "message": "Pin shortcut to top"
+  },
+  "guideNoteStep2Title": {
+    "message": "Use AI"
+  },
+  "aiDisclaimerVerifyInformation": {
+    "message": "This response was generated by AI. Always verify information independently before making decisions."
+  },
+  "guideShortcutProTip": {
+    "message": "Use shortcuts for deep links properly in your SAP system"
+  },
+  "aiContextStats": {
+    "message": "📊 Analyzed $1 environments, $2 shortcuts, $3 notes across $4 profiles",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      },
+      "3": {
+        "content": "$3"
+      },
+      "4": {
+        "content": "$4"
+      }
+    }
+  },
+  "noteTypeCode": {
+    "message": "💻 Code"
+  },
+  "aiContextQuery": {
+    "message": "🔍 \"$1\"",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "noteTypeNote": {
+    "message": "📝 Note"
+  },
+  "guideShortcutStep1Title": {
+    "message": "Navigate to Page"
+  },
+  "tooltipSwitchEnvironment": {
+    "message": "Switch to this environment"
+  },
+  "aiButtonAnalyzing": {
+    "message": "⏳ Analyzing..."
+  },
+  "generated": {
+    "message": "Generated"
+  },
+  "proTipLabel": {
+    "message": "Pro Tip"
+  },
+  "diagnosticsReportTitle": {
+    "message": "Diagnostics Report - $1 - $2",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "tooltipReloadEnvironment": {
+    "message": "Reload this environment"
+  },
+  "aiOriginalPromptLabel": {
+    "message": "📝 Original Prompt (Input):"
+  },
+  "tooltipCopyNote": {
+    "message": "Copy note content"
+  },
+  "guideNoteProTip": {
+    "message": "Store your AI prompts here for reuse"
+  },
+  "confirmCreateProfile": {
+    "message": "📦 Create New Profile?\n\nThis will create \"$1\" and import the file's data.\n\nContinue?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "usedYesterday": {
+    "message": "Used yesterday"
+  },
+  "tooltipPinToTop": {
+    "message": "Pin to top"
+  },
+  "diagnosticsReport": {
+    "message": "Diagnostics Report"
+  },
+  "itemPinned": {
+    "message": "アイテムがピン留めされました ✓"
   }
 }

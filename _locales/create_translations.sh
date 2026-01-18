@@ -3,9 +3,9 @@
 # Spanish (es)
 cat > es/messages.json << 'EOF'
 {
-  "extName": {"message": "SF Pro Toolkit", "description": "Name of the extension"},
+  "extName": {"message": "SAP Pro Toolkit", "description": "Name of the extension"},
   "extDescription": {"message": "Kit de herramientas de productividad para profesionales de SAP SuccessFactors", "description": "Description of the extension"},
-  "headerTitle": {"message": "SF Pro Toolkit", "description": "Main header title"},
+  "headerTitle": {"message": "SAP Pro Toolkit", "description": "Main header title"},
   "dcInfoBtn": {"message": "Directorio de centros de datos", "description": "Datacenter info button tooltip"},
   "helpBtn": {"message": "Acerca de y ayuda", "description": "Help button tooltip"},
   "contextDetecting": {"message": "Detectando entorno...", "description": "Loading message for environment detection"},
@@ -64,7 +64,7 @@ cat > es/messages.json << 'EOF'
   "dcDirectoryTitle": {"message": "Directorio global de centros de datos", "description": "Datacenter directory modal title"},
   "dcDirectoryDescription": {"message": "Lista completa de centros de datos de SuccessFactors en todo el mundo con sus ubicaciones, proveedores de nube y disponibilidad.", "description": "Datacenter directory modal description"},
   "close": {"message": "Cerrar", "description": "Close button text"},
-  "helpTitle": {"message": "Acerca de SF Pro Toolkit", "description": "Help modal title"},
+  "helpTitle": {"message": "Acerca de SAP Pro Toolkit", "description": "Help modal title"},
   "helpFeatures": {"message": "Tres características principales", "description": "Help features heading"},
   "helpFeature1Title": {"message": "Cambiar entre entornos", "description": "Help feature 1 title"},
   "helpFeature1Description": {"message": "Guarde múltiples instancias de SF (Producción, Vista previa, Ventas, Sandbox) y cambie rápidamente entre ellas sin cambiar manualmente las URLs. La extensión preserva la ruta de su página actual al cambiar.", "description": "Help feature 1 description"},

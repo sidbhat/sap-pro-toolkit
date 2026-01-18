@@ -4,7 +4,7 @@
     "description": "Name of the extension"
   },
   "extDescription": {
-    "message": "Produktivitäts-Toolkit für SAP-Profis",
+    "message": "Produktivitäts-Toolkit für SAP-Profis auf SuccessFactors, S/4HANA, BTP und mehr",
     "description": "Description of the extension"
   },
   "headerTitle": {
@@ -263,10 +263,6 @@
     "message": "Schneller Zugriff auf häufig verwendete SAP-Seiten wie Admin-Center, RBP, Bereitstellung und Neuigkeiten-Dokumentation. Erstellen Sie benutzerdefinierte Verknüpfungen für jede SAP-URL, die Sie regelmäßig besuchen.",
     "description": "Help feature 2 description"
   },
-  "helpFeature2Description": {
-    "message": "Schneller Zugriff auf häufig verwendete SF-Seiten wie Admin-Center, RBP, Bereitstellung und Neuigkeiten-Dokumentation. Erstellen Sie benutzerdefinierte Verknüpfungen für jede SF-URL, die Sie regelmäßig besuchen.",
-    "description": "Help feature 2 description"
-  },
   "helpFeature3Title": {
     "message": "Systemdiagnose kopieren",
     "description": "Help feature 3 title"
@@ -302,5 +298,1122 @@
   "required": {
     "message": "*",
     "description": "Required field indicator"
+  },
+  "profileSwitchSuggestion": {
+    "message": "💡 Sie sind auf {solutionLabel} - Zum Profil {profileName} wechseln?",
+    "description": "Toast message suggesting profile switch"
+  },
+  "confirmDeleteEnvironment": {
+    "message": "Umgebung \"{envName}\" löschen?",
+    "description": "Confirmation dialog for deleting an environment"
+  },
+  "confirmDeleteShortcut": {
+    "message": "Verknüpfung \"{shortcutName}\" löschen?",
+    "description": "Confirmation dialog for deleting a shortcut"
+  },
+  "confirmDeleteNote": {
+    "message": "Notiz \"{noteTitle}\" löschen?",
+    "description": "Confirmation dialog for deleting a note"
+  },
+  "ossNoteCopied": {
+    "message": "OSS-Notiz-URL kopiert ✓",
+    "description": "Success message when OSS note URL is copied"
+  },
+  "globalSearchPlaceholder": {
+    "message": "Umgebungen, Verknüpfungen, Notizen suchen...",
+    "description": "Placeholder text for global search input"
+  },
+  "enableAutoLogin": {
+    "message": "Automatische Anmeldung für diese Umgebung aktivieren",
+    "description": "Checkbox label for enabling auto-login"
+  },
+  "credentialUsername": {
+    "message": "Benutzername",
+    "description": "Username field label for credentials"
+  },
+  "credentialUsernamePlaceholder": {
+    "message": "Ihr SAP-Benutzername",
+    "description": "Username field placeholder"
+  },
+  "credentialPassword": {
+    "message": "Passwort",
+    "description": "Password field label for credentials"
+  },
+  "credentialPasswordPlaceholder": {
+    "message": "Ihr SAP-Passwort",
+    "description": "Password field placeholder"
+  },
+  "credentialCompanyId": {
+    "message": "Unternehmens-ID",
+    "description": "Company ID field label for SuccessFactors"
+  },
+  "credentialCompanyIdPlaceholder": {
+    "message": "z.B. SFPART123456",
+    "description": "Company ID field placeholder"
+  },
+  "clearCache": {
+    "message": "Cache leeren und neue Anmeldung erzwingen",
+    "description": "Checkbox label for clearing cookies"
+  },
+  "showPassword": {
+    "message": "Passwort anzeigen",
+    "description": "Tooltip for show password button"
+  },
+  "hidePassword": {
+    "message": "Passwort verbergen",
+    "description": "Tooltip for hide password button"
+  },
+  "credentialsSecurityNotice": {
+    "message": "🔒 Anmeldedaten werden mit AES-256-GCM verschlüsselt und sicher in Ihrem Browser gespeichert.",
+    "description": "Security notice for credential storage"
+  },
+  "credentialsRequiredWarning": {
+    "message": "Benutzername und Passwort sind erforderlich, wenn die automatische Anmeldung aktiviert ist",
+    "description": "Validation warning for required credentials"
+  },
+  "autoLoginSuccess": {
+    "message": "Automatische Anmeldung erfolgreich ✓",
+    "description": "Success notification for auto-login"
+  },
+  "autoLoginFailed": {
+    "message": "Automatische Anmeldung fehlgeschlagen",
+    "description": "Error notification for auto-login failure"
+  },
+  "autoLoginSSODetected": {
+    "message": "SSO erkannt - bitte manuell anmelden",
+    "description": "Info notification when SSO is detected"
+  },
+  "autoLoginCompanyIdRequired": {
+    "message": "Unternehmens-ID erforderlich aber nicht konfiguriert",
+    "description": "Warning when company ID is needed but missing"
+  },
+  "decryptionFailed": {
+    "message": "Anmeldedaten konnten nicht entschlüsselt werden",
+    "description": "Error message when credential decryption fails"
+  },
+  "encryptionFailed": {
+    "message": "Anmeldedaten konnten nicht verschlüsselt werden",
+    "description": "Error message when credential encryption fails"
+  },
+  "aiSettings": {
+    "message": "KI-Einstellungen",
+    "description": "AI Settings section"
+  },
+  "enableAiFeatures": {
+    "message": "KI-Funktionen aktivieren",
+    "description": "AI Features toggle"
+  },
+  "enableAiFeaturesDesc": {
+    "message": "KI-gestützte Funktionen im gesamten Toolkit global aktivieren oder deaktivieren.",
+    "description": "Toggle description"
+  },
+  "downloadedAsFormat": {
+    "message": "Als $1 heruntergeladen ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadFailed": {
+    "message": "Download fehlgeschlagen."
+  },
+  "aiFeaturesRequireConfiguration": {
+    "message": "⚙️ KI-Funktionen erfordern Konfiguration"
+  },
+  "configureAPIKeysInSettings": {
+    "message": "💡 Gehe zu Einstellungen → API-Schlüssel, um OpenAI, Anthropic oder SAP AI Core zu konfigurieren"
+  },
+  "aiDiagnosticsOnlySAPDomains": {
+    "message": "ℹ️ KI-Diagnose nur auf SAP-Domains verfügbar"
+  },
+  "navigateToSAPPage": {
+    "message": "Navigiere zu einer SAP-Seite (SuccessFactors, S/4HANA, BTP oder sap.com), um diese Funktion zu nutzen"
+  },
+  "noActiveTab": {
+    "message": "Kein aktiver Tab gefunden"
+  },
+  "noResponseFromAI": {
+    "message": "Keine Antwort von der KI"
+  },
+  "noReportContentToSave": {
+    "message": "Kein Berichtsinhalt zum Speichern."
+  },
+  "diagnosticsReportSavedAsNote": {
+    "message": "Diagnosebericht als Notiz gespeichert ✓"
+  },
+  "failedSaveReportAsNote": {
+    "message": "Fehler beim Speichern des Berichts als Notiz."
+  },
+  "noReportContentToDownload": {
+    "message": "Kein Berichtsinhalt zum Herunterladen"
+  },
+  "failedLoadAIPromptConfiguration": {
+    "message": "Fehler beim Laden der KI-Prompt-Konfiguration"
+  },
+  "aiSearchComplete": {
+    "message": "KI-Suche abgeschlossen ✓"
+  },
+  "pleaseEnterPromptContentFirst": {
+    "message": "Bitte geben Sie zuerst Prompt-Inhalt ein"
+  },
+  "aiFeaturesNotAvailableToolkitCoreMissing": {
+    "message": "KI-Funktionen nicht verfügbar - ToolkitCore fehlt"
+  },
+  "noteRefinerTemplateMissingRunningRawPrompt": {
+    "message": "Notiz-Refiner-Vorlage fehlt, Raw-Prompt wird ausgeführt"
+  },
+  "failedLoadPricingData": {
+    "message": "Fehler beim Laden der Preisdaten"
+  },
+  "noResponseContentToSave": {
+    "message": "Kein Antwortinhalt zum Speichern"
+  },
+  "aiResponseSavedAsNote": {
+    "message": "KI-Antwort als Notiz gespeichert ✓"
+  },
+  "noResponseContentToCopy": {
+    "message": "Kein Antwortinhalt zum Kopieren."
+  },
+  "responseCopiedToClipboard": {
+    "message": "Antwort in Zwischenablage kopiert ✓"
+  },
+  "failedCopyResponse": {
+    "message": "Fehler beim Kopieren der Antwort."
+  },
+  "enterpriseCalculatorNotAvailable": {
+    "message": "Enterprise-Rechner nicht verfügbar"
+  },
+  "projectionsCalculated": {
+    "message": "Projektionen berechnet ✓"
+  },
+  "aiFeaturesNotAvailable": {
+    "message": "KI-Funktionen nicht verfügbar"
+  },
+  "noActiveTabFound": {
+    "message": "Kein aktiver Tab gefunden"
+  },
+  "cannotScrapeBrowserInternalPages": {
+    "message": "Browser-interne Seiten können nicht gescrapt werden"
+  },
+  "aiShortcutCreationOnlySAPDomains": {
+    "message": "ℹ️ KI-Verknüpfungserstellung nur auf SAP-Domains verfügbar"
+  },
+  "navigateToSAPPageForAIShortcut": {
+    "message": "Navigiere zu einer SAP-Seite (SuccessFactors, S/4HANA, BTP oder sap.com), um diese Funktion zu nutzen"
+  },
+  "aiSummaryGenerated": {
+    "message": "✨ KI-Zusammenfassung generiert ✓"
+  },
+  "aiShortcutCreationFailed": {
+    "message": "KI-Verknüpfungserstellung fehlgeschlagen: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterOSSNoteNumber": {
+    "message": "Bitte geben Sie eine OSS-Notiz-Nummer ein"
+  },
+  "invalidOSSNoteNumber": {
+    "message": "Ungültige OSS-Notiz-Nummer"
+  },
+  "openingOSSNote": {
+    "message": "OSS-Notiz $1 wird geöffnet ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterOSSNoteNumberFirst": {
+    "message": "Bitte geben Sie zuerst eine OSS-Notiz-Nummer ein"
+  },
+  "ossNoteURLCopied": {
+    "message": "OSS-Notiz-URL kopiert ✓"
+  },
+  "failedCopyURL": {
+    "message": "Fehler beim Kopieren der URL"
+  },
+  "ossNoteAddedAsShortcut": {
+    "message": "OSS-Notiz $1 als Verknüpfung hinzugefügt ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterAPIKeyFirst": {
+    "message": "Bitte geben Sie zuerst einen API-Schlüssel ein"
+  },
+  "testingOpenAIConnection": {
+    "message": "OpenAI-Verbindung wird getestet..."
+  },
+  "openAIConnectionSuccessful": {
+    "message": "OpenAI-Verbindung erfolgreich ✓"
+  },
+  "openAIConnectionFailed": {
+    "message": "OpenAI-Verbindung fehlgeschlagen - API-Schlüssel prüfen"
+  },
+  "connectionTestFailed": {
+    "message": "Verbindungstest fehlgeschlagen"
+  },
+  "openAIAPIKeyCleared": {
+    "message": "OpenAI-API-Schlüssel gelöscht"
+  },
+  "testingAnthropicConnection": {
+    "message": "Anthropic-Verbindung wird getestet..."
+  },
+  "anthropicConnectionSuccessful": {
+    "message": "Anthropic-Verbindung erfolgreich ✓"
+  },
+  "anthropicConnectionFailed": {
+    "message": "Anthropic-Verbindung fehlgeschlagen - API-Schlüssel prüfen"
+  },
+  "anthropicAPIKeyCleared": {
+    "message": "Anthropic-API-Schlüssel gelöscht"
+  },
+  "profileNotFound": {
+    "message": "Profil nicht gefunden"
+  },
+  "themeChanged": {
+    "message": "Design: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiDiagnosticsGenerated": {
+    "message": "✨ KI-Diagnose generiert ✓"
+  },
+  "aiDiagnosticsFailed": {
+    "message": "KI-Diagnose fehlgeschlagen: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiResponseAlreadySaved": {
+    "message": "⚠️ Diese KI-Antwort wurde bereits kürzlich gespeichert"
+  },
+  "aiSearchFailed": {
+    "message": "KI-Suche fehlgeschlagen: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiTestFailed": {
+    "message": "KI-Test fehlgeschlagen: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "enterSearchQueryFirst": {
+    "message": "Zuerst Suchanfrage eingeben"
+  },
+  "importedItemsIntoProfile": {
+    "message": "$1 in $2 importiert ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "importFailed": {
+    "message": "Import fehlgeschlagen: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportedItemsAndQuickActions": {
+    "message": "$1 Elemente + $2 Quick Actions exportiert ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "failedExportConfiguration": {
+    "message": "Konfiguration konnte nicht exportiert werden"
+  },
+  "invalidJSONFile": {
+    "message": "Ungültige JSON-Datei - konnte nicht analysiert werden"
+  },
+  "invalidFileStructure": {
+    "message": "Ungültige Dateistruktur - erforderliche Felder fehlen"
+  },
+  "noNewItemsToImport": {
+    "message": "Keine neuen Elemente zum Importieren (alle Elemente existieren bereits)"
+  },
+  "connectingToSAPAICore": {
+    "message": "Verbindung zu SAP AI Core wird hergestellt..."
+  },
+  "connectedFoundModels": {
+    "message": "Verbunden ✓ $1 bereitgestellte(s) Modell(e) gefunden",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sapAICoreConfigurationSaved": {
+    "message": "SAP AI Core-Konfiguration gespeichert ✓"
+  },
+  "sapAICoreConfigurationCleared": {
+    "message": "SAP AI Core-Konfiguration gelöscht"
+  },
+  "noDeployedModelsFoundInResourceGroup": {
+    "message": "Keine bereitgestellten Modelle in der Ressourcengruppe gefunden"
+  },
+  "pleaseSelectDeployedModel": {
+    "message": "Bitte wählen Sie ein bereitgestelltes Modell aus"
+  },
+  "pleaseFillAllRequiredFields": {
+    "message": "Bitte füllen Sie alle erforderlichen Felder aus"
+  },
+  "failedClearConfiguration": {
+    "message": "Konfiguration konnte nicht gelöscht werden"
+  },
+  "failedToSave": {
+    "message": "Speichern fehlgeschlagen: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "systemErrorToolkitCoreNotLoaded": {
+    "message": "Systemfehler: ToolkitCore nicht geladen"
+  },
+  "maxTokensSet": {
+    "message": "Max. Token auf $1 gesetzt ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "reportExported": {
+    "message": "Bericht exportiert ✓"
+  },
+  "navigatingTo": {
+    "message": "Navigiere zu $1...",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiAnalyzeClickToStart": {
+    "message": "Klicken Sie auf \"Mit KI analysieren\" um zu starten..."
+  },
+  "aiAnalyzingPage": {
+    "message": "⏳ KI analysiert die Seite..."
+  },
+  "aiAnalyzingToolkitData": {
+    "message": "⏳ Analysiere Toolkit-Daten über alle Profile..."
+  },
+  "aiAnalyzingPrompt": {
+    "message": "⏳ KI analysiert Ihre Eingabe..."
+  },
+  "aiAnalyzingCurrentPage": {
+    "message": "⏳ Analysiere aktuelle Seite..."
+  },
+  "aiPreparingToScrapePage": {
+    "message": "⏳ Bereite Seitenextraktion vor..."
+  },
+  "aiScrapingPageContent": {
+    "message": "⏳ Extrahiere Seiteninhalt..."
+  },
+  "aiEnhancingTitle": {
+    "message": "⏳ Verbessere Titel..."
+  },
+  "aiGeneratingSummary": {
+    "message": "⏳ Generiere KI-Zusammenfassung..."
+  },
+  "failedGenerateDiagnosticsTryAgain": {
+    "message": "KI-Diagnose Generierung fehlgeschlagen. Bitte erneut versuchen."
+  },
+  "scaleParameters": {
+    "message": "Skalierungsparameter"
+  },
+  "numberOfUsers": {
+    "message": "Anzahl der Benutzer"
+  },
+  "queriesPerUserPerDay": {
+    "message": "Abfragen pro Benutzer pro Tag"
+  },
+  "workingDaysPerYear": {
+    "message": "Arbeitstage pro Jahr"
+  },
+  "expectedOutputTokens": {
+    "message": "Erwartete Ausgabe-Token"
+  },
+  "calculateAnnualProjections": {
+    "message": "Jährliche Projektionen berechnen"
+  },
+  "annualCostProjection": {
+    "message": "Jährliche Kostenprojektion"
+  },
+  "contextLabel": {
+    "message": "Kontext"
+  },
+  "originalPromptInput": {
+    "message": "📝 Original-Prompt (Eingabe):"
+  },
+  "aiResponseOutput": {
+    "message": "✨ KI-Antwort (Ausgabe):"
+  },
+  "volumeProjections": {
+    "message": "Volumenprojektionen"
+  },
+  "costProjections": {
+    "message": "Kostenprojektionen"
+  },
+  "assumptionsLabel": {
+    "message": "Annahmen:"
+  },
+  "costPerQuery": {
+    "message": "Kosten pro Abfrage:"
+  },
+  "monthlyCost": {
+    "message": "Monatliche Kosten:"
+  },
+  "annualCost": {
+    "message": "Jährliche Kosten:"
+  },
+  "connectToLoadDeployedModels": {
+    "message": "Verbinden um bereitgestellte Modelle zu laden..."
+  },
+  "annualQueries": {
+    "message": "Jährliche Abfragen"
+  },
+  "annualInputTokens": {
+    "message": "Jährliche Eingabe-Token"
+  },
+  "annualOutputTokens": {
+    "message": "Jährliche Ausgabe-Token"
+  },
+  "assumptions": {
+    "message": "Annahmen"
+  },
+  "editQuickActionsInstructions": {
+    "message": "Bearbeiten Sie Quick Action-Namen und -Pfade und klicken Sie dann unten auf \"Alle Änderungen speichern\"."
+  },
+  "noQuickActionsConfigured": {
+    "message": "Keine Quick Actions in solutions.json konfiguriert"
+  },
+  "noQuickActions": {
+    "message": "Keine Quick Actions"
+  },
+  "failedToLoadData": {
+    "message": "Laden fehlgeschlagen"
+  },
+  "addedFromOssNoteSearch": {
+    "message": "Hinzugefügt aus OSS-Hinweis-Suche"
+  },
+  "ossNoteShortcutName": {
+    "message": "OSS-Hinweis $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "largeNoteWarning": {
+    "message": "Große Notiz"
+  },
+  "welcomeModalTitle": {
+    "message": "Willkommen beim SAP Pro Toolkit"
+  },
+  "welcomeTagline": {
+    "message": "Ihre SAP-Kommandozentrale. Ein Klick überall hin."
+  },
+  "welcomeCapabilityEnv": {
+    "message": "Umgebungsmanagement"
+  },
+  "welcomeCapabilityShortcuts": {
+    "message": "Intelligente Verknüpfungen"
+  },
+  "welcomeCapabilityAI": {
+    "message": "KI-gestützte Tools"
+  },
+  "welcomeCapabilityProfiles": {
+    "message": "Profilsystem"
+  },
+  "welcomeCapabilityDiag": {
+    "message": "Diagnose & Suche"
+  },
+  "welcomeCTAText": {
+    "message": "Bereit loszulegen?"
+  },
+  "welcomeBtnLearnMore": {
+    "message": "Mehr erfahren"
+  },
+  "welcomeBtnSettings": {
+    "message": "Einstellungen öffnen"
+  },
+  "welcomeBtnGotIt": {
+    "message": "Verstanden!"
+  },
+  "helpKeyFeaturesHeading": {
+    "message": "Hauptfunktionen"
+  },
+  "helpKeyboardShortcutsHeading": {
+    "message": "Tastaturkürzel"
+  },
+  "aiDisclaimerDiagnostics": {
+    "message": "[NEEDS TRANSLATION] ⚠️ AI-Generated Content: This diagnostics report was generated using AI. Please review technical details for accuracy before making system changes."
+  },
+  "aiDisclaimerExport": {
+    "message": "[NEEDS TRANSLATION] ⚠️ AI-Generated Content: This content was generated using AI language models. Review for accuracy before use in production environments."
+  },
+  "toolkitDisclaimerExport": {
+    "message": "[NEEDS TRANSLATION] Generated by SAP Pro Toolkit - A productivity tool for SAP professionals."
+  },
+  "exportHeaderToolkitNote": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | Note"
+  },
+  "exportHeaderToolkitAINote": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | AI-Generated Note"
+  },
+  "exportHeaderToolkitAIAnalysis": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | AI Analysis"
+  },
+  "environmentSaved": {
+    "message": "Umgebung gespeichert ✓"
+  },
+  "environmentUpdated": {
+    "message": "Umgebung aktualisiert ✓"
+  },
+  "environmentDeleted": {
+    "message": "Umgebung gelöscht ✓"
+  },
+  "shortcutSaved": {
+    "message": "Verknüpfung gespeichert ✓"
+  },
+  "shortcutUpdated": {
+    "message": "Verknüpfung aktualisiert ✓"
+  },
+  "shortcutDeleted": {
+    "message": "Verknüpfung gelöscht ✓"
+  },
+  "noteSaved": {
+    "message": "Notiz gespeichert ✓"
+  },
+  "noteUpdated": {
+    "message": "Notiz aktualisiert ✓"
+  },
+  "noteDeleted": {
+    "message": "Notiz gelöscht ✓"
+  },
+  "noteCopied": {
+    "message": "Notiz kopiert ✓"
+  },
+  "environmentNameRequired": {
+    "message": "Umgebungsname ist erforderlich"
+  },
+  "hostnameRequired": {
+    "message": "Hostname ist erforderlich"
+  },
+  "invalidSapHostname": {
+    "message": "Ungültiges SAP-Hostname-Format"
+  },
+  "envNameTooShort": {
+    "message": "Umgebungsname zu kurz (min. 2 Zeichen)"
+  },
+  "envNameTooLong": {
+    "message": "Umgebungsname zu lang (max. 50 Zeichen)"
+  },
+  "hostnameTooShort": {
+    "message": "Hostname zu kurz (min. 5 Zeichen)"
+  },
+  "hostnameTooLong": {
+    "message": "Hostname zu lang (max. 100 Zeichen)"
+  },
+  "hostnameCannotContainSpaces": {
+    "message": "Hostname darf keine Leerzeichen enthalten"
+  },
+  "hostnameInvalidCharacters": {
+    "message": "Hostname enthält ungültige Zeichen"
+  },
+  "shortcutNameTooShort": {
+    "message": "Verknüpfungsname zu kurz (min. 2 Zeichen)"
+  },
+  "shortcutNameTooLong": {
+    "message": "Verknüpfungsname zu lang (max. 50 Zeichen)"
+  },
+  "urlTooShort": {
+    "message": "URL zu kurz (min. 10 Zeichen)"
+  },
+  "urlTooLong": {
+    "message": "URL zu lang (max. 2000 Zeichen)"
+  },
+  "urlMustBeExternal": {
+    "message": "URL muss extern sein (http:// oder https://)"
+  },
+  "noteTitleTooShort": {
+    "message": "Notiztitel zu kurz (min. 2 Zeichen)"
+  },
+  "noteTitleTooLong": {
+    "message": "Notiztitel zu lang (max. 100 Zeichen)"
+  },
+  "enterNoteTitle": {
+    "message": "Bitte geben Sie einen Notiztitel ein"
+  },
+  "fillRequiredFields": {
+    "message": "Bitte füllen Sie alle erforderlichen Felder aus"
+  },
+  "failedSaveEnvironment": {
+    "message": "Fehler beim Speichern der Umgebung"
+  },
+  "failedSwitchEnvironment": {
+    "message": "Fehler beim Wechseln der Umgebung"
+  },
+  "failedNavigate": {
+    "message": "Navigation fehlgeschlagen"
+  },
+  "failedToNavigate": {
+    "message": "Navigation zur Seite fehlgeschlagen"
+  },
+  "failedCopyNote": {
+    "message": "Fehler beim Kopieren der Notiz"
+  },
+  "failedCopyContent": {
+    "message": "Fehler beim Kopieren des Inhalts"
+  },
+  "failedOpenOSSNote": {
+    "message": "Fehler beim Öffnen der OSS-Notiz"
+  },
+  "failedSaveQuickActions": {
+    "message": "Fehler beim Speichern der Quick Actions"
+  },
+  "failedInitialize": {
+    "message": "Initialisierung fehlgeschlagen"
+  },
+  "switchingToEnvironment": {
+    "message": "Wechsle zur Umgebung..."
+  },
+  "contentCopied": {
+    "message": "Inhalt kopiert ✓"
+  },
+  "noContentToCopy": {
+    "message": "Kein Inhalt zum Kopieren"
+  },
+  "noChangesToSave": {
+    "message": "Keine Änderungen zum Speichern"
+  },
+  "quickActionsSaved": {
+    "message": "Quick Actions gespeichert ✓"
+  },
+  "profileCreated": {
+    "message": "Profil erstellt ✓"
+  },
+  "profileDeleted": {
+    "message": "Profil gelöscht ✓"
+  },
+  "switchedToProfile": {
+    "message": "Zu Profil gewechselt"
+  },
+  "profileNameRequired": {
+    "message": "Profilname ist erforderlich"
+  },
+  "profileAlreadyExists": {
+    "message": "Profil existiert bereits"
+  },
+  "profileNameAlreadyExists": {
+    "message": "Profilname existiert bereits"
+  },
+  "currentProfileNotFound": {
+    "message": "Aktuelles Profil nicht gefunden"
+  },
+  "cannotDeleteSystemProfiles": {
+    "message": "Systemprofile können nicht gelöscht werden"
+  },
+  "switchProfileBeforeDeleting": {
+    "message": "Wechseln Sie zu einem anderen Profil vor dem Löschen"
+  },
+  "failedSwitchProfile": {
+    "message": "Fehler beim Wechseln des Profils"
+  },
+  "failedCreateProfile": {
+    "message": "Fehler beim Erstellen des Profils"
+  },
+  "failedDeleteProfile": {
+    "message": "Fehler beim Löschen des Profils"
+  },
+  "profileResetSuccess": {
+    "message": "Profil erfolgreich zurückgesetzt ✓"
+  },
+  "resetFailed": {
+    "message": "Zurücksetzen fehlgeschlagen"
+  },
+  "importedIntoProfile": {
+    "message": "In Profil importiert"
+  },
+  "importedIntoNewProfile": {
+    "message": "In neues Profil importiert"
+  },
+  "exportedProfile": {
+    "message": "Profil exportiert ✓"
+  },
+  "exportedDataWithQA": {
+    "message": "Daten mit Quick Actions exportiert ✓"
+  },
+  "failedExportProfile": {
+    "message": "Fehler beim Exportieren des Profils"
+  },
+  "fullBackupExported": {
+    "message": "Vollständige Sicherung exportiert ✓"
+  },
+  "fullBackupRestored": {
+    "message": "Vollständige Sicherung wiederhergestellt ✓"
+  },
+  "failedExportBackup": {
+    "message": "Fehler beim Exportieren der Sicherung"
+  },
+  "backupRestoreFailed": {
+    "message": "Wiederherstellung der Sicherung fehlgeschlagen"
+  },
+  "invalidBackupStructure": {
+    "message": "Ungültige Sicherungsdateistruktur"
+  },
+  "cannotNavigateNoActiveSFInstance": {
+    "message": "Navigation nicht möglich - keine aktive SuccessFactors-Instanz"
+  },
+  "shortcutNotFound": {
+    "message": "Verknüpfung nicht gefunden"
+  },
+  "noteNotFound": {
+    "message": "Notiz nicht gefunden"
+  },
+  "modalNotFound": {
+    "message": "Modal nicht gefunden"
+  },
+  "noEnvironmentAtPosition": {
+    "message": "Keine Umgebung an Position"
+  },
+  "noEnvironmentsSaved": {
+    "message": "Noch keine Umgebungen gespeichert"
+  },
+  "formElementsNotFound": {
+    "message": "Formularelemente nicht gefunden"
+  },
+  "guideEnvStep1Title": {
+    "message": "Zur SAP-Instanz navigieren"
+  },
+  "guideEnvStep1Desc": {
+    "message": "Gehen Sie zu Ihrer SAP SuccessFactors-, S/4HANA- oder BTP-Instanz"
+  },
+  "guideEnvStep2Title": {
+    "message": "Umgebung hinzufügen"
+  },
+  "guideEnvStep2Desc": {
+    "message": "Klicken Sie auf <code>+ Umgebung</code> oder verwenden Sie <code>Cmd+E</code>"
+  },
+  "guideEnvStep3Title": {
+    "message": "Jederzeit wechseln"
+  },
+  "guideEnvStep3Desc": {
+    "message": "Schnell zwischen Umgebungen wechseln und dabei Ihren Seitenpfad beibehalten"
+  },
+  "welcomeGetStarted": {
+    "message": "Loslegen"
+  },
+  "tooltipPinNote": {
+    "message": "Pin note to top"
+  },
+  "tooltipUnpinEnvironment": {
+    "message": "Unpin environment"
+  },
+  "tooltipUnpinShortcut": {
+    "message": "Unpin shortcut"
+  },
+  "inputTokens": {
+    "message": "Input Tokens"
+  },
+  "guideShortcutStep2Title": {
+    "message": "Add Shortcut"
+  },
+  "emptyNotesSubtitle": {
+    "message": "Store documentation, prompts, and code snippets"
+  },
+  "noteTypeIdea": {
+    "message": "💡 Idea"
+  },
+  "tooltipOpenShortcut": {
+    "message": "Open shortcut"
+  },
+  "model": {
+    "message": "Model"
+  },
+  "noteTypeAIPrompt": {
+    "message": "✨ AI Prompt"
+  },
+  "confirmClearSAPAICore": {
+    "message": "Clear SAP AI Core configuration? This cannot be undone."
+  },
+  "emptyEnvironmentsSubtitle": {
+    "message": "Save your SAP instances for quick access"
+  },
+  "tooltipDeleteProfile": {
+    "message": "Delete profile"
+  },
+  "emptyNotesTitle": {
+    "message": "No Saved Notes"
+  },
+  "aiResponseTitle": {
+    "message": "✨ AI Response"
+  },
+  "confirmProfileExists": {
+    "message": "Profile \"$1\" already exists.\n\nImport items into existing profile?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "guideNoteStep1Desc": {
+    "message": "Jot down IDs, URLs, or quick thoughts"
+  },
+  "aiDisclaimerPage": {
+    "message": "This response was generated by AI analyzing your page. While AI provides helpful insights, always verify information independently before making decisions."
+  },
+  "emptyNotesHowTo": {
+    "message": "How to Get Started"
+  },
+  "emptyShortcutsHowTo": {
+    "message": "How to Get Started"
+  },
+  "aiResponseNoteTitle": {
+    "message": "AI Response - $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "usedMonthsAgo": {
+    "message": "Used $1 months ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyShortcutsTitle": {
+    "message": "No Saved Shortcuts"
+  },
+  "tooltipUnpinNote": {
+    "message": "Unpin note"
+  },
+  "context": {
+    "message": "Context"
+  },
+  "usedToday": {
+    "message": "Used today"
+  },
+  "aiResponseOutputLabel": {
+    "message": "✨ AI Response (Output):"
+  },
+  "accessCount": {
+    "message": "$1 accesses",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "outputTokens": {
+    "message": "Output Tokens"
+  },
+  "emptyEnvironmentsTitle": {
+    "message": "No Saved Environments"
+  },
+  "guideNoteStep2Desc": {
+    "message": "Turn rough notes into polished documentation"
+  },
+  "usedDaysAgo": {
+    "message": "Used $1 days ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyEnvironmentsHowTo": {
+    "message": "How to Get Started"
+  },
+  "noteTypeDocumentation": {
+    "message": "📚 Documentation"
+  },
+  "guideEnvProTip": {
+    "message": "💡 Profi-Tipp: Mit Quick Actions springen Sie sofort zu bestimmten SF-Modulen!"
+  },
+  "aiButtonReady": {
+    "message": "✨ AI"
+  },
+  "tooltipDelete": {
+    "message": "Delete"
+  },
+  "guideShortcutStep1Desc": {
+    "message": "Go to the page you want to shortcut"
+  },
+  "tooltipEdit": {
+    "message": "Edit"
+  },
+  "aiDisclaimerGeneric": {
+    "message": "This response was generated by AI. Always verify information independently before making decisions."
+  },
+  "aiDisclaimerToolkit": {
+    "message": "This response was generated by AI analyzing your toolkit data. While AI provides helpful insights, always verify information independently before making decisions."
+  },
+  "guideNoteStep1Title": {
+    "message": "Capture Ideas"
+  },
+  "aiInsightsLabel": {
+    "message": "✨ AI INSIGHTS"
+  },
+  "emptyShortcutsSubtitle": {
+    "message": "Create quick links to frequently-used SAP pages"
+  },
+  "tooltipPinEnvironment": {
+    "message": "Pin environment to top"
+  },
+  "cost": {
+    "message": "Cost"
+  },
+  "aiDisclaimerCostProjection": {
+    "message": "Cost projections based on AI-analyzed token usage. Always verify with your provider for accurate enterprise pricing."
+  },
+  "usedWeeksAgo": {
+    "message": "Used $1 weeks ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "guideShortcutStep2Desc": {
+    "message": "Click <code>+ Shortcut</code> or use <code>Cmd+J</code>"
+  },
+  "tooltipUnpin": {
+    "message": "Unpin"
+  },
+  "tooltipPinShortcut": {
+    "message": "Pin shortcut to top"
+  },
+  "guideNoteStep2Title": {
+    "message": "Use AI"
+  },
+  "aiDisclaimerVerifyInformation": {
+    "message": "This response was generated by AI. Always verify information independently before making decisions."
+  },
+  "guideShortcutProTip": {
+    "message": "Use shortcuts for deep links properly in your SAP system"
+  },
+  "aiContextStats": {
+    "message": "📊 Analyzed $1 environments, $2 shortcuts, $3 notes across $4 profiles",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      },
+      "3": {
+        "content": "$3"
+      },
+      "4": {
+        "content": "$4"
+      }
+    }
+  },
+  "noteTypeCode": {
+    "message": "💻 Code"
+  },
+  "aiContextQuery": {
+    "message": "🔍 \"$1\"",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "noteTypeNote": {
+    "message": "📝 Note"
+  },
+  "guideShortcutStep1Title": {
+    "message": "Navigate to Page"
+  },
+  "tooltipSwitchEnvironment": {
+    "message": "Switch to this environment"
+  },
+  "aiButtonAnalyzing": {
+    "message": "⏳ Analyzing..."
+  },
+  "generated": {
+    "message": "Generated"
+  },
+  "proTipLabel": {
+    "message": "Pro Tip"
+  },
+  "diagnosticsReportTitle": {
+    "message": "Diagnostics Report - $1 - $2",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "tooltipReloadEnvironment": {
+    "message": "Reload this environment"
+  },
+  "aiOriginalPromptLabel": {
+    "message": "📝 Original Prompt (Input):"
+  },
+  "tooltipCopyNote": {
+    "message": "Copy note content"
+  },
+  "guideNoteProTip": {
+    "message": "Store your AI prompts here for reuse"
+  },
+  "confirmCreateProfile": {
+    "message": "📦 Create New Profile?\n\nThis will create \"$1\" and import the file's data.\n\nContinue?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "usedYesterday": {
+    "message": "Used yesterday"
+  },
+  "tooltipPinToTop": {
+    "message": "Pin to top"
+  },
+  "diagnosticsReport": {
+    "message": "Diagnostics Report"
+  },
+  "itemPinned": {
+    "message": "Element angeheftet ✓"
   }
 }

@@ -1,4 +1,4 @@
-# SF Pro Toolkit - Testing Guide
+# SAP Pro Toolkit - Testing Guide
 
 ## 🧪 Complete Testing Checklist
 
@@ -13,7 +13,7 @@ This guide helps you verify that all three critical issues have been fixed:
 
 ### 1. Reload the Extension (CRITICAL!)
 - Open Chrome → `chrome://extensions/`
-- Find "SF Pro Toolkit"
+- Find "SAP Pro Toolkit"
 - Click the refresh/reload icon 🔄
 - **Important**: Must reload after every code change!
 
@@ -138,7 +138,7 @@ Navigate to a SuccessFactors instance:
 
 #### Header
 - ✅ Purple gradient background
-- ✅ "SF Pro Toolkit" title (white, bold)
+- ✅ "SAP Pro Toolkit" title (white, bold)
 - ✅ Version badge (small, rounded, semi-transparent)
 
 #### Context Banner

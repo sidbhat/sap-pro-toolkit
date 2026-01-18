@@ -23,6 +23,9 @@
     "https://*.hana.ondemand.com/*",
     "https://*.sap.com/*"
   ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://api.openai.com https://api.anthropic.com https://*.hana.ondemand.com https://generative-ai-hub-provider.cfapps.us10.hana.ondemand.com"
+  },
   "action": {
     "default_icon": {
       "16": "icons/icon-16.png",

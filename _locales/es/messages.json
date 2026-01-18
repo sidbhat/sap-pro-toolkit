@@ -1,78 +1,1419 @@
 {
-  "extName": {"message": "SAP Pro Toolkit", "description": "Name of the extension"},
-  "extDescription": {"message": "Kit de herramientas de productividad para profesionales de SAP", "description": "Description of the extension"},
-  "headerTitle": {"message": "SAP Pro Toolkit", "description": "Main header title"},
-  "dcInfoBtn": {"message": "Directorio de centros de datos", "description": "Datacenter info button tooltip"},
-  "helpBtn": {"message": "Acerca de y ayuda", "description": "Help button tooltip"},
-  "contextDetecting": {"message": "Detectando entorno...", "description": "Loading message for environment detection"},
-  "switchEnvironmentTitle": {"message": "Cambiar entorno", "description": "Environment section title"},
-  "noEnvironments": {"message": "Aún no hay entornos guardados", "description": "Empty state message for environments"},
-  "addCurrentInstance": {"message": "Agregar instancia actual", "description": "Button to add current instance"},
-  "addEnvironment": {"message": "Agregar entorno", "description": "Button to add environment"},
-  "shortcutsTitle": {"message": "Atajos", "description": "Shortcuts section title"},
-  "notesTitle": {"message": "Notas rápidas", "description": "Notes section title"},
-  "selectNote": {"message": "Seleccionar nota...", "description": "Placeholder for notes dropdown"},
-  "addNote": {"message": "Agregar nota", "description": "Add note button tooltip"},
-  "editNote": {"message": "Editar nota", "description": "Edit note button tooltip"},
-  "deleteNote": {"message": "Eliminar nota", "description": "Delete note button tooltip"},
-  "copyNote": {"message": "Copiar contenido de nota", "description": "Copy note button tooltip"},
-  "selectShortcut": {"message": "Seleccionar atajo...", "description": "Placeholder for shortcut dropdown"},
-  "addCurrentPage": {"message": "Agregar página actual", "description": "Add current page button tooltip"},
-  "editSelected": {"message": "Editar seleccionado", "description": "Edit shortcut button tooltip"},
-  "deleteSelected": {"message": "Eliminar seleccionado", "description": "Delete shortcut button tooltip"},
-  "diagnosticsTitle": {"message": "Diagnósticos del sistema", "description": "Diagnostics section title"},
-  "diagnosticsDescription": {"message": "Copie información completa del sistema que incluye detalles del entorno, datos de usuario y especificaciones técnicas para solución de problemas y soporte.", "description": "Diagnostics section description"},
-  "copyDiagnostics": {"message": "Copiar informe de diagnóstico", "description": "Copy diagnostics button text"},
-  "addEnvironmentTitle": {"message": "Agregar entorno", "description": "Add environment modal title"},
-  "editEnvironmentTitle": {"message": "Editar entorno", "description": "Edit environment modal title"},
-  "environmentName": {"message": "Nombre del entorno", "description": "Environment name field label"},
-  "environmentNamePlaceholder": {"message": "ej. Producción DC68", "description": "Environment name field placeholder"},
-  "environmentType": {"message": "Tipo de entorno", "description": "Environment type field label"},
-  "environmentTypeProduction": {"message": "Producción", "description": "Production environment type"},
-  "environmentTypePreview": {"message": "Vista previa", "description": "Preview environment type"},
-  "environmentTypeSales": {"message": "Ventas/Demo", "description": "Sales/Demo environment type"},
-  "environmentTypeSandbox": {"message": "Sandbox", "description": "Sandbox environment type"},
-  "hostname": {"message": "Nombre de host", "description": "Hostname field label"},
-  "hostnamePlaceholder": {"message": "ej. hcm-us20.hr.cloud.sap", "description": "Hostname field placeholder"},
-  "hostnameHelp": {"message": "El centro de datos se detectará automáticamente desde el nombre de host", "description": "Hostname field help text"},
-  "cancel": {"message": "Cancelar", "description": "Cancel button text"},
-  "saveEnvironment": {"message": "Guardar entorno", "description": "Save environment button text"},
-  "addShortcutTitle": {"message": "Agregar atajo", "description": "Add shortcut modal title"},
-  "editShortcutTitle": {"message": "Editar atajo", "description": "Edit shortcut modal title"},
-  "shortcutName": {"message": "Nombre", "description": "Shortcut name field label"},
-  "shortcutNamePlaceholder": {"message": "ej. Centro de administración", "description": "Shortcut name field placeholder"},
-  "shortcutUrl": {"message": "URL", "description": "Shortcut URL field label"},
-  "shortcutUrlPlaceholder": {"message": "ej. https://hcm-us20.hr.cloud.sap/sf/admin", "description": "Shortcut URL field placeholder"},
-  "shortcutUrlHelp": {"message": "Ingrese la URL completa incluyendo https://", "description": "Shortcut URL field help text"},
-  "shortcutNotes": {"message": "Notas (opcional)", "description": "Shortcut notes field label"},
-  "shortcutNotesPlaceholder": {"message": "ej. Para solución de problemas", "description": "Shortcut notes field placeholder"},
-  "shortcutIcon": {"message": "Icono", "description": "Shortcut icon field label"},
-  "saveShortcut": {"message": "Guardar atajo", "description": "Save shortcut button text"},
-  "addNoteTitle": {"message": "Agregar nota", "description": "Add note modal title"},
-  "editNoteTitle": {"message": "Editar nota", "description": "Edit note modal title"},
-  "noteTitle": {"message": "Título", "description": "Note title field label"},
-  "noteTitlePlaceholder": {"message": "ej. IDs temporales, URLs, Configuración", "description": "Note title field placeholder"},
-  "noteContent": {"message": "Contenido", "description": "Note content field label"},
-  "noteContentPlaceholder": {"message": "Pegue información temporal aquí...\\n\\n• IDs de usuario\\n• URLs\\n• Fragmentos de configuración\\n• Cualquier cosa que necesite acceso rápido", "description": "Note content field placeholder"},
-  "noteIcon": {"message": "Icono", "description": "Note icon field label"},
-  "noteColor": {"message": "Color", "description": "Note color field label"},
-  "saveNote": {"message": "Guardar nota", "description": "Save note button text"},
-  "dcDirectoryTitle": {"message": "Directorio global de centros de datos", "description": "Datacenter directory modal title"},
-  "dcDirectoryDescription": {"message": "Lista completa de centros de datos de SAP SuccessFactors en todo el mundo con sus ubicaciones, proveedores de nube y disponibilidad.", "description": "Datacenter directory modal description"},
-  "close": {"message": "Cerrar", "description": "Close button text"},
-  "helpTitle": {"message": "Acerca de SAP Pro Toolkit", "description": "Help modal title"},
-  "helpFeatures": {"message": "Tres características principales", "description": "Help features heading"},
-  "helpFeature1Title": {"message": "Cambiar entre entornos", "description": "Help feature 1 title"},
-  "helpFeature1Description": {"message": "Guarde múltiples instancias de SAP (Producción, Vista previa, Ventas, Sandbox) y cambie rápidamente entre ellas sin cambiar manualmente las URLs. La extensión preserva la ruta de su página actual al cambiar.", "description": "Help feature 1 description"},
-  "helpFeature2Title": {"message": "Navegar con atajos", "description": "Help feature 2 title"},
-  "helpFeature2Description": {"message": "Acceso rápido a páginas de SAP frecuentemente usadas como Centro de administración, RBP, Provisioning y documentación de novedades. Cree atajos personalizados para cualquier URL de SAP que visite regularmente.", "description": "Help feature 2 description"},
-  "helpFeature3Title": {"message": "Copiar diagnósticos del sistema", "description": "Help feature 3 title"},
-  "helpFeature3Description": {"message": "Genere informes de diagnóstico completos que incluyen detalles del entorno actual, información del centro de datos, IDs de usuario, especificaciones del navegador y configuración técnica para solución de problemas y tickets de soporte.", "description": "Help feature 3 description"},
-  "helpProTip": {"message": "Consejo profesional", "description": "Help pro tip heading"},
-  "helpProTipDescription": {"message": "La extensión detecta automáticamente la información del centro de datos y el tipo de entorno cuando está en una página de SAP SuccessFactors, facilitando el seguimiento de la instancia en la que está trabajando.", "description": "Help pro tip description"},
-  "helpGotIt": {"message": "¡Entendido!", "description": "Help modal close button"},
-  "switchButton": {"message": "Cambiar", "description": "Switch environment button text"},
-  "editButton": {"message": "Editar", "description": "Edit button tooltip"},
-  "deleteButton": {"message": "Eliminar", "description": "Delete button tooltip"},
-  "required": {"message": "*", "description": "Required field indicator"}
+  "extName": {
+    "message": "SAP Pro Toolkit",
+    "description": "Name of the extension"
+  },
+  "extDescription": {
+    "message": "Kit de herramientas de productividad para profesionales de SAP en SuccessFactors, S/4HANA, BTP y más",
+    "description": "Description of the extension"
+  },
+  "headerTitle": {
+    "message": "SAP Pro Toolkit",
+    "description": "Main header title"
+  },
+  "dcInfoBtn": {
+    "message": "Directorio de centros de datos",
+    "description": "Datacenter info button tooltip"
+  },
+  "helpBtn": {
+    "message": "Acerca de y ayuda",
+    "description": "Help button tooltip"
+  },
+  "contextDetecting": {
+    "message": "Detectando entorno...",
+    "description": "Loading message for environment detection"
+  },
+  "switchEnvironmentTitle": {
+    "message": "Cambiar entorno",
+    "description": "Environment section title"
+  },
+  "noEnvironments": {
+    "message": "Aún no hay entornos guardados",
+    "description": "Empty state message for environments"
+  },
+  "addCurrentInstance": {
+    "message": "Agregar instancia actual",
+    "description": "Button to add current instance"
+  },
+  "addEnvironment": {
+    "message": "Agregar entorno",
+    "description": "Button to add environment"
+  },
+  "shortcutsTitle": {
+    "message": "Atajos",
+    "description": "Shortcuts section title"
+  },
+  "notesTitle": {
+    "message": "Notas rápidas",
+    "description": "Notes section title"
+  },
+  "selectNote": {
+    "message": "Seleccionar nota...",
+    "description": "Placeholder for notes dropdown"
+  },
+  "addNote": {
+    "message": "Agregar nota",
+    "description": "Add note button tooltip"
+  },
+  "editNote": {
+    "message": "Editar nota",
+    "description": "Edit note button tooltip"
+  },
+  "deleteNote": {
+    "message": "Eliminar nota",
+    "description": "Delete note button tooltip"
+  },
+  "copyNote": {
+    "message": "Copiar contenido de nota",
+    "description": "Copy note button tooltip"
+  },
+  "selectShortcut": {
+    "message": "Seleccionar atajo...",
+    "description": "Placeholder for shortcut dropdown"
+  },
+  "addCurrentPage": {
+    "message": "Agregar página actual",
+    "description": "Add current page button tooltip"
+  },
+  "editSelected": {
+    "message": "Editar seleccionado",
+    "description": "Edit shortcut button tooltip"
+  },
+  "deleteSelected": {
+    "message": "Eliminar seleccionado",
+    "description": "Delete shortcut button tooltip"
+  },
+  "diagnosticsTitle": {
+    "message": "Diagnósticos del sistema",
+    "description": "Diagnostics section title"
+  },
+  "diagnosticsDescription": {
+    "message": "Copie información completa del sistema que incluye detalles del entorno, datos de usuario y especificaciones técnicas para solución de problemas y soporte.",
+    "description": "Diagnostics section description"
+  },
+  "copyDiagnostics": {
+    "message": "Copiar informe de diagnóstico",
+    "description": "Copy diagnostics button text"
+  },
+  "addEnvironmentTitle": {
+    "message": "Agregar entorno",
+    "description": "Add environment modal title"
+  },
+  "editEnvironmentTitle": {
+    "message": "Editar entorno",
+    "description": "Edit environment modal title"
+  },
+  "environmentName": {
+    "message": "Nombre del entorno",
+    "description": "Environment name field label"
+  },
+  "environmentNamePlaceholder": {
+    "message": "ej. Producción DC68",
+    "description": "Environment name field placeholder"
+  },
+  "environmentType": {
+    "message": "Tipo de entorno",
+    "description": "Environment type field label"
+  },
+  "environmentTypeProduction": {
+    "message": "Producción",
+    "description": "Production environment type"
+  },
+  "environmentTypePreview": {
+    "message": "Vista previa",
+    "description": "Preview environment type"
+  },
+  "environmentTypeSales": {
+    "message": "Ventas/Demo",
+    "description": "Sales/Demo environment type"
+  },
+  "environmentTypeSandbox": {
+    "message": "Sandbox",
+    "description": "Sandbox environment type"
+  },
+  "hostname": {
+    "message": "Nombre de host",
+    "description": "Hostname field label"
+  },
+  "hostnamePlaceholder": {
+    "message": "ej. hcm-us20.hr.cloud.sap",
+    "description": "Hostname field placeholder"
+  },
+  "hostnameHelp": {
+    "message": "El centro de datos se detectará automáticamente desde el nombre de host",
+    "description": "Hostname field help text"
+  },
+  "cancel": {
+    "message": "Cancelar",
+    "description": "Cancel button text"
+  },
+  "saveEnvironment": {
+    "message": "Guardar entorno",
+    "description": "Save environment button text"
+  },
+  "addShortcutTitle": {
+    "message": "Agregar atajo",
+    "description": "Add shortcut modal title"
+  },
+  "editShortcutTitle": {
+    "message": "Editar atajo",
+    "description": "Edit shortcut modal title"
+  },
+  "shortcutName": {
+    "message": "Nombre",
+    "description": "Shortcut name field label"
+  },
+  "shortcutNamePlaceholder": {
+    "message": "ej. Centro de administración",
+    "description": "Shortcut name field placeholder"
+  },
+  "shortcutUrl": {
+    "message": "URL",
+    "description": "Shortcut URL field label"
+  },
+  "shortcutUrlPlaceholder": {
+    "message": "ej. https://hcm-us20.hr.cloud.sap/sf/admin",
+    "description": "Shortcut URL field placeholder"
+  },
+  "shortcutUrlHelp": {
+    "message": "Ingrese la URL completa incluyendo https://",
+    "description": "Shortcut URL field help text"
+  },
+  "shortcutNotes": {
+    "message": "Notas (opcional)",
+    "description": "Shortcut notes field label"
+  },
+  "shortcutNotesPlaceholder": {
+    "message": "ej. Para solución de problemas",
+    "description": "Shortcut notes field placeholder"
+  },
+  "shortcutIcon": {
+    "message": "Icono",
+    "description": "Shortcut icon field label"
+  },
+  "saveShortcut": {
+    "message": "Guardar atajo",
+    "description": "Save shortcut button text"
+  },
+  "addNoteTitle": {
+    "message": "Agregar nota",
+    "description": "Add note modal title"
+  },
+  "editNoteTitle": {
+    "message": "Editar nota",
+    "description": "Edit note modal title"
+  },
+  "noteTitle": {
+    "message": "Título",
+    "description": "Note title field label"
+  },
+  "noteTitlePlaceholder": {
+    "message": "ej. IDs temporales, URLs, Configuración",
+    "description": "Note title field placeholder"
+  },
+  "noteContent": {
+    "message": "Contenido",
+    "description": "Note content field label"
+  },
+  "noteContentPlaceholder": {
+    "message": "Pegue información temporal aquí...\\n\\n• IDs de usuario\\n• URLs\\n• Fragmentos de configuración\\n• Cualquier cosa que necesite acceso rápido",
+    "description": "Note content field placeholder"
+  },
+  "noteIcon": {
+    "message": "Icono",
+    "description": "Note icon field label"
+  },
+  "noteColor": {
+    "message": "Color",
+    "description": "Note color field label"
+  },
+  "saveNote": {
+    "message": "Guardar nota",
+    "description": "Save note button text"
+  },
+  "dcDirectoryTitle": {
+    "message": "Directorio global de centros de datos",
+    "description": "Datacenter directory modal title"
+  },
+  "dcDirectoryDescription": {
+    "message": "Lista completa de centros de datos de SAP SuccessFactors en todo el mundo con sus ubicaciones, proveedores de nube y disponibilidad.",
+    "description": "Datacenter directory modal description"
+  },
+  "close": {
+    "message": "Cerrar",
+    "description": "Close button text"
+  },
+  "helpTitle": {
+    "message": "Acerca de SAP Pro Toolkit",
+    "description": "Help modal title"
+  },
+  "helpFeatures": {
+    "message": "Tres características principales",
+    "description": "Help features heading"
+  },
+  "helpFeature1Title": {
+    "message": "Cambiar entre entornos",
+    "description": "Help feature 1 title"
+  },
+  "helpFeature1Description": {
+    "message": "Guarde múltiples instancias de SAP (Producción, Vista previa, Ventas, Sandbox) y cambie rápidamente entre ellas sin cambiar manualmente las URLs. La extensión preserva la ruta de su página actual al cambiar.",
+    "description": "Help feature 1 description"
+  },
+  "helpFeature2Description": {
+    "message": "Acceso rápido a páginas de SAP frecuentemente usadas como Centro de administración, RBP, Provisioning y documentación de novedades. Cree atajos personalizados para cualquier URL de SAP que visite regularmente.",
+    "description": "Help feature 2 description"
+  },
+  "helpFeature3Title": {
+    "message": "Copiar diagnósticos del sistema",
+    "description": "Help feature 3 title"
+  },
+  "helpFeature3Description": {
+    "message": "Genere informes de diagnóstico completos que incluyen detalles del entorno actual, información del centro de datos, IDs de usuario, especificaciones del navegador y configuración técnica para solución de problemas y tickets de soporte.",
+    "description": "Help feature 3 description"
+  },
+  "helpProTip": {
+    "message": "Consejo profesional",
+    "description": "Help pro tip heading"
+  },
+  "helpProTipDescription": {
+    "message": "La extensión detecta automáticamente la información del centro de datos y el tipo de entorno cuando está en una página de SAP SuccessFactors, facilitando el seguimiento de la instancia en la que está trabajando.",
+    "description": "Help pro tip description"
+  },
+  "helpGotIt": {
+    "message": "¡Entendido!",
+    "description": "Help modal close button"
+  },
+  "switchButton": {
+    "message": "Cambiar",
+    "description": "Switch environment button text"
+  },
+  "editButton": {
+    "message": "Editar",
+    "description": "Edit button tooltip"
+  },
+  "deleteButton": {
+    "message": "Eliminar",
+    "description": "Delete button tooltip"
+  },
+  "required": {
+    "message": "*",
+    "description": "Required field indicator"
+  },
+  "profileSwitchSuggestion": {
+    "message": "💡 Estás en {solutionLabel} - ¿Cambiar al perfil {profileName}?",
+    "description": "Toast message suggesting profile switch"
+  },
+  "confirmDeleteEnvironment": {
+    "message": "¿Eliminar entorno \"{envName}\"?",
+    "description": "Confirmation dialog for deleting an environment"
+  },
+  "confirmDeleteShortcut": {
+    "message": "¿Eliminar atajo \"{shortcutName}\"?",
+    "description": "Confirmation dialog for deleting a shortcut"
+  },
+  "confirmDeleteNote": {
+    "message": "¿Eliminar nota \"{noteTitle}\"?",
+    "description": "Confirmation dialog for deleting a note"
+  },
+  "ossNoteCopied": {
+    "message": "URL de nota OSS copiada ✓",
+    "description": "Success message when OSS note URL is copied"
+  },
+  "globalSearchPlaceholder": {
+    "message": "Buscar entornos, atajos, notas...",
+    "description": "Placeholder text for global search input"
+  },
+  "enableAutoLogin": {
+    "message": "Habilitar inicio de sesión automático para este entorno",
+    "description": "Checkbox label for enabling auto-login"
+  },
+  "credentialUsername": {
+    "message": "Usuario",
+    "description": "Username field label for credentials"
+  },
+  "credentialUsernamePlaceholder": {
+    "message": "Tu nombre de usuario SAP",
+    "description": "Username field placeholder"
+  },
+  "credentialPassword": {
+    "message": "Contraseña",
+    "description": "Password field label for credentials"
+  },
+  "credentialPasswordPlaceholder": {
+    "message": "Tu contraseña SAP",
+    "description": "Password field placeholder"
+  },
+  "credentialCompanyId": {
+    "message": "ID de empresa",
+    "description": "Company ID field label for SuccessFactors"
+  },
+  "credentialCompanyIdPlaceholder": {
+    "message": "ej. SFPART123456",
+    "description": "Company ID field placeholder"
+  },
+  "clearCache": {
+    "message": "Limpiar caché y forzar nuevo inicio de sesión",
+    "description": "Checkbox label for clearing cookies"
+  },
+  "showPassword": {
+    "message": "Mostrar contraseña",
+    "description": "Tooltip for show password button"
+  },
+  "hidePassword": {
+    "message": "Ocultar contraseña",
+    "description": "Tooltip for hide password button"
+  },
+  "credentialsSecurityNotice": {
+    "message": "🔒 Las credenciales están encriptadas con AES-256-GCM y almacenadas de forma segura en tu navegador.",
+    "description": "Security notice for credential storage"
+  },
+  "credentialsRequiredWarning": {
+    "message": "Usuario y contraseña son requeridos cuando el inicio de sesión automático está habilitado",
+    "description": "Validation warning for required credentials"
+  },
+  "autoLoginSuccess": {
+    "message": "Inicio de sesión automático exitoso ✓",
+    "description": "Success notification for auto-login"
+  },
+  "autoLoginFailed": {
+    "message": "Inicio de sesión automático fallido",
+    "description": "Error notification for auto-login failure"
+  },
+  "autoLoginSSODetected": {
+    "message": "SSO detectado - por favor inicia sesión manualmente",
+    "description": "Info notification when SSO is detected"
+  },
+  "autoLoginCompanyIdRequired": {
+    "message": "ID de empresa requerido pero no configurado",
+    "description": "Warning when company ID is needed but missing"
+  },
+  "decryptionFailed": {
+    "message": "Error al desencriptar credenciales",
+    "description": "Error message when credential decryption fails"
+  },
+  "encryptionFailed": {
+    "message": "Error al encriptar credenciales",
+    "description": "Error message when credential encryption fails"
+  },
+  "aiSettings": {
+    "message": "Configuración de IA",
+    "description": "AI Settings section"
+  },
+  "enableAiFeatures": {
+    "message": "Habilitar funciones de IA",
+    "description": "AI Features toggle"
+  },
+  "enableAiFeaturesDesc": {
+    "message": "Habilitar o deshabilitar globalmente las funciones impulsadas por IA en el kit de herramientas.",
+    "description": "Toggle description"
+  },
+  "downloadedAsFormat": {
+    "message": "Descargado como $1 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadFailed": {
+    "message": "Descarga fallida."
+  },
+  "aiFeaturesRequireConfiguration": {
+    "message": "⚙️ Las funciones de IA requieren configuración"
+  },
+  "configureAPIKeysInSettings": {
+    "message": "💡 Ve a Configuración → Claves API para configurar OpenAI, Anthropic o SAP AI Core"
+  },
+  "aiDiagnosticsOnlySAPDomains": {
+    "message": "ℹ️ Diagnósticos IA solo disponibles en dominios SAP"
+  },
+  "navigateToSAPPage": {
+    "message": "Navega a una página SAP (SuccessFactors, S/4HANA, BTP o sap.com) para usar esta función"
+  },
+  "noActiveTab": {
+    "message": "No se encontró pestaña activa"
+  },
+  "noResponseFromAI": {
+    "message": "Sin respuesta de la IA"
+  },
+  "noReportContentToSave": {
+    "message": "Sin contenido de informe para guardar."
+  },
+  "diagnosticsReportSavedAsNote": {
+    "message": "Informe de diagnóstico guardado como nota ✓"
+  },
+  "failedSaveReportAsNote": {
+    "message": "Error al guardar el informe como nota."
+  },
+  "noReportContentToDownload": {
+    "message": "Sin contenido de informe para descargar"
+  },
+  "failedLoadAIPromptConfiguration": {
+    "message": "Error al cargar la configuración del prompt IA"
+  },
+  "aiSearchComplete": {
+    "message": "Búsqueda IA completada ✓"
+  },
+  "pleaseEnterPromptContentFirst": {
+    "message": "Por favor ingresa el contenido del prompt primero"
+  },
+  "aiFeaturesNotAvailableToolkitCoreMissing": {
+    "message": "Funciones IA no disponibles - ToolkitCore faltante"
+  },
+  "noteRefinerTemplateMissingRunningRawPrompt": {
+    "message": "Plantilla de refinador de notas faltante, ejecutando prompt sin procesar"
+  },
+  "failedLoadPricingData": {
+    "message": "Error al cargar datos de precios"
+  },
+  "noResponseContentToSave": {
+    "message": "Sin contenido de respuesta para guardar"
+  },
+  "aiResponseSavedAsNote": {
+    "message": "Respuesta IA guardada como nota ✓"
+  },
+  "noResponseContentToCopy": {
+    "message": "Sin contenido de respuesta para copiar."
+  },
+  "responseCopiedToClipboard": {
+    "message": "Respuesta copiada al portapapeles ✓"
+  },
+  "failedCopyResponse": {
+    "message": "Error al copiar la respuesta."
+  },
+  "enterpriseCalculatorNotAvailable": {
+    "message": "Calculadora empresarial no disponible"
+  },
+  "projectionsCalculated": {
+    "message": "Proyecciones calculadas ✓"
+  },
+  "aiFeaturesNotAvailable": {
+    "message": "Funciones IA no disponibles"
+  },
+  "noActiveTabFound": {
+    "message": "No se encontró pestaña activa"
+  },
+  "cannotScrapeBrowserInternalPages": {
+    "message": "No se pueden extraer páginas internas del navegador"
+  },
+  "aiShortcutCreationOnlySAPDomains": {
+    "message": "ℹ️ Creación de atajos IA solo disponible en dominios SAP"
+  },
+  "navigateToSAPPageForAIShortcut": {
+    "message": "Navega a una página SAP (SuccessFactors, S/4HANA, BTP o sap.com) para usar esta función"
+  },
+  "aiSummaryGenerated": {
+    "message": "✨ Resumen IA generado ✓"
+  },
+  "aiShortcutCreationFailed": {
+    "message": "Creación de atajo IA fallida: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterOSSNoteNumber": {
+    "message": "Por favor ingresa un número de nota OSS"
+  },
+  "invalidOSSNoteNumber": {
+    "message": "Número de nota OSS inválido"
+  },
+  "openingOSSNote": {
+    "message": "Abriendo nota OSS $1 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterOSSNoteNumberFirst": {
+    "message": "Por favor ingresa un número de nota OSS primero"
+  },
+  "ossNoteURLCopied": {
+    "message": "URL de nota OSS copiada ✓"
+  },
+  "failedCopyURL": {
+    "message": "Error al copiar URL"
+  },
+  "ossNoteAddedAsShortcut": {
+    "message": "Nota OSS $1 agregada como atajo ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterAPIKeyFirst": {
+    "message": "Por favor ingresa una clave API primero"
+  },
+  "testingOpenAIConnection": {
+    "message": "Probando conexión OpenAI..."
+  },
+  "openAIConnectionSuccessful": {
+    "message": "Conexión OpenAI exitosa ✓"
+  },
+  "openAIConnectionFailed": {
+    "message": "Conexión OpenAI fallida - verifica la clave API"
+  },
+  "connectionTestFailed": {
+    "message": "Prueba de conexión fallida"
+  },
+  "openAIAPIKeyCleared": {
+    "message": "Clave API de OpenAI eliminada"
+  },
+  "testingAnthropicConnection": {
+    "message": "Probando conexión Anthropic..."
+  },
+  "anthropicConnectionSuccessful": {
+    "message": "Conexión Anthropic exitosa ✓"
+  },
+  "anthropicConnectionFailed": {
+    "message": "Conexión Anthropic fallida - verifica la clave API"
+  },
+  "anthropicAPIKeyCleared": {
+    "message": "Clave API de Anthropic eliminada"
+  },
+  "profileNotFound": {
+    "message": "Perfil no encontrado"
+  },
+  "themeChanged": {
+    "message": "Tema: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiDiagnosticsGenerated": {
+    "message": "✨ Diagnósticos IA generados ✓"
+  },
+  "aiDiagnosticsFailed": {
+    "message": "Diagnósticos IA fallidos: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiResponseAlreadySaved": {
+    "message": "⚠️ Esta respuesta IA ya fue guardada recientemente"
+  },
+  "aiSearchFailed": {
+    "message": "Búsqueda IA fallida: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiTestFailed": {
+    "message": "Prueba IA fallida: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "enterSearchQueryFirst": {
+    "message": "Ingresa una consulta de búsqueda primero"
+  },
+  "importedItemsIntoProfile": {
+    "message": "$1 importado en $2 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "importFailed": {
+    "message": "Importación fallida: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportedItemsAndQuickActions": {
+    "message": "$1 elementos + $2 Acciones Rápidas exportadas ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "failedExportConfiguration": {
+    "message": "Error al exportar configuración"
+  },
+  "invalidJSONFile": {
+    "message": "Archivo JSON inválido - no se pudo analizar"
+  },
+  "invalidFileStructure": {
+    "message": "Estructura de archivo inválida - faltan campos requeridos"
+  },
+  "noNewItemsToImport": {
+    "message": "No hay nuevos elementos para importar (todos ya existen)"
+  },
+  "connectingToSAPAICore": {
+    "message": "Conectando a SAP AI Core..."
+  },
+  "connectedFoundModels": {
+    "message": "Conectado ✓ Se encontraron $1 modelo(s) desplegado(s)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sapAICoreConfigurationSaved": {
+    "message": "Configuración de SAP AI Core guardada ✓"
+  },
+  "sapAICoreConfigurationCleared": {
+    "message": "Configuración de SAP AI Core eliminada"
+  },
+  "noDeployedModelsFoundInResourceGroup": {
+    "message": "No se encontraron modelos desplegados en el grupo de recursos"
+  },
+  "pleaseSelectDeployedModel": {
+    "message": "Por favor selecciona un modelo desplegado"
+  },
+  "pleaseFillAllRequiredFields": {
+    "message": "Por favor completa todos los campos requeridos"
+  },
+  "failedClearConfiguration": {
+    "message": "Error al limpiar configuración"
+  },
+  "failedToSave": {
+    "message": "Error al guardar: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "systemErrorToolkitCoreNotLoaded": {
+    "message": "Error del sistema: ToolkitCore no cargado"
+  },
+  "maxTokensSet": {
+    "message": "Tokens máximos establecidos en $1 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "reportExported": {
+    "message": "Reporte exportado ✓"
+  },
+  "navigatingTo": {
+    "message": "Navegando a $1...",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiAnalyzeClickToStart": {
+    "message": "Haz clic en \"Analizar con IA\" para comenzar..."
+  },
+  "aiAnalyzingPage": {
+    "message": "⏳ La IA está analizando la página..."
+  },
+  "aiAnalyzingToolkitData": {
+    "message": "⏳ Analizando datos del toolkit en todos los perfiles..."
+  },
+  "aiAnalyzingPrompt": {
+    "message": "⏳ La IA está analizando tu prompt..."
+  },
+  "aiAnalyzingCurrentPage": {
+    "message": "⏳ Analizando página actual..."
+  },
+  "aiPreparingToScrapePage": {
+    "message": "⏳ Preparando para extraer página..."
+  },
+  "aiScrapingPageContent": {
+    "message": "⏳ Extrayendo contenido de la página..."
+  },
+  "aiEnhancingTitle": {
+    "message": "⏳ Mejorando título..."
+  },
+  "aiGeneratingSummary": {
+    "message": "⏳ Generando resumen con IA..."
+  },
+  "failedGenerateDiagnosticsTryAgain": {
+    "message": "Error al generar diagnósticos IA. Por favor, inténtalo de nuevo."
+  },
+  "scaleParameters": {
+    "message": "Parámetros de escala"
+  },
+  "numberOfUsers": {
+    "message": "Número de usuarios"
+  },
+  "queriesPerUserPerDay": {
+    "message": "Consultas por usuario por día"
+  },
+  "workingDaysPerYear": {
+    "message": "Días laborables por año"
+  },
+  "expectedOutputTokens": {
+    "message": "Tokens de salida esperados"
+  },
+  "calculateAnnualProjections": {
+    "message": "Calcular proyecciones anuales"
+  },
+  "annualCostProjection": {
+    "message": "Proyección de costo anual"
+  },
+  "contextLabel": {
+    "message": "Contexto"
+  },
+  "originalPromptInput": {
+    "message": "📝 Prompt original (Entrada):"
+  },
+  "aiResponseOutput": {
+    "message": "✨ Respuesta IA (Salida):"
+  },
+  "volumeProjections": {
+    "message": "Proyecciones de volumen"
+  },
+  "costProjections": {
+    "message": "Proyecciones de costo"
+  },
+  "assumptionsLabel": {
+    "message": "Supuestos:"
+  },
+  "costPerQuery": {
+    "message": "Costo por consulta:"
+  },
+  "monthlyCost": {
+    "message": "Costo mensual:"
+  },
+  "annualCost": {
+    "message": "Costo anual:"
+  },
+  "connectToLoadDeployedModels": {
+    "message": "Conectar para cargar modelos desplegados..."
+  },
+  "annualQueries": {
+    "message": "Consultas anuales"
+  },
+  "annualInputTokens": {
+    "message": "Tokens de entrada anuales"
+  },
+  "annualOutputTokens": {
+    "message": "Tokens de salida anuales"
+  },
+  "assumptions": {
+    "message": "Supuestos"
+  },
+  "editQuickActionsInstructions": {
+    "message": "Edite nombres y rutas de acciones rápidas, luego haga clic en \"Guardar todos los cambios\" abajo."
+  },
+  "noQuickActionsConfigured": {
+    "message": "No hay acciones rápidas configuradas en solutions.json"
+  },
+  "noQuickActions": {
+    "message": "Sin acciones rápidas"
+  },
+  "failedToLoadData": {
+    "message": "Error al cargar"
+  },
+  "addedFromOssNoteSearch": {
+    "message": "Añadido desde búsqueda de nota OSS"
+  },
+  "ossNoteShortcutName": {
+    "message": "Nota OSS $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "largeNoteWarning": {
+    "message": "Nota grande"
+  },
+  "welcomeModalTitle": {
+    "message": "Bienvenido a SAP Pro Toolkit"
+  },
+  "welcomeTagline": {
+    "message": "Tu centro de mando SAP. Un clic a cualquier lugar."
+  },
+  "welcomeCapabilityEnv": {
+    "message": "Gestión de Entornos"
+  },
+  "welcomeCapabilityShortcuts": {
+    "message": "Accesos Directos Inteligentes"
+  },
+  "welcomeCapabilityAI": {
+    "message": "Herramientas con IA"
+  },
+  "welcomeCapabilityProfiles": {
+    "message": "Sistema de Perfiles"
+  },
+  "welcomeCapabilityDiag": {
+    "message": "Diagnóstico y Búsqueda"
+  },
+  "welcomeCTAText": {
+    "message": "¿Listo para empezar?"
+  },
+  "welcomeBtnLearnMore": {
+    "message": "Más información"
+  },
+  "welcomeBtnSettings": {
+    "message": "Abrir Ajustes"
+  },
+  "welcomeBtnGotIt": {
+    "message": "¡Entendido!"
+  },
+  "helpKeyFeaturesHeading": {
+    "message": "Características Clave"
+  },
+  "helpKeyboardShortcutsHeading": {
+    "message": "Atajos de Teclado"
+  },
+  "aiDisclaimerDiagnostics": {
+    "message": "Este informe de diagnóstico fue generado por IA analizando la información de su sistema. Si bien la IA proporciona información útil, siempre verifique la información de forma independiente antes de tomar decisiones."
+  },
+  "aiDisclaimerExport": {
+    "message": "[NEEDS TRANSLATION] ⚠️ AI-Generated Content: This content was generated using AI language models. Review for accuracy before use in production environments."
+  },
+  "toolkitDisclaimerExport": {
+    "message": "[NEEDS TRANSLATION] Generated by SAP Pro Toolkit - A productivity tool for SAP professionals."
+  },
+  "exportHeaderToolkitNote": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | Note"
+  },
+  "exportHeaderToolkitAINote": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | AI-Generated Note"
+  },
+  "exportHeaderToolkitAIAnalysis": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | AI Analysis"
+  },
+  "environmentSaved": {
+    "message": "Entorno guardado ✓"
+  },
+  "environmentUpdated": {
+    "message": "Entorno actualizado ✓"
+  },
+  "environmentDeleted": {
+    "message": "Entorno eliminado ✓"
+  },
+  "shortcutSaved": {
+    "message": "Atajo guardado ✓"
+  },
+  "shortcutUpdated": {
+    "message": "Atajo actualizado ✓"
+  },
+  "shortcutDeleted": {
+    "message": "Atajo eliminado ✓"
+  },
+  "noteSaved": {
+    "message": "Nota guardada ✓"
+  },
+  "noteUpdated": {
+    "message": "Nota actualizada ✓"
+  },
+  "noteDeleted": {
+    "message": "Nota eliminada ✓"
+  },
+  "noteCopied": {
+    "message": "Nota copiada ✓"
+  },
+  "environmentNameRequired": {
+    "message": "Se requiere el nombre del entorno"
+  },
+  "hostnameRequired": {
+    "message": "Se requiere el nombre de host"
+  },
+  "invalidSapHostname": {
+    "message": "Formato de nombre de host SAP no válido"
+  },
+  "envNameTooShort": {
+    "message": "Nombre del entorno demasiado corto (mín. 2 caracteres)"
+  },
+  "envNameTooLong": {
+    "message": "Nombre del entorno demasiado largo (máx. 50 caracteres)"
+  },
+  "hostnameTooShort": {
+    "message": "Nombre de host demasiado corto (mín. 5 caracteres)"
+  },
+  "hostnameTooLong": {
+    "message": "Nombre de host demasiado largo (máx. 100 caracteres)"
+  },
+  "hostnameCannotContainSpaces": {
+    "message": "El nombre de host no puede contener espacios"
+  },
+  "hostnameInvalidCharacters": {
+    "message": "El nombre de host contiene caracteres no válidos"
+  },
+  "shortcutNameTooShort": {
+    "message": "Nombre del atajo demasiado corto (mín. 2 caracteres)"
+  },
+  "shortcutNameTooLong": {
+    "message": "Nombre del atajo demasiado largo (máx. 50 caracteres)"
+  },
+  "urlTooShort": {
+    "message": "URL demasiado corta (mín. 10 caracteres)"
+  },
+  "urlTooLong": {
+    "message": "URL demasiado larga (máx. 2000 caracteres)"
+  },
+  "urlMustBeExternal": {
+    "message": "La URL debe ser externa (http:// o https://)"
+  },
+  "noteTitleTooShort": {
+    "message": "Título de nota demasiado corto (mín. 2 caracteres)"
+  },
+  "noteTitleTooLong": {
+    "message": "Título de nota demasiado largo (máx. 100 caracteres)"
+  },
+  "enterNoteTitle": {
+    "message": "Por favor ingrese un título de nota"
+  },
+  "fillRequiredFields": {
+    "message": "Por favor complete todos los campos requeridos"
+  },
+  "failedSaveEnvironment": {
+    "message": "Error al guardar el entorno"
+  },
+  "failedSwitchEnvironment": {
+    "message": "Error al cambiar de entorno"
+  },
+  "failedNavigate": {
+    "message": "Error de navegación"
+  },
+  "failedToNavigate": {
+    "message": "Error al navegar a la página"
+  },
+  "failedCopyNote": {
+    "message": "Error al copiar la nota"
+  },
+  "failedCopyContent": {
+    "message": "Error al copiar el contenido"
+  },
+  "failedOpenOSSNote": {
+    "message": "Error al abrir la nota OSS"
+  },
+  "failedSaveQuickActions": {
+    "message": "Error al guardar Acciones Rápidas"
+  },
+  "failedInitialize": {
+    "message": "Error de inicialización"
+  },
+  "switchingToEnvironment": {
+    "message": "Cambiando a entorno..."
+  },
+  "contentCopied": {
+    "message": "Contenido copiado ✓"
+  },
+  "noContentToCopy": {
+    "message": "Sin contenido para copiar"
+  },
+  "noChangesToSave": {
+    "message": "Sin cambios para guardar"
+  },
+  "quickActionsSaved": {
+    "message": "Acciones Rápidas guardadas ✓"
+  },
+  "profileCreated": {
+    "message": "Perfil creado ✓"
+  },
+  "profileDeleted": {
+    "message": "Perfil eliminado ✓"
+  },
+  "switchedToProfile": {
+    "message": "Cambiado al perfil"
+  },
+  "profileNameRequired": {
+    "message": "Se requiere el nombre del perfil"
+  },
+  "profileAlreadyExists": {
+    "message": "El perfil ya existe"
+  },
+  "profileNameAlreadyExists": {
+    "message": "El nombre del perfil ya existe"
+  },
+  "currentProfileNotFound": {
+    "message": "Perfil actual no encontrado"
+  },
+  "cannotDeleteSystemProfiles": {
+    "message": "No se pueden eliminar perfiles del sistema"
+  },
+  "switchProfileBeforeDeleting": {
+    "message": "Cambie a otro perfil antes de eliminar"
+  },
+  "failedSwitchProfile": {
+    "message": "Error al cambiar de perfil"
+  },
+  "failedCreateProfile": {
+    "message": "Error al crear perfil"
+  },
+  "failedDeleteProfile": {
+    "message": "Error al eliminar perfil"
+  },
+  "profileResetSuccess": {
+    "message": "Restablecimiento de perfil exitoso ✓"
+  },
+  "resetFailed": {
+    "message": "Restablecimiento fallido"
+  },
+  "importedIntoProfile": {
+    "message": "Importado al perfil"
+  },
+  "importedIntoNewProfile": {
+    "message": "Importado al nuevo perfil"
+  },
+  "exportedProfile": {
+    "message": "Perfil exportado ✓"
+  },
+  "exportedDataWithQA": {
+    "message": "Datos exportados con Acciones Rápidas ✓"
+  },
+  "failedExportProfile": {
+    "message": "Error al exportar perfil"
+  },
+  "fullBackupExported": {
+    "message": "Copia de seguridad completa exportada ✓"
+  },
+  "fullBackupRestored": {
+    "message": "Copia de seguridad completa restaurada ✓"
+  },
+  "failedExportBackup": {
+    "message": "Error al exportar copia de seguridad"
+  },
+  "backupRestoreFailed": {
+    "message": "Restauración de copia de seguridad fallida"
+  },
+  "invalidBackupStructure": {
+    "message": "Estructura de archivo de copia de seguridad no válida"
+  },
+  "cannotNavigateNoActiveSFInstance": {
+    "message": "No se puede navegar - sin instancia de SuccessFactors activa"
+  },
+  "shortcutNotFound": {
+    "message": "Atajo no encontrado"
+  },
+  "noteNotFound": {
+    "message": "Nota no encontrada"
+  },
+  "modalNotFound": {
+    "message": "Modal no encontrado"
+  },
+  "noEnvironmentAtPosition": {
+    "message": "Sin entorno en la posición"
+  },
+  "noEnvironmentsSaved": {
+    "message": "Aún no hay entornos guardados"
+  },
+  "formElementsNotFound": {
+    "message": "Elementos de formulario no encontrados"
+  },
+  "guideEnvStep1Title": {
+    "message": "Navegar a instancia SAP"
+  },
+  "guideEnvStep1Desc": {
+    "message": "Vaya a su instancia de SAP SuccessFactors, S/4HANA o BTP"
+  },
+  "guideEnvStep2Title": {
+    "message": "Agregar entorno"
+  },
+  "guideEnvStep2Desc": {
+    "message": "Haga clic en <code>+ Entorno</code> o use <code>Cmd+E</code>"
+  },
+  "guideEnvStep3Title": {
+    "message": "Cambiar en cualquier momento"
+  },
+  "guideEnvStep3Desc": {
+    "message": "Cambie rápidamente entre entornos preservando la ruta de su página"
+  },
+  "welcomeGetStarted": {
+    "message": "Comenzar"
+  },
+  "tooltipPinNote": {
+    "message": "Pin note to top"
+  },
+  "tooltipUnpinEnvironment": {
+    "message": "Unpin environment"
+  },
+  "tooltipUnpinShortcut": {
+    "message": "Unpin shortcut"
+  },
+  "inputTokens": {
+    "message": "Input Tokens"
+  },
+  "guideShortcutStep2Title": {
+    "message": "Add Shortcut"
+  },
+  "emptyNotesSubtitle": {
+    "message": "Store documentation, prompts, and code snippets"
+  },
+  "noteTypeIdea": {
+    "message": "💡 Idea"
+  },
+  "tooltipOpenShortcut": {
+    "message": "Open shortcut"
+  },
+  "model": {
+    "message": "Model"
+  },
+  "noteTypeAIPrompt": {
+    "message": "✨ AI Prompt"
+  },
+  "confirmClearSAPAICore": {
+    "message": "Clear SAP AI Core configuration? This cannot be undone."
+  },
+  "emptyEnvironmentsSubtitle": {
+    "message": "Save your SAP instances for quick access"
+  },
+  "tooltipDeleteProfile": {
+    "message": "Delete profile"
+  },
+  "emptyNotesTitle": {
+    "message": "No Saved Notes"
+  },
+  "aiResponseTitle": {
+    "message": "✨ AI Response"
+  },
+  "confirmProfileExists": {
+    "message": "Profile \"$1\" already exists.\n\nImport items into existing profile?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "guideNoteStep1Desc": {
+    "message": "Jot down IDs, URLs, or quick thoughts"
+  },
+  "aiDisclaimerPage": {
+    "message": "This response was generated by AI analyzing your page. While AI provides helpful insights, always verify information independently before making decisions."
+  },
+  "emptyNotesHowTo": {
+    "message": "How to Get Started"
+  },
+  "emptyShortcutsHowTo": {
+    "message": "How to Get Started"
+  },
+  "aiResponseNoteTitle": {
+    "message": "AI Response - $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "usedMonthsAgo": {
+    "message": "Used $1 months ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyShortcutsTitle": {
+    "message": "No Saved Shortcuts"
+  },
+  "tooltipUnpinNote": {
+    "message": "Unpin note"
+  },
+  "context": {
+    "message": "Context"
+  },
+  "usedToday": {
+    "message": "Used today"
+  },
+  "aiResponseOutputLabel": {
+    "message": "✨ AI Response (Output):"
+  },
+  "accessCount": {
+    "message": "$1 accesses",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "outputTokens": {
+    "message": "Output Tokens"
+  },
+  "emptyEnvironmentsTitle": {
+    "message": "No Saved Environments"
+  },
+  "guideNoteStep2Desc": {
+    "message": "Turn rough notes into polished documentation"
+  },
+  "usedDaysAgo": {
+    "message": "Used $1 days ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyEnvironmentsHowTo": {
+    "message": "How to Get Started"
+  },
+  "noteTypeDocumentation": {
+    "message": "📚 Documentation"
+  },
+  "guideEnvProTip": {
+    "message": "💡 Consejo: ¡Las Acciones Rápidas le permiten saltar instantáneamente a módulos específicos de SF!"
+  },
+  "aiButtonReady": {
+    "message": "✨ AI"
+  },
+  "tooltipDelete": {
+    "message": "Delete"
+  },
+  "guideShortcutStep1Desc": {
+    "message": "Go to the page you want to shortcut"
+  },
+  "tooltipEdit": {
+    "message": "Edit"
+  },
+  "aiDisclaimerGeneric": {
+    "message": "This response was generated by AI. Always verify information independently before making decisions."
+  },
+  "aiDisclaimerToolkit": {
+    "message": "This response was generated by AI analyzing your toolkit data. While AI provides helpful insights, always verify information independently before making decisions."
+  },
+  "guideNoteStep1Title": {
+    "message": "Capture Ideas"
+  },
+  "aiInsightsLabel": {
+    "message": "✨ AI INSIGHTS"
+  },
+  "emptyShortcutsSubtitle": {
+    "message": "Create quick links to frequently-used SAP pages"
+  },
+  "tooltipPinEnvironment": {
+    "message": "Pin environment to top"
+  },
+  "cost": {
+    "message": "Cost"
+  },
+  "aiDisclaimerCostProjection": {
+    "message": "Cost projections based on AI-analyzed token usage. Always verify with your provider for accurate enterprise pricing."
+  },
+  "usedWeeksAgo": {
+    "message": "Used $1 weeks ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "guideShortcutStep2Desc": {
+    "message": "Click <code>+ Shortcut</code> or use <code>Cmd+J</code>"
+  },
+  "tooltipUnpin": {
+    "message": "Unpin"
+  },
+  "tooltipPinShortcut": {
+    "message": "Pin shortcut to top"
+  },
+  "guideNoteStep2Title": {
+    "message": "Use AI"
+  },
+  "aiDisclaimerVerifyInformation": {
+    "message": "This response was generated by AI. Always verify information independently before making decisions."
+  },
+  "guideShortcutProTip": {
+    "message": "Use shortcuts for deep links properly in your SAP system"
+  },
+  "aiContextStats": {
+    "message": "📊 Analyzed $1 environments, $2 shortcuts, $3 notes across $4 profiles",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      },
+      "3": {
+        "content": "$3"
+      },
+      "4": {
+        "content": "$4"
+      }
+    }
+  },
+  "noteTypeCode": {
+    "message": "💻 Code"
+  },
+  "aiContextQuery": {
+    "message": "🔍 \"$1\"",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "noteTypeNote": {
+    "message": "📝 Note"
+  },
+  "guideShortcutStep1Title": {
+    "message": "Navigate to Page"
+  },
+  "tooltipSwitchEnvironment": {
+    "message": "Switch to this environment"
+  },
+  "aiButtonAnalyzing": {
+    "message": "⏳ Analyzing..."
+  },
+  "generated": {
+    "message": "Generated"
+  },
+  "proTipLabel": {
+    "message": "Pro Tip"
+  },
+  "diagnosticsReportTitle": {
+    "message": "Diagnostics Report - $1 - $2",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "tooltipReloadEnvironment": {
+    "message": "Reload this environment"
+  },
+  "aiOriginalPromptLabel": {
+    "message": "📝 Original Prompt (Input):"
+  },
+  "tooltipCopyNote": {
+    "message": "Copy note content"
+  },
+  "guideNoteProTip": {
+    "message": "Store your AI prompts here for reuse"
+  },
+  "confirmCreateProfile": {
+    "message": "📦 Create New Profile?\n\nThis will create \"$1\" and import the file's data.\n\nContinue?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "usedYesterday": {
+    "message": "Used yesterday"
+  },
+  "tooltipPinToTop": {
+    "message": "Pin to top"
+  },
+  "diagnosticsReport": {
+    "message": "Diagnostics Report"
+  },
+  "itemPinned": {
+    "message": "Elemento fijado ✓"
+  }
 }

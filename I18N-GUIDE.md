@@ -1,8 +1,8 @@
-# SF Pro Toolkit - Internationalization (i18n) Guide
+# SAP Pro Toolkit - Internationalization (i18n) Guide
 
 ## Overview
 
-SF Pro Toolkit now supports multiple languages through Chrome's built-in internationalization (i18n) system. The extension automatically detects the appropriate language based on:
+SAP Pro Toolkit now supports multiple languages through Chrome's built-in internationalization (i18n) system. The extension automatically detects the appropriate language based on:
 
 1. **SF Page Language** (Priority 1) - Language from the SuccessFactors URL
 2. **Browser Language** (Priority 2) - User's browser language setting
@@ -121,7 +121,7 @@ Edit the new `messages.json` file and translate each message:
 
 | Key | English | Purpose |
 |-----|---------|---------|
-| `headerTitle` | SF Pro Toolkit | Main header title |
+| `headerTitle` | SAP Pro Toolkit | Main header title |
 | `switchEnvironmentTitle` | Switch Environment | Environment section |
 | `shortcutsTitle` | Shortcuts | Shortcuts section |
 | `notesTitle` | Notes | Notes section |
@@ -190,7 +190,7 @@ Edit the new `messages.json` file and translate each message:
 2. **HTML Attributes**
 ```html
 <!-- Text content -->
-<h1 data-i18n="headerTitle">SF Pro Toolkit</h1>
+<h1 data-i18n="headerTitle">SAP Pro Toolkit</h1>
 
 <!-- Tooltip/title -->
 <button data-i18n-title="helpBtn">❓</button>
@@ -287,10 +287,10 @@ Common SF locale parameters:
 
 Check browser console for these logs:
 ```
-[SF Pro Toolkit] Language detected from URL locale parameter: zh
-[SF Pro Toolkit] Language detected from URL path: zh
-[SF Pro Toolkit] Using browser language: en
-[SF Pro Toolkit] Detected language: en
+[SAP Pro Toolkit] Language detected from URL locale parameter: zh
+[SAP Pro Toolkit] Language detected from URL path: zh
+[SAP Pro Toolkit] Using browser language: en
+[SAP Pro Toolkit] Detected language: en
 ```
 
 ### Check Translation Loading

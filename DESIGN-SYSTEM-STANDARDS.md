@@ -1,6 +1,6 @@
-# SF Pro Toolkit - Design System Standards
+# SAP Pro Toolkit - Design System Standards
 
-This document outlines the harmonized design system implemented across the SF Pro Toolkit extension to ensure consistency, accessibility, and maintainability.
+This document outlines the harmonized design system implemented across the SAP Pro Toolkit extension to ensure consistency, accessibility, and maintainability.
 
 ## Overview
 

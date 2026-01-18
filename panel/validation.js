@@ -1,4 +1,4 @@
-// SF Pro Toolkit - Input Validation & Sanitization
+// SAP Pro Toolkit - Input Validation & Sanitization
 // Prevents breaks from malformed input and ensures consistent formatting
 
 // ==================== CONSTANTS ====================
@@ -10,19 +10,19 @@ const VALIDATION_LIMITS = {
   ENV_HOSTNAME_MIN: 5,
   ENV_HOSTNAME_MAX: 255,
   ENV_NOTES_MAX: 500,
-  
+
   // Shortcut limits
   SHORTCUT_NAME_MIN: 3,
   SHORTCUT_NAME_MAX: 100,
   SHORTCUT_URL_MIN: 10,
   SHORTCUT_URL_MAX: 2000,
   SHORTCUT_NOTES_MAX: 500,
-  
+
   // Note limits
   NOTE_TITLE_MIN: 3,
   NOTE_TITLE_MAX: 100,
   NOTE_CONTENT_MAX: 5000,
-  
+
   // Tag limits
   TAG_NAME_MIN: 1,
   TAG_NAME_MAX: 30,
@@ -40,32 +40,32 @@ const VALIDATION_LIMITS = {
  */
 function sanitizeText(text, maxLength, options = {}) {
   if (!text || typeof text !== 'string') return '';
-  
+
   // Remove HTML tags (prevent XSS)
   text = text.replace(/<[^>]*>/g, '');
-  
+
   // Remove script tags and dangerous attributes
   text = text.replace(/javascript:/gi, '');
   text = text.replace(/on\w+\s*=/gi, '');
-  
+
   // Normalize whitespace
   text = text.trim().replace(/\s+/g, ' ');
-  
+
   // Truncate if needed
   if (maxLength && text.length > maxLength) {
     text = text.substring(0, maxLength).trim();
   }
-  
+
   // Auto-capitalize first letter if requested
   if (options.capitalize && text.length > 0) {
     text = text.charAt(0).toUpperCase() + text.slice(1);
   }
-  
+
   // Convert to lowercase if requested (for hostnames, etc.)
   if (options.lowercase) {
     text = text.toLowerCase();
   }
-  
+
   return text;
 }
 
@@ -76,28 +76,28 @@ function sanitizeText(text, maxLength, options = {}) {
  */
 function sanitizeHostname(hostname) {
   if (!hostname || typeof hostname !== 'string') return '';
-  
+
   // Remove protocol if present
   hostname = hostname.replace(/^https?:\/\//, '');
-  
+
   // Trim and lowercase
   hostname = hostname.trim().toLowerCase();
-  
+
   // Extract just the domain part before any path/query/hash
   let hostnameOnly = hostname.split('/')[0].split('?')[0].split('#')[0];
-  
+
   // Remove spaces from hostname part
   hostnameOnly = hostnameOnly.replace(/\s+/g, '');
-  
+
   // Get the rest (path, query, hash) if any
   const pathPart = hostname.substring(hostnameOnly.length);
-  
+
   // Validate hostname format (only letters, numbers, dots, hyphens)
   if (hostnameOnly && !/^[a-zA-Z0-9.-]+$/.test(hostnameOnly)) {
     // Remove invalid characters
     hostnameOnly = hostnameOnly.replace(/[^a-zA-Z0-9.-]/g, '');
   }
-  
+
   return hostnameOnly + pathPart;
 }
 
@@ -108,20 +108,20 @@ function sanitizeHostname(hostname) {
  */
 function sanitizeUrl(url) {
   if (!url || typeof url !== 'string') return '';
-  
+
   // Trim whitespace
   url = url.trim();
-  
+
   // Remove dangerous protocols
   if (url.match(/^(javascript|data|vbscript):/i)) {
     return '';
   }
-  
+
   // Ensure protocol is present for absolute URLs
   if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('/')) {
     url = 'https://' + url;
   }
-  
+
   return url;
 }
 
@@ -132,34 +132,34 @@ function sanitizeUrl(url) {
  */
 function sanitizeTags(tagsString) {
   if (!tagsString || typeof tagsString !== 'string') return [];
-  
+
   const tags = tagsString
     .split(',')
     .map(tag => {
       // Trim and normalize
       tag = tag.trim();
-      
+
       // Remove special characters except hyphens and underscores
       tag = tag.replace(/[^a-zA-Z0-9\s-_]/g, '');
-      
+
       // Normalize spaces to single space
       tag = tag.replace(/\s+/g, ' ');
-      
+
       // Capitalize first letter
       if (tag.length > 0) {
         tag = tag.charAt(0).toUpperCase() + tag.slice(1);
       }
-      
+
       // Enforce length limits
       if (tag.length > VALIDATION_LIMITS.TAG_NAME_MAX) {
         tag = tag.substring(0, VALIDATION_LIMITS.TAG_NAME_MAX);
       }
-      
+
       return tag;
     })
     .filter(tag => tag.length >= VALIDATION_LIMITS.TAG_NAME_MIN) // Remove empty/too short tags
     .slice(0, VALIDATION_LIMITS.TAG_MAX_COUNT); // Limit total number of tags
-  
+
   // Remove duplicates (case-insensitive)
   const uniqueTags = [];
   const seen = new Set();
@@ -170,7 +170,7 @@ function sanitizeTags(tagsString) {
       uniqueTags.push(tag);
     }
   }
-  
+
   return uniqueTags;
 }
 
@@ -184,28 +184,28 @@ function sanitizeTags(tagsString) {
 function validateEnvironment(env) {
   const errors = [];
   const sanitized = {};
-  
+
   // Validate name
   sanitized.name = sanitizeText(env.name, VALIDATION_LIMITS.ENV_NAME_MAX, { capitalize: true });
   if (sanitized.name.length < VALIDATION_LIMITS.ENV_NAME_MIN) {
-    errors.push(`Environment name must be at least ${VALIDATION_LIMITS.ENV_NAME_MIN} characters`);
+    errors.push(window.i18n('envNameTooShort', [VALIDATION_LIMITS.ENV_NAME_MIN.toString()]));
   }
   if (sanitized.name.length > VALIDATION_LIMITS.ENV_NAME_MAX) {
-    errors.push(`Environment name must be less than ${VALIDATION_LIMITS.ENV_NAME_MAX} characters`);
+    errors.push(window.i18n('envNameTooLong', [VALIDATION_LIMITS.ENV_NAME_MAX.toString()]));
   }
-  
+
   // Validate hostname
   sanitized.hostname = sanitizeHostname(env.hostname);
   if (sanitized.hostname.length < VALIDATION_LIMITS.ENV_HOSTNAME_MIN) {
-    errors.push(`Hostname must be at least ${VALIDATION_LIMITS.ENV_HOSTNAME_MIN} characters`);
+    errors.push(window.i18n('hostnameTooShort', [VALIDATION_LIMITS.ENV_HOSTNAME_MIN.toString()]));
   }
   if (sanitized.hostname.length > VALIDATION_LIMITS.ENV_HOSTNAME_MAX) {
-    errors.push(`Hostname must be less than ${VALIDATION_LIMITS.ENV_HOSTNAME_MAX} characters`);
+    errors.push(window.i18n('hostnameTooLong', [VALIDATION_LIMITS.ENV_HOSTNAME_MAX.toString()]));
   }
-  
+
   // Extract hostname only (before path) for domain validation
   const hostnameOnly = sanitized.hostname.split('/')[0].split('?')[0].split('#')[0];
-  
+
   // Validate SAP domain
   const sapDomains = [
     'hr.cloud.sap', 'sapsf.com', 'sapsf.cn', 'sapcloud.cn',
@@ -216,19 +216,19 @@ function validateEnvironment(env) {
   ];
   const isValidSAPHostname = sapDomains.some(domain => hostnameOnly.includes(domain));
   if (!isValidSAPHostname) {
-    errors.push('Must be a valid SAP hostname (SuccessFactors, S/4HANA, BTP, or IBP)');
+    errors.push(window.i18n('invalidSapHostname'));
   }
-  
+
   // Validate type
   const validTypes = ['production', 'preview', 'sales', 'sandbox'];
   sanitized.type = env.type && validTypes.includes(env.type) ? env.type : 'production';
-  
+
   // Validate notes
   sanitized.notes = sanitizeText(env.notes || '', VALIDATION_LIMITS.ENV_NOTES_MAX);
-  
+
   // Preserve ID if exists
   if (env.id) sanitized.id = env.id;
-  
+
   return {
     valid: errors.length === 0,
     errors,
@@ -244,40 +244,40 @@ function validateEnvironment(env) {
 function validateShortcut(shortcut) {
   const errors = [];
   const sanitized = {};
-  
+
   // Validate name
   sanitized.name = sanitizeText(shortcut.name, VALIDATION_LIMITS.SHORTCUT_NAME_MAX, { capitalize: true });
   if (sanitized.name.length < VALIDATION_LIMITS.SHORTCUT_NAME_MIN) {
-    errors.push(`Shortcut name must be at least ${VALIDATION_LIMITS.SHORTCUT_NAME_MIN} characters`);
+    errors.push(window.i18n('shortcutNameTooShort', [VALIDATION_LIMITS.SHORTCUT_NAME_MIN.toString()]));
   }
   if (sanitized.name.length > VALIDATION_LIMITS.SHORTCUT_NAME_MAX) {
-    errors.push(`Shortcut name must be less than ${VALIDATION_LIMITS.SHORTCUT_NAME_MAX} characters`);
+    errors.push(window.i18n('shortcutNameTooLong', [VALIDATION_LIMITS.SHORTCUT_NAME_MAX.toString()]));
   }
-  
+
   // Validate URL
   sanitized.url = sanitizeUrl(shortcut.url);
   if (!sanitized.url.startsWith('http://') && !sanitized.url.startsWith('https://')) {
-    errors.push('URL must start with http:// or https:// (external links only)');
+    errors.push(window.i18n('urlMustBeExternal'));
   }
   if (sanitized.url.length < VALIDATION_LIMITS.SHORTCUT_URL_MIN) {
-    errors.push(`URL must be at least ${VALIDATION_LIMITS.SHORTCUT_URL_MIN} characters`);
+    errors.push(window.i18n('urlTooShort', [VALIDATION_LIMITS.SHORTCUT_URL_MIN.toString()]));
   }
   if (sanitized.url.length > VALIDATION_LIMITS.SHORTCUT_URL_MAX) {
-    errors.push(`URL must be less than ${VALIDATION_LIMITS.SHORTCUT_URL_MAX} characters`);
+    errors.push(window.i18n('urlTooLong', [VALIDATION_LIMITS.SHORTCUT_URL_MAX.toString()]));
   }
-  
+
   // Validate notes
   sanitized.notes = sanitizeText(shortcut.notes || '', VALIDATION_LIMITS.SHORTCUT_NOTES_MAX);
-  
+
   // Validate icon
   sanitized.icon = shortcut.icon || '8';
-  
+
   // Validate tags
   sanitized.tags = sanitizeTags(shortcut.tags || '');
-  
+
   // Preserve ID if exists
   if (shortcut.id) sanitized.id = shortcut.id;
-  
+
   return {
     valid: errors.length === 0,
     errors,
@@ -293,29 +293,29 @@ function validateShortcut(shortcut) {
 function validateNote(note) {
   const errors = [];
   const sanitized = {};
-  
+
   // Validate title
   sanitized.title = sanitizeText(note.title, VALIDATION_LIMITS.NOTE_TITLE_MAX, { capitalize: true });
   if (sanitized.title.length < VALIDATION_LIMITS.NOTE_TITLE_MIN) {
-    errors.push(`Note title must be at least ${VALIDATION_LIMITS.NOTE_TITLE_MIN} characters`);
+    errors.push(window.i18n('noteTitleTooShort', [VALIDATION_LIMITS.NOTE_TITLE_MIN.toString()]));
   }
   if (sanitized.title.length > VALIDATION_LIMITS.NOTE_TITLE_MAX) {
-    errors.push(`Note title must be less than ${VALIDATION_LIMITS.NOTE_TITLE_MAX} characters`);
+    errors.push(window.i18n('noteTitleTooLong', [VALIDATION_LIMITS.NOTE_TITLE_MAX.toString()]));
   }
-  
+
   // Validate content
   sanitized.content = sanitizeText(note.content || '', VALIDATION_LIMITS.NOTE_CONTENT_MAX);
-  
+
   // Validate icon
   sanitized.icon = note.icon || '0';
-  
+
   // Validate tags
   sanitized.tags = sanitizeTags(note.tags || '');
-  
+
   // Preserve ID and timestamp if exist
   if (note.id) sanitized.id = note.id;
   if (note.timestamp) sanitized.timestamp = note.timestamp;
-  
+
   return {
     valid: errors.length === 0,
     errors,
@@ -333,10 +333,10 @@ function validateNote(note) {
  */
 function migrateData(items, type) {
   if (!Array.isArray(items)) return [];
-  
+
   return items.map(item => {
     let result;
-    
+
     switch (type) {
       case 'environment':
         result = validateEnvironment(item);
@@ -350,7 +350,7 @@ function migrateData(items, type) {
       default:
         return item;
     }
-    
+
     // If validation passed or we have sanitized data, use it
     // Otherwise, return original (better to show malformed data than lose it)
     return result.valid ? result.sanitized : (result.sanitized || item);
@@ -367,19 +367,19 @@ function migrateData(items, type) {
  */
 function updateCharacterCounter(input, counter, maxLength) {
   if (!input || !counter) return;
-  
+
   const currentLength = input.value.length;
   const remaining = maxLength - currentLength;
-  
+
   counter.textContent = `${currentLength}/${maxLength}`;
-  
+
   // Add warning class if approaching limit
   if (remaining < 50) {
     counter.classList.add('char-warning');
   } else {
     counter.classList.remove('char-warning');
   }
-  
+
   // Add error class if over limit
   if (remaining < 0) {
     counter.classList.add('char-error');
@@ -397,17 +397,17 @@ function updateCharacterCounter(input, counter, maxLength) {
 function setupCharacterCounter(inputId, counterId, maxLength) {
   const input = document.getElementById(inputId);
   const counter = document.getElementById(counterId);
-  
+
   if (!input || !counter) return;
-  
+
   // Set maxlength attribute
   input.setAttribute('maxlength', maxLength);
-  
+
   // Update counter on input
   input.addEventListener('input', () => {
     updateCharacterCounter(input, counter, maxLength);
   });
-  
+
   // Initialize counter
   updateCharacterCounter(input, counter, maxLength);
 }

@@ -1,4 +1,4 @@
-// SF Pro Toolkit - Side Panel Edition
+// SAP Pro Toolkit - Side Panel Edition
 // Enhanced with Starter Pack Import System
 // Uses shared toolkit-core.js for common functionality
 
@@ -138,7 +138,7 @@ window.openOssNoteInline = function () {
   const noteNumber = input?.value.trim();
 
   if (!noteNumber) {
-    if (window.showToast) window.showToast('Please enter an OSS Note number', 'warning');
+    if (window.showToast) window.showToast(window.i18n('pleaseEnterOSSNoteNumber'), 'warning');
     return;
   }
 
@@ -146,13 +146,13 @@ window.openOssNoteInline = function () {
   const cleanNumber = noteNumber.replace(/\D/g, '');
 
   if (!cleanNumber) {
-    if (window.showToast) window.showToast('Invalid OSS Note number', 'error');
+    if (window.showToast) window.showToast(window.i18n('invalidOSSNoteNumber'), 'error');
     return;
   }
 
   const ossUrl = `https://launchpad.support.sap.com/#/notes/${cleanNumber}`;
   chrome.tabs.create({ url: ossUrl });
-  if (window.showToast) window.showToast(`Opening OSS Note ${cleanNumber} ✓`, 'success');
+  if (window.showToast) window.showToast(window.i18n('openingOSSNote', [cleanNumber]), 'success');
 
   // Clear input and hide form
   if (input) input.value = '';
@@ -168,7 +168,7 @@ window.copyOssNoteUrl = async function () {
   const noteNumber = input?.value.trim().replace(/\D/g, '');
 
   if (!noteNumber) {
-    if (window.showToast) window.showToast('Please enter an OSS Note number first', 'warning');
+    if (window.showToast) window.showToast(window.i18n('pleaseEnterOSSNoteNumberFirst'), 'warning');
     return;
   }
 
@@ -176,10 +176,10 @@ window.copyOssNoteUrl = async function () {
 
   try {
     await navigator.clipboard.writeText(ossUrl);
-    if (window.showToast) window.showToast('OSS Note URL copied ✓', 'success');
+    if (window.showToast) window.showToast(window.i18n('ossNoteURLCopied'), 'success');
   } catch (error) {
     console.error('[Copy OSS URL] Failed:', error);
-    if (window.showToast) window.showToast('Failed to copy URL', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedCopyURL'), 'error');
   }
 }
 
@@ -192,7 +192,7 @@ window.addOssNoteAsShortcut = async function () {
   const noteNumber = input?.value.trim().replace(/\D/g, '');
 
   if (!noteNumber) {
-    if (window.showToast) window.showToast('Please enter an OSS Note number first', 'warning');
+    if (window.showToast) window.showToast(window.i18n('pleaseEnterOSSNoteNumberFirst'), 'warning');
     return;
   }
 
@@ -200,10 +200,10 @@ window.addOssNoteAsShortcut = async function () {
 
   const newShortcut = {
     id: `shortcut-${Date.now()}`,
-    name: `OSS Note ${noteNumber}`,
+    name: window.i18n('ossNoteShortcutName', [noteNumber]),
     url: ossUrl,
     icon: 'document',
-    notes: 'Added from OSS Note search',
+    notes: window.i18n('addedFromOssNoteSearch'),
     timestamp: Date.now()
   };
 
@@ -214,7 +214,7 @@ window.addOssNoteAsShortcut = async function () {
   await chrome.storage.local.set({ [storageKey]: newShortcuts });
 
   window.renderShortcuts();
-  if (window.showToast) window.showToast(`OSS Note ${noteNumber} added as shortcut ✓`, 'success');
+  if (window.showToast) window.showToast(window.i18n('ossNoteAddedAsShortcut', [noteNumber]), 'success');
 
   // Clear input and hide form
   if (input) input.value = '';
@@ -296,43 +296,7 @@ window.closeSettingsModal = function () {
  * Setup note character counter for content field
  * Shows character count and warning at 5000+ characters
  */
-function setupNoteCharacterCounter() {
-  const contentInput = document.getElementById('noteContent');
-  const counter = document.getElementById('noteContentCounter');
 
-  if (!contentInput || !counter) return;
-
-  function updateCounter() {
-    const length = contentInput.value.length;
-    counter.textContent = length.toLocaleString();
-
-    // Apply warning styling at 5000+ characters (soft warning)
-    if (length >= 5000) {
-      counter.classList.add('char-warning');
-      counter.textContent = `${length.toLocaleString()} (⚠️ Large note)`;
-    } else {
-      counter.classList.remove('char-warning');
-      counter.textContent = length.toLocaleString();
-    }
-  }
-
-  // Update on input
-  contentInput.addEventListener('input', updateCounter);
-
-  // Update when modal opens (for edit mode)
-  const modal = document.getElementById('addNoteModal');
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-        if (modal.classList.contains('active')) {
-          updateCounter();
-        }
-      }
-    });
-  });
-
-  observer.observe(modal, { attributes: true });
-}
 
 /**
  * Initialize API Keys tab
@@ -376,12 +340,12 @@ function initializeAPIKeysTab() {
     newTestOpenAIBtn.addEventListener('click', async () => {
       const apiKey = document.getElementById('apiKeyopenaiInput').value.trim();
       if (!apiKey) {
-        showToast('Please enter an API key first', 'warning');
+        showToast(window.i18n('pleaseEnterAPIKeyFirst'), 'warning');
         return;
       }
 
       try {
-        showToast('Testing OpenAI connection...', 'info');
+        showToast(window.i18n('testingOpenAIConnection'), 'info');
         const response = await fetch('https://api.openai.com/v1/models', {
           headers: { 'Authorization': `Bearer ${apiKey}` }
         });
@@ -389,13 +353,13 @@ function initializeAPIKeysTab() {
         if (response.ok) {
           await window.CryptoUtils.encryptAndStore('apiKeyopenai', apiKey);
           await updateAISettings();
-          showToast('OpenAI connection successful ✓', 'success');
+          showToast(window.i18n('openAIConnectionSuccessful'), 'success');
         } else {
-          showToast('OpenAI connection failed - check API key', 'error');
+          showToast(window.i18n('openAIConnectionFailed'), 'error');
         }
       } catch (error) {
         console.error('[OpenAI] Test failed:', error);
-        showToast('Connection test failed', 'error');
+        showToast(window.i18n('connectionTestFailed'), 'error');
       }
     });
   }
@@ -407,7 +371,7 @@ function initializeAPIKeysTab() {
       await chrome.storage.local.remove('apiKeyopenai');
       document.getElementById('apiKeyopenaiInput').value = '';
       await updateAISettings();
-      showToast('OpenAI API key cleared', 'success');
+      showToast(window.i18n('openAIAPIKeyCleared'), 'success');
     });
   }
 
@@ -417,12 +381,12 @@ function initializeAPIKeysTab() {
     newTestAnthropicBtn.addEventListener('click', async () => {
       const apiKey = document.getElementById('apiKeyanthropicInput').value.trim();
       if (!apiKey) {
-        showToast('Please enter an API key first', 'warning');
+        showToast(window.i18n('pleaseEnterAPIKeyFirst'), 'warning');
         return;
       }
 
       try {
-        showToast('Testing Anthropic connection...', 'info');
+        showToast(window.i18n('testingAnthropicConnection'), 'info');
         const response = await fetch('https://api.anthropic.com/v1/messages', {
           method: 'POST',
           headers: {
@@ -440,13 +404,13 @@ function initializeAPIKeysTab() {
         if (response.ok) {
           await window.CryptoUtils.encryptAndStore('apiKeyanthropic', apiKey);
           await updateAISettings();
-          showToast('Anthropic connection successful ✓', 'success');
+          showToast(window.i18n('anthropicConnectionSuccessful'), 'success');
         } else {
-          showToast('Anthropic connection failed - check API key', 'error');
+          showToast(window.i18n('anthropicConnectionFailed'), 'error');
         }
       } catch (error) {
         console.error('[Anthropic] Test failed:', error);
-        showToast('Connection test failed', 'error');
+        showToast(window.i18n('connectionTestFailed'), 'error');
       }
     });
   }
@@ -458,7 +422,7 @@ function initializeAPIKeysTab() {
       await chrome.storage.local.remove('apiKeyanthropic');
       document.getElementById('apiKeyanthropicInput').value = '';
       await updateAISettings();
-      showToast('Anthropic API key cleared', 'success');
+      showToast(window.i18n('anthropicAPIKeyCleared'), 'success');
     });
   }
 
@@ -468,7 +432,7 @@ function initializeAPIKeysTab() {
     newSaveMaxTokensBtn.addEventListener('click', async () => {
       const maxTokens = parseInt(document.getElementById('maxTokensDefault').value) || 4096;
       await chrome.storage.local.set({ maxTokensDefault: maxTokens });
-      showToast(`Max tokens set to ${maxTokens} ✓`, 'success');
+      showToast(window.i18n('maxTokensSet', [maxTokens.toString()]), 'success');
     });
   }
 
@@ -520,7 +484,7 @@ async function loadQuickActionsTab() {
   const container = document.getElementById('quick-actions-tab');
 
   // Update instructions
-  container.querySelector('p').innerHTML = 'Edit Quick Action names and paths, then click "Save All Changes" below.';
+  container.querySelector('p').innerHTML = window.i18n('editQuickActionsInstructions');
 
   // Render all profiles' Quick Actions
   await renderAllProfilesQuickActions();
@@ -550,14 +514,14 @@ async function handleFileImport(event) {
       data = JSON.parse(text);
     } catch (parseError) {
       console.error('JSON parse error:', parseError);
-      showToast('Invalid JSON file. Please check file format.', 'error');
+      showToast(window.i18n('invalidJSONFile'), 'error');
       event.target.value = '';
       return;
     }
 
     // Check if file has expected structure
     if (!data.shortcuts && !data.environments && !data.notes) {
-      showToast('Invalid file structure. Expected shortcuts, environments, or notes.', 'error');
+      showToast(window.i18n('invalidFileStructure'), 'error');
       event.target.value = '';
       return;
     }
@@ -569,14 +533,7 @@ async function handleFileImport(event) {
 
       if (!profileExists) {
         // Offer to create new custom profile
-        const confirmed = confirm(
-          `📦 Create New Profile?\n\n` +
-          `Profile Name: ${data.profileName}\n` +
-          `Items: ${data.shortcuts?.length || 0} shortcuts, ${data.environments?.length || 0} environments, ${data.notes?.length || 0} notes\n\n` +
-          `Options:\n` +
-          `• OK = Create new profile and switch to it\n` +
-          `• Cancel = Import into current profile (${availableProfiles.find(p => p.id === currentProfile)?.name})`
-        );
+        const confirmed = confirm(window.i18n('confirmCreateProfile', [data.profileName]));
 
         if (confirmed) {
           await window.createCustomProfile(profileId, data.profileName, data);
@@ -657,16 +614,16 @@ async function handleFileImport(event) {
     window.renderNotes();
 
     if (importCount === 0) {
-      showToast('No new items to import (all items already exist)', 'warning');
+      showToast(window.i18n('noNewItemsToImport'), 'warning');
     } else {
       const summary = importSummary.join(', ');
       const targetProfile = availableProfiles.find(p => p.id === currentProfile);
-      showToast(`Imported ${summary} into ${targetProfile?.name || 'current profile'} ✓`, 'success');
+      showToast(window.i18n('importedItemsIntoProfile', [summary, targetProfile?.name || 'current profile']), 'success');
     }
 
   } catch (error) {
     console.error('Import failed:', error);
-    showToast(`Import failed: ${error.message}`, 'error');
+    showToast(window.i18n('importFailed', [error.message]), 'error');
   }
 
   event.target.value = '';
@@ -721,11 +678,11 @@ async function exportJsonToFile() {
     // Show helpful message about creating new profiles and editing Quick Actions
     const itemCount = shortcuts.length + environments.length + notes.length;
     const qaCount = exportSolutions?.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0) || 0;
-    showToast(`Exported ${itemCount} items + ${qaCount} Quick Actions ✓ | Edit "solutions" array to customize Quick Actions`, 'success');
+    showToast(window.i18n('exportedItemsAndQuickActions', [itemCount.toString(), qaCount.toString()]), 'success');
 
   } catch (error) {
     console.error('Export failed:', error);
-    showToast('Failed to export configuration', 'error');
+    showToast(window.i18n('failedExportConfiguration'), 'error');
   }
 }
 
@@ -749,44 +706,7 @@ async function exportJsonToFile() {
 
 // ==================== THEME MANAGEMENT ====================
 
-async function loadTheme() {
-  const result = await chrome.storage.local.get({ theme: 'auto' });
-  const theme = result.theme;
-  applyTheme(theme);
-}
 
-function applyTheme(theme) {
-  document.body.setAttribute('data-theme', theme);
-
-  // Update footer button indicator
-  const themeBtn = document.getElementById('footerThemeBtn');
-  if (themeBtn) {
-    themeBtn.setAttribute('data-theme-active', theme !== 'auto' ? 'true' : 'false');
-  }
-
-  console.log('[Theme] Applied theme:', theme);
-}
-
-async function toggleTheme() {
-  const result = await chrome.storage.local.get({ theme: 'auto' });
-  let currentTheme = result.theme;
-
-  // Cycle: auto → light → dark → auto
-  let nextTheme;
-  if (currentTheme === 'auto') {
-    nextTheme = 'light';
-  } else if (currentTheme === 'light') {
-    nextTheme = 'dark';
-  } else {
-    nextTheme = 'auto';
-  }
-
-  await chrome.storage.local.set({ theme: nextTheme });
-  applyTheme(nextTheme);
-
-  const themeLabels = { auto: 'Auto', light: 'Light', dark: 'Dark' };
-  showToast(`Theme: ${themeLabels[nextTheme]}`, 'success');
-}
 
 // ==================== PROFILE MANAGEMENT ====================
 
@@ -827,7 +747,7 @@ async function renderAllProfilesQuickActions() {
     const baseSolutions = window.solutions;
 
     if (baseSolutions.length === 0) {
-      listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-secondary);">No Quick Actions configured in solutions.json</div>';
+      listContainer.innerHTML = `<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-secondary);">${window.i18n('noQuickActionsConfigured')}</div>`;
       return;
     }
 
@@ -843,7 +763,7 @@ async function renderAllProfilesQuickActions() {
             ${solution.name || solution.id} (${quickActions.length})
           </h3>
           ${quickActions.length === 0 ?
-          '<div style="padding: 12px; color: var(--text-secondary); font-size: 11px;">No Quick Actions</div>' :
+          `<div style="padding: 12px; color: var(--text-secondary); font-size: 11px;">${window.i18n('noQuickActions')}</div>` :
           quickActions.map(qa => `
               <div class="qa-edit-row" data-qa-id="${qa.id}" data-solution-id="${solution.id}" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                 <div>
@@ -876,7 +796,7 @@ async function renderAllProfilesQuickActions() {
 
   } catch (error) {
     console.error('[Quick Actions Tab] Failed to load:', error);
-    listContainer.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--env-production);">Failed to load</div>';
+    listContainer.innerHTML = `<div class="empty-state" style="padding: 24px; text-align: center; color: var(--env-production);">${window.i18n('failedToLoadData')}</div>`;
   }
 }
 
@@ -924,7 +844,7 @@ function setupAISearchHandler() {
     const searchQuery = searchInput.value.trim();
 
     if (!searchQuery) {
-      showToast('Enter a search query first', 'warning');
+      showToast(window.i18n('enterSearchQueryFirst'), 'warning');
       searchInput.focus();
       return;
     }
@@ -1112,7 +1032,7 @@ function showEstimateResults(result) {
     return;
   }
 
-  titleEl.textContent = '✨ AI Response';
+  titleEl.textContent = window.i18n('aiResponseTitle');
 
   // Calculate reading time from response content
   const readingTime = window.calculateReadingTime(result.responseContent);
@@ -1147,7 +1067,7 @@ function showEstimateResults(result) {
       </div>
       <div class="llm-response-content ai-response">${markdownToHTML(result.responseContent)}</div>
       <div style="margin-top: 12px; padding: 10px; background: rgba(16, 185, 129, 0.15); border-radius: 4px; font-size: 10px; line-height: 1.4; color: var(--text-secondary);">
-        <strong style="color: #10B981;">✨ AI INSIGHTS</strong> – This response was generated by AI. Always verify information independently before making decisions.
+        <strong style="color: #10B981;">✨ AI INSIGHTS</strong> – ${window.i18n('aiDisclaimerVerifyInformation')}
       </div>
     </div>
   `;
@@ -1198,7 +1118,7 @@ async function copyAIResponseToClipboard() {
   const responseContent = modal.dataset.responseContent;
 
   if (!responseContent) {
-    showToast('No response content to copy.', 'warning');
+    showToast(window.i18n('noResponseContentToCopy'), 'warning');
     return;
   }
 
@@ -1218,10 +1138,10 @@ async function copyAIResponseToClipboard() {
       document.execCommand('copy');
       document.body.removeChild(textarea);
     }
-    showToast('Response copied to clipboard ✓', 'success');
+    showToast(window.i18n('responseCopiedToClipboard'), 'success');
   } catch (error) {
     console.error('[Copy AI Response] Failed:', error);
-    showToast('Failed to copy response.', 'error');
+    showToast(window.i18n('failedCopyResponse'), 'error');
   }
 }
 
@@ -1245,7 +1165,7 @@ function openEnterpriseCalculator(testResult) {
 
   if (!modal || !contentEl) {
     console.error('[Enterprise Calc] Modal elements not found');
-    showToast('Enterprise calculator not available', 'error');
+    showToast(window.i18n('enterpriseCalculatorNotAvailable'), 'error');
     return;
   }
 
@@ -1363,19 +1283,19 @@ function calculateEnterpriseProjections(testResult) {
         <div class="llm-response-content">
           ${originalPrompt ? `
             <div style="margin-bottom: 12px;">
-              <strong style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 6px;">📝 Original Prompt (Input):</strong>
+              <strong style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 6px;">${window.i18n('aiOriginalPromptLabel')}</strong>
               <div style="padding: 12px; background: var(--bg-primary); border-radius: 4px; font-size: 12px; line-height: 1.6; max-height: 200px; overflow-y: auto; white-space: pre-wrap; font-family: 'SF Mono', monospace;">${originalPrompt}</div>
             </div>
           ` : ''}
           ${aiResponse ? `
             <div>
-              <strong style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 6px;">✨ AI Response (Output):</strong>
+              <strong style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 6px;">${window.i18n('aiResponseOutputLabel')}</strong>
               <div class="ai-response" style="padding: 12px; background: var(--bg-primary); border-radius: 4px; font-size: 13px; line-height: 1.7; max-height: 300px; overflow-y: auto;">${markdownToHTML(aiResponse)}</div>
             </div>
           ` : ''}
         </div>
         <div style="margin-top: 12px; padding: 10px; background: rgba(16, 185, 129, 0.15); border-radius: 4px; font-size: 10px; line-height: 1.4; color: var(--text-secondary);">
-          <strong style="color: #10B981;">✨ AI INSIGHTS</strong> – This response was generated by AI. Always verify information independently before making decisions.
+          <strong style="color: #10B981;">✨ AI INSIGHTS</strong> – ${window.i18n('aiDisclaimerVerifyInformation')}
         </div>
       </div>
     `;
@@ -1437,7 +1357,7 @@ function calculateEnterpriseProjections(testResult) {
         </div>
       </div>
       <div style="margin-top: 12px; padding: 10px; background: rgba(16, 185, 129, 0.15); border-radius: 4px; font-size: 10px; line-height: 1.4; color: var(--text-secondary);">
-        <strong style="color: #10B981;">✨ AI INSIGHTS</strong> – Cost projections based on AI-analyzed token usage. Always verify with your provider for accurate enterprise pricing.
+        <strong style="color: #10B981;">✨ AI INSIGHTS</strong> – ${window.i18n('aiDisclaimerCostProjection')}
       </div>
     </div>
     
@@ -1476,7 +1396,7 @@ function calculateEnterpriseProjections(testResult) {
     };
   }
 
-  showToast('Projections calculated ✓', 'success');
+  showToast(window.i18n('projectionsCalculated'), 'success');
 }
 
 /**
@@ -1576,7 +1496,7 @@ Last Updated: 2026-01-13
 
   URL.revokeObjectURL(url);
 
-  showToast('Report exported ✓', 'success');
+  showToast(window.i18n('reportExported'), 'success');
 }
 
 /**
@@ -1606,19 +1526,19 @@ async function connectSAPAICore() {
   const resourceGroup = document.getElementById('sapAiCoreResourceGroup').value.trim() || 'default';
 
   if (!clientId || !clientSecret || !baseUrl || !authUrl) {
-    showToast('Please fill in all required fields', 'warning');
+    showToast(window.i18n('pleaseFillAllRequiredFields'), 'warning');
     return;
   }
 
   // Verify ToolkitCore is loaded
   if (!window.ToolkitCore || !window.ToolkitCore.loadSAPAICoreModels) {
     console.error('[SAP AI Core] ToolkitCore not loaded!', window.ToolkitCore);
-    showToast('System error: ToolkitCore not loaded. Try reloading the extension.', 'error');
+    showToast(window.i18n('systemErrorToolkitCoreNotLoaded'), 'error');
     return;
   }
 
   try {
-    showToast('Connecting to SAP AI Core...', 'info');
+    showToast(window.i18n('connectingToSAPAICore'), 'info');
 
     // Test connection by loading deployed models
     // This validates credentials and populates the model dropdown
@@ -1631,7 +1551,7 @@ async function connectSAPAICore() {
     });
 
     if (!models || models.length === 0) {
-      showToast('No deployed models found in resource group', 'warning');
+      showToast(window.i18n('noDeployedModelsFoundInResourceGroup'), 'warning');
       return;
     }
 
@@ -1642,11 +1562,11 @@ async function connectSAPAICore() {
       `<option value="${m.name}" data-deployment-id="${m.id}">${m.name} (${m.status})</option>`
     ).join('');
 
-    showToast(`Connected ✓ Found ${models.length} deployed model(s)`, 'success');
+    showToast(window.i18n('connectedFoundModels', [models.length.toString()]), 'success');
 
   } catch (error) {
     console.error('[SAP AI Core] Connection failed:', error);
-    showToast(`Connection failed: ${error.message}`, 'error');
+    showToast(window.i18n('connectionTestFailed'), 'error');
   }
 }
 
@@ -1662,12 +1582,12 @@ async function saveSAPAICoreConfig() {
   const selectedModel = document.getElementById('sapAiCoreModel').value;
 
   if (!clientId || !clientSecret || !baseUrl || !authUrl) {
-    showToast('Please fill in all required fields', 'warning');
+    showToast(window.i18n('pleaseFillAllRequiredFields'), 'warning');
     return;
   }
 
   if (!selectedModel) {
-    showToast('Please select a deployed model', 'warning');
+    showToast(window.i18n('pleaseSelectDeployedModel'), 'warning');
     return;
   }
 
@@ -1703,11 +1623,11 @@ async function saveSAPAICoreConfig() {
     // Update AI settings
     await updateAISettings();
 
-    showToast('SAP AI Core configuration saved ✓', 'success');
+    showToast(window.i18n('sapAICoreConfigurationSaved'), 'success');
 
   } catch (error) {
     console.error('[SAP AI Core] Save failed:', error);
-    showToast(`Failed to save: ${error.message}`, 'error');
+    showToast(window.i18n('connectionTestFailed'), 'error');
   }
 }
 
@@ -1715,7 +1635,7 @@ async function saveSAPAICoreConfig() {
  * Clear SAP AI Core configuration from storage
  */
 async function clearSAPAICoreConfig() {
-  if (!confirm('Clear SAP AI Core configuration? This cannot be undone.')) return;
+  if (!confirm(window.i18n('confirmClearSAPAICore'))) return;
 
   try {
     await chrome.storage.local.remove('sapAiCoreCredentials');
@@ -1730,7 +1650,7 @@ async function clearSAPAICoreConfig() {
     // Reset model dropdown
     const modelSelect = document.getElementById('sapAiCoreModel');
     modelSelect.disabled = true;
-    modelSelect.innerHTML = '<option value="">Connect to load deployed models...</option>';
+    modelSelect.innerHTML = `<option value="">${window.i18n('connectToLoadDeployedModels')}</option>`;
 
     // Hide primary model indicator
     const indicator = document.getElementById('sapAiCorePrimaryIndicator');
@@ -1739,11 +1659,11 @@ async function clearSAPAICoreConfig() {
     // Update AI settings
     await updateAISettings();
 
-    showToast('SAP AI Core configuration cleared', 'success');
+    showToast(window.i18n('sapAICoreConfigurationCleared'), 'success');
 
   } catch (error) {
     console.error('[SAP AI Core] Clear failed:', error);
-    showToast('Failed to clear configuration', 'error');
+    showToast(window.i18n('failedClearConfiguration'), 'error');
   }
 }
 
@@ -1794,212 +1714,10 @@ async function loadSavedAPIKeys() {
 }
 
 // ==================== AI SHORTCUT CREATION ====================
-// observeShortcutModal is now in ai-features.js
 
-/**
- * Add event listener for AI shortcut button
- */
-document.getElementById('addShortcutWithAIBtn')?.addEventListener('click', addShortcutWithAI);
-
-/**
- * AI-powered shortcut creation
- * Opens modal first, then scrapes page and populates fields dynamically
- */
-async function addShortcutWithAI() {
-  // Check if AI is available
-  if (!window.ToolkitCore || !window.ToolkitCore.testPromptWithModel) {
-    showToast('AI features not available', 'error');
-    return;
-  }
-
-  try {
-    // Open modal FIRST with empty fields
-    openAddShortcutModal();
-
-    const notesField = document.getElementById('shortcutNotes');
-
-    // Show loading state in notes field with green background
-    notesField.value = '⏳ Analyzing current page...';
-    notesField.style.background = 'rgba(16, 185, 129, 0.1)';
-    notesField.style.borderColor = '#10B981';
-
-    // Get current tab
-    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-    if (!tab || !tab.url) {
-      notesField.value = '';
-      notesField.style.background = '';
-      notesField.style.borderColor = '';
-      showToast('No active tab found', 'warning');
-      return;
-    }
-
-    // Check if we can inject scripts (not on chrome:// or edge:// pages)
-    if (tab.url.startsWith('chrome://') || tab.url.startsWith('edge://') || tab.url.startsWith('about:')) {
-      notesField.value = '';
-      notesField.style.background = '';
-      notesField.style.borderColor = '';
-      showToast('Cannot scrape browser internal pages', 'warning');
-      document.getElementById('shortcutName').value = tab.title;
-      document.getElementById('shortcutPath').value = tab.url;
-      return;
-    }
-
-    // Inject content script if not already present
-    notesField.value = '⏳ Preparing to scrape page...';
-    try {
-      await chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        files: ['content/content.js']
-      });
-      console.log('[AI Shortcut] Content script injected');
-    } catch (injectError) {
-      console.log('[AI Shortcut] Content script already present or injection failed:', injectError);
-      // Continue anyway - script might already be loaded
-    }
-
-    // Wait a moment for script to initialize
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    // Scrape page content via content script
-    notesField.value = '⏳ Scraping page content...';
-    const scrapedData = await new Promise((resolve) => {
-      chrome.tabs.sendMessage(tab.id, { action: 'scrapePageForShortcut' }, (response) => {
-        if (chrome.runtime.lastError) {
-          console.warn('[AI Shortcut] Message failed:', chrome.runtime.lastError);
-          resolve({ error: 'Failed to scrape page', title: tab.title, url: tab.url, content: '' });
-        } else {
-          resolve(response);
-        }
-      });
-    });
-
-    console.log('[AI Shortcut] Scraped data:', scrapedData);
-
-    // Populate URL immediately
-    document.getElementById('shortcutPath').value = scrapedData.url;
-
-    // Enhance title if it's vague
-    notesField.value = '⏳ Enhancing title...';
-    const enhancedTitle = await enhanceTitle(scrapedData.title, scrapedData.content);
-    document.getElementById('shortcutName').value = enhancedTitle;
-
-    // Generate AI summary from page content
-    notesField.value = '⏳ Generating AI summary...';
-    const summary = await generatePageSummary(scrapedData.title, scrapedData.url, scrapedData.content);
-
-    // Populate with summary and remove loading state
-    notesField.value = summary;
-    notesField.style.background = '';
-    notesField.style.borderColor = '';
-
-    // Set default icon
-    document.getElementById('shortcutIcon').value = '8';
-
-    showToast('✨ AI summary generated ✓', 'success');
-
-  } catch (error) {
-    console.error('[AI Shortcut] Failed:', error);
-    const notesField = document.getElementById('shortcutNotes');
-    notesField.value = '';
-    notesField.style.background = '';
-    notesField.style.borderColor = '';
-    showToast(`AI shortcut creation failed: ${error.message}`, 'error');
-  }
-}
-
-/**
- * Smart title enhancement - only enhances vague titles
- * @param {string} originalTitle - Original page title
- * @param {string} pageContent - Page content for context
- * @returns {string} Enhanced or original title
- */
-async function enhanceTitle(originalTitle, pageContent) {
-  // List of vague titles that need enhancement
-  const vagueTitles = [
-    'dashboard',
-    'home',
-    'admin',
-    'settings',
-    'configuration',
-    'profile',
-    'reports',
-    'analytics',
-    'overview',
-    'home page',
-    'main page',
-    'portal'
-  ];
-
-  // Check if title is vague (case-insensitive)
-  const titleLower = originalTitle.toLowerCase().trim();
-  const isVague = vagueTitles.some(vague => titleLower === vague || titleLower.startsWith(vague + ' '));
-
-  // If title is good (specific), return it unchanged
-  if (!isVague) {
-    console.log('[Title Enhancement] Title is specific, keeping original:', originalTitle);
-    return originalTitle;
-  }
-
-  // If title is vague, enhance it with AI
-  console.log('[Title Enhancement] Vague title detected, enhancing:', originalTitle);
-
-  try {
-    const prompt = `Based on this page content, generate a more descriptive title (max 50 characters). 
-Current title: "${originalTitle}"
-
-Page content preview:
-${pageContent.substring(0, 500)}
-
-Provide only the enhanced title, nothing else.`;
-
-    const result = await window.ToolkitCore.testPromptWithModel(prompt);
-
-    if (result && result.content) {
-      const enhancedTitle = result.content.trim().replace(/^["']|["']$/g, ''); // Remove quotes
-      console.log('[Title Enhancement] Enhanced title:', enhancedTitle);
-      return enhancedTitle.substring(0, 50); // Limit to 50 chars
-    }
-
-  } catch (error) {
-    console.warn('[Title Enhancement] Failed, using original:', error);
-  }
-
-  return originalTitle;
-}
-
-/**
- * Generate AI summary from page content
- * @param {string} title - Page title
- * @param {string} url - Page URL
- * @param {string} content - Scraped page content
- * @returns {string} AI-generated summary
- */
-async function generatePageSummary(title, url, content) {
-  if (!content || content.length < 50) {
-    return `${title}\n\nURL: ${url}`;
-  }
-
-  try {
-    const prompt = `Summarize this page in 2-3 concise sentences (max 200 words). Focus on what the page is about and its key information.
-
-Page Title: ${title}
-URL: ${url}
-
-Content:
-${content}
-
-Provide only the summary, no preamble.`;
-
-    const result = await window.ToolkitCore.testPromptWithModel(prompt);
-
-    if (result && result.content) {
-      return result.content.trim();
-    }
-
-    return `${title}\n\n${content.substring(0, 200)}...`;
-
-  } catch (error) {
-    console.error('[AI Summary] Failed:', error);
-    return `${title}\n\n${content.substring(0, 200)}...`;
-  }
-}
+// AI Shortcut creation functions are now in ai-features.js as:
+// - window.addShortcutWithAI
+// - enhanceTitle (private to ai-features.js)
+// - generatePageSummary (private to ai-features.js)
+//
+// Event listener for AI shortcut button is now in main.js to prevent duplicate handlers

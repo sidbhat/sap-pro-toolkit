@@ -1,11 +1,11 @@
-// SF Pro Toolkit - Main Module
+// SAP Pro Toolkit - Main Module
 // Initialization and event listener setup
 // Uses window object pattern for cross-file communication
 
 // ==================== INITIALIZATION ====================
 
 async function init() {
-  console.log('[Init] Starting SF Pro Toolkit initialization...');
+  console.log('[Init] Starting SAP Pro Toolkit initialization...');
 
   try {
     // Define available profiles (hardcoded list of profile files)
@@ -183,7 +183,7 @@ async function init() {
   } catch (error) {
     console.error('[Init] ❌ Failed:', error);
     if (window.showToast) {
-      window.showToast('Failed to initialize extension', 'error');
+      window.showToast(window.i18n('failedInitialize'), 'error');
     }
   }
 }
@@ -212,7 +212,7 @@ function setupEventListeners() {
   document.getElementById('welcomeGotItBtn')?.addEventListener('click', async () => {
     await window.markWelcomeSeen();
     document.getElementById('welcomeModal')?.classList.remove('active');
-    if (window.showToast) window.showToast('Welcome! Let\'s get started 🚀', 'success');
+    if (window.showToast) window.showToast(window.i18n('welcomeGetStarted'), 'success');
   });
 
   document.getElementById('welcomeLearnMoreBtn')?.addEventListener('click', async () => {
@@ -251,11 +251,31 @@ function setupEventListeners() {
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
       if (noteContent && window.downloadFile) {
+        // Detect if this is an AI-generated note
+        const modal = document.getElementById('addNoteModal');
+        const editId = modal?.getAttribute('data-edit-id');
+        let isAINote = false;
+        
+        if (editId) {
+          const note = window.notes.find(n => n.id === editId);
+          isAINote = note && (note.noteType === 'ai-prompt' || note.title.startsWith('AI Response'));
+        }
+        
+        // Use conditional header and disclaimer based on AI detection
+        const header = isAINote 
+          ? window.i18n('exportHeaderToolkitAINote')
+          : window.i18n('exportHeaderToolkitNote');
+        
+        const disclaimer = isAINote 
+          ? window.i18n('aiDisclaimerExport')
+          : window.i18n('toolkitDisclaimerExport');
+
         window.downloadFile({
           content: noteContent,
           filename: `${noteTitle.replace(/[^a-zA-Z0-9]/g, '-')}-${timestamp}`,
           format: format,
-          title: noteTitle
+          title: header,
+          headerDisclaimer: disclaimer
         });
       }
       noteDropdown?.classList.remove('open');
@@ -319,7 +339,8 @@ function setupEventListeners() {
           content: content,
           filename: `diagnostics-${timestamp}`,
           format: format,
-          title: pageTitle
+          title: pageTitle,
+          headerDisclaimer: window.i18n('aiDisclaimerDiagnostics')
         });
       }
       diagDropdown?.classList.remove('open');
@@ -333,7 +354,7 @@ function setupEventListeners() {
     if (query) {
       window.performAISearch(query);
     } else {
-      if (window.showToast) window.showToast('Enter a search query first', 'warning');
+      if (window.showToast) window.showToast(window.i18n('enterSearchQueryFirst'), 'warning');
     }
   });
 
@@ -368,9 +389,10 @@ function setupEventListeners() {
       if (content && window.downloadFile) {
         window.downloadFile({
           content: content,
-          filename: `ai-response-${timestamp}`,
+          filename: `ai-analysis-${timestamp}`,
           format: format,
-          title: 'AI Response'
+          title: window.i18n('exportHeaderToolkitAIAnalysis'),
+          headerDisclaimer: window.i18n('aiDisclaimerExport')
         });
       }
       aiResultsDropdown?.classList.remove('open');
@@ -671,7 +693,7 @@ function setupNoteCharCounter() {
 
       if (length >= 5000) {
         counter.classList.add('char-warning');
-        counter.textContent = `${length.toLocaleString()} (⚠️ Large note)`;
+        counter.textContent = `${length.toLocaleString()} (⚠️ ${window.i18n('largeNoteWarning')})`;
       } else {
         counter.classList.remove('char-warning');
         counter.textContent = length.toLocaleString();

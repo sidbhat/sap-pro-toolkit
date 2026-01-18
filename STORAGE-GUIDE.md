@@ -1,10 +1,10 @@
-# SF Pro Toolkit - Storage Guide for Power Users
+# SAP Pro Toolkit - Storage Guide for Power Users
 
 **Last Updated**: 2026-01-12
 
 ## Overview
 
-SF Pro Toolkit uses Chrome's `chrome.storage.local` API to persist user data. This guide helps power users understand the storage structure and manually manipulate data when needed.
+SAP Pro Toolkit uses Chrome's `chrome.storage.local` API to persist user data. This guide helps power users understand the storage structure and manually manipulate data when needed.
 
 ---
 
@@ -20,7 +20,7 @@ SF Pro Toolkit uses Chrome's `chrome.storage.local` API to persist user data. Th
 ### Method 2: Chrome Storage Inspector
 
 1. Open `chrome://extensions/`
-2. Find "SF Pro Toolkit"
+2. Find "SAP Pro Toolkit"
 3. Click "Details"
 4. Scroll to "Inspect views: side panel"
 5. Click "side panel" link

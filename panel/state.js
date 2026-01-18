@@ -1,4 +1,4 @@
-// SF Pro Toolkit - State Management Module
+// SAP Pro Toolkit - State Management Module
 // Global state variables and data loading/saving logic
 
 // ==================== DEFAULT SAP ICONS ====================
@@ -79,7 +79,7 @@ window.loadShortcuts = async function () {
   });
 
   window.shortcuts = result[storageKey] || [];
-  
+
   // Apply default icons to shortcuts missing iconType
   let needsSave = false;
   window.shortcuts = window.shortcuts.map(shortcut => {
@@ -93,7 +93,7 @@ window.loadShortcuts = async function () {
     }
     return shortcut;
   });
-  
+
   if (needsSave) {
     await chrome.storage.local.set({ [storageKey]: window.shortcuts });
     console.log('[Load Shortcuts] Applied default SAP icons to', window.shortcuts.length, 'shortcuts');
@@ -154,7 +154,7 @@ window.loadEnvironments = async function () {
     await chrome.storage.local.set({ [storageKey]: window.environments });
     console.log('[Load Environments] Saved to storage');
   }
-  
+
   // Apply default icons to environments missing iconType
   let needsSave = false;
   window.environments = window.environments.map(env => {
@@ -168,7 +168,7 @@ window.loadEnvironments = async function () {
     }
     return env;
   });
-  
+
   if (needsSave) {
     await chrome.storage.local.set({ [storageKey]: window.environments });
     console.log('[Load Environments] Applied default SAP icons to', window.environments.length, 'environments');
@@ -204,19 +204,19 @@ window.loadNotes = async function () {
   let needsSave = false;
   window.notes = window.notes.map(note => {
     let updated = { ...note };
-    
+
     if (!note.noteType) {
       console.log('[Notes Migration] Adding missing noteType to:', note.title);
       updated.noteType = 'note';
       needsSave = true;
     }
-    
+
     if (!note.iconType) {
       updated.icon = note.icon || window.DEFAULT_ICONS.note;
       updated.iconType = 'sap';
       needsSave = true;
     }
-    
+
     return updated;
   });
 
@@ -277,7 +277,7 @@ async function loadCurrentPageData() {
     const messagePromise = new Promise((resolve) => {
       chrome.tabs.sendMessage(tab.id, { action: 'getPageData' }, (response) => {
         if (chrome.runtime.lastError) {
-          console.log('[SF Pro Toolkit] Content script message failed, using URL detection');
+          console.log('[SAP Pro Toolkit] Content script message failed, using URL detection');
           resolve(null);
         } else {
           resolve(response);
@@ -292,12 +292,12 @@ async function loadCurrentPageData() {
       window.currentPageData = response;
       window.currentPageData.url = tab.url;
       window.currentPageData.solutionType = solutionType;
-      console.log('[SF Pro Toolkit] Using enhanced data from content script:', window.currentPageData);
+      console.log('[SAP Pro Toolkit] Using enhanced data from content script:', window.currentPageData);
     } else {
       window.currentPageData = window.detectEnvironmentFromURL ? window.detectEnvironmentFromURL(tab.url) : null;
       window.currentPageData.url = tab.url;
       window.currentPageData.solutionType = solutionType;
-      console.log('[SF Pro Toolkit] Using URL-based detection:', window.currentPageData);
+      console.log('[SAP Pro Toolkit] Using URL-based detection:', window.currentPageData);
     }
 
     // Render environments after page data is loaded to show Quick Actions
@@ -306,7 +306,7 @@ async function loadCurrentPageData() {
     }
 
   } catch (error) {
-    console.error('[SF Pro Toolkit] Failed to load page data:', error);
+    console.error('[SAP Pro Toolkit] Failed to load page data:', error);
     window.currentPageData = null;
   }
 }

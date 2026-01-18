@@ -4,303 +4,1416 @@
     "description": "Name of the extension"
   },
   "extDescription": {
-    "message": "Productiviteitstoolkit voor SAP SuccessFactors professionals",
-    "description": "extDescription translation"
+    "message": "Productiviteitstoolkit voor SAP-professionals op SuccessFactors, S/4HANA, BTP en meer",
+    "description": "Description of the extension"
   },
   "headerTitle": {
     "message": "SAP Pro Toolkit",
-    "description": "Name of the extension"
+    "description": "Main header title"
   },
   "dcInfoBtn": {
     "message": "Datacenter directory",
-    "description": "dcInfoBtn translation"
+    "description": "Datacenter info button tooltip"
   },
   "helpBtn": {
-    "message": "Over en help",
-    "description": "helpBtn translation"
+    "message": "Over en hulp",
+    "description": "Help button tooltip"
   },
   "contextDetecting": {
     "message": "Omgeving detecteren...",
-    "description": "contextDetecting translation"
+    "description": "Loading message for environment detection"
   },
   "switchEnvironmentTitle": {
     "message": "Omgeving wisselen",
-    "description": "switchEnvironmentTitle translation"
+    "description": "Environment section title"
   },
   "noEnvironments": {
     "message": "Nog geen opgeslagen omgevingen",
-    "description": "noEnvironments translation"
+    "description": "Empty state message for environments"
   },
   "addCurrentInstance": {
     "message": "Huidige instantie toevoegen",
-    "description": "addCurrentInstance translation"
+    "description": "Button to add current instance"
   },
   "addEnvironment": {
     "message": "Omgeving toevoegen",
-    "description": "addEnvironment translation"
+    "description": "Button to add environment"
   },
   "shortcutsTitle": {
     "message": "Snelkoppelingen",
-    "description": "shortcutsTitle translation"
+    "description": "Shortcuts section title"
   },
   "notesTitle": {
-    "message": "Snelle notities",
-    "description": "notesTitle translation"
+    "message": "Notities",
+    "description": "Notes section title"
   },
   "selectNote": {
-    "message": "Notitie selecteren...",
-    "description": "selectNote translation"
+    "message": "Selecteer een notitie...",
+    "description": "Placeholder for notes dropdown"
   },
   "addNote": {
     "message": "Notitie toevoegen",
-    "description": "addNote translation"
+    "description": "Add note button tooltip"
   },
   "editNote": {
     "message": "Notitie bewerken",
-    "description": "editNote translation"
+    "description": "Edit note button tooltip"
   },
   "deleteNote": {
     "message": "Notitie verwijderen",
-    "description": "deleteNote translation"
+    "description": "Delete note button tooltip"
   },
   "copyNote": {
     "message": "Notitie-inhoud kopiëren",
-    "description": "copyNote translation"
+    "description": "Copy note button tooltip"
   },
   "selectShortcut": {
-    "message": "Snelkoppeling selecteren...",
-    "description": "selectShortcut translation"
+    "message": "Selecteer een snelkoppeling...",
+    "description": "Placeholder for shortcut dropdown"
   },
   "addCurrentPage": {
     "message": "Huidige pagina toevoegen",
-    "description": "addCurrentPage translation"
+    "description": "Add current page button tooltip"
   },
   "editSelected": {
-    "message": "Geselecteerde bewerken",
-    "description": "editSelected translation"
+    "message": "Selectie bewerken",
+    "description": "Edit shortcut button tooltip"
   },
   "deleteSelected": {
-    "message": "Geselecteerde verwijderen",
-    "description": "deleteSelected translation"
+    "message": "Selectie verwijderen",
+    "description": "Delete shortcut button tooltip"
   },
   "diagnosticsTitle": {
     "message": "Systeemdiagnose",
-    "description": "diagnosticsTitle translation"
+    "description": "Diagnostics section title"
   },
   "diagnosticsDescription": {
     "message": "Kopieer uitgebreide systeeminformatie inclusief omgevingsdetails, gebruikersgegevens en technische specificaties voor probleemoplossing en ondersteuning.",
-    "description": "diagnosticsDescription translation"
+    "description": "Diagnostics section description"
   },
   "copyDiagnostics": {
     "message": "Diagnoserapport kopiëren",
-    "description": "copyDiagnostics translation"
+    "description": "Copy diagnostics button text"
   },
   "addEnvironmentTitle": {
     "message": "Omgeving toevoegen",
-    "description": "addEnvironmentTitle translation"
+    "description": "Add environment modal title"
   },
   "editEnvironmentTitle": {
     "message": "Omgeving bewerken",
-    "description": "editEnvironmentTitle translation"
+    "description": "Edit environment modal title"
   },
   "environmentName": {
     "message": "Omgevingsnaam",
-    "description": "environmentName translation"
+    "description": "Environment name field label"
   },
   "environmentNamePlaceholder": {
     "message": "bijv. Productie DC68",
-    "description": "environmentNamePlaceholder translation"
+    "description": "Environment name field placeholder"
   },
   "environmentType": {
     "message": "Omgevingstype",
-    "description": "environmentType translation"
+    "description": "Environment type field label"
   },
   "environmentTypeProduction": {
     "message": "Productie",
-    "description": "environmentTypeProduction translation"
+    "description": "Production environment type"
   },
   "environmentTypePreview": {
-    "message": "Voorbeeld",
-    "description": "environmentTypePreview translation"
+    "message": "Preview",
+    "description": "Preview environment type"
   },
   "environmentTypeSales": {
     "message": "Verkoop/Demo",
-    "description": "environmentTypeSales translation"
+    "description": "Sales/Demo environment type"
   },
   "environmentTypeSandbox": {
     "message": "Sandbox",
-    "description": "environmentTypeSandbox translation"
+    "description": "Sandbox environment type"
   },
   "hostname": {
     "message": "Hostnaam",
-    "description": "hostname translation"
+    "description": "Hostname field label"
   },
   "hostnamePlaceholder": {
     "message": "bijv. hcm-us20.hr.cloud.sap",
-    "description": "hostnamePlaceholder translation"
+    "description": "Hostname field placeholder"
   },
   "hostnameHelp": {
-    "message": "Datacenter wordt automatisch gedetecteerd vanuit hostnaam",
-    "description": "hostnameHelp translation"
+    "message": "Datacenter wordt automatisch gedetecteerd van hostnaam",
+    "description": "Hostname field help text"
   },
   "cancel": {
     "message": "Annuleren",
-    "description": "cancel translation"
+    "description": "Cancel button text"
   },
   "saveEnvironment": {
     "message": "Omgeving opslaan",
-    "description": "saveEnvironment translation"
+    "description": "Save environment button text"
   },
   "addShortcutTitle": {
     "message": "Snelkoppeling toevoegen",
-    "description": "addShortcutTitle translation"
+    "description": "Add shortcut modal title"
   },
   "editShortcutTitle": {
     "message": "Snelkoppeling bewerken",
-    "description": "editShortcutTitle translation"
+    "description": "Edit shortcut modal title"
   },
   "shortcutName": {
     "message": "Naam",
-    "description": "shortcutName translation"
+    "description": "Shortcut name field label"
   },
   "shortcutNamePlaceholder": {
-    "message": "bijv. Beheercentrum",
-    "description": "shortcutNamePlaceholder translation"
+    "message": "bijv. Admin Center",
+    "description": "Shortcut name field placeholder"
   },
   "shortcutUrl": {
     "message": "URL",
-    "description": "shortcutUrl translation"
+    "description": "Shortcut URL field label"
   },
   "shortcutUrlPlaceholder": {
     "message": "bijv. https://hcm-us20.hr.cloud.sap/sf/admin",
-    "description": "shortcutUrlPlaceholder translation"
+    "description": "Shortcut URL field placeholder"
   },
   "shortcutUrlHelp": {
     "message": "Voer de volledige URL in inclusief https://",
-    "description": "shortcutUrlHelp translation"
+    "description": "Shortcut URL field help text"
   },
   "shortcutNotes": {
     "message": "Notities (optioneel)",
-    "description": "shortcutNotes translation"
+    "description": "Shortcut notes field label"
   },
   "shortcutNotesPlaceholder": {
     "message": "bijv. Voor probleemoplossing",
-    "description": "shortcutNotesPlaceholder translation"
+    "description": "Shortcut notes field placeholder"
   },
   "shortcutIcon": {
     "message": "Pictogram",
-    "description": "shortcutIcon translation"
+    "description": "Shortcut icon field label"
   },
   "saveShortcut": {
     "message": "Snelkoppeling opslaan",
-    "description": "saveShortcut translation"
+    "description": "Save shortcut button text"
   },
   "addNoteTitle": {
     "message": "Notitie toevoegen",
-    "description": "addNoteTitle translation"
+    "description": "Add note modal title"
   },
   "editNoteTitle": {
     "message": "Notitie bewerken",
-    "description": "editNoteTitle translation"
+    "description": "Edit note modal title"
   },
   "noteTitle": {
     "message": "Titel",
-    "description": "noteTitle translation"
+    "description": "Note title field label"
   },
   "noteTitlePlaceholder": {
-    "message": "bijv. Tijdelijke ID's, URL's, Configuratie",
-    "description": "noteTitlePlaceholder translation"
+    "message": "bijv. Temp IDs, URLs, Config",
+    "description": "Note title field placeholder"
   },
   "noteContent": {
     "message": "Inhoud",
-    "description": "noteContent translation"
+    "description": "Note content field label"
   },
   "noteContentPlaceholder": {
-    "message": "Plak hier tijdelijke informatie...\\n\\n• Gebruikers-ID's\\n• URL's\\n• Configuratiesnippers\\n• Alles waartoe u snel toegang nodig hebt",
-    "description": "noteContentPlaceholder translation"
+    "message": "Plak hier tijdelijke informatie...\\n\\n• Gebruikers-IDs\\n• URLs\\n• Configuratiefragmenten\\n• Alles waartoe je snel toegang nodig hebt",
+    "description": "Note content field placeholder"
   },
   "noteIcon": {
     "message": "Pictogram",
-    "description": "noteIcon translation"
+    "description": "Note icon field label"
   },
   "noteColor": {
     "message": "Kleur",
-    "description": "noteColor translation"
+    "description": "Note color field label"
   },
   "saveNote": {
     "message": "Notitie opslaan",
-    "description": "saveNote translation"
+    "description": "Save note button text"
   },
   "dcDirectoryTitle": {
     "message": "Wereldwijde datacenter directory",
-    "description": "dcDirectoryTitle translation"
+    "description": "Datacenter directory modal title"
   },
   "dcDirectoryDescription": {
     "message": "Volledige lijst van SAP SuccessFactors datacenters wereldwijd met hun locaties, cloudproviders en beschikbaarheid.",
-    "description": "dcDirectoryDescription translation"
+    "description": "Datacenter directory modal description"
   },
   "close": {
     "message": "Sluiten",
-    "description": "close translation"
+    "description": "Close button text"
   },
   "helpTitle": {
     "message": "Over SAP Pro Toolkit",
-    "description": "helpTitle translation"
+    "description": "Help modal title"
   },
   "helpFeatures": {
     "message": "Drie kernfuncties",
-    "description": "helpFeatures translation"
+    "description": "Help features heading"
   },
   "helpFeature1Title": {
-    "message": "Wisselen tussen omgevingen",
-    "description": "helpFeature1Title translation"
+    "message": "Schakelen tussen omgevingen",
+    "description": "Help feature 1 title"
   },
   "helpFeature1Description": {
-    "message": "Bewaar meerdere SAP instanties (Productie, Voorbeeld, Verkoop, Sandbox) en schakel snel tussen hen zonder handmatig URL's te wijzigen. De extensie behoudt uw huidige paginapad bij het wisselen.",
-    "description": "helpFeature1Description translation"
+    "message": "Sla meerdere SAP-instanties op (Productie, Preview, Verkoop, Sandbox) en schakel snel tussen hen zonder handmatig URLs te wijzigen. De extensie behoudt je huidige paginapad bij het schakelen.",
+    "description": "Help feature 1 description"
   },
   "helpFeature2Description": {
-    "message": "Snelle toegang tot veelgebruikte SAP-pagina's zoals Beheercentrum, RBP, Provisioning en documentatie voor nieuwe functies. Maak aangepaste snelkoppelingen voor elke SAP URL die u regelmatig bezoekt.",
-    "description": "helpFeature2Description translation"
-  },
-  "helpFeature2Description": {
-    "message": "Snelle toegang tot veelgebruikte SF-pagina's zoals Beheercentrum, RBP, Provisioning en documentatie voor nieuwe functies. Maak aangepaste snelkoppelingen voor elke SF URL die u regelmatig bezoekt.",
-    "description": "helpFeature2Description translation"
+    "message": "Snelle toegang tot veelgebruikte SAP-pagina's zoals Admin Center, RBP, Provisioning en Wat is nieuw-documentatie. Maak aangepaste snelkoppelingen voor elke SAP-URL die je regelmatig bezoekt.",
+    "description": "Help feature 2 description"
   },
   "helpFeature3Title": {
     "message": "Systeemdiagnose kopiëren",
-    "description": "helpFeature3Title translation"
+    "description": "Help feature 3 title"
   },
   "helpFeature3Description": {
-    "message": "Genereer uitgebreide diagnostische rapporten inclusief huidige omgevingsdetails, datacenterinformatie, gebruikers-ID's, browserspecificaties en technische configuratie voor probleemoplossing en ondersteuningstickets.",
-    "description": "helpFeature3Description translation"
+    "message": "Genereer uitgebreide diagnoserapporten inclusief huidige omgevingsdetails, datacenterinfo, gebruikers-IDs, browserspecificaties en technische configuratie voor probleemoplossing en supporttickets.",
+    "description": "Help feature 3 description"
   },
   "helpProTip": {
-    "message": "Pro-tip",
-    "description": "helpProTip translation"
+    "message": "Tip",
+    "description": "Help pro tip heading"
   },
   "helpProTipDescription": {
-    "message": "De extensie detecteert automatisch datacenterinformatie en omgevingstype wanneer u op een SAP SuccessFactors-pagina bent, waardoor u gemakkelijk kunt bijhouden aan welke instantie u werkt.",
-    "description": "helpProTipDescription translation"
+    "message": "De extensie detecteert automatisch datacenterinformatie en omgevingstype wanneer je op een SAP SuccessFactors-pagina bent, waardoor het eenvoudig is om bij te houden op welke instantie je werkt.",
+    "description": "Help pro tip description"
   },
   "helpGotIt": {
     "message": "Begrepen!",
-    "description": "helpGotIt translation"
+    "description": "Help modal close button"
   },
   "switchButton": {
     "message": "Wisselen",
-    "description": "switchButton translation"
+    "description": "Switch environment button text"
   },
   "editButton": {
     "message": "Bewerken",
-    "description": "editButton translation"
+    "description": "Edit button tooltip"
   },
   "deleteButton": {
     "message": "Verwijderen",
-    "description": "deleteButton translation"
+    "description": "Delete button tooltip"
   },
   "required": {
     "message": "*",
     "description": "Required field indicator"
+  },
+  "profileSwitchSuggestion": {
+    "message": "💡 Je bent op {solutionLabel} - Overschakelen naar {profileName} profiel?",
+    "description": "Toast message suggesting profile switch"
+  },
+  "confirmDeleteEnvironment": {
+    "message": "Omgeving \"{envName}\" verwijderen?",
+    "description": "Confirmation dialog for deleting an environment"
+  },
+  "confirmDeleteShortcut": {
+    "message": "Snelkoppeling \"{shortcutName}\" verwijderen?",
+    "description": "Confirmation dialog for deleting a shortcut"
+  },
+  "confirmDeleteNote": {
+    "message": "Notitie \"{noteTitle}\" verwijderen?",
+    "description": "Confirmation dialog for deleting a note"
+  },
+  "ossNoteCopied": {
+    "message": "OSS Note URL gekopieerd ✓",
+    "description": "Success message when OSS note URL is copied"
+  },
+  "globalSearchPlaceholder": {
+    "message": "Zoek omgevingen, snelkoppelingen, notities...",
+    "description": "Placeholder text for global search input"
+  },
+  "enableAutoLogin": {
+    "message": "Automatische aanmelding inschakelen voor deze omgeving",
+    "description": "Checkbox label for enabling auto-login"
+  },
+  "credentialUsername": {
+    "message": "Gebruikersnaam",
+    "description": "Username field label for credentials"
+  },
+  "credentialUsernamePlaceholder": {
+    "message": "Je SAP-gebruikersnaam",
+    "description": "Username field placeholder"
+  },
+  "credentialPassword": {
+    "message": "Wachtwoord",
+    "description": "Password field label for credentials"
+  },
+  "credentialPasswordPlaceholder": {
+    "message": "Je SAP-wachtwoord",
+    "description": "Password field placeholder"
+  },
+  "credentialCompanyId": {
+    "message": "Bedrijfs-ID",
+    "description": "Company ID field label for SuccessFactors"
+  },
+  "credentialCompanyIdPlaceholder": {
+    "message": "bijv. SFPART123456",
+    "description": "Company ID field placeholder"
+  },
+  "clearCache": {
+    "message": "Cache wissen en nieuwe aanmelding forceren",
+    "description": "Checkbox label for clearing cookies"
+  },
+  "showPassword": {
+    "message": "Wachtwoord tonen",
+    "description": "Tooltip for show password button"
+  },
+  "hidePassword": {
+    "message": "Wachtwoord verbergen",
+    "description": "Tooltip for hide password button"
+  },
+  "credentialsSecurityNotice": {
+    "message": "🔒 Inloggegevens worden versleuteld met AES-256-GCM en veilig opgeslagen in je browser.",
+    "description": "Security notice for credential storage"
+  },
+  "credentialsRequiredWarning": {
+    "message": "Gebruikersnaam en wachtwoord zijn vereist wanneer automatische aanmelding is ingeschakeld",
+    "description": "Validation warning for required credentials"
+  },
+  "autoLoginSuccess": {
+    "message": "Automatische aanmelding geslaagd ✓",
+    "description": "Success notification for auto-login"
+  },
+  "autoLoginFailed": {
+    "message": "Automatische aanmelding mislukt",
+    "description": "Error notification for auto-login failure"
+  },
+  "autoLoginSSODetected": {
+    "message": "SSO gedetecteerd - log handmatig in",
+    "description": "Info notification when SSO is detected"
+  },
+  "autoLoginCompanyIdRequired": {
+    "message": "Bedrijfs-ID vereist maar niet geconfigureerd",
+    "description": "Warning when company ID is needed but missing"
+  },
+  "decryptionFailed": {
+    "message": "Kan inloggegevens niet ontsleutelen",
+    "description": "Error message when credential decryption fails"
+  },
+  "encryptionFailed": {
+    "message": "Kan inloggegevens niet versleutelen",
+    "description": "Error message when credential encryption fails"
+  },
+  "aiSettings": {
+    "message": "AI-instellingen",
+    "description": "AI Settings section"
+  },
+  "enableAiFeatures": {
+    "message": "AI-functies inschakelen",
+    "description": "AI Features toggle"
+  },
+  "enableAiFeaturesDesc": {
+    "message": "AI-aangedreven functies globaal in- of uitschakelen in de toolkit.",
+    "description": "Toggle description"
+  },
+  "downloadedAsFormat": {
+    "message": "Gedownload als $1 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadFailed": {
+    "message": "Download mislukt."
+  },
+  "aiFeaturesRequireConfiguration": {
+    "message": "⚙️ AI-functies vereisen configuratie"
+  },
+  "configureAPIKeysInSettings": {
+    "message": "💡 Ga naar Instellingen → API-sleutels om OpenAI, Anthropic of SAP AI Core te configureren"
+  },
+  "aiDiagnosticsOnlySAPDomains": {
+    "message": "ℹ️ AI-diagnose alleen beschikbaar op SAP-domeinen"
+  },
+  "navigateToSAPPage": {
+    "message": "Navigeer naar een SAP-pagina (SuccessFactors, S/4HANA, BTP of sap.com) om deze functie te gebruiken"
+  },
+  "noActiveTab": {
+    "message": "Geen actief tabblad gevonden"
+  },
+  "noResponseFromAI": {
+    "message": "Geen reactie van AI"
+  },
+  "noReportContentToSave": {
+    "message": "Geen rapportinhoud om op te slaan."
+  },
+  "diagnosticsReportSavedAsNote": {
+    "message": "Diagnoserapport opgeslagen als notitie ✓"
+  },
+  "failedSaveReportAsNote": {
+    "message": "Kan rapport niet opslaan als notitie."
+  },
+  "noReportContentToDownload": {
+    "message": "Geen rapportinhoud om te downloaden"
+  },
+  "failedLoadAIPromptConfiguration": {
+    "message": "Kan AI-promptconfiguratie niet laden"
+  },
+  "aiSearchComplete": {
+    "message": "AI-zoekopdracht voltooid ✓"
+  },
+  "pleaseEnterPromptContentFirst": {
+    "message": "Voer eerst promptinhoud in"
+  },
+  "aiFeaturesNotAvailableToolkitCoreMissing": {
+    "message": "AI-functies niet beschikbaar - ToolkitCore ontbreekt"
+  },
+  "noteRefinerTemplateMissingRunningRawPrompt": {
+    "message": "Notitie-verfijner sjabloon ontbreekt, ruwe prompt wordt uitgevoerd"
+  },
+  "failedLoadPricingData": {
+    "message": "Kan prijsgegevens niet laden"
+  },
+  "noResponseContentToSave": {
+    "message": "Geen antwoordinhoud om op te slaan"
+  },
+  "aiResponseSavedAsNote": {
+    "message": "AI-antwoord opgeslagen als notitie ✓"
+  },
+  "noResponseContentToCopy": {
+    "message": "Geen antwoordinhoud om te kopiëren."
+  },
+  "responseCopiedToClipboard": {
+    "message": "Antwoord gekopieerd naar klembord ✓"
+  },
+  "failedCopyResponse": {
+    "message": "Kan antwoord niet kopiëren."
+  },
+  "enterpriseCalculatorNotAvailable": {
+    "message": "Enterprise-calculator niet beschikbaar"
+  },
+  "projectionsCalculated": {
+    "message": "Projecties berekend ✓"
+  },
+  "aiFeaturesNotAvailable": {
+    "message": "AI-functies niet beschikbaar"
+  },
+  "noActiveTabFound": {
+    "message": "Geen actief tabblad gevonden"
+  },
+  "cannotScrapeBrowserInternalPages": {
+    "message": "Kan browser-interne pagina's niet scrapen"
+  },
+  "aiShortcutCreationOnlySAPDomains": {
+    "message": "ℹ️ AI-snelkoppeling maken alleen beschikbaar op SAP-domeinen"
+  },
+  "navigateToSAPPageForAIShortcut": {
+    "message": "Navigeer naar een SAP-pagina (SuccessFactors, S/4HANA, BTP of sap.com) om deze functie te gebruiken"
+  },
+  "aiSummaryGenerated": {
+    "message": "✨ AI-samenvatting gegenereerd ✓"
+  },
+  "aiShortcutCreationFailed": {
+    "message": "AI-snelkoppeling maken mislukt: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterOSSNoteNumber": {
+    "message": "Voer een OSS Note-nummer in"
+  },
+  "invalidOSSNoteNumber": {
+    "message": "Ongeldig OSS Note-nummer"
+  },
+  "openingOSSNote": {
+    "message": "OSS Note $1 openen ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterOSSNoteNumberFirst": {
+    "message": "Voer eerst een OSS Note-nummer in"
+  },
+  "ossNoteURLCopied": {
+    "message": "OSS Note URL gekopieerd ✓"
+  },
+  "failedCopyURL": {
+    "message": "Kan URL niet kopiëren"
+  },
+  "ossNoteAddedAsShortcut": {
+    "message": "OSS Note $1 toegevoegd als snelkoppeling ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterAPIKeyFirst": {
+    "message": "Voer eerst een API-sleutel in"
+  },
+  "testingOpenAIConnection": {
+    "message": "OpenAI-verbinding testen..."
+  },
+  "openAIConnectionSuccessful": {
+    "message": "OpenAI-verbinding geslaagd ✓"
+  },
+  "openAIConnectionFailed": {
+    "message": "OpenAI-verbinding mislukt - controleer API-sleutel"
+  },
+  "connectionTestFailed": {
+    "message": "Verbindingstest mislukt"
+  },
+  "openAIAPIKeyCleared": {
+    "message": "OpenAI API-sleutel gewist"
+  },
+  "testingAnthropicConnection": {
+    "message": "Anthropic-verbinding testen..."
+  },
+  "anthropicConnectionSuccessful": {
+    "message": "Anthropic-verbinding geslaagd ✓"
+  },
+  "anthropicConnectionFailed": {
+    "message": "Anthropic-verbinding mislukt - controleer API-sleutel"
+  },
+  "anthropicAPIKeyCleared": {
+    "message": "Anthropic API-sleutel gewist"
+  },
+  "profileNotFound": {
+    "message": "Profiel niet gevonden"
+  },
+  "themeChanged": {
+    "message": "Thema: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiDiagnosticsGenerated": {
+    "message": "✨ AI-diagnose gegenereerd ✓"
+  },
+  "aiDiagnosticsFailed": {
+    "message": "AI-diagnose mislukt: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiResponseAlreadySaved": {
+    "message": "⚠️ Dit AI-antwoord is al recent opgeslagen"
+  },
+  "aiSearchFailed": {
+    "message": "AI-zoekopdracht mislukt: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiTestFailed": {
+    "message": "AI-test mislukt: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "enterSearchQueryFirst": {
+    "message": "Voer eerst een zoekopdracht in"
+  },
+  "importedItemsIntoProfile": {
+    "message": "$1 geïmporteerd in $2 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "importFailed": {
+    "message": "Import mislukt: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportedItemsAndQuickActions": {
+    "message": "$1 items + $2 Snelle Acties geëxporteerd ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "failedExportConfiguration": {
+    "message": "Kan configuratie niet exporteren"
+  },
+  "invalidJSONFile": {
+    "message": "Ongeldig JSON-bestand - kan niet worden geanalyseerd"
+  },
+  "invalidFileStructure": {
+    "message": "Ongeldige bestandsstructuur - vereiste velden ontbreken"
+  },
+  "noNewItemsToImport": {
+    "message": "Geen nieuwe items om te importeren (alles bestaat al)"
+  },
+  "connectingToSAPAICore": {
+    "message": "Verbinden met SAP AI Core..."
+  },
+  "connectedFoundModels": {
+    "message": "Verbonden ✓ $1 geïmplementeerde model(len) gevonden",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sapAICoreConfigurationSaved": {
+    "message": "SAP AI Core-configuratie opgeslagen ✓"
+  },
+  "sapAICoreConfigurationCleared": {
+    "message": "SAP AI Core-configuratie gewist"
+  },
+  "noDeployedModelsFoundInResourceGroup": {
+    "message": "Geen geïmplementeerde modellen gevonden in resourcegroep"
+  },
+  "pleaseSelectDeployedModel": {
+    "message": "Selecteer een geïmplementeerd model"
+  },
+  "pleaseFillAllRequiredFields": {
+    "message": "Vul alle vereiste velden in"
+  },
+  "failedClearConfiguration": {
+    "message": "Kan configuratie niet wissen"
+  },
+  "failedToSave": {
+    "message": "Opslaan mislukt: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "systemErrorToolkitCoreNotLoaded": {
+    "message": "Systeemfout: ToolkitCore niet geladen"
+  },
+  "maxTokensSet": {
+    "message": "Max tokens ingesteld op $1 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "reportExported": {
+    "message": "Rapport geëxporteerd ✓"
+  },
+  "navigatingTo": {
+    "message": "Navigeren naar $1...",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiAnalyzeClickToStart": {
+    "message": "Klik op \"Analyseren met AI\" om te starten..."
+  },
+  "aiAnalyzingPage": {
+    "message": "⏳ AI analyseert de pagina..."
+  },
+  "aiAnalyzingToolkitData": {
+    "message": "⏳ Toolkit-gegevens analyseren over alle profielen..."
+  },
+  "aiAnalyzingPrompt": {
+    "message": "⏳ AI analyseert je prompt..."
+  },
+  "aiAnalyzingCurrentPage": {
+    "message": "⏳ Huidige pagina analyseren..."
+  },
+  "aiPreparingToScrapePage": {
+    "message": "⏳ Pagina-extractie voorbereiden..."
+  },
+  "aiScrapingPageContent": {
+    "message": "⏳ Pagina-inhoud extraheren..."
+  },
+  "aiEnhancingTitle": {
+    "message": "⏳ Titel verbeteren..."
+  },
+  "aiGeneratingSummary": {
+    "message": "⏳ AI-samenvatting genereren..."
+  },
+  "failedGenerateDiagnosticsTryAgain": {
+    "message": "AI-diagnose genereren mislukt. Probeer het opnieuw."
+  },
+  "scaleParameters": {
+    "message": "Schaalparameters"
+  },
+  "numberOfUsers": {
+    "message": "Aantal gebruikers"
+  },
+  "queriesPerUserPerDay": {
+    "message": "Queries per gebruiker per dag"
+  },
+  "workingDaysPerYear": {
+    "message": "Werkdagen per jaar"
+  },
+  "expectedOutputTokens": {
+    "message": "Verwachte output tokens"
+  },
+  "calculateAnnualProjections": {
+    "message": "Jaarlijkse projecties berekenen"
+  },
+  "annualCostProjection": {
+    "message": "Jaarlijkse kostenprojectie"
+  },
+  "contextLabel": {
+    "message": "Context"
+  },
+  "originalPromptInput": {
+    "message": "📝 Originele prompt (invoer):"
+  },
+  "aiResponseOutput": {
+    "message": "✨ AI-antwoord (uitvoer):"
+  },
+  "volumeProjections": {
+    "message": "Volumeprojecties"
+  },
+  "costProjections": {
+    "message": "Kostenprojecties"
+  },
+  "assumptionsLabel": {
+    "message": "Aannames:"
+  },
+  "costPerQuery": {
+    "message": "Kosten per query:"
+  },
+  "monthlyCost": {
+    "message": "Maandelijkse kosten:"
+  },
+  "annualCost": {
+    "message": "Jaarlijkse kosten:"
+  },
+  "connectToLoadDeployedModels": {
+    "message": "Verbinden om geïmplementeerde modellen te laden..."
+  },
+  "annualQueries": {
+    "message": "Jaarlijkse queries"
+  },
+  "annualInputTokens": {
+    "message": "Jaarlijkse invoer tokens"
+  },
+  "annualOutputTokens": {
+    "message": "Jaarlijkse uitvoer tokens"
+  },
+  "assumptions": {
+    "message": "Aannames"
+  },
+  "editQuickActionsInstructions": {
+    "message": "Bewerk namen en paden van Snelle acties en klik vervolgens hieronder op \"Alle wijzigingen opslaan\"."
+  },
+  "noQuickActionsConfigured": {
+    "message": "Geen snelle acties geconfigureerd in solutions.json"
+  },
+  "noQuickActions": {
+    "message": "Geen snelle acties"
+  },
+  "failedToLoadData": {
+    "message": "Laden mislukt"
+  },
+  "addedFromOssNoteSearch": {
+    "message": "Toegevoegd vanuit OSS-notitie zoeken"
+  },
+  "ossNoteShortcutName": {
+    "message": "OSS-notitie $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "largeNoteWarning": {
+    "message": "Grote notitie"
+  },
+  "welcomeModalTitle": {
+    "message": "Welkom bij SAP Pro Toolkit"
+  },
+  "welcomeTagline": {
+    "message": "Uw SAP-commandocentrum. Eén klik naar overal."
+  },
+  "welcomeCapabilityEnv": {
+    "message": "Omgevingsbeheer"
+  },
+  "welcomeCapabilityShortcuts": {
+    "message": "Slimme snelkoppelingen"
+  },
+  "welcomeCapabilityAI": {
+    "message": "AI-gestuurde tools"
+  },
+  "welcomeCapabilityProfiles": {
+    "message": "Profielsysteem"
+  },
+  "welcomeCapabilityDiag": {
+    "message": "Diagnostiek en Zoeken"
+  },
+  "welcomeCTAText": {
+    "message": "Klaar om te beginnen?"
+  },
+  "welcomeBtnLearnMore": {
+    "message": "Meer informatie"
+  },
+  "welcomeBtnSettings": {
+    "message": "Instellingen openen"
+  },
+  "welcomeBtnGotIt": {
+    "message": "Begrepen!"
+  },
+  "helpKeyFeaturesHeading": {
+    "message": "Belangrijkste functies"
+  },
+  "helpKeyboardShortcutsHeading": {
+    "message": "Sneltoetsen"
+  },
+  "aiDisclaimerDiagnostics": {
+    "message": "Dit diagnostisch rapport is gegenereerd door AI die uw systeeminformatie analyseert. Hoewel AI nuttige inzichten biedt, moet u informatie altijd onafhankelijk verifiëren voordat u beslissingen neemt."
+  },
+  "aiDisclaimerExport": {
+    "message": "[NEEDS TRANSLATION] ⚠️ AI-Generated Content: This content was generated using AI language models. Review for accuracy before use in production environments."
+  },
+  "toolkitDisclaimerExport": {
+    "message": "[NEEDS TRANSLATION] Generated by SAP Pro Toolkit - A productivity tool for SAP professionals."
+  },
+  "exportHeaderToolkitNote": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | Note"
+  },
+  "exportHeaderToolkitAINote": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | AI-Generated Note"
+  },
+  "exportHeaderToolkitAIAnalysis": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | AI Analysis"
+  },
+  "environmentSaved": {
+    "message": "Omgeving opgeslagen ✓"
+  },
+  "environmentUpdated": {
+    "message": "Omgeving bijgewerkt ✓"
+  },
+  "environmentDeleted": {
+    "message": "Omgeving verwijderd ✓"
+  },
+  "shortcutSaved": {
+    "message": "Snelkoppeling opgeslagen ✓"
+  },
+  "shortcutUpdated": {
+    "message": "Snelkoppeling bijgewerkt ✓"
+  },
+  "shortcutDeleted": {
+    "message": "Snelkoppeling verwijderd ✓"
+  },
+  "noteSaved": {
+    "message": "Notitie opgeslagen ✓"
+  },
+  "noteUpdated": {
+    "message": "Notitie bijgewerkt ✓"
+  },
+  "noteDeleted": {
+    "message": "Notitie verwijderd ✓"
+  },
+  "noteCopied": {
+    "message": "Notitie gekopieerd ✓"
+  },
+  "environmentNameRequired": {
+    "message": "Omgevingsnaam is verplicht"
+  },
+  "hostnameRequired": {
+    "message": "Hostnaam is verplicht"
+  },
+  "invalidSapHostname": {
+    "message": "Ongeldig SAP-hostnaamformaat"
+  },
+  "envNameTooShort": {
+    "message": "Omgevingsnaam te kort (min 2 tekens)"
+  },
+  "envNameTooLong": {
+    "message": "Omgevingsnaam te lang (max 50 tekens)"
+  },
+  "hostnameTooShort": {
+    "message": "Hostnaam te kort (min 5 tekens)"
+  },
+  "hostnameTooLong": {
+    "message": "Hostnaam te lang (max 100 tekens)"
+  },
+  "hostnameCannotContainSpaces": {
+    "message": "Hostnaam mag geen spaties bevatten"
+  },
+  "hostnameInvalidCharacters": {
+    "message": "Hostnaam bevat ongeldige tekens"
+  },
+  "shortcutNameTooShort": {
+    "message": "Snelkoppelingsnaam te kort (min 2 tekens)"
+  },
+  "shortcutNameTooLong": {
+    "message": "Snelkoppelingsnaam te lang (max 50 tekens)"
+  },
+  "urlTooShort": {
+    "message": "URL te kort (min 10 tekens)"
+  },
+  "urlTooLong": {
+    "message": "URL te lang (max 2000 tekens)"
+  },
+  "urlMustBeExternal": {
+    "message": "URL moet extern zijn (http:// of https://)"
+  },
+  "noteTitleTooShort": {
+    "message": "Notitietitel te kort (min 2 tekens)"
+  },
+  "noteTitleTooLong": {
+    "message": "Notitietitel te lang (max 100 tekens)"
+  },
+  "enterNoteTitle": {
+    "message": "Voer een notitietitel in"
+  },
+  "fillRequiredFields": {
+    "message": "Vul alle verplichte velden in"
+  },
+  "failedSaveEnvironment": {
+    "message": "Kan omgeving niet opslaan"
+  },
+  "failedSwitchEnvironment": {
+    "message": "Kan omgeving niet wisselen"
+  },
+  "failedNavigate": {
+    "message": "Navigatie mislukt"
+  },
+  "failedToNavigate": {
+    "message": "Kan niet naar pagina navigeren"
+  },
+  "failedCopyNote": {
+    "message": "Kan notitie niet kopiëren"
+  },
+  "failedCopyContent": {
+    "message": "Kan inhoud niet kopiëren"
+  },
+  "failedOpenOSSNote": {
+    "message": "Kan OSS-notitie niet openen"
+  },
+  "failedSaveQuickActions": {
+    "message": "Kan Snelle Acties niet opslaan"
+  },
+  "failedInitialize": {
+    "message": "Initialisatie mislukt"
+  },
+  "switchingToEnvironment": {
+    "message": "Wisselen naar omgeving..."
+  },
+  "contentCopied": {
+    "message": "Inhoud gekopieerd ✓"
+  },
+  "noContentToCopy": {
+    "message": "Geen inhoud om te kopiëren"
+  },
+  "noChangesToSave": {
+    "message": "Geen wijzigingen om op te slaan"
+  },
+  "quickActionsSaved": {
+    "message": "Snelle Acties opgeslagen ✓"
+  },
+  "profileCreated": {
+    "message": "Profiel aangemaakt ✓"
+  },
+  "profileDeleted": {
+    "message": "Profiel verwijderd ✓"
+  },
+  "switchedToProfile": {
+    "message": "Overgeschakeld naar profiel"
+  },
+  "profileNameRequired": {
+    "message": "Profielnaam is verplicht"
+  },
+  "profileAlreadyExists": {
+    "message": "Profiel bestaat al"
+  },
+  "profileNameAlreadyExists": {
+    "message": "Profielnaam bestaat al"
+  },
+  "currentProfileNotFound": {
+    "message": "Huidig profiel niet gevonden"
+  },
+  "cannotDeleteSystemProfiles": {
+    "message": "Kan systeemprofielen niet verwijderen"
+  },
+  "switchProfileBeforeDeleting": {
+    "message": "Schakel over naar een ander profiel voor verwijderen"
+  },
+  "failedSwitchProfile": {
+    "message": "Kan profiel niet wisselen"
+  },
+  "failedCreateProfile": {
+    "message": "Kan profiel niet aanmaken"
+  },
+  "failedDeleteProfile": {
+    "message": "Kan profiel niet verwijderen"
+  },
+  "profileResetSuccess": {
+    "message": "Profiel succesvol gereset ✓"
+  },
+  "resetFailed": {
+    "message": "Reset mislukt"
+  },
+  "importedIntoProfile": {
+    "message": "Geïmporteerd in profiel"
+  },
+  "importedIntoNewProfile": {
+    "message": "Geïmporteerd in nieuw profiel"
+  },
+  "exportedProfile": {
+    "message": "Profiel geëxporteerd ✓"
+  },
+  "exportedDataWithQA": {
+    "message": "Gegevens geëxporteerd met Snelle Acties ✓"
+  },
+  "failedExportProfile": {
+    "message": "Kan profiel niet exporteren"
+  },
+  "fullBackupExported": {
+    "message": "Volledige back-up geëxporteerd ✓"
+  },
+  "fullBackupRestored": {
+    "message": "Volledige back-up hersteld ✓"
+  },
+  "failedExportBackup": {
+    "message": "Kan back-up niet exporteren"
+  },
+  "backupRestoreFailed": {
+    "message": "Back-up herstellen mislukt"
+  },
+  "invalidBackupStructure": {
+    "message": "Ongeldige back-upbestandsstructuur"
+  },
+  "cannotNavigateNoActiveSFInstance": {
+    "message": "Kan niet navigeren - geen actieve SuccessFactors-instantie"
+  },
+  "shortcutNotFound": {
+    "message": "Snelkoppeling niet gevonden"
+  },
+  "noteNotFound": {
+    "message": "Notitie niet gevonden"
+  },
+  "modalNotFound": {
+    "message": "Modal niet gevonden"
+  },
+  "noEnvironmentAtPosition": {
+    "message": "Geen omgeving op positie"
+  },
+  "noEnvironmentsSaved": {
+    "message": "Nog geen omgevingen opgeslagen"
+  },
+  "formElementsNotFound": {
+    "message": "Formulierelementen niet gevonden"
+  },
+  "guideEnvStep1Title": {
+    "message": "Naar SAP-instantie navigeren"
+  },
+  "guideEnvStep1Desc": {
+    "message": "Ga naar uw SAP SuccessFactors-, S/4HANA- of BTP-instantie"
+  },
+  "guideEnvStep2Title": {
+    "message": "Omgeving toevoegen"
+  },
+  "guideEnvStep2Desc": {
+    "message": "Klik op <code>+ Omgeving</code> of gebruik <code>Cmd+E</code>"
+  },
+  "guideEnvStep3Title": {
+    "message": "Wisselen wanneer u wilt"
+  },
+  "guideEnvStep3Desc": {
+    "message": "Snel wisselen tussen omgevingen terwijl u uw paginapad behoudt"
+  },
+  "welcomeGetStarted": {
+    "message": "Aan de slag"
+  },
+  "tooltipPinNote": {
+    "message": "Pin note to top"
+  },
+  "tooltipUnpinEnvironment": {
+    "message": "Unpin environment"
+  },
+  "tooltipUnpinShortcut": {
+    "message": "Unpin shortcut"
+  },
+  "inputTokens": {
+    "message": "Input Tokens"
+  },
+  "guideShortcutStep2Title": {
+    "message": "Add Shortcut"
+  },
+  "emptyNotesSubtitle": {
+    "message": "Store documentation, prompts, and code snippets"
+  },
+  "noteTypeIdea": {
+    "message": "💡 Idea"
+  },
+  "tooltipOpenShortcut": {
+    "message": "Open shortcut"
+  },
+  "model": {
+    "message": "Model"
+  },
+  "noteTypeAIPrompt": {
+    "message": "✨ AI Prompt"
+  },
+  "confirmClearSAPAICore": {
+    "message": "Clear SAP AI Core configuration? This cannot be undone."
+  },
+  "emptyEnvironmentsSubtitle": {
+    "message": "Save your SAP instances for quick access"
+  },
+  "tooltipDeleteProfile": {
+    "message": "Delete profile"
+  },
+  "emptyNotesTitle": {
+    "message": "No Saved Notes"
+  },
+  "aiResponseTitle": {
+    "message": "✨ AI Response"
+  },
+  "confirmProfileExists": {
+    "message": "Profile \"$1\" already exists.\n\nImport items into existing profile?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "guideNoteStep1Desc": {
+    "message": "Jot down IDs, URLs, or quick thoughts"
+  },
+  "aiDisclaimerPage": {
+    "message": "This response was generated by AI analyzing your page. While AI provides helpful insights, always verify information independently before making decisions."
+  },
+  "emptyNotesHowTo": {
+    "message": "How to Get Started"
+  },
+  "emptyShortcutsHowTo": {
+    "message": "How to Get Started"
+  },
+  "aiResponseNoteTitle": {
+    "message": "AI Response - $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "usedMonthsAgo": {
+    "message": "Used $1 months ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyShortcutsTitle": {
+    "message": "No Saved Shortcuts"
+  },
+  "tooltipUnpinNote": {
+    "message": "Unpin note"
+  },
+  "context": {
+    "message": "Context"
+  },
+  "usedToday": {
+    "message": "Used today"
+  },
+  "aiResponseOutputLabel": {
+    "message": "✨ AI Response (Output):"
+  },
+  "accessCount": {
+    "message": "$1 accesses",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "outputTokens": {
+    "message": "Output Tokens"
+  },
+  "emptyEnvironmentsTitle": {
+    "message": "No Saved Environments"
+  },
+  "guideNoteStep2Desc": {
+    "message": "Turn rough notes into polished documentation"
+  },
+  "usedDaysAgo": {
+    "message": "Used $1 days ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyEnvironmentsHowTo": {
+    "message": "How to Get Started"
+  },
+  "noteTypeDocumentation": {
+    "message": "📚 Documentation"
+  },
+  "guideEnvProTip": {
+    "message": "💡 Pro Tip: Met Snelle Acties springt u direct naar specifieke SF-modules!"
+  },
+  "aiButtonReady": {
+    "message": "✨ AI"
+  },
+  "tooltipDelete": {
+    "message": "Delete"
+  },
+  "guideShortcutStep1Desc": {
+    "message": "Go to the page you want to shortcut"
+  },
+  "tooltipEdit": {
+    "message": "Edit"
+  },
+  "aiDisclaimerGeneric": {
+    "message": "This response was generated by AI. Always verify information independently before making decisions."
+  },
+  "aiDisclaimerToolkit": {
+    "message": "This response was generated by AI analyzing your toolkit data. While AI provides helpful insights, always verify information independently before making decisions."
+  },
+  "guideNoteStep1Title": {
+    "message": "Capture Ideas"
+  },
+  "aiInsightsLabel": {
+    "message": "✨ AI INSIGHTS"
+  },
+  "emptyShortcutsSubtitle": {
+    "message": "Create quick links to frequently-used SAP pages"
+  },
+  "tooltipPinEnvironment": {
+    "message": "Pin environment to top"
+  },
+  "cost": {
+    "message": "Cost"
+  },
+  "aiDisclaimerCostProjection": {
+    "message": "Cost projections based on AI-analyzed token usage. Always verify with your provider for accurate enterprise pricing."
+  },
+  "usedWeeksAgo": {
+    "message": "Used $1 weeks ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "guideShortcutStep2Desc": {
+    "message": "Click <code>+ Shortcut</code> or use <code>Cmd+J</code>"
+  },
+  "tooltipUnpin": {
+    "message": "Unpin"
+  },
+  "tooltipPinShortcut": {
+    "message": "Pin shortcut to top"
+  },
+  "guideNoteStep2Title": {
+    "message": "Use AI"
+  },
+  "aiDisclaimerVerifyInformation": {
+    "message": "This response was generated by AI. Always verify information independently before making decisions."
+  },
+  "guideShortcutProTip": {
+    "message": "Use shortcuts for deep links properly in your SAP system"
+  },
+  "aiContextStats": {
+    "message": "📊 Analyzed $1 environments, $2 shortcuts, $3 notes across $4 profiles",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      },
+      "3": {
+        "content": "$3"
+      },
+      "4": {
+        "content": "$4"
+      }
+    }
+  },
+  "noteTypeCode": {
+    "message": "💻 Code"
+  },
+  "aiContextQuery": {
+    "message": "🔍 \"$1\"",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "noteTypeNote": {
+    "message": "📝 Note"
+  },
+  "guideShortcutStep1Title": {
+    "message": "Navigate to Page"
+  },
+  "tooltipSwitchEnvironment": {
+    "message": "Switch to this environment"
+  },
+  "aiButtonAnalyzing": {
+    "message": "⏳ Analyzing..."
+  },
+  "generated": {
+    "message": "Generated"
+  },
+  "proTipLabel": {
+    "message": "Pro Tip"
+  },
+  "diagnosticsReportTitle": {
+    "message": "Diagnostics Report - $1 - $2",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "tooltipReloadEnvironment": {
+    "message": "Reload this environment"
+  },
+  "aiOriginalPromptLabel": {
+    "message": "📝 Original Prompt (Input):"
+  },
+  "tooltipCopyNote": {
+    "message": "Copy note content"
+  },
+  "guideNoteProTip": {
+    "message": "Store your AI prompts here for reuse"
+  },
+  "confirmCreateProfile": {
+    "message": "📦 Create New Profile?\n\nThis will create \"$1\" and import the file's data.\n\nContinue?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "usedYesterday": {
+    "message": "Used yesterday"
+  },
+  "tooltipPinToTop": {
+    "message": "Pin to top"
+  },
+  "diagnosticsReport": {
+    "message": "Diagnostics Report"
+  },
+  "itemPinned": {
+    "message": "Item vastgemaakt ✓"
   }
 }

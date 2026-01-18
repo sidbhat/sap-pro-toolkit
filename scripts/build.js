@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * SF Pro Toolkit Build Script
+ * SAP Pro Toolkit Build Script
  * 
  * Creates a production-ready distribution build for Chrome Web Store submission.
  * 
@@ -70,7 +70,7 @@ function copyDir(src, dest) {
       console.log(`  ${colors.yellow}⚠${colors.reset} Skipping ${srcPath} (using public version instead)`);
       continue;
     }
-    
+
     // Copy public version as profile-successfactors.json
     if (entry.name === 'profile-successfactors-public.json') {
       const publicDestPath = path.join(dest, 'profile-successfactors.json');
@@ -107,7 +107,7 @@ function copyFile(src, dest) {
  */
 async function minifyJSFile(filePath) {
   const code = fs.readFileSync(filePath, 'utf8');
-  
+
   try {
     const result = await minify(code, {
       compress: {
@@ -134,7 +134,7 @@ async function minifyJSFile(filePath) {
     console.error(`  ${colors.red}✗${colors.reset} Failed to minify ${path.basename(filePath)}: ${error.message}`);
     return false;
   }
-  
+
   return false;
 }
 
@@ -153,7 +153,7 @@ async function minifyAllJS() {
   ];
 
   console.log(`\n${colors.bright}Minifying JavaScript files:${colors.reset}`);
-  
+
   let minified = 0;
   let originalSize = 0;
   let minifiedSize = 0;
@@ -163,12 +163,12 @@ async function minifyAllJS() {
     if (fs.existsSync(filePath)) {
       const beforeSize = fs.statSync(filePath).size;
       const success = await minifyJSFile(filePath);
-      
+
       if (success) {
         const afterSize = fs.statSync(filePath).size;
         const reduction = ((beforeSize - afterSize) / beforeSize * 100).toFixed(1);
-        console.log(`  ${colors.green}✓${colors.reset} ${file} (${(beforeSize/1024).toFixed(1)}KB → ${(afterSize/1024).toFixed(1)}KB, -${reduction}%)`);
-        
+        console.log(`  ${colors.green}✓${colors.reset} ${file} (${(beforeSize / 1024).toFixed(1)}KB → ${(afterSize / 1024).toFixed(1)}KB, -${reduction}%)`);
+
         minified++;
         originalSize += beforeSize;
         minifiedSize += afterSize;
@@ -179,16 +179,16 @@ async function minifyAllJS() {
   const totalReduction = ((originalSize - minifiedSize) / originalSize * 100).toFixed(1);
   console.log(`\n${colors.bright}Minification Summary:${colors.reset}`);
   console.log(`  Files minified: ${minified}/${jsFiles.length}`);
-  console.log(`  Original size:  ${(originalSize/1024).toFixed(1)}KB`);
-  console.log(`  Minified size:  ${(minifiedSize/1024).toFixed(1)}KB`);
-  console.log(`  Space saved:    ${((originalSize - minifiedSize)/1024).toFixed(1)}KB (${totalReduction}% reduction)`);
+  console.log(`  Original size:  ${(originalSize / 1024).toFixed(1)}KB`);
+  console.log(`  Minified size:  ${(minifiedSize / 1024).toFixed(1)}KB`);
+  console.log(`  Space saved:    ${((originalSize - minifiedSize) / 1024).toFixed(1)}KB (${totalReduction}% reduction)`);
 }
 
 /**
  * Create INSTALL.md guide in dist/
  */
 function createInstallGuide() {
-  const content = `# SF Pro Toolkit - Installation Guide
+  const content = `# SAP Pro Toolkit - Installation Guide
 
 ## Chrome Web Store Installation (Recommended)
 
@@ -246,7 +246,7 @@ Version: ${require('../package.json').version}
  * Main build function
  */
 async function build() {
-  console.log(`${colors.bright}${colors.blue}SF Pro Toolkit - Build Script${colors.reset}\n`);
+  console.log(`${colors.bright}${colors.blue}SAP Pro Toolkit - Build Script${colors.reset}\n`);
 
   // Clean existing build
   if (fs.existsSync(BUILD_DIR)) {

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SF Pro Toolkit</title>
+  <title>SAP Pro Toolkit</title>
   <link rel="stylesheet" href="side-panel.css">
 </head>
 
@@ -20,7 +20,7 @@
   STANDARD MODAL HEADER PATTERN:
   <div class="modal-header">
     <div class="modal-header-title">
-      <img src="../icons/icon-32.png" alt="SF Pro Toolkit" class="modal-icon">
+      <img src="../icons/icon-32.png" alt="SAP Pro Toolkit" class="modal-icon">
       <h3>[Modal Title]</h3>
     </div>
     <button class="icon-btn" id="close[Modal]Modal">&times;</button>
@@ -29,7 +29,7 @@
   CHECKLIST FOR NEW MODALS:
   ✓ modal-header has modal-header-title wrapper?
   ✓ Includes icon-32.png with class="modal-icon"?
-  ✓ Alt text is "SF Pro Toolkit"?
+  ✓ Alt text is "SAP Pro Toolkit"?
   ✓ CSS uses var(--logo-size-modal)?
 -->
   <div class="side-panel-container">
@@ -54,7 +54,7 @@
               </linearGradient>
             </defs>
           </svg>
-          <h1 class="header-title" data-i18n="headerTitle">SF Pro Toolkit</h1>
+          <h1 class="header-title" data-i18n="headerTitle">SAP Pro Toolkit</h1>
         </div>
         <div class="profile-switcher">
           <button class="profile-dropdown" id="profileDropdownBtn">
@@ -1129,16 +1129,17 @@
               </linearGradient>
             </defs>
           </svg>
-          <h3>About SF Pro Toolkit</h3>
+          <h3 data-i18n="helpTitle">About SAP Pro Toolkit</h3>
         </div>
         <button class="icon-btn" id="closeHelpModal">&times;</button>
       </div>
       <div class="modal-body">
-        <p class="welcome-intro">
+        <p class="welcome-intro" data-i18n="welcomeTagline">
           Your SAP command center. One click to anywhere.
         </p>
 
-        <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">Key Features
+        <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);"
+          data-i18n="helpKeyFeaturesHeading">Key Features
         </h4>
         <ul style="font-size: 12px; line-height: 1.8; color: var(--text-secondary); margin: 0; padding-left: 20px;">
           <li><strong>Side Panel</strong>: Always accessible while you work (can be positioned on either side)</li>
@@ -1160,8 +1161,9 @@
           <li><strong>JSON Import/Export</strong>: Backup and share your configuration</li>
         </ul>
 
-        <h4 style="font-size: 13px; font-weight: 600; margin: 20px 0 10px; color: var(--text-primary);">⌨️ Keyboard
-          Shortcuts</h4>
+        <h4 style="font-size: 13px; font-weight: 600; margin: 20px 0 10px; color: var(--text-primary);">⌨️ <span
+            data-i18n="helpKeyboardShortcutsHeading">Keyboard
+            Shortcuts</span></h4>
         <div class="keyboard-shortcuts-grid">
           <div class="shortcut-item">
             <kbd id="modKey1">⌘</kbd><kbd>K</kbd>
@@ -1199,7 +1201,7 @@
 
       </div>
       <div class="modal-footer">
-        <button class="btn btn-primary" id="closeHelpBtn">Got it!</button>
+        <button class="btn btn-primary" id="closeHelpBtn" data-i18n="helpGotIt">Got it!</button>
       </div>
     </div>
   </div>
@@ -1279,6 +1281,7 @@
   <script src="vendor/purify.min.js"></script>
 
   <!-- Core utilities (must be loaded before side-panel.js) -->
+  <script src="i18n-helpers.js"></script>
   <script src="crypto-utils.js"></script>
   <script src="sap-icon-library.js"></script>
   <script src="icon-picker.js"></script>
@@ -1314,12 +1317,12 @@
               </linearGradient>
             </defs>
           </svg>
-          <h3>Welcome to SF Pro Toolkit</h3>
+          <h3 data-i18n="welcomeModalTitle">Welcome to SAP Pro Toolkit</h3>
         </div>
         <button class="icon-btn" id="closeWelcomeModal">&times;</button>
       </div>
       <div class="modal-body">
-        <p class="welcome-intro">
+        <p class="welcome-intro" data-i18n="welcomeTagline">
           Your SAP command center. One click to anywhere.
         </p>
 
@@ -1327,38 +1330,38 @@
         <div class="welcome-capabilities">
           <div class="welcome-capability">
             <div class="capability-icon">🌐</div>
-            <h4>Environment Management</h4>
+            <h4 data-i18n="welcomeCapabilityEnv">Environment Management</h4>
             <p>Switch instantly between Production, Preview, Sales, and Sandbox instances</p>
           </div>
 
           <div class="welcome-capability">
             <div class="capability-icon">📋</div>
-            <h4>Smart Shortcuts</h4>
+            <h4 data-i18n="welcomeCapabilityShortcuts">Smart Shortcuts</h4>
             <p>Save external links with AI-generated summaries and organize by tags</p>
           </div>
 
           <div class="welcome-capability">
             <div class="capability-icon">✨</div>
-            <h4>AI-Powered Tools</h4>
+            <h4 data-i18n="welcomeCapabilityAI">AI-Powered Tools</h4>
             <p>Test Joule prompts with live AI models (OpenAI, Anthropic, SAP AI Core) - configure in Settings first</p>
           </div>
 
           <div class="welcome-capability">
             <div class="capability-icon">📊</div>
-            <h4>Profile System</h4>
+            <h4 data-i18n="welcomeCapabilityProfiles">Profile System</h4>
             <p>Organize by solution (SuccessFactors, S/4HANA, BTP) with specialized resources</p>
           </div>
 
           <div class="welcome-capability">
             <div class="capability-icon">🔍</div>
-            <h4>Diagnostics & Search</h4>
+            <h4 data-i18n="welcomeCapabilityDiag">Diagnostics & Search</h4>
             <p>Generate system reports and search across all items with AI insights</p>
           </div>
         </div>
 
         <!-- CTA Section -->
         <div class="welcome-cta">
-          <p class="welcome-cta-text">Ready to get started?</p>
+          <p class="welcome-cta-text" data-i18n="welcomeCTAText">Ready to get started?</p>
           <div class="welcome-cta-buttons">
             <button class="btn btn-secondary" id="welcomeLearnMoreBtn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1366,20 +1369,20 @@
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
                 <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
-              Learn More
+              <span data-i18n="welcomeBtnLearnMore">Learn More</span>
             </button>
             <button class="btn btn-accent" id="welcomeSettingsBtn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="3" />
                 <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2" />
               </svg>
-              Open Settings
+              <span data-i18n="welcomeBtnSettings">Open Settings</span>
             </button>
             <button class="btn btn-primary" id="welcomeGotItBtn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              Got It!
+              <span data-i18n="welcomeBtnGotIt">Got It!</span>
             </button>
           </div>
         </div>

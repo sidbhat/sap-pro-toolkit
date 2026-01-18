@@ -21,14 +21,23 @@ class CryptoUtils {
 
   /**
    * Derive encryption key from extension ID and browser fingerprint
-   * This binds keys to the specific browser/extension instance
+   * version 'legacy': binds to UserAgent (unstable across browser updates)
+   * version 'stable': binds to Extension ID only (stable)
+   * @param {string} version - 'stable' (default) or 'legacy'
    * @returns {Promise<CryptoKey>} Derived encryption key
    */
-  async deriveEncryptionKey() {
+  async deriveEncryptionKey(version = 'stable') {
     try {
-      // Create key material from extension ID + user agent
-      // This ensures keys are unique per installation
-      const keyMaterial = chrome.runtime.id + navigator.userAgent;
+      // Create key material
+      // Legacy: Includes navigator.userAgent (BREAKS on browser update)
+      // Stable: Fixed suffix (Robust)
+      let keyMaterial;
+      if (version === 'legacy') {
+        keyMaterial = chrome.runtime.id + navigator.userAgent;
+      } else {
+        keyMaterial = chrome.runtime.id + '_sap_pro_toolkit_v2_stable';
+      }
+
       const encoder = new TextEncoder();
       const keyData = encoder.encode(keyMaterial);
 
@@ -87,7 +96,7 @@ class CryptoUtils {
         } else {
           // Generate new salt
           const newSalt = crypto.getRandomValues(new Uint8Array(this.saltLength));
-          
+
           // Store salt for future use
           chrome.storage.local.set({ crypto_salt: Array.from(newSalt) }, () => {
             if (chrome.runtime.lastError) {
@@ -103,6 +112,7 @@ class CryptoUtils {
 
   /**
    * Encrypt a plaintext password
+   * Always uses 'stable' key derivation
    * @param {string} plaintext - Password to encrypt
    * @returns {Promise<Object>} Object containing ciphertext and IV as arrays
    */
@@ -112,8 +122,8 @@ class CryptoUtils {
         throw new Error('Invalid plaintext input');
       }
 
-      // Derive encryption key
-      const key = await this.deriveEncryptionKey();
+      // Derive encryption key (Always use stable for new encryptions)
+      const key = await this.deriveEncryptionKey('stable');
 
       // Generate unique IV for this encryption
       const iv = crypto.getRandomValues(new Uint8Array(this.ivLength));
@@ -137,7 +147,7 @@ class CryptoUtils {
         ciphertext: Array.from(new Uint8Array(ciphertext)),
         iv: Array.from(iv),
         algorithm: this.algorithm,
-        version: '1.0' // For future compatibility
+        version: '2.0' // Version 2.0 indicates stable key usage
       };
     } catch (error) {
       console.error('Error encrypting password:', error);
@@ -148,16 +158,17 @@ class CryptoUtils {
   /**
    * Decrypt an encrypted password
    * @param {Object} encrypted - Object containing ciphertext and IV
+   * @param {string} version - 'stable' or 'legacy'
    * @returns {Promise<string>} Decrypted plaintext password
    */
-  async decryptPassword(encrypted) {
+  async decryptPassword(encrypted, version = 'stable') {
     try {
       if (!encrypted || !encrypted.ciphertext || !encrypted.iv) {
         throw new Error('Invalid encrypted data structure');
       }
 
-      // Derive encryption key
-      const key = await this.deriveEncryptionKey();
+      // Derive encryption key based on requested version
+      const key = await this.deriveEncryptionKey(version);
 
       // Convert arrays back to Uint8Array
       const ciphertext = new Uint8Array(encrypted.ciphertext);
@@ -177,8 +188,9 @@ class CryptoUtils {
       const decoder = new TextDecoder();
       return decoder.decode(decrypted);
     } catch (error) {
-      console.error('Error decrypting password:', error);
-      throw new Error('Failed to decrypt password');
+      // Don't log full error here to avoid spamming during migration checks
+      // console.error('Error decrypting password:', error);
+      throw error; // Re-throw to allow caller to handle (e.g., try legacy)
     }
   }
 
@@ -197,7 +209,12 @@ class CryptoUtils {
    * @returns {Promise<string>} Decrypted username
    */
   async decryptUsername(encrypted) {
-    return this.decryptPassword(encrypted);
+    // Try stable first, then legacy logic (can't migrate easily here without storage key)
+    try {
+      return await this.decryptPassword(encrypted, 'stable');
+    } catch {
+      return await this.decryptPassword(encrypted, 'legacy');
+    }
   }
 
   /**
@@ -222,15 +239,15 @@ class CryptoUtils {
       const testPassword = 'Test123!@#';
       const encrypted = await this.encryptPassword(testPassword);
       const decrypted = await this.decryptPassword(encrypted);
-      
+
       const success = decrypted === testPassword;
-      
+
       if (success) {
-        console.log('✅ Encryption test passed');
+        console.log('✅ Encryption test passed (Stable V2)');
       } else {
         console.error('❌ Encryption test failed: decrypted value does not match');
       }
-      
+
       return success;
     } catch (error) {
       console.error('❌ Encryption test failed with error:', error);
@@ -248,13 +265,13 @@ class CryptoUtils {
     try {
       // Convert data to string if it's an object
       const plaintext = typeof data === 'string' ? data : JSON.stringify(data);
-      
-      // Encrypt the data
+
+      // Encrypt the data (Using Stable V2)
       const encrypted = await this.encryptPassword(plaintext);
-      
+
       // Store encrypted data
       await chrome.storage.local.set({ [key]: encrypted });
-      
+
       console.log(`[CryptoUtils] Encrypted and stored: ${key}`);
     } catch (error) {
       console.error(`[CryptoUtils] Failed to encrypt and store ${key}:`, error);
@@ -264,6 +281,7 @@ class CryptoUtils {
 
   /**
    * Retrieve and decrypt data from chrome.storage.local
+   * Handles automatic migration from Legacy (UserAgent) to Stable (Fixed Suffix) keys
    * @param {string} key - Storage key
    * @returns {Promise<any>} Decrypted data (parsed if JSON)
    */
@@ -271,14 +289,43 @@ class CryptoUtils {
     try {
       const result = await chrome.storage.local.get(key);
       const encrypted = result[key];
-      
+
       if (!encrypted) {
         return null;
       }
-      
-      // Decrypt the data
-      const plaintext = await this.decryptPassword(encrypted);
-      
+
+      let plaintext;
+      let needsMigration = false;
+
+      // 1. Try Stable Decryption (V2)
+      try {
+        plaintext = await this.decryptPassword(encrypted, 'stable');
+      } catch (stableError) {
+        // 2. Fallback to Legacy Decryption (V1 - UserAgent based)
+        // Only if V2 fails (likely old data)
+        try {
+          console.warn(`[CryptoUtils] Stable decryption failed for ${key}, trying legacy...`);
+          plaintext = await this.decryptPassword(encrypted, 'legacy');
+          needsMigration = true;
+          console.log(`[CryptoUtils] Legacy decryption successful for ${key}. Marking for migration.`);
+        } catch (legacyError) {
+          console.error(`[CryptoUtils] All decryption attempts failed for ${key}`);
+          throw legacyError;
+        }
+      }
+
+      // 3. Auto-Migrate if needed
+      if (needsMigration) {
+        try {
+          // Re-encrypt with Stable key and store immediately
+          await this.encryptAndStore(key, plaintext);
+          console.log(`[CryptoUtils] Automatically migrated ${key} to stable encryption`);
+        } catch (migrateError) {
+          console.error(`[CryptoUtils] Failed to migrate ${key}:`, migrateError);
+          // Don't fail the retrieval, just log error
+        }
+      }
+
       // Try to parse as JSON, otherwise return as string
       try {
         return JSON.parse(plaintext);

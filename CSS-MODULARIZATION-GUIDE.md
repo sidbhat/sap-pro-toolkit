@@ -5,7 +5,7 @@
 
 ## Overview
 
-The SF Pro Toolkit CSS has been successfully modularized from a single 3,791-line file into **27 focused modules** for better maintainability, easier debugging, and improved AI context management.
+The SAP Pro Toolkit CSS has been successfully modularized from a single 3,791-line file into **27 focused modules** for better maintainability, easier debugging, and improved AI context management.
 
 ## 📊 Before & After
 

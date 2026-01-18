@@ -4,7 +4,7 @@
     "description": "Name of the extension"
   },
   "extDescription": {
-    "message": "SAP 专业人员的生产力工具包",
+    "message": "面向 SuccessFactors、S/4HANA、BTP 等 SAP 专业人员的生产力工具包",
     "description": "Description of the extension"
   },
   "headerTitle": {
@@ -28,7 +28,7 @@
     "description": "Environment section title"
   },
   "noEnvironments": {
-    "message": "尚未保存环境",
+    "message": "尚未保存任何环境",
     "description": "Empty state message for environments"
   },
   "addCurrentInstance": {
@@ -44,7 +44,7 @@
     "description": "Shortcuts section title"
   },
   "notesTitle": {
-    "message": "草稿笔记",
+    "message": "便签",
     "description": "Notes section title"
   },
   "selectNote": {
@@ -76,11 +76,11 @@
     "description": "Add current page button tooltip"
   },
   "editSelected": {
-    "message": "编辑所选",
+    "message": "编辑选中项",
     "description": "Edit shortcut button tooltip"
   },
   "deleteSelected": {
-    "message": "删除所选",
+    "message": "删除选中项",
     "description": "Delete shortcut button tooltip"
   },
   "diagnosticsTitle": {
@@ -88,7 +88,7 @@
     "description": "Diagnostics section title"
   },
   "diagnosticsDescription": {
-    "message": "复制包括环境详情、用户数据和技术规格在内的综合系统信息，用于故障排除和支持。",
+    "message": "复制包含环境详情、用户数据和技术规格的综合系统信息，用于故障排除和支持。",
     "description": "Diagnostics section description"
   },
   "copyDiagnostics": {
@@ -128,7 +128,7 @@
     "description": "Sales/Demo environment type"
   },
   "environmentTypeSandbox": {
-    "message": "沙箱",
+    "message": "沙盒",
     "description": "Sandbox environment type"
   },
   "hostname": {
@@ -168,7 +168,7 @@
     "description": "Shortcut name field placeholder"
   },
   "shortcutUrl": {
-    "message": "网址",
+    "message": "URL",
     "description": "Shortcut URL field label"
   },
   "shortcutUrlPlaceholder": {
@@ -176,7 +176,7 @@
     "description": "Shortcut URL field placeholder"
   },
   "shortcutUrlHelp": {
-    "message": "输入完整的 URL，包括 https://",
+    "message": "输入包含 https:// 的完整 URL",
     "description": "Shortcut URL field help text"
   },
   "shortcutNotes": {
@@ -184,7 +184,7 @@
     "description": "Shortcut notes field label"
   },
   "shortcutNotesPlaceholder": {
-    "message": "例如：用于故障排除问题",
+    "message": "例如：用于故障排除",
     "description": "Shortcut notes field placeholder"
   },
   "shortcutIcon": {
@@ -216,7 +216,7 @@
     "description": "Note content field label"
   },
   "noteContentPlaceholder": {
-    "message": "在此粘贴临时信息...\\n\\n• 用户 ID\\n• URL\\n• 配置片段\\n• 任何您需要快速访问的内容",
+    "message": "在此粘贴临时信息...\\n\\n• 用户 ID\\n• URL\\n• 配置代码片段\\n• 任何需要快速访问的内容",
     "description": "Note content field placeholder"
   },
   "noteIcon": {
@@ -236,7 +236,7 @@
     "description": "Datacenter directory modal title"
   },
   "dcDirectoryDescription": {
-    "message": "全球 SAP SuccessFactors 数据中心的完整列表，包括其位置、云提供商和可用性。",
+    "message": "全球 SAP SuccessFactors 数据中心完整列表，包含位置、云提供商和可用性信息。",
     "description": "Datacenter directory modal description"
   },
   "close": {
@@ -248,23 +248,19 @@
     "description": "Help modal title"
   },
   "helpFeatures": {
-    "message": "三个核心功能",
+    "message": "三大核心功能",
     "description": "Help features heading"
   },
   "helpFeature1Title": {
-    "message": "在环境之间切换",
+    "message": "在环境间切换",
     "description": "Help feature 1 title"
   },
   "helpFeature1Description": {
-    "message": "保存多个 SAP 实例（生产、预览、销售、沙箱）并快速切换，无需手动更改 URL。扩展会在切换时保留您当前的页面路径。",
+    "message": "保存多个 SAP 实例（生产、预览、销售、沙盒）并快速切换，无需手动更改 URL。切换时扩展会保留当前页面路径。",
     "description": "Help feature 1 description"
   },
   "helpFeature2Description": {
-    "message": "快速访问常用的 SAP 页面，如管理中心、RBP、配置和新功能文档。为任何您经常访问的 SAP URL 创建自定义快捷方式。",
-    "description": "Help feature 2 description"
-  },
-  "helpFeature2Description": {
-    "message": "快速访问常用的 SF 页面，如管理中心、RBP、配置和新功能文档。为任何您经常访问的 SF URL 创建自定义快捷方式。",
+    "message": "快速访问常用的 SAP 页面，如管理中心、RBP、Provisioning 和新功能文档。为您经常访问的任何 SAP URL 创建自定义快捷方式。",
     "description": "Help feature 2 description"
   },
   "helpFeature3Title": {
@@ -272,7 +268,7 @@
     "description": "Help feature 3 title"
   },
   "helpFeature3Description": {
-    "message": "生成包括当前环境详情、数据中心信息、用户 ID、浏览器规格和技术配置的综合诊断报告，用于故障排除和支持工单。",
+    "message": "生成包含当前环境详情、数据中心信息、用户 ID、浏览器规格和技术配置的综合诊断报告，用于故障排除和支持工单。",
     "description": "Help feature 3 description"
   },
   "helpProTip": {
@@ -302,5 +298,1122 @@
   "required": {
     "message": "*",
     "description": "Required field indicator"
+  },
+  "profileSwitchSuggestion": {
+    "message": "💡 您正在 {solutionLabel} - 切换到 {profileName} 配置文件？",
+    "description": "Toast message suggesting profile switch"
+  },
+  "confirmDeleteEnvironment": {
+    "message": "删除环境 \"{envName}\"？",
+    "description": "Confirmation dialog for deleting an environment"
+  },
+  "confirmDeleteShortcut": {
+    "message": "删除快捷方式 \"{shortcutName}\"？",
+    "description": "Confirmation dialog for deleting a shortcut"
+  },
+  "confirmDeleteNote": {
+    "message": "删除笔记 \"{noteTitle}\"？",
+    "description": "Confirmation dialog for deleting a note"
+  },
+  "ossNoteCopied": {
+    "message": "OSS 笔记 URL 已复制 ✓",
+    "description": "Success message when OSS note URL is copied"
+  },
+  "globalSearchPlaceholder": {
+    "message": "搜索环境、快捷方式、笔记...",
+    "description": "Placeholder text for global search input"
+  },
+  "enableAutoLogin": {
+    "message": "为此环境启用自动登录",
+    "description": "Checkbox label for enabling auto-login"
+  },
+  "credentialUsername": {
+    "message": "用户名",
+    "description": "Username field label for credentials"
+  },
+  "credentialUsernamePlaceholder": {
+    "message": "您的 SAP 用户名",
+    "description": "Username field placeholder"
+  },
+  "credentialPassword": {
+    "message": "密码",
+    "description": "Password field label for credentials"
+  },
+  "credentialPasswordPlaceholder": {
+    "message": "您的 SAP 密码",
+    "description": "Password field placeholder"
+  },
+  "credentialCompanyId": {
+    "message": "公司 ID",
+    "description": "Company ID field label for SuccessFactors"
+  },
+  "credentialCompanyIdPlaceholder": {
+    "message": "例如：SFPART123456",
+    "description": "Company ID field placeholder"
+  },
+  "clearCache": {
+    "message": "清除缓存并强制重新登录",
+    "description": "Checkbox label for clearing cookies"
+  },
+  "showPassword": {
+    "message": "显示密码",
+    "description": "Tooltip for show password button"
+  },
+  "hidePassword": {
+    "message": "隐藏密码",
+    "description": "Tooltip for hide password button"
+  },
+  "credentialsSecurityNotice": {
+    "message": "🔒 凭据使用 AES-256-GCM 加密，安全存储在您的浏览器中。",
+    "description": "Security notice for credential storage"
+  },
+  "credentialsRequiredWarning": {
+    "message": "启用自动登录时需要用户名和密码",
+    "description": "Validation warning for required credentials"
+  },
+  "autoLoginSuccess": {
+    "message": "自动登录成功 ✓",
+    "description": "Success notification for auto-login"
+  },
+  "autoLoginFailed": {
+    "message": "自动登录失败",
+    "description": "Error notification for auto-login failure"
+  },
+  "autoLoginSSODetected": {
+    "message": "检测到 SSO - 请手动登录",
+    "description": "Info notification when SSO is detected"
+  },
+  "autoLoginCompanyIdRequired": {
+    "message": "需要公司 ID 但未配置",
+    "description": "Warning when company ID is needed but missing"
+  },
+  "decryptionFailed": {
+    "message": "解密凭据失败",
+    "description": "Error message when credential decryption fails"
+  },
+  "encryptionFailed": {
+    "message": "加密凭据失败",
+    "description": "Error message when credential encryption fails"
+  },
+  "aiSettings": {
+    "message": "AI 设置",
+    "description": "AI Settings section"
+  },
+  "enableAiFeatures": {
+    "message": "启用 AI 功能",
+    "description": "AI Features toggle"
+  },
+  "enableAiFeaturesDesc": {
+    "message": "全局启用或禁用工具包中的 AI 驱动功能。",
+    "description": "Toggle description"
+  },
+  "downloadedAsFormat": {
+    "message": "已下载为 $1 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadFailed": {
+    "message": "下载失败。"
+  },
+  "aiFeaturesRequireConfiguration": {
+    "message": "⚙️ AI 功能需要配置"
+  },
+  "configureAPIKeysInSettings": {
+    "message": "💡 前往设置 → API 密钥配置 OpenAI、Anthropic 或 SAP AI Core"
+  },
+  "aiDiagnosticsOnlySAPDomains": {
+    "message": "ℹ️ AI 诊断仅在 SAP 域上可用"
+  },
+  "navigateToSAPPage": {
+    "message": "导航到 SAP 页面（SuccessFactors、S/4HANA、BTP 或 sap.com）以使用此功能"
+  },
+  "noActiveTab": {
+    "message": "未找到活动标签页"
+  },
+  "noResponseFromAI": {
+    "message": "AI 无响应"
+  },
+  "noReportContentToSave": {
+    "message": "没有报告内容可保存。"
+  },
+  "diagnosticsReportSavedAsNote": {
+    "message": "诊断报告已保存为笔记 ✓"
+  },
+  "failedSaveReportAsNote": {
+    "message": "保存报告为笔记失败。"
+  },
+  "noReportContentToDownload": {
+    "message": "没有报告内容可下载"
+  },
+  "failedLoadAIPromptConfiguration": {
+    "message": "加载 AI 提示配置失败"
+  },
+  "aiSearchComplete": {
+    "message": "AI 搜索完成 ✓"
+  },
+  "pleaseEnterPromptContentFirst": {
+    "message": "请先输入提示内容"
+  },
+  "aiFeaturesNotAvailableToolkitCoreMissing": {
+    "message": "AI 功能不可用 - 缺少 ToolkitCore"
+  },
+  "noteRefinerTemplateMissingRunningRawPrompt": {
+    "message": "笔记精炼器模板缺失，正在运行原始提示"
+  },
+  "failedLoadPricingData": {
+    "message": "加载定价数据失败"
+  },
+  "noResponseContentToSave": {
+    "message": "没有响应内容可保存"
+  },
+  "aiResponseSavedAsNote": {
+    "message": "AI 响应已保存为笔记 ✓"
+  },
+  "noResponseContentToCopy": {
+    "message": "没有响应内容可复制。"
+  },
+  "responseCopiedToClipboard": {
+    "message": "响应已复制到剪贴板 ✓"
+  },
+  "failedCopyResponse": {
+    "message": "复制响应失败。"
+  },
+  "enterpriseCalculatorNotAvailable": {
+    "message": "企业计算器不可用"
+  },
+  "projectionsCalculated": {
+    "message": "预测已计算 ✓"
+  },
+  "aiFeaturesNotAvailable": {
+    "message": "AI 功能不可用"
+  },
+  "noActiveTabFound": {
+    "message": "未找到活动标签页"
+  },
+  "cannotScrapeBrowserInternalPages": {
+    "message": "无法抓取浏览器内部页面"
+  },
+  "aiShortcutCreationOnlySAPDomains": {
+    "message": "ℹ️ AI 快捷方式创建仅在 SAP 域上可用"
+  },
+  "navigateToSAPPageForAIShortcut": {
+    "message": "导航到 SAP 页面（SuccessFactors、S/4HANA、BTP 或 sap.com）以使用此功能"
+  },
+  "aiSummaryGenerated": {
+    "message": "✨ AI 摘要已生成 ✓"
+  },
+  "aiShortcutCreationFailed": {
+    "message": "AI 快捷方式创建失败：$1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterOSSNoteNumber": {
+    "message": "请输入 OSS 笔记编号"
+  },
+  "invalidOSSNoteNumber": {
+    "message": "无效的 OSS 笔记编号"
+  },
+  "openingOSSNote": {
+    "message": "正在打开 OSS 笔记 $1 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterOSSNoteNumberFirst": {
+    "message": "请先输入 OSS 笔记编号"
+  },
+  "ossNoteURLCopied": {
+    "message": "OSS 笔记 URL 已复制 ✓"
+  },
+  "failedCopyURL": {
+    "message": "复制 URL 失败"
+  },
+  "ossNoteAddedAsShortcut": {
+    "message": "OSS 笔记 $1 已添加为快捷方式 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "pleaseEnterAPIKeyFirst": {
+    "message": "请先输入 API 密钥"
+  },
+  "testingOpenAIConnection": {
+    "message": "正在测试 OpenAI 连接..."
+  },
+  "openAIConnectionSuccessful": {
+    "message": "OpenAI 连接成功 ✓"
+  },
+  "openAIConnectionFailed": {
+    "message": "OpenAI 连接失败 - 检查 API 密钥"
+  },
+  "connectionTestFailed": {
+    "message": "连接测试失败"
+  },
+  "openAIAPIKeyCleared": {
+    "message": "OpenAI API 密钥已清除"
+  },
+  "testingAnthropicConnection": {
+    "message": "正在测试 Anthropic 连接..."
+  },
+  "anthropicConnectionSuccessful": {
+    "message": "Anthropic 连接成功 ✓"
+  },
+  "anthropicConnectionFailed": {
+    "message": "Anthropic 连接失败 - 检查 API 密钥"
+  },
+  "anthropicAPIKeyCleared": {
+    "message": "Anthropic API 密钥已清除"
+  },
+  "profileNotFound": {
+    "message": "未找到配置文件"
+  },
+  "themeChanged": {
+    "message": "主题：$1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiDiagnosticsGenerated": {
+    "message": "✨ AI 诊断已生成 ✓"
+  },
+  "aiDiagnosticsFailed": {
+    "message": "AI 诊断失败：$1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiResponseAlreadySaved": {
+    "message": "⚠️ 此 AI 响应最近已保存"
+  },
+  "aiSearchFailed": {
+    "message": "AI 搜索失败：$1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiTestFailed": {
+    "message": "AI 测试失败：$1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "enterSearchQueryFirst": {
+    "message": "请先输入搜索查询"
+  },
+  "importedItemsIntoProfile": {
+    "message": "已将 $1 导入到 $2 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "importFailed": {
+    "message": "导入失败：$1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportedItemsAndQuickActions": {
+    "message": "已导出 $1 个项目 + $2 个快速操作 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "failedExportConfiguration": {
+    "message": "导出配置失败"
+  },
+  "invalidJSONFile": {
+    "message": "无效的 JSON 文件 - 无法解析"
+  },
+  "invalidFileStructure": {
+    "message": "无效的文件结构 - 缺少必填字段"
+  },
+  "noNewItemsToImport": {
+    "message": "没有新项目可导入（所有项目已存在）"
+  },
+  "connectingToSAPAICore": {
+    "message": "正在连接到 SAP AI Core..."
+  },
+  "connectedFoundModels": {
+    "message": "已连接 ✓ 发现 $1 个已部署模型",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sapAICoreConfigurationSaved": {
+    "message": "SAP AI Core 配置已保存 ✓"
+  },
+  "sapAICoreConfigurationCleared": {
+    "message": "SAP AI Core 配置已清除"
+  },
+  "noDeployedModelsFoundInResourceGroup": {
+    "message": "在资源组中未找到已部署的模型"
+  },
+  "pleaseSelectDeployedModel": {
+    "message": "请选择已部署的模型"
+  },
+  "pleaseFillAllRequiredFields": {
+    "message": "请填写所有必填字段"
+  },
+  "failedClearConfiguration": {
+    "message": "清除配置失败"
+  },
+  "failedToSave": {
+    "message": "保存失败：$1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "systemErrorToolkitCoreNotLoaded": {
+    "message": "系统错误：ToolkitCore 未加载"
+  },
+  "maxTokensSet": {
+    "message": "最大令牌已设置为 $1 ✓",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "reportExported": {
+    "message": "报告已导出 ✓"
+  },
+  "navigatingTo": {
+    "message": "正在导航到 $1...",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "aiAnalyzeClickToStart": {
+    "message": "点击\"AI分析\"开始..."
+  },
+  "aiAnalyzingPage": {
+    "message": "⏳ AI正在分析页面..."
+  },
+  "aiAnalyzingToolkitData": {
+    "message": "⏳ 正在分析所有配置文件的工具包数据..."
+  },
+  "aiAnalyzingPrompt": {
+    "message": "⏳ AI正在分析您的提示..."
+  },
+  "aiAnalyzingCurrentPage": {
+    "message": "⏳ 正在分析当前页面..."
+  },
+  "aiPreparingToScrapePage": {
+    "message": "⏳ 准备抓取页面..."
+  },
+  "aiScrapingPageContent": {
+    "message": "⏳ 正在抓取页面内容..."
+  },
+  "aiEnhancingTitle": {
+    "message": "⏳ 正在优化标题..."
+  },
+  "aiGeneratingSummary": {
+    "message": "⏳ 正在生成AI摘要..."
+  },
+  "failedGenerateDiagnosticsTryAgain": {
+    "message": "生成AI诊断失败。请重试。"
+  },
+  "scaleParameters": {
+    "message": "规模参数"
+  },
+  "numberOfUsers": {
+    "message": "用户数"
+  },
+  "queriesPerUserPerDay": {
+    "message": "每用户每日查询数"
+  },
+  "workingDaysPerYear": {
+    "message": "每年工作日"
+  },
+  "expectedOutputTokens": {
+    "message": "预期输出令牌"
+  },
+  "calculateAnnualProjections": {
+    "message": "计算年度预测"
+  },
+  "annualCostProjection": {
+    "message": "年度成本预测"
+  },
+  "contextLabel": {
+    "message": "上下文"
+  },
+  "originalPromptInput": {
+    "message": "📝 原始提示（输入）:"
+  },
+  "aiResponseOutput": {
+    "message": "✨ AI响应（输出）:"
+  },
+  "volumeProjections": {
+    "message": "容量预测"
+  },
+  "costProjections": {
+    "message": "成本预测"
+  },
+  "assumptionsLabel": {
+    "message": "假设:"
+  },
+  "costPerQuery": {
+    "message": "每次查询成本:"
+  },
+  "monthlyCost": {
+    "message": "月度成本:"
+  },
+  "annualCost": {
+    "message": "年度成本:"
+  },
+  "connectToLoadDeployedModels": {
+    "message": "连接以加载已部署的模型..."
+  },
+  "annualQueries": {
+    "message": "年度查询"
+  },
+  "annualInputTokens": {
+    "message": "年度输入令牌"
+  },
+  "annualOutputTokens": {
+    "message": "年度输出令牌"
+  },
+  "assumptions": {
+    "message": "假设"
+  },
+  "editQuickActionsInstructions": {
+    "message": "编辑快速操作名称和路径，然后点击下方的“保存所有更改”。"
+  },
+  "noQuickActionsConfigured": {
+    "message": "solutions.json 中未配置快速操作"
+  },
+  "noQuickActions": {
+    "message": "无快速操作"
+  },
+  "failedToLoadData": {
+    "message": "加载失败"
+  },
+  "addedFromOssNoteSearch": {
+    "message": "从 OSS 笔记搜索添加"
+  },
+  "ossNoteShortcutName": {
+    "message": "OSS 笔记 $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "largeNoteWarning": {
+    "message": "大笔记"
+  },
+  "welcomeModalTitle": {
+    "message": "欢迎使用 SAP Pro Toolkit"
+  },
+  "welcomeTagline": {
+    "message": "您的 SAP 指挥中心。一键直达。"
+  },
+  "welcomeCapabilityEnv": {
+    "message": "环境管理"
+  },
+  "welcomeCapabilityShortcuts": {
+    "message": "智能快捷方式"
+  },
+  "welcomeCapabilityAI": {
+    "message": "AI 驱动工具"
+  },
+  "welcomeCapabilityProfiles": {
+    "message": "配置文件系统"
+  },
+  "welcomeCapabilityDiag": {
+    "message": "诊断与搜索"
+  },
+  "welcomeCTAText": {
+    "message": "准备好开始了吗？"
+  },
+  "welcomeBtnLearnMore": {
+    "message": "了解更多"
+  },
+  "welcomeBtnSettings": {
+    "message": "打开设置"
+  },
+  "welcomeBtnGotIt": {
+    "message": "知道了！"
+  },
+  "helpKeyFeaturesHeading": {
+    "message": "主要功能"
+  },
+  "helpKeyboardShortcutsHeading": {
+    "message": "键盘快捷键"
+  },
+  "aiDisclaimerDiagnostics": {
+    "message": "此诊断报告由AI分析您的系统信息生成。虽然AI提供了有用的见解，但在做出决定之前请始终独立验证信息。"
+  },
+  "aiDisclaimerExport": {
+    "message": "[NEEDS TRANSLATION] ⚠️ AI-Generated Content: This content was generated using AI language models. Review for accuracy before use in production environments."
+  },
+  "toolkitDisclaimerExport": {
+    "message": "[NEEDS TRANSLATION] Generated by SAP Pro Toolkit - A productivity tool for SAP professionals."
+  },
+  "exportHeaderToolkitNote": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | Note"
+  },
+  "exportHeaderToolkitAINote": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | AI-Generated Note"
+  },
+  "exportHeaderToolkitAIAnalysis": {
+    "message": "[NEEDS TRANSLATION] SAP Pro Toolkit | AI Analysis"
+  },
+  "environmentSaved": {
+    "message": "环境已保存 ✓"
+  },
+  "environmentUpdated": {
+    "message": "环境已更新 ✓"
+  },
+  "environmentDeleted": {
+    "message": "环境已删除 ✓"
+  },
+  "shortcutSaved": {
+    "message": "快捷方式已保存 ✓"
+  },
+  "shortcutUpdated": {
+    "message": "快捷方式已更新 ✓"
+  },
+  "shortcutDeleted": {
+    "message": "快捷方式已删除 ✓"
+  },
+  "noteSaved": {
+    "message": "笔记已保存 ✓"
+  },
+  "noteUpdated": {
+    "message": "笔记已更新 ✓"
+  },
+  "noteDeleted": {
+    "message": "笔记已删除 ✓"
+  },
+  "noteCopied": {
+    "message": "笔记已复制 ✓"
+  },
+  "environmentNameRequired": {
+    "message": "环境名称为必填项"
+  },
+  "hostnameRequired": {
+    "message": "主机名为必填项"
+  },
+  "invalidSapHostname": {
+    "message": "无效的SAP主机名格式"
+  },
+  "envNameTooShort": {
+    "message": "环境名称太短（最少2个字符）"
+  },
+  "envNameTooLong": {
+    "message": "环境名称太长（最多50个字符）"
+  },
+  "hostnameTooShort": {
+    "message": "主机名太短（最少5个字符）"
+  },
+  "hostnameTooLong": {
+    "message": "主机名太长（最多100个字符）"
+  },
+  "hostnameCannotContainSpaces": {
+    "message": "主机名不能包含空格"
+  },
+  "hostnameInvalidCharacters": {
+    "message": "主机名包含无效字符"
+  },
+  "shortcutNameTooShort": {
+    "message": "快捷方式名称太短（最少2个字符）"
+  },
+  "shortcutNameTooLong": {
+    "message": "快捷方式名称太长（最多50个字符）"
+  },
+  "urlTooShort": {
+    "message": "URL太短（最少10个字符）"
+  },
+  "urlTooLong": {
+    "message": "URL太长（最多2000个字符）"
+  },
+  "urlMustBeExternal": {
+    "message": "URL必须是外部的（http://或https://）"
+  },
+  "noteTitleTooShort": {
+    "message": "笔记标题太短（最少2个字符）"
+  },
+  "noteTitleTooLong": {
+    "message": "笔记标题太长（最多100个字符）"
+  },
+  "enterNoteTitle": {
+    "message": "请输入笔记标题"
+  },
+  "fillRequiredFields": {
+    "message": "请填写所有必填字段"
+  },
+  "failedSaveEnvironment": {
+    "message": "保存环境失败"
+  },
+  "failedSwitchEnvironment": {
+    "message": "切换环境失败"
+  },
+  "failedNavigate": {
+    "message": "导航失败"
+  },
+  "failedToNavigate": {
+    "message": "导航到页面失败"
+  },
+  "failedCopyNote": {
+    "message": "复制笔记失败"
+  },
+  "failedCopyContent": {
+    "message": "复制内容失败"
+  },
+  "failedOpenOSSNote": {
+    "message": "打开OSS注释失败"
+  },
+  "failedSaveQuickActions": {
+    "message": "保存快速操作失败"
+  },
+  "failedInitialize": {
+    "message": "初始化失败"
+  },
+  "switchingToEnvironment": {
+    "message": "切换到环境..."
+  },
+  "contentCopied": {
+    "message": "内容已复制 ✓"
+  },
+  "noContentToCopy": {
+    "message": "没有要复制的内容"
+  },
+  "noChangesToSave": {
+    "message": "没有要保存的更改"
+  },
+  "quickActionsSaved": {
+    "message": "快速操作已保存 ✓"
+  },
+  "profileCreated": {
+    "message": "配置文件已创建 ✓"
+  },
+  "profileDeleted": {
+    "message": "配置文件已删除 ✓"
+  },
+  "switchedToProfile": {
+    "message": "已切换到配置文件"
+  },
+  "profileNameRequired": {
+    "message": "配置文件名称为必填项"
+  },
+  "profileAlreadyExists": {
+    "message": "配置文件已存在"
+  },
+  "profileNameAlreadyExists": {
+    "message": "配置文件名称已存在"
+  },
+  "currentProfileNotFound": {
+    "message": "未找到当前配置文件"
+  },
+  "cannotDeleteSystemProfiles": {
+    "message": "无法删除系统配置文件"
+  },
+  "switchProfileBeforeDeleting": {
+    "message": "删除前切换到另一个配置文件"
+  },
+  "failedSwitchProfile": {
+    "message": "切换配置文件失败"
+  },
+  "failedCreateProfile": {
+    "message": "创建配置文件失败"
+  },
+  "failedDeleteProfile": {
+    "message": "删除配置文件失败"
+  },
+  "profileResetSuccess": {
+    "message": "配置文件重置成功 ✓"
+  },
+  "resetFailed": {
+    "message": "重置失败"
+  },
+  "importedIntoProfile": {
+    "message": "已导入到配置文件"
+  },
+  "importedIntoNewProfile": {
+    "message": "已导入到新配置文件"
+  },
+  "exportedProfile": {
+    "message": "配置文件已导出 ✓"
+  },
+  "exportedDataWithQA": {
+    "message": "已导出数据和快速操作 ✓"
+  },
+  "failedExportProfile": {
+    "message": "导出配置文件失败"
+  },
+  "fullBackupExported": {
+    "message": "完整备份已导出 ✓"
+  },
+  "fullBackupRestored": {
+    "message": "完整备份已恢复 ✓"
+  },
+  "failedExportBackup": {
+    "message": "导出备份失败"
+  },
+  "backupRestoreFailed": {
+    "message": "备份恢复失败"
+  },
+  "invalidBackupStructure": {
+    "message": "备份文件结构无效"
+  },
+  "cannotNavigateNoActiveSFInstance": {
+    "message": "无法导航 - 没有活动的SuccessFactors实例"
+  },
+  "shortcutNotFound": {
+    "message": "未找到快捷方式"
+  },
+  "noteNotFound": {
+    "message": "未找到笔记"
+  },
+  "modalNotFound": {
+    "message": "未找到模态框"
+  },
+  "noEnvironmentAtPosition": {
+    "message": "该位置没有环境"
+  },
+  "noEnvironmentsSaved": {
+    "message": "还没有保存的环境"
+  },
+  "formElementsNotFound": {
+    "message": "未找到表单元素"
+  },
+  "guideEnvStep1Title": {
+    "message": "导航到SAP实例"
+  },
+  "guideEnvStep1Desc": {
+    "message": "转到您的SAP SuccessFactors、S/4HANA或BTP实例"
+  },
+  "guideEnvStep2Title": {
+    "message": "添加环境"
+  },
+  "guideEnvStep2Desc": {
+    "message": "点击<code>+ 环境</code>或使用<code>Cmd+E</code>"
+  },
+  "guideEnvStep3Title": {
+    "message": "随时切换"
+  },
+  "guideEnvStep3Desc": {
+    "message": "在保留页面路径的同时快速切换环境"
+  },
+  "welcomeGetStarted": {
+    "message": "开始使用"
+  },
+  "tooltipPinNote": {
+    "message": "Pin note to top"
+  },
+  "tooltipUnpinEnvironment": {
+    "message": "Unpin environment"
+  },
+  "tooltipUnpinShortcut": {
+    "message": "Unpin shortcut"
+  },
+  "inputTokens": {
+    "message": "Input Tokens"
+  },
+  "guideShortcutStep2Title": {
+    "message": "Add Shortcut"
+  },
+  "emptyNotesSubtitle": {
+    "message": "Store documentation, prompts, and code snippets"
+  },
+  "noteTypeIdea": {
+    "message": "💡 Idea"
+  },
+  "tooltipOpenShortcut": {
+    "message": "Open shortcut"
+  },
+  "model": {
+    "message": "Model"
+  },
+  "noteTypeAIPrompt": {
+    "message": "✨ AI Prompt"
+  },
+  "confirmClearSAPAICore": {
+    "message": "Clear SAP AI Core configuration? This cannot be undone."
+  },
+  "emptyEnvironmentsSubtitle": {
+    "message": "Save your SAP instances for quick access"
+  },
+  "tooltipDeleteProfile": {
+    "message": "Delete profile"
+  },
+  "emptyNotesTitle": {
+    "message": "No Saved Notes"
+  },
+  "aiResponseTitle": {
+    "message": "✨ AI Response"
+  },
+  "confirmProfileExists": {
+    "message": "Profile \"$1\" already exists.\n\nImport items into existing profile?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "guideNoteStep1Desc": {
+    "message": "Jot down IDs, URLs, or quick thoughts"
+  },
+  "aiDisclaimerPage": {
+    "message": "This response was generated by AI analyzing your page. While AI provides helpful insights, always verify information independently before making decisions."
+  },
+  "emptyNotesHowTo": {
+    "message": "How to Get Started"
+  },
+  "emptyShortcutsHowTo": {
+    "message": "How to Get Started"
+  },
+  "aiResponseNoteTitle": {
+    "message": "AI Response - $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "usedMonthsAgo": {
+    "message": "Used $1 months ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyShortcutsTitle": {
+    "message": "No Saved Shortcuts"
+  },
+  "tooltipUnpinNote": {
+    "message": "Unpin note"
+  },
+  "context": {
+    "message": "Context"
+  },
+  "usedToday": {
+    "message": "Used today"
+  },
+  "aiResponseOutputLabel": {
+    "message": "✨ AI Response (Output):"
+  },
+  "accessCount": {
+    "message": "$1 accesses",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "outputTokens": {
+    "message": "Output Tokens"
+  },
+  "emptyEnvironmentsTitle": {
+    "message": "No Saved Environments"
+  },
+  "guideNoteStep2Desc": {
+    "message": "Turn rough notes into polished documentation"
+  },
+  "usedDaysAgo": {
+    "message": "Used $1 days ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyEnvironmentsHowTo": {
+    "message": "How to Get Started"
+  },
+  "noteTypeDocumentation": {
+    "message": "📚 Documentation"
+  },
+  "guideEnvProTip": {
+    "message": "💡 专业提示：快速操作可让您立即跳转到特定的SF模块！"
+  },
+  "aiButtonReady": {
+    "message": "✨ AI"
+  },
+  "tooltipDelete": {
+    "message": "Delete"
+  },
+  "guideShortcutStep1Desc": {
+    "message": "Go to the page you want to shortcut"
+  },
+  "tooltipEdit": {
+    "message": "Edit"
+  },
+  "aiDisclaimerGeneric": {
+    "message": "This response was generated by AI. Always verify information independently before making decisions."
+  },
+  "aiDisclaimerToolkit": {
+    "message": "This response was generated by AI analyzing your toolkit data. While AI provides helpful insights, always verify information independently before making decisions."
+  },
+  "guideNoteStep1Title": {
+    "message": "Capture Ideas"
+  },
+  "aiInsightsLabel": {
+    "message": "✨ AI INSIGHTS"
+  },
+  "emptyShortcutsSubtitle": {
+    "message": "Create quick links to frequently-used SAP pages"
+  },
+  "tooltipPinEnvironment": {
+    "message": "Pin environment to top"
+  },
+  "cost": {
+    "message": "Cost"
+  },
+  "aiDisclaimerCostProjection": {
+    "message": "Cost projections based on AI-analyzed token usage. Always verify with your provider for accurate enterprise pricing."
+  },
+  "usedWeeksAgo": {
+    "message": "Used $1 weeks ago",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "guideShortcutStep2Desc": {
+    "message": "Click <code>+ Shortcut</code> or use <code>Cmd+J</code>"
+  },
+  "tooltipUnpin": {
+    "message": "Unpin"
+  },
+  "tooltipPinShortcut": {
+    "message": "Pin shortcut to top"
+  },
+  "guideNoteStep2Title": {
+    "message": "Use AI"
+  },
+  "aiDisclaimerVerifyInformation": {
+    "message": "This response was generated by AI. Always verify information independently before making decisions."
+  },
+  "guideShortcutProTip": {
+    "message": "Use shortcuts for deep links properly in your SAP system"
+  },
+  "aiContextStats": {
+    "message": "📊 Analyzed $1 environments, $2 shortcuts, $3 notes across $4 profiles",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      },
+      "3": {
+        "content": "$3"
+      },
+      "4": {
+        "content": "$4"
+      }
+    }
+  },
+  "noteTypeCode": {
+    "message": "💻 Code"
+  },
+  "aiContextQuery": {
+    "message": "🔍 \"$1\"",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "noteTypeNote": {
+    "message": "📝 Note"
+  },
+  "guideShortcutStep1Title": {
+    "message": "Navigate to Page"
+  },
+  "tooltipSwitchEnvironment": {
+    "message": "Switch to this environment"
+  },
+  "aiButtonAnalyzing": {
+    "message": "⏳ Analyzing..."
+  },
+  "generated": {
+    "message": "Generated"
+  },
+  "proTipLabel": {
+    "message": "Pro Tip"
+  },
+  "diagnosticsReportTitle": {
+    "message": "Diagnostics Report - $1 - $2",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "tooltipReloadEnvironment": {
+    "message": "Reload this environment"
+  },
+  "aiOriginalPromptLabel": {
+    "message": "📝 Original Prompt (Input):"
+  },
+  "tooltipCopyNote": {
+    "message": "Copy note content"
+  },
+  "guideNoteProTip": {
+    "message": "Store your AI prompts here for reuse"
+  },
+  "confirmCreateProfile": {
+    "message": "📦 Create New Profile?\n\nThis will create \"$1\" and import the file's data.\n\nContinue?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "usedYesterday": {
+    "message": "Used yesterday"
+  },
+  "tooltipPinToTop": {
+    "message": "Pin to top"
+  },
+  "diagnosticsReport": {
+    "message": "Diagnostics Report"
+  },
+  "itemPinned": {
+    "message": "项目已固定 ✓"
   }
 }

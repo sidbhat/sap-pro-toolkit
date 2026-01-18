@@ -1,4 +1,4 @@
-// SF Pro Toolkit - Actions Module
+// SAP Pro Toolkit - Actions Module
 // CRUD operations for environments, shortcuts, notes, and navigation
 
 // ==================== NAVIGATION ====================
@@ -23,7 +23,7 @@ window.navigateToShortcut = async function (url) {
     }
   } catch (error) {
     console.error('Navigation error:', error);
-    if (window.showToast) window.showToast('Failed to navigate', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedNavigate'), 'error');
   }
 }
 
@@ -45,19 +45,19 @@ window.switchEnvironment = async function (targetHostname, targetType) {
     });
 
     if (response.success) {
-      if (window.showToast) window.showToast(`Switching to ${targetHostname}...`, 'success');
+      if (window.showToast) window.showToast(window.i18n('switchingToEnvironment', [targetHostname]), 'success');
     } else {
-      if (window.showToast) window.showToast('Failed to switch environment', 'error');
+      if (window.showToast) window.showToast(window.i18n('failedSwitchEnvironment'), 'error');
     }
   } catch (error) {
     console.error('Environment switch error:', error);
-    if (window.showToast) window.showToast('Failed to switch environment', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedSwitchEnvironment'), 'error');
   }
 }
 
 window.quickSwitchToEnvironment = async function (envIndex) {
   if (window.environments.length === 0) {
-    if (window.showToast) window.showToast('No environments saved', 'warning');
+    if (window.showToast) window.showToast(window.i18n('noEnvironmentsSaved'), 'warning');
     return;
   }
 
@@ -79,13 +79,13 @@ window.quickSwitchToEnvironment = async function (envIndex) {
   });
 
   if (envIndex < 0 || envIndex >= sortedEnvs.length) {
-    if (window.showToast) window.showToast(`No environment at position ${envIndex + 1}`, 'warning');
+    if (window.showToast) window.showToast(window.i18n('noEnvironmentAtPosition', [(envIndex + 1).toString()]), 'warning');
     return;
   }
 
   const env = sortedEnvs[envIndex];
   if (!env) {
-    if (window.showToast) window.showToast(`No environment at position ${envIndex + 1}`, 'warning');
+    if (window.showToast) window.showToast(window.i18n('noEnvironmentAtPosition', [(envIndex + 1).toString()]), 'warning');
     return;
   }
 
@@ -103,7 +103,7 @@ window.addCurrentPageAsEnvironment = async function () {
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
 
   if (!tab || !tab.url) {
-    if (window.showToast) window.showToast('No active tab found', 'warning');
+    if (window.showToast) window.showToast(window.i18n('noActiveTab'), 'warning');
     return;
   }
 
@@ -149,7 +149,7 @@ window.closeAddEnvironmentModal = function () {
   modal.classList.remove('active');
   modal.removeAttribute('data-edit-id');
   document.getElementById('addEnvForm').reset();
-  document.querySelector('#addEnvModal .modal-header h3').textContent = 'Add Environment';
+  document.querySelector('#addEnvModal .modal-header h3').textContent = window.i18n('addEnvironmentTitle');
 };
 
 window.editEnvironment = async function (id) {
@@ -163,7 +163,7 @@ window.editEnvironment = async function (id) {
 
   const modal = document.getElementById('addEnvModal');
   modal.setAttribute('data-edit-id', id);
-  document.querySelector('#addEnvModal .modal-header h3').textContent = 'Edit Environment';
+  document.querySelector('#addEnvModal .modal-header h3').textContent = window.i18n('editEnvironmentTitle');
 
   modal.classList.add('active');
 };
@@ -185,7 +185,7 @@ window.deleteEnvironment = async function (id) {
   // BUG FIX: Reload data from storage before rendering
   await window.loadEnvironments();
   await window.renderEnvironments();
-  if (window.showToast) window.showToast('Environment deleted', 'success');
+  if (window.showToast) window.showToast(window.i18n('environmentDeleted'), 'success');
 };
 
 window.saveEnvironment = async function () {
@@ -194,13 +194,13 @@ window.saveEnvironment = async function () {
   let hostname = document.getElementById('envHostname').value.trim();
 
   if (!name) {
-    if (window.showToast) window.showToast('Environment name is required', 'warning');
+    if (window.showToast) window.showToast(window.i18n('environmentNameRequired'), 'warning');
     document.getElementById('envName').focus();
     return;
   }
 
   if (!hostname) {
-    if (window.showToast) window.showToast('Hostname is required', 'warning');
+    if (window.showToast) window.showToast(window.i18n('hostnameRequired'), 'warning');
     document.getElementById('envHostname').focus();
     return;
   }
@@ -210,13 +210,13 @@ window.saveEnvironment = async function () {
   let hostnameOnly = hostname.split('/')[0].split('?')[0].split('#')[0];
 
   if (/\s/.test(hostnameOnly)) {
-    if (window.showToast) window.showToast('Hostname cannot contain spaces', 'error');
+    if (window.showToast) window.showToast(window.i18n('hostnameCannotContainSpaces'), 'error');
     document.getElementById('envHostname').focus();
     return;
   }
 
   if (!/^[a-zA-Z0-9.-]+$/.test(hostnameOnly)) {
-    if (window.showToast) window.showToast('Hostname contains invalid characters. Use only letters, numbers, dots, and hyphens', 'error');
+    if (window.showToast) window.showToast(window.i18n('hostnameInvalidCharacters'), 'error');
     document.getElementById('envHostname').focus();
     return;
   }
@@ -224,7 +224,7 @@ window.saveEnvironment = async function () {
   document.getElementById('envHostname').value = hostname;
 
   const notes = document.getElementById('envNotes').value.trim();
-  
+
   // Get icon from icon picker or use default
   const iconInput = document.getElementById('envIcon');
   const icon = iconInput ? iconInput.value.trim() : '';
@@ -252,12 +252,12 @@ window.saveEnvironment = async function () {
     if (editId) {
       newEnvs = window.environments.filter(e => e.id !== editId);
       newEnvs.push(envObject);
-      if (window.showToast) window.showToast('Environment updated ✓', 'success');
+      if (window.showToast) window.showToast(window.i18n('environmentUpdated'), 'success');
       modal.removeAttribute('data-edit-id');
     } else {
       newEnvs = [...window.environments, envObject];
       newlyCreatedId = envObject.id;
-      if (window.showToast) window.showToast('Environment saved ✓', 'success');
+      if (window.showToast) window.showToast(window.i18n('environmentSaved'), 'success');
     }
 
     console.log('[Save Environment] New environments array:', newEnvs);
@@ -282,7 +282,7 @@ window.saveEnvironment = async function () {
     window.closeAddEnvironmentModal();
   } catch (error) {
     console.error('Failed to save environment:', error);
-    if (window.showToast) window.showToast('Failed to save environment. Please try again.', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedSaveEnvironment'), 'error');
   }
 };
 
@@ -292,7 +292,7 @@ window.addCurrentPageAsShortcut = async function () {
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
 
   if (!tab || !tab.url) {
-    if (window.showToast) window.showToast('No active tab found', 'warning');
+    if (window.showToast) window.showToast(window.i18n('noActiveTab'), 'warning');
     return;
   }
 
@@ -324,14 +324,14 @@ window.closeAddShortcutModal = function () {
   modal.classList.remove('active');
   modal.removeAttribute('data-edit-id');
   document.getElementById('addShortcutForm').reset();
-  document.querySelector('#addShortcutModal .modal-header h3').textContent = 'Add Shortcut';
+  document.querySelector('#addShortcutModal .modal-header h3').textContent = window.i18n('addShortcutTitle');
 };
 
 window.editShortcut = function (id) {
   const shortcut = window.shortcuts.find(s => s.id === id);
 
   if (!shortcut) {
-    if (window.showToast) window.showToast('Shortcut not found. Try reloading the extension.', 'error');
+    if (window.showToast) window.showToast(window.i18n('shortcutNotFound'), 'error');
     return;
   }
 
@@ -344,7 +344,7 @@ window.editShortcut = function (id) {
   const headerEl = document.querySelector('#addShortcutModal .modal-header h3');
 
   if (!nameEl || !pathEl || !modalEl) {
-    if (window.showToast) window.showToast('Error: Form elements not found', 'error');
+    if (window.showToast) window.showToast(window.i18n('formElementsNotFound'), 'error');
     return;
   }
 
@@ -354,7 +354,7 @@ window.editShortcut = function (id) {
   iconEl.value = shortcut.icon || window.DEFAULT_ICONS.shortcut;
   tagsEl.value = shortcut.tags ? shortcut.tags.join(', ') : '';
   modalEl.setAttribute('data-edit-id', id);
-  if (headerEl) headerEl.textContent = 'Edit Shortcut';
+  if (headerEl) headerEl.textContent = window.i18n('editShortcutTitle');
 
   window.openAddShortcutModal();
 };
@@ -376,7 +376,7 @@ window.deleteShortcut = async function (id) {
   // BUG FIX: Reload data from storage before rendering
   await window.loadShortcuts();
   await window.renderShortcuts();
-  if (window.showToast) window.showToast('Shortcut deleted', 'success');
+  if (window.showToast) window.showToast(window.i18n('shortcutDeleted'), 'success');
 };
 
 window.saveShortcut = async function () {
@@ -389,12 +389,12 @@ window.saveShortcut = async function () {
   const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
 
   if (!name || !url) {
-    if (window.showToast) window.showToast('Please fill in required fields', 'warning');
+    if (window.showToast) window.showToast(window.i18n('fillRequiredFields'), 'warning');
     return;
   }
 
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    if (window.showToast) window.showToast('URL must start with http:// or https:// (external links only)', 'warning');
+    if (window.showToast) window.showToast(window.i18n('urlMustBeExternal'), 'warning');
     document.getElementById('shortcutPath').focus();
     return;
   }
@@ -407,30 +407,30 @@ window.saveShortcut = async function () {
 
   if (editId) {
     newShortcuts = window.shortcuts.filter(s => s.id !== editId);
-    newShortcuts.push({ 
-      id: editId, 
-      name, 
-      url, 
-      notes, 
-      icon: icon || window.DEFAULT_ICONS.shortcut, 
+    newShortcuts.push({
+      id: editId,
+      name,
+      url,
+      notes,
+      icon: icon || window.DEFAULT_ICONS.shortcut,
       iconType: 'sap',
-      tags 
+      tags
     });
-    if (window.showToast) window.showToast('Shortcut updated ✓', 'success');
+    if (window.showToast) window.showToast(window.i18n('shortcutUpdated'), 'success');
     modal.removeAttribute('data-edit-id');
   } else {
-    const newShortcut = { 
-      id: `shortcut-${Date.now()}`, 
-      name, 
-      url, 
-      notes, 
-      icon: icon || window.DEFAULT_ICONS.shortcut, 
+    const newShortcut = {
+      id: `shortcut-${Date.now()}`,
+      name,
+      url,
+      notes,
+      icon: icon || window.DEFAULT_ICONS.shortcut,
       iconType: 'sap',
-      tags 
+      tags
     };
     newShortcuts = [...window.shortcuts, newShortcut];
     newlyCreatedId = newShortcut.id;
-    if (window.showToast) window.showToast('Shortcut saved ✓', 'success');
+    if (window.showToast) window.showToast(window.i18n('shortcutSaved'), 'success');
   }
 
   window.setShortcuts(newShortcuts);
@@ -448,7 +448,7 @@ window.addCurrentPageAsShortcut = async function () {
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
 
   if (!tab || !tab.url) {
-    if (window.showToast) window.showToast('No active tab found', 'warning');
+    if (window.showToast) window.showToast(window.i18n('noActiveTab'), 'warning');
     return;
   }
 
@@ -510,14 +510,14 @@ window.closeAddNoteModal = function () {
   if (modelGroup) modelGroup.style.display = 'none';
 
   document.getElementById('addNoteForm').reset();
-  document.querySelector('#addNoteModal .modal-header h3').textContent = 'Scratch Note';
+  document.querySelector('#addNoteModal .modal-header h3').textContent = window.i18n('addNoteTitle');
 };
 
 window.editNote = async function (id) {
   const note = window.notes.find(n => n.id === id);
   if (!note) {
     console.error('[Edit Note] Note not found:', id);
-    if (window.showToast) window.showToast('Note not found. Try reloading the extension.', 'error');
+    if (window.showToast) window.showToast(window.i18n('noteNotFound'), 'error');
     return;
   }
 
@@ -533,7 +533,7 @@ window.editNote = async function (id) {
   const modal = document.getElementById('addNoteModal');
   if (!modal) {
     console.error('[Edit Note] Modal not found: addNoteModal');
-    if (window.showToast) window.showToast('Error: Modal not found', 'error');
+    if (window.showToast) window.showToast(window.i18n('modalNotFound'), 'error');
     return;
   }
 
@@ -543,7 +543,7 @@ window.editNote = async function (id) {
 
   if (!titleEl || !contentEl || !iconEl) {
     console.error('[Edit Note] Form elements not found:', { titleEl, contentEl, iconEl });
-    if (window.showToast) window.showToast('Error: Form elements not found', 'error');
+    if (window.showToast) window.showToast(window.i18n('formElementsNotFound'), 'error');
     return;
   }
 
@@ -553,7 +553,7 @@ window.editNote = async function (id) {
 
   modal.setAttribute('data-edit-id', id);
   const headerEl = document.querySelector('#addNoteModal .modal-header h3');
-  if (headerEl) headerEl.textContent = 'Edit Note';
+  if (headerEl) headerEl.textContent = window.i18n('editNoteTitle');
 
   const downloadBtn = document.getElementById('downloadNoteBtn');
   if (downloadBtn) downloadBtn.style.display = 'inline-flex';
@@ -611,7 +611,7 @@ window.deleteNote = async function (id) {
   // BUG FIX: Reload data from storage before rendering
   await window.loadNotes();
   await window.renderNotes();
-  if (window.showToast) window.showToast('Note deleted', 'success');
+  if (window.showToast) window.showToast(window.i18n('noteDeleted'), 'success');
 };
 
 window.saveNote = async function () {
@@ -624,7 +624,7 @@ window.saveNote = async function () {
   let noteType = noteTypeRadio ? noteTypeRadio.value : 'note';
 
   if (!title) {
-    if (window.showToast) window.showToast('Please enter a title', 'warning');
+    if (window.showToast) window.showToast(window.i18n('enterNoteTitle'), 'warning');
     return;
   }
 
@@ -679,12 +679,12 @@ window.saveNote = async function () {
   if (editId) {
     newNotes = window.notes.filter(n => n.id !== editId);
     newNotes.push(noteObject);
-    if (window.showToast) window.showToast('Note updated ✓', 'success');
+    if (window.showToast) window.showToast(window.i18n('noteUpdated'), 'success');
     modal.removeAttribute('data-edit-id');
   } else {
     newNotes = [...window.notes, noteObject];
     newlyCreatedId = noteObject.id;
-    if (window.showToast) window.showToast('Note saved ✓', 'success');
+    if (window.showToast) window.showToast(window.i18n('noteSaved'), 'success');
   }
 
   window.setNotes(newNotes);
@@ -712,10 +712,10 @@ window.copyNoteContent = async function (id, btn) {
       setTimeout(() => btn.classList.remove('copy-success'), 2000);
     }
 
-    if (window.showToast) window.showToast('Note copied ✓', 'success');
+    if (window.showToast) window.showToast(window.i18n('noteCopied'), 'success');
   } catch (error) {
     console.error('Failed to copy note:', error);
-    if (window.showToast) window.showToast('Failed to copy note', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedCopyNote'), 'error');
   }
 };
 
@@ -723,7 +723,7 @@ window.copyNoteContent = async function (id, btn) {
 window.downloadNote = async function (id) {
   const note = window.notes.find(n => n.id === id);
   if (!note) {
-    if (window.showToast) window.showToast('Note not found', 'error');
+    if (window.showToast) window.showToast(window.i18n('noteNotFound'), 'error');
     return;
   }
 
@@ -745,20 +745,32 @@ ${note.content || ''}
     .replace(/^-+|-+$/g, '')
     .substring(0, 50);
 
+  // Detect if this is an AI-generated note
+  const isAINote = note.noteType === 'ai-prompt' || note.title.startsWith('AI Response');
+  
+  // Use conditional header and disclaimer based on AI detection
+  const header = isAINote 
+    ? window.i18n('exportHeaderToolkitAINote')
+    : window.i18n('exportHeaderToolkitNote');
+  
+  const disclaimer = isAINote 
+    ? window.i18n('aiDisclaimerExport')
+    : window.i18n('toolkitDisclaimerExport');
+
   window.downloadFile({
     content: content,
     filename: `note-${safeTitle}-${timestamp}`,
     format: 'txt',
-    title: note.title
+    title: header,
+    headerDisclaimer: disclaimer
   });
 };
 
 // Legacy wrapper - uses downloadFile() utility
 window.downloadCurrentNoteContent = async function (title, content) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const prefixedTitle = title.startsWith('AI Response') ? title : `AI Response - ${title}`;
 
-  const formattedContent = `${prefixedTitle}
+  const formattedContent = `${title}
 Generated: ${new Date().toLocaleString()}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -768,17 +780,19 @@ ${content}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `;
 
-  const safeTitle = prefixedTitle
+  const safeTitle = title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .substring(0, 50);
 
+  // This function is always called after AI prompt execution, so it's always AI content
   window.downloadFile({
     content: formattedContent,
-    filename: `${safeTitle}-${timestamp}`,
+    filename: `ai-analysis-${safeTitle}-${timestamp}`,
     format: 'txt',
-    title: prefixedTitle
+    title: window.i18n('exportHeaderToolkitAIAnalysis'),
+    headerDisclaimer: window.i18n('aiDisclaimerExport')
   });
 };
 
@@ -789,16 +803,16 @@ window.copyNoteFromModal = async function () {
 
   const content = contentInput.value;
   if (!content) {
-    if (window.showToast) window.showToast('No content to copy', 'warning');
+    if (window.showToast) window.showToast(window.i18n('noContentToCopy'), 'warning');
     return;
   }
 
   try {
     await navigator.clipboard.writeText(content);
-    if (window.showToast) window.showToast('Content copied to clipboard', 'success');
+    if (window.showToast) window.showToast(window.i18n('contentCopied'), 'success');
   } catch (err) {
     console.error('[Copy Note] Failed to copy:', err);
-    if (window.showToast) window.showToast('Failed to copy content', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedCopyContent'), 'error');
   }
 };
 
@@ -841,8 +855,8 @@ window.togglePin = async function (id, type = 'environment') {
 
   await renderFunction();
 
-  const message = item.pinned ? `${itemLabel} pinned ⭐` : `${itemLabel} unpinned`;
-  if (window.showToast) window.showToast(message, 'success');
+  const messageKey = item.pinned ? 'itemPinned' : 'itemUnpinned';
+  if (window.showToast) window.showToast(window.i18n(messageKey, [itemLabel]), 'success');
 };
 
 // ==================== PROFILE SWITCHING ====================
@@ -865,7 +879,7 @@ window.switchProfile = async function (profileId) {
     console.error('[Switch Profile] Profile not found in availableProfiles!');
     console.error('[Switch Profile] Searched for:', profileId);
     console.error('[Switch Profile] Available IDs:', window.availableProfiles.map(p => p.id));
-    if (window.showToast) window.showToast('Profile not found', 'error');
+    if (window.showToast) window.showToast(window.i18n('profileNotFound'), 'error');
     return;
   }
 
@@ -890,11 +904,11 @@ window.switchProfile = async function (profileId) {
     await window.renderProfileMenu();
     document.getElementById('profileMenu')?.classList.remove('active');
 
-    if (window.showToast) window.showToast(`Switched to ${profile.name}`, 'success');
+    if (window.showToast) window.showToast(window.i18n('switchedToProfile', [profile.name]), 'success');
 
   } catch (error) {
     console.error('Failed to switch profile:', error);
-    if (window.showToast) window.showToast('Failed to switch profile', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedSwitchProfile'), 'error');
   }
 };
 
@@ -966,7 +980,7 @@ window.saveAllQuickActions = async function () {
     console.log('[Save QA] Change details:', changes);
 
     if (changesMade === 0) {
-      if (window.showToast) window.showToast('No changes to save', 'info');
+      if (window.showToast) window.showToast(window.i18n('noChangesToSave'), 'info');
       return;
     }
 
@@ -981,14 +995,14 @@ window.saveAllQuickActions = async function () {
     window.setSolutions(solutionsData);
     console.log('[Save QA] Updated global solutions variable');
 
-    if (window.showToast) window.showToast(`${changesMade} Quick Action(s) saved ✓`, 'success');
+    if (window.showToast) window.showToast(window.i18n('quickActionsSaved', [changesMade.toString()]), 'success');
 
     if (window.renderAllProfilesQuickActions) await window.renderAllProfilesQuickActions();
     await window.renderEnvironments();
 
   } catch (error) {
     console.error('[Save All Quick Actions] Failed:', error);
-    if (window.showToast) window.showToast('Failed to save Quick Actions', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedSaveQuickActions'), 'error');
   }
 };
 
@@ -998,10 +1012,10 @@ window.openPopularOssNote = async function (noteNumber) {
   try {
     const ossNoteUrl = `https://launchpad.support.sap.com/#/notes/${noteNumber}`;
     await chrome.tabs.create({ url: ossNoteUrl });
-    if (window.showToast) window.showToast(`Opening OSS Note ${noteNumber} ✓`, 'success');
+    if (window.showToast) window.showToast(window.i18n('openingOSSNote', [noteNumber.toString()]), 'success');
   } catch (error) {
     console.error('[Popular OSS Note] Failed to open:', error);
-    if (window.showToast) window.showToast('Failed to open OSS Note', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedOpenOSSNote'), 'error');
   }
 };
 
@@ -1113,7 +1127,7 @@ window.createCustomProfile = async function (profileId, profileName, importData 
 
     // Check if profile already exists
     if (customProfiles.some(p => p.id === profileId)) {
-      if (window.showToast) window.showToast('Profile already exists', 'warning');
+      if (window.showToast) window.showToast(window.i18n('profileAlreadyExists'), 'warning');
       return false;
     }
 
@@ -1186,13 +1200,13 @@ window.createCustomProfile = async function (profileId, profileName, importData 
     // Switch to new profile (this will also re-render the menu)
     await window.switchProfile(profileId);
 
-    if (window.showToast) window.showToast(`Profile "${profileName}" created ✓`, 'success');
+    if (window.showToast) window.showToast(window.i18n('profileCreated', [profileName]), 'success');
 
     return true;
 
   } catch (error) {
     console.error('[Create Profile] Failed:', error);
-    if (window.showToast) window.showToast(`Failed to create profile: ${error.message}`, 'error');
+    if (window.showToast) window.showToast(window.i18n('failedCreateProfile', [error.message]), 'error');
     return false;
   }
 };
@@ -1207,20 +1221,20 @@ window.deleteCustomProfile = async function (profileId) {
     // Get profile info
     const profile = window.availableProfiles.find(p => p.id === profileId);
     if (!profile) {
-      if (window.showToast) window.showToast('Profile not found', 'error');
+      if (window.showToast) window.showToast(window.i18n('profileNotFound'), 'error');
       return;
     }
 
     // Safety check: can't delete system profiles
     const systemProfiles = ['profile-global', 'profile-successfactors', 'profile-s4hana', 'profile-btp', 'profile-executive', 'profile-golive', 'profile-ai-joule'];
     if (systemProfiles.includes(profileId)) {
-      if (window.showToast) window.showToast('Cannot delete system profiles', 'error');
+      if (window.showToast) window.showToast(window.i18n('cannotDeleteSystemProfiles'), 'error');
       return;
     }
 
     // Safety check: can't delete active profile
     if (profileId === window.currentProfile) {
-      if (window.showToast) window.showToast('Switch to another profile before deleting', 'warning');
+      if (window.showToast) window.showToast(window.i18n('switchProfileBeforeDeleting'), 'warning');
       return;
     }
 
@@ -1256,13 +1270,13 @@ window.deleteCustomProfile = async function (profileId) {
     // Re-render profile menu
     await window.renderProfileMenu();
 
-    if (window.showToast) window.showToast(`Profile "${profile.name}" deleted`, 'success');
+    if (window.showToast) window.showToast(window.i18n('profileDeleted', [profile.name]), 'success');
 
     console.log('[Delete Profile] Profile deleted successfully');
 
   } catch (error) {
     console.error('[Delete Profile] Failed:', error);
-    if (window.showToast) window.showToast(`Failed to delete profile: ${error.message}`, 'error');
+    if (window.showToast) window.showToast(window.i18n('failedDeleteProfile', [error.message]), 'error');
   }
 };
 
@@ -1284,7 +1298,7 @@ window.saveNewProfile = async function () {
   const icon = iconInput ? iconInput.value.trim() : '📁';
 
   if (!name) {
-    if (window.showToast) window.showToast('Profile name is required', 'warning');
+    if (window.showToast) window.showToast(window.i18n('profileNameRequired'), 'warning');
     nameInput.focus();
     return;
   }
@@ -1294,7 +1308,7 @@ window.saveNewProfile = async function () {
 
   // Check if profile with this ID already exists
   if (window.availableProfiles.some(p => p.id === profileId)) {
-    if (window.showToast) window.showToast('Profile with this name already exists', 'warning');
+    if (window.showToast) window.showToast(window.i18n('profileNameAlreadyExists'), 'warning');
     nameInput.focus();
     return;
   }
@@ -1332,7 +1346,7 @@ window.exportCurrentProfile = async function () {
   try {
     const profile = window.availableProfiles.find(p => p.id === window.currentProfile);
     if (!profile) {
-      if (window.showToast) window.showToast('Profile not found', 'error');
+      if (window.showToast) window.showToast(window.i18n('profileNotFound'), 'error');
       return;
     }
 
@@ -1379,11 +1393,11 @@ window.exportCurrentProfile = async function () {
 
     const itemCount = window.shortcuts.length + window.environments.length + window.notes.length;
     const qaCount = exportSolutions?.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0) || 0;
-    if (window.showToast) window.showToast(`Exported ${profile.name}: ${itemCount} items + ${qaCount} Quick Actions ✓`, 'success');
+    if (window.showToast) window.showToast(window.i18n('exportedProfile', [profile.name, itemCount.toString(), qaCount.toString()]), 'success');
 
   } catch (error) {
     console.error('[Export Current Profile] Failed:', error);
-    if (window.showToast) window.showToast('Failed to export profile', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedExportProfile'), 'error');
   }
 };
 
@@ -1454,7 +1468,7 @@ window.exportAllProfiles = async function () {
 
     if (window.showToast) {
       window.showToast(
-        `Full backup exported ✓\n${window.availableProfiles.length} profiles, ${totalItems} items, ${totalQA} Quick Actions`,
+        window.i18n('fullBackupExported', [window.availableProfiles.length.toString(), totalItems.toString(), totalQA.toString()]),
         'success'
       );
     }
@@ -1463,7 +1477,7 @@ window.exportAllProfiles = async function () {
 
   } catch (error) {
     console.error('[Export All] Failed:', error);
-    if (window.showToast) window.showToast('Failed to export backup', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedExportBackup'), 'error');
   }
 };
 
@@ -1512,11 +1526,11 @@ window.exportJsonToFile = async function () {
 
     const itemCount = window.shortcuts.length + window.environments.length + window.notes.length;
     const qaCount = exportSolutions?.reduce((sum, sol) => sum + (sol.quickActions?.length || 0), 0) || 0;
-    if (window.showToast) window.showToast(`Exported ${itemCount} items + ${qaCount} Quick Actions ✓ | Edit "solutions" array to customize Quick Actions`, 'success');
+    if (window.showToast) window.showToast(window.i18n('exportedDataWithQA', [itemCount.toString(), qaCount.toString()]), 'success');
 
   } catch (error) {
     console.error('Export failed:', error);
-    if (window.showToast) window.showToast('Failed to export configuration', 'error');
+    if (window.showToast) window.showToast(window.i18n('failedExportConfiguration'), 'error');
   }
 };
 
@@ -1532,7 +1546,7 @@ window.handleFileImport = async function (event) {
       data = JSON.parse(text);
     } catch (parseError) {
       console.error('JSON parse error:', parseError);
-      if (window.showToast) window.showToast('Invalid JSON file. Please check file format.', 'error');
+      if (window.showToast) window.showToast(window.i18n('invalidJSONFile'), 'error');
       event.target.value = '';
       return;
     }
@@ -1546,7 +1560,7 @@ window.handleFileImport = async function (event) {
 
     // Validate that file has data to import
     if (!data.shortcuts && !data.environments && !data.notes) {
-      if (window.showToast) window.showToast('Invalid file structure. Expected shortcuts, environments, or notes.', 'error');
+      if (window.showToast) window.showToast(window.i18n('invalidFileStructure'), 'error');
       event.target.value = '';
       return;
     }
@@ -1574,13 +1588,13 @@ window.handleFileImport = async function (event) {
     if (success) {
       const itemCount = (data.shortcuts?.length || 0) + (data.environments?.length || 0) + (data.notes?.length || 0);
       if (window.showToast) {
-        window.showToast(`Imported ${itemCount} items into new profile "${profileName}" ✓`, 'success');
+        window.showToast(window.i18n('importedIntoNewProfile', [itemCount.toString(), profileName]), 'success');
       }
     }
 
   } catch (error) {
     console.error('Import failed:', error);
-    if (window.showToast) window.showToast(`Import failed: ${error.message}`, 'error');
+    if (window.showToast) window.showToast(window.i18n('importFailed', [error.message]), 'error');
   }
 
   event.target.value = '';
@@ -1594,7 +1608,7 @@ async function handleFullBackupImport(data, event) {
     console.log('[Import Full Backup] Starting...');
 
     if (!data.customProfiles || !data.profilesData) {
-      if (window.showToast) window.showToast('Invalid backup file structure', 'error');
+      if (window.showToast) window.showToast(window.i18n('invalidBackupStructure'), 'error');
       event.target.value = '';
       return;
     }
@@ -1662,7 +1676,7 @@ async function handleFullBackupImport(data, event) {
 
     if (window.showToast) {
       window.showToast(
-        `Full backup restored ✓\n${customProfilesCount} custom profiles, ${totalItems} items`,
+        window.i18n('fullBackupRestored', [customProfilesCount.toString(), totalItems.toString()]),
         'success'
       );
     }
@@ -1671,7 +1685,7 @@ async function handleFullBackupImport(data, event) {
 
   } catch (error) {
     console.error('[Import Full Backup] Failed:', error);
-    if (window.showToast) window.showToast(`Backup restore failed: ${error.message}`, 'error');
+    if (window.showToast) window.showToast(window.i18n('backupRestoreFailed', [error.message]), 'error');
   }
 
   event.target.value = '';
@@ -1784,15 +1798,15 @@ async function handleSingleProfileImport(data, event) {
     window.renderNotes();
 
     if (importCount === 0 && importSummary.length === 0) {
-      if (window.showToast) window.showToast('No new items to import', 'warning');
+      if (window.showToast) window.showToast(window.i18n('noNewItemsToImport'), 'warning');
     } else {
       const summary = importSummary.join(', ');
-      if (window.showToast) window.showToast(`Imported ${summary} into ${profileName} ✓`, 'success');
+      if (window.showToast) window.showToast(window.i18n('importedIntoProfile', [summary, profileName]), 'success');
     }
 
   } catch (error) {
     console.error('[Import Single Profile] Failed:', error);
-    if (window.showToast) window.showToast(`Import failed: ${error.message}`, 'error');
+    if (window.showToast) window.showToast(window.i18n('importFailed', [error.message]), 'error');
   }
 
   event.target.value = '';
@@ -1808,7 +1822,7 @@ window.resetProfile = async function () {
   try {
     const profile = window.availableProfiles.find(p => p.id === window.currentProfile);
     if (!profile) {
-      if (window.showToast) window.showToast('Current profile not found', 'error');
+      if (window.showToast) window.showToast(window.i18n('currentProfileNotFound'), 'error');
       return;
     }
 
@@ -1889,14 +1903,14 @@ window.resetProfile = async function () {
     await window.renderNotes();
 
     if (window.showToast) {
-      window.showToast(`Profile "${profile.name}" reset successfully ✓`, 'success');
+      window.showToast(window.i18n('profileResetSuccess', [profile.name]), 'success');
     }
 
     console.log(`[Reset Profile] ✅ Reset complete`);
 
   } catch (error) {
     console.error('[Reset Profile] Failed:', error);
-    if (window.showToast) window.showToast(`Reset failed: ${error.message}`, 'error');
+    if (window.showToast) window.showToast(window.i18n('resetFailed', [error.message]), 'error');
   }
 };
 
@@ -1924,8 +1938,7 @@ window.toggleTheme = async function () {
     themeBtn.setAttribute('data-theme-active', nextTheme !== 'auto' ? 'true' : 'false');
   }
 
-  const themeLabels = { auto: 'Auto', light: 'Light', dark: 'Dark' };
-  if (window.showToast) window.showToast(`Theme: ${themeLabels[nextTheme]}`, 'success');
+  if (window.showToast) window.showToast(window.i18n('themeChanged', [nextTheme]), 'success');
 };
 
 // ==================== COLLAPSIBLE SECTIONS ====================

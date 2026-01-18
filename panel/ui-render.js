@@ -1,4 +1,4 @@
-// SF Pro Toolkit - UI Rendering Module
+// SAP Pro Toolkit - UI Rendering Module
 // All rendering functions for environments, shortcuts, notes, and UI updates
 
 // ==================== UI RENDERING - ENVIRONMENTS ====================
@@ -52,33 +52,33 @@ window.renderEnvironments = async function (newlyCreatedId = null) {
           <div class="empty-state-enhanced">
             <div class="empty-state-header">
               <div class="empty-state-icon">🌐</div>
-              <h3 class="empty-state-title">No Saved Environments</h3>
-              <p class="empty-state-subtitle">Save your SAP instances for quick access</p>
+              <h3 class="empty-state-title">${window.i18n('emptyEnvironmentsTitle')}</h3>
+              <p class="empty-state-subtitle">${window.i18n('emptyEnvironmentsSubtitle')}</p>
             </div>
             
             <details class="empty-state-guidance">
               <summary class="guidance-toggle">
                 <span class="chevron-icon">▶</span>
-                <span>How to Get Started</span>
+                <span>${window.i18n('emptyEnvironmentsHowTo')}</span>
               </summary>
               <div class="guidance-content">
                 <div class="guidance-step">
-                  <h4 data-step-number="1">Navigate to Your SAP System</h4>
-                  <p>Open any SAP SuccessFactors, S/4HANA, or BTP instance in your browser</p>
+                  <h4 data-step-number="1">${window.i18n('guideEnvStep1Title', [], 'Navigate to Your SAP System')}</h4>
+                  <p>${window.i18n('guideEnvStep1Desc', [], 'Open any SAP SuccessFactors, S/4HANA, or BTP instance in your browser')}</p>
                 </div>
                 
                 <div class="guidance-step">
-                  <h4 data-step-number="2">Save the Environment</h4>
-                  <p>Click the <code>+ Environment</code> button or use <code>Cmd+E</code> keyboard shortcut</p>
+                  <h4 data-step-number="2">${window.i18n('guideEnvStep2Title', [], 'Save the Environment')}</h4>
+                  <p>${window.i18n('guideEnvStep2Desc', [], 'Click the <code>+ Environment</code> button or use <code>Cmd+E</code> keyboard shortcut')}</p>
                 </div>
                 
                 <div class="guidance-step">
-                  <h4 data-step-number="3">Switch Between Environments</h4>
-                  <p>Use <code>Cmd+Shift+1-2</code> for quick switching, or click the switch icon</p>
+                  <h4 data-step-number="3">${window.i18n('guideEnvStep3Title', [], 'Switch Between Environments')}</h4>
+                  <p>${window.i18n('guideEnvStep3Desc', [], 'Use <code>Cmd+Shift+1-2</code> for quick switching, or click the switch icon')}</p>
                 </div>
                 
                 <div class="guidance-tip">
-                  <strong>💡 Pro Tip:</strong> Pin frequently-used environments to keep them at the top of your list
+                  <strong>💡 ${window.i18n('proTipLabel', [], 'Pro Tip')}:</strong> ${window.i18n('guideEnvProTip', [], 'Pin frequently-used environments to keep them at the top of your list')}
                 </div>
               </div>
             </details>
@@ -88,7 +88,7 @@ window.renderEnvironments = async function (newlyCreatedId = null) {
                 <line x1="12" y1="5" x2="12" y2="19"/>
                 <line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
-              Add Current Instance
+              ${window.i18n('addCurrentInstance')}
             </button>
           </div>
         </td>
@@ -167,30 +167,33 @@ window.renderEnvironments = async function (newlyCreatedId = null) {
     let line3HTML = '';
     if (env.notes) {
       line3HTML = `<div class="env-notes">${env.notes}</div>`;
-    } else if (env.lastAccessed && !isActive) {
-      const daysSinceAccess = Math.floor((Date.now() - env.lastAccessed) / (1000 * 60 * 60 * 24));
-      const accessCount = env.accessCount || 0;
+    }
+    // Time-based usage indicator
+    let usageLabel = '';
+    if (env.lastAccessed && !isActive) {
+      const lastAccessed = new Date(env.lastAccessed);
+      const now = new Date();
+      const diffInDays = Math.floor((now - lastAccessed) / (1000 * 60 * 60 * 24));
 
-      let usageText = '';
-      if (daysSinceAccess === 0) {
-        usageText = `Used today`;
-      } else if (daysSinceAccess === 1) {
-        usageText = `Used yesterday`;
-      } else if (daysSinceAccess < 7) {
-        usageText = `Used ${daysSinceAccess} days ago`;
-      } else if (daysSinceAccess < 30) {
-        const weeks = Math.floor(daysSinceAccess / 7);
-        usageText = `Used ${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+      if (diffInDays === 0) {
+        usageLabel = window.i18n('usedToday');
+      } else if (diffInDays === 1) {
+        usageLabel = window.i18n('usedYesterday');
+      } else if (diffInDays < 7) {
+        usageLabel = window.i18n('usedDaysAgo', [diffInDays]);
+      } else if (diffInDays < 30) {
+        const weeks = Math.floor(diffInDays / 7);
+        usageLabel = window.i18n('usedWeeksAgo', [weeks]);
       } else {
-        const months = Math.floor(daysSinceAccess / 30);
-        usageText = `Used ${months} ${months === 1 ? 'month' : 'months'} ago`;
+        const months = Math.floor(diffInDays / 30);
+        usageLabel = window.i18n('usedMonthsAgo', [months]);
       }
 
+      const accessCount = env.accessCount || 0;
       if (accessCount > 1) {
-        usageText += ` • ${accessCount} times`;
+        usageLabel += ` • ${window.i18n('accessCount', [accessCount])}`;
       }
-
-      line3HTML = `<div class="env-usage-stats">${usageText}</div>`;
+      line3HTML = `<div class="env-usage-stats">${usageLabel}</div>`;
     }
 
     const isNewlyCreated = newlyCreatedId && env.id === newlyCreatedId;
@@ -201,9 +204,13 @@ window.renderEnvironments = async function (newlyCreatedId = null) {
           <div class="env-name">
             <span class="status-dot ${env.type} ${isActive ? 'active' : ''}">${iconHTML}</span>
             ${env.name}
-            <button class="pin-btn ${env.pinned ? 'pinned' : ''}" data-id="${env.id}" title="${env.pinned ? 'Unpin environment' : 'Pin environment to top'}" tabindex="0">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="${env.pinned ? '#F59E0B' : 'currentColor'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: ${env.pinned ? '1' : '0.3'}">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            <button class="pin-btn ${env.pinned ? 'pinned' : ''}" 
+              data-id="${env.id}" 
+              data-type="environment"
+              title="${env.pinned ? window.i18n('tooltipUnpinEnvironment') : window.i18n('tooltipPinEnvironment')}"
+              style="opacity: ${env.pinned ? '1' : '0.3'};">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="${env.pinned ? '#F59E0B' : 'currentColor'}" stroke="none">
+                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
               </svg>
             </button>
           </div>
@@ -212,20 +219,20 @@ window.renderEnvironments = async function (newlyCreatedId = null) {
         </td>
         <td class="env-actions-cell">
           <div class="table-actions">
-            <button class="icon-btn primary switch-btn" data-hostname="${env.hostname}" data-type="${env.type}" title="${isActive ? 'Reload this environment' : 'Switch to this environment'}">
+            <button class="icon-btn primary switch-btn" data-hostname="${env.hostname}" data-type="${env.type}"              title="${isActive ? window.i18n('tooltipReloadEnvironment') : window.i18n('tooltipSwitchEnvironment')}">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="23 4 23 10 17 10"/>
                 <polyline points="1 20 1 14 7 14"/>
                 <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
               </svg>
             </button>
-            <button class="icon-btn edit-btn" data-id="${env.id}" title="Edit" tabindex="0">
+            <button class="icon-btn text-btn edit-btn" title="${window.i18n('tooltipEdit')}" data-id="${env.id}">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
             </button>
-            <button class="icon-btn danger delete-btn" data-id="${env.id}" title="Delete" tabindex="0">
+            <button class="icon-btn text-btn delete-btn" title="${window.i18n('tooltipDelete')}" data-id="${env.id}">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -274,11 +281,11 @@ function attachQuickActionBadgeHandlers(quickActions) {
         console.log('[Quick Action] Target URL:', targetUrl);
 
         await chrome.tabs.update(tab.id, { url: targetUrl });
-        if (window.showToast) window.showToast(`Navigating to ${badge.textContent.trim()}...`, 'success');
+        if (window.showToast) window.showToast(window.i18n('navigatingTo', [badge.textContent.trim()]), 'success');
 
       } catch (error) {
         console.error('[Quick Action] Navigation failed:', error);
-        if (window.showToast) window.showToast('Failed to navigate', 'error');
+        if (window.showToast) window.showToast(window.i18n('failedToNavigate'), 'error');
       }
     });
   });
@@ -337,34 +344,29 @@ window.renderShortcuts = async function (newlyCreatedId = null) {
         <td colspan="3">
           <div class="empty-state-enhanced">
             <div class="empty-state-header">
-              <div class="empty-state-icon">⚡</div>
-              <h3 class="empty-state-title">No Saved Shortcuts</h3>
-              <p class="empty-state-subtitle">Create quick links to frequently-used SAP pages</p>
+              <div class="empty-state-icon">🔗</div>
+              <h3 class="empty-state-title">${window.i18n('emptyShortcutsTitle')}</h3>
+              <p class="empty-state-subtitle">${window.i18n('emptyShortcutsSubtitle')}</p>
             </div>
             
             <details class="empty-state-guidance">
               <summary class="guidance-toggle">
                 <span class="chevron-icon">▶</span>
-                <span>How to Get Started</span>
+                <span>${window.i18n('emptyShortcutsHowTo')}</span>
               </summary>
               <div class="guidance-content">
                 <div class="guidance-step">
-                  <h4 data-step-number="1">Navigate to Any SAP Page</h4>
-                  <p>Open a report, form, workflow, or app you use frequently</p>
+                  <h4 data-step-number="1">${window.i18n('guideShortcutStep1Title', [], 'Navigate to Page')}</h4>
+                  <p>${window.i18n('guideShortcutStep1Desc', [], 'Go to the page you want to shortcut')}</p>
                 </div>
                 
                 <div class="guidance-step">
-                  <h4 data-step-number="2">Save as Shortcut</h4>
-                  <p>Click <code>+ Shortcut</code> button to save</p>
-                </div>
-                
-                <div class="guidance-step">
-                  <h4 data-step-number="3">Open from Any Environment</h4>
-                  <p>Shortcuts work across all environments - click to navigate instantly</p>
+                  <h4 data-step-number="2">${window.i18n('guideShortcutStep2Title', [], 'Add Shortcut')}</h4>
+                  <p>${window.i18n('guideShortcutStep2Desc', [], 'Click <code>+ Shortcut</code> or use <code>Cmd+J</code>')}</p>
                 </div>
                 
                 <div class="guidance-tip">
-                  <strong>💡 Pro Tip:</strong> Use AI-powered shortcut suggestions to automatically generate name and icon
+                  <strong>💡 ${window.i18n('proTipLabel', [], 'Pro Tip')}:</strong> ${window.i18n('guideShortcutProTip', [], 'Use shortcuts for deep links properly in your SAP system')}
                 </div>
               </div>
             </details>
@@ -374,7 +376,7 @@ window.renderShortcuts = async function (newlyCreatedId = null) {
                 <line x1="12" y1="5" x2="12" y2="19"/>
                 <line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
-              Add Current Page
+              ${window.i18n('addCurrentPage', [], 'Add Current Page')}
             </button>
           </div>
         </td>
@@ -401,16 +403,21 @@ window.renderShortcuts = async function (newlyCreatedId = null) {
     const isNewlyCreated = newlyCreatedId && shortcut.id === newlyCreatedId;
 
     return `
-      <tr class="shortcut-row ${isNewlyCreated ? 'newly-created' : ''}" data-shortcut-id="${shortcut.id}" data-url="${shortcut.url}">
+        <tr class="shortcut-row ${isNewlyCreated ? 'newly-created' : ''}" data-shortcut-id="${shortcut.id}">
         <td class="shortcut-icon-cell">
           <span class="shortcut-icon">${displayIcon}</span>
         </td>
         <td class="shortcut-name-cell">
           <div class="shortcut-name">
             <span>${shortcut.name}</span>
-            <button class="pin-btn ${shortcut.pinned ? 'pinned' : ''}" data-id="${shortcut.id}" data-type="shortcut" title="${shortcut.pinned ? 'Unpin shortcut' : 'Pin shortcut to top'}" tabindex="0">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="${shortcut.pinned ? '#F59E0B' : 'currentColor'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: ${shortcut.pinned ? '1' : '0.3'}">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            <button class="pin-btn ${shortcut.pinned ? 'pinned' : ''}" 
+              data-id="${shortcut.id}" 
+              data-type="shortcut" 
+              title="${shortcut.pinned ? window.i18n('tooltipUnpinShortcut') : window.i18n('tooltipPinShortcut')}" 
+              tabindex="0" 
+              style="opacity: ${shortcut.pinned ? '1' : '0.3'};">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="${shortcut.pinned ? '#F59E0B' : 'currentColor'}" stroke="none">
+                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
               </svg>
             </button>
           </div>
@@ -418,19 +425,19 @@ window.renderShortcuts = async function (newlyCreatedId = null) {
         </td>
         <td class="shortcut-actions-cell">
           <div class="table-actions">
-            <button class="icon-btn primary go-btn" data-url="${shortcut.url}" title="Open shortcut" tabindex="0">
+            <button class="icon-btn primary go-btn" data-url="${shortcut.url}" title="${window.i18n('tooltipOpenShortcut')}" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"/>
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </button>
-            <button class="icon-btn edit-btn" data-id="${shortcut.id}" title="Edit" tabindex="0">
+            <button class="icon-btn edit-btn" data-id="${shortcut.id}" title="${window.i18n('tooltipEdit')}" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
             </button>
-            <button class="icon-btn danger delete-btn" data-id="${shortcut.id}" title="Delete" tabindex="0">
+            <button class="icon-btn danger delete-btn" data-id="${shortcut.id}" title="${window.i18n('tooltipDelete')}" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -478,7 +485,7 @@ function attachShortcutListeners() {
       if (builtUrl) {
         if (window.navigateToShortcut) window.navigateToShortcut(builtUrl);
       } else {
-        if (window.showToast) window.showToast('Cannot navigate: No active SF instance detected', 'warning');
+        if (window.showToast) window.showToast(window.i18n('cannotNavigateNoActiveSFInstance'), 'warning');
       }
     });
   });
@@ -523,33 +530,28 @@ window.renderNotes = async function (newlyCreatedId = null) {
           <div class="empty-state-enhanced">
             <div class="empty-state-header">
               <div class="empty-state-icon">📝</div>
-              <h3 class="empty-state-title">No Saved Notes</h3>
-              <p class="empty-state-subtitle">Store documentation, prompts, and code snippets</p>
+              <h3 class="empty-state-title">${window.i18n('emptyNotesTitle')}</h3>
+              <p class="empty-state-subtitle">${window.i18n('emptyNotesSubtitle')}</p>
             </div>
             
             <details class="empty-state-guidance">
               <summary class="guidance-toggle">
                 <span class="chevron-icon">▶</span>
-                <span>How to Get Started</span>
+                <span>${window.i18n('emptyNotesHowTo')}</span>
               </summary>
               <div class="guidance-content">
                 <div class="guidance-step">
-                  <h4 data-step-number="1">Create a Note</h4>
-                  <p>Click <code>+ Note</code> button to create</p>
+                  <h4 data-step-number="1">${window.i18n('guideNoteStep1Title', [], 'Capture Ideas')}</h4>
+                  <p>${window.i18n('guideNoteStep1Desc', [], 'Jot down IDs, URLs, or quick thoughts')}</p>
                 </div>
                 
                 <div class="guidance-step">
-                  <h4 data-step-number="2">Choose Note Type</h4>
-                  <p>Select <strong>Note</strong> for general documentation or <strong>AI Prompt</strong> for testing prompts</p>
+                  <h4 data-step-number="2">${window.i18n('guideNoteStep2Title', [], 'Use AI')}</h4>
+                  <p>${window.i18n('guideNoteStep2Desc', [], 'Turn rough notes into polished documentation')}</p>
                 </div>
                 
-                <div class="guidance-step">
-                  <h4 data-step-number="3">Use AI Enhancement</h4>
-                  <p>For AI Prompts, test against real models and refine your prompts interactively</p>
-                </div>
-                
-                <div class="guidance-tip">
-                  <strong>💡 Pro Tip:</strong> Pin important notes to keep them accessible across all profiles
+                 <div class="guidance-tip">
+                  <strong>💡 ${window.i18n('proTipLabel', [], 'Pro Tip')}:</strong> ${window.i18n('guideNoteProTip', [], 'Store your AI prompts here for reuse')}
                 </div>
               </div>
             </details>
@@ -559,7 +561,7 @@ window.renderNotes = async function (newlyCreatedId = null) {
                 <line x1="12" y1="5" x2="12" y2="19"/>
                 <line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
-              Add Note
+              ${window.i18n('addNote', [], 'Add Note')}
             </button>
           </div>
         </td>
@@ -590,14 +592,15 @@ window.renderNotes = async function (newlyCreatedId = null) {
 
     const noteType = note.noteType || 'note';
     const noteTypeLabels = {
-      'note': '📝 Note',
-      'ai-prompt': '✨ AI Prompt',
-      'documentation': '📚 Documentation',
-      'code': '💻 Code'
+      'note': window.i18n('noteTypeNote'),
+      'ai-prompt': window.i18n('noteTypeAIPrompt'),
+      'documentation': window.i18n('noteTypeDocumentation'),
+      'code': window.i18n('noteTypeCode'),
+      'idea': window.i18n('noteTypeIdea')
     };
     const noteTypeBadge = `<div class="note-type-badge"><span class="note-type-label">${noteTypeLabels[noteType]}</span></div>`;
 
-    const editButtonHTML = `<button class="icon-btn primary edit-btn" data-id="${note.id}" title="Edit" tabindex="0">
+    const editButtonHTML = `<button class="icon-btn primary edit-btn" data-id="${note.id}" title="${window.i18n('tooltipEdit')}" tabindex="0">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -612,9 +615,14 @@ window.renderNotes = async function (newlyCreatedId = null) {
         <td class="note-content-cell">
           <div class="note-title">
             <span>${note.title}</span>
-            <button class="pin-btn ${note.pinned ? 'pinned' : ''}" data-id="${note.id}" data-type="note" title="${note.pinned ? 'Unpin note' : 'Pin note to top'}" tabindex="0">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="${note.pinned ? '#F59E0B' : 'currentColor'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: ${note.pinned ? '1' : '0.3'}">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            <button class="pin-btn ${note.pinned ? 'pinned' : ''}" 
+              data-id="${note.id}" 
+              data-type="note" 
+              title="${note.pinned ? window.i18n('tooltipUnpinNote') : window.i18n('tooltipPinNote')}" 
+              tabindex="0" 
+              style="opacity: ${note.pinned ? '1' : '0.3'};">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="${note.pinned ? '#F59E0B' : 'currentColor'}" stroke="none">
+                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
               </svg>
             </button>
           </div>
@@ -624,13 +632,13 @@ window.renderNotes = async function (newlyCreatedId = null) {
         <td class="note-actions-cell">
           <div class="table-actions">
             ${editButtonHTML}
-            <button class="icon-btn copy-btn" data-id="${note.id}" title="Copy note content" tabindex="0">
+            <button class="icon-btn copy-btn" data-id="${note.id}" title="${window.i18n('tooltipCopyNote')}" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
               </svg>
             </button>
-            <button class="icon-btn danger delete-btn" data-id="${note.id}" title="Delete" tabindex="0">
+            <button class="icon-btn danger delete-btn" data-id="${note.id}" title="${window.i18n('tooltipDelete')}" tabindex="0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>

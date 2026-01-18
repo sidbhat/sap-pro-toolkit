@@ -8,7 +8,7 @@
 
 ## Overview
 
-SF Pro Toolkit uses AI features to enhance productivity for SAP professionals. This document provides complete transparency about our AI implementation in compliance with the EU AI Act Article 52 (Limited Risk AI Systems).
+SAP Pro Toolkit uses AI features to enhance productivity for SAP professionals. This document provides complete transparency about our AI implementation in compliance with the EU AI Act Article 52 (Limited Risk AI Systems).
 
 ---
 

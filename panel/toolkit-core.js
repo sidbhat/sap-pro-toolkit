@@ -1,4 +1,4 @@
-// SF Pro Toolkit - Shared Core Logic
+// SAP Pro Toolkit - Shared Core Logic
 // This file contains all shared functionality used by both popup and side panel
 
 // ==================== I18N INITIALIZATION ====================
@@ -8,13 +8,13 @@ async function detectLanguage() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab && tab.url && isSFPage(tab.url)) {
       const url = new URL(tab.url);
-      
+
       const localeParam = url.searchParams.get('locale');
       if (localeParam) {
         const lang = localeParam.split('_')[0];
         return lang;
       }
-      
+
       const pathMatch = url.pathname.match(/\/([a-z]{2}_[A-Z]{2})\//);
       if (pathMatch) {
         const lang = pathMatch[1].split('_')[0];
@@ -24,7 +24,7 @@ async function detectLanguage() {
   } catch (error) {
     // Silently fall through to browser language
   }
-  
+
   const browserLang = navigator.language.split('-')[0];
   return browserLang;
 }
@@ -34,12 +34,12 @@ function initI18n() {
     const key = element.getAttribute('data-i18n');
     element.textContent = chrome.i18n.getMessage(key) || element.textContent;
   });
-  
+
   document.querySelectorAll('[data-i18n-title]').forEach(element => {
     const key = element.getAttribute('data-i18n-title');
     element.title = chrome.i18n.getMessage(key) || element.title;
   });
-  
+
   document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
     const key = element.getAttribute('data-i18n-placeholder');
     element.placeholder = chrome.i18n.getMessage(key) || element.placeholder;
@@ -89,7 +89,7 @@ function renderSAPIcon(iconId, iconType = 'universal', size = 16) {
   if (iconId && typeof iconId === 'string' && iconId.startsWith('sap-icon://')) {
     iconId = iconId.replace('sap-icon://', '');
   }
-  
+
   if (typeof window.SAPIconLibrary === 'undefined') {
     // Fallback to emoji if library not loaded
     const fallbackEmojis = {
@@ -100,7 +100,7 @@ function renderSAPIcon(iconId, iconType = 'universal', size = 16) {
     };
     return `<span style="font-size: ${size}px;">${fallbackEmojis[iconType] || '📌'}</span>`;
   }
-  
+
   // Get icon by ID
   const icon = window.SAPIconLibrary.getIconById(iconId, iconType);
   if (!icon) {
@@ -108,7 +108,7 @@ function renderSAPIcon(iconId, iconType = 'universal', size = 16) {
     console.warn(`[Icon Rendering] Icon ID not found: ${iconId} (type: ${iconType})`);
     return `<span style="font-size: ${size}px;">📌</span>`;
   }
-  
+
   return window.SAPIconLibrary.renderIconSVG(icon, size);
 }
 
@@ -119,7 +119,7 @@ function suggestIconForContent(context = 'note') {
   if (typeof window.SAPIconLibrary === 'undefined') {
     return window.SAPIconLibrary.getDefaultIcon(context);
   }
-  
+
   return window.SAPIconLibrary.getDefaultIcon(context);
 }
 
@@ -127,15 +127,15 @@ function suggestIconForContent(context = 'note') {
 
 function isSFPage(url) {
   if (!url) return false;
-  const sfDomains = ['hr.cloud.sap', 'sapsf.com', 'sapsf.cn', 'sapcloud.cn', 
-                      'successfactors.eu', 'sapsf.eu', 'successfactors.com'];
+  const sfDomains = ['hr.cloud.sap', 'sapsf.com', 'sapsf.cn', 'sapcloud.cn',
+    'successfactors.eu', 'sapsf.eu', 'successfactors.com'];
   return sfDomains.some(domain => url.includes(domain));
 }
 
 function detectEnvironmentFromURL(url) {
   const hostname = new URL(url).hostname;
   const envType = detectEnvironmentHeuristic(hostname);
-  
+
   return {
     environment: envType,
     datacenter: 'Unknown',
@@ -151,15 +151,15 @@ function detectEnvironmentFromURL(url) {
 function detectEnvironmentHeuristic(hostname) {
   // More specific preview detection
   if (hostname.includes('-preview') || hostname.includes('preview-') || hostname.includes('preview.')) return 'preview';
-  
+
   // Sales/Demo detection - only if it's in the subdomain or company ID
   const hostnameLower = hostname.toLowerCase();
   if (hostnameLower.startsWith('demo.') || hostnameLower.startsWith('sales.')) return 'sales';
   if (hostnameLower.includes('-demo') || hostnameLower.includes('-sales')) return 'sales';
-  
+
   // Sandbox/Test detection
   if (hostname.includes('sandbox') || hostname.includes('-test') || hostname.includes('test-')) return 'sandbox';
-  
+
   // Default to production for standard hostnames
   return 'production';
 }
@@ -168,22 +168,22 @@ function detectEnvironmentHeuristic(hostname) {
 
 function buildShortcutUrl(shortcut, currentPageData) {
   const url = shortcut.url;
-  
+
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url;
   }
-  
+
   if (url.startsWith('/')) {
     if (currentPageData && currentPageData.hostname) {
       return `https://${currentPageData.hostname}${url}`;
     }
     return null;
   }
-  
+
   if (currentPageData && currentPageData.hostname) {
     return `https://${currentPageData.hostname}/${url}`;
   }
-  
+
   return url;
 }
 
@@ -225,31 +225,31 @@ const SOLUTION_PATTERNS = {
 
 function detectSolutionType(url, hostname) {
   if (!url || !hostname) return null;
-  
+
   // SuccessFactors detection
   const sfPatterns = SOLUTION_PATTERNS.successfactors;
   if (sfPatterns.some(pattern => hostname.includes(pattern))) {
     return 'successfactors';
   }
-  
+
   // S/4HANA detection
   const s4Patterns = SOLUTION_PATTERNS.s4hana;
   if (s4Patterns.some(pattern => url.includes(pattern) || hostname.includes(pattern))) {
     return 's4hana';
   }
-  
+
   // IBP detection
   const ibpPatterns = SOLUTION_PATTERNS.ibp;
   if (ibpPatterns.some(pattern => hostname.includes(pattern) || url.includes(pattern))) {
     return 'ibp';
   }
-  
+
   // BTP detection
   const btpPatterns = SOLUTION_PATTERNS.btp;
   if (btpPatterns.some(pattern => hostname.includes(pattern))) {
     return 'btp';
   }
-  
+
   return null;
 }
 
@@ -257,19 +257,19 @@ function detectSolutionType(url, hostname) {
 
 function extractAllUrlParameters(currentUrl, contentScriptData) {
   if (!currentUrl) return {};
-  
+
   try {
     const url = new URL(currentUrl);
     const params = {};
-    
+
     // Get ALL query parameters
     url.searchParams.forEach((value, key) => {
       params[key] = value;
     });
-    
+
     // Extract company ID from multiple sources (priority order):
     let companyId = '';
-    
+
     // 1. First check content script data (most reliable)
     if (contentScriptData && contentScriptData.companyId) {
       companyId = contentScriptData.companyId;
@@ -292,7 +292,7 @@ function extractAllUrlParameters(currentUrl, contentScriptData) {
         }
       }
     }
-    
+
     return {
       hostname: url.hostname,
       protocol: url.protocol,
@@ -306,7 +306,7 @@ function extractAllUrlParameters(currentUrl, contentScriptData) {
       queryString: url.search.substring(1) // Remove leading '?'
     };
   } catch (error) {
-    console.error('[SF Pro Toolkit] Failed to parse URL:', error);
+    console.error('[SAP Pro Toolkit] Failed to parse URL:', error);
     return {};
   }
 }
@@ -315,10 +315,10 @@ function extractAllUrlParameters(currentUrl, contentScriptData) {
 
 function buildQuickActionUrl(quickAction, currentPageData, currentUrl) {
   const urlInfo = extractAllUrlParameters(currentUrl);
-  
+
   // Start with the path from Quick Action
   let targetPath = quickAction.path;
-  
+
   // Extract hash fragment (for S/4HANA Fiori navigation like #Shell-settings)
   let hashFragment = '';
   if (targetPath.includes('#')) {
@@ -326,13 +326,13 @@ function buildQuickActionUrl(quickAction, currentPageData, currentUrl) {
     targetPath = pathPart;
     hashFragment = '#' + hash;
   }
-  
+
   // Extract path and its own parameters
   const [pathOnly, pathParams] = targetPath.split('?');
-  
+
   // Merge: Current URL params + Quick Action params
   const allParams = new URLSearchParams(urlInfo.queryString);
-  
+
   // Add/override with Quick Action specific params
   if (pathParams) {
     const actionParams = new URLSearchParams(pathParams);
@@ -350,10 +350,10 @@ function buildQuickActionUrl(quickAction, currentPageData, currentUrl) {
       allParams.set(key, value);
     });
   }
-  
+
   // Build final URL with ALL parameters preserved + hash fragment
   const finalUrl = `https://${urlInfo.hostname}${pathOnly}?${allParams.toString()}${hashFragment}`;
-  
+
   return finalUrl;
 }
 
@@ -366,13 +366,13 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
       e.preventDefault();
       document.getElementById('globalSearch')?.focus();
     }
-    
+
     // Cmd/Ctrl + J → New shortcut
     if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
       e.preventDefault();
       if (callbacks.addShortcut) callbacks.addShortcut();
     }
-    
+
     // Cmd/Ctrl + E → New environment
     if ((e.metaKey || e.ctrlKey) && e.key === 'e') {
       e.preventDefault();
@@ -383,13 +383,13 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
         console.error('[Keyboard] addEnvironment callback not registered!');
       }
     }
-    
+
     // Cmd/Ctrl + M → New note
     if ((e.metaKey || e.ctrlKey) && e.key === 'm') {
       e.preventDefault();
       if (callbacks.addNote) callbacks.addNote();
     }
-    
+
     // Cmd/Ctrl + Shift + 1/2/3 → Quick switch to environment 1/2/3
     if ((e.metaKey || e.ctrlKey) && e.shiftKey && ['1', '2', '3'].includes(e.key)) {
       e.preventDefault();
@@ -398,12 +398,12 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
         callbacks.quickSwitchEnv(envIndex);
       }
     }
-    
+
     // Arrow key navigation through ALL rows (not in input/textarea/select)
     if (!e.target.matches('input, textarea, select')) {
       const allRows = document.querySelectorAll('.env-row:not([style*="display: none"]), .shortcut-row:not([style*="display: none"]), .note-row:not([style*="display: none"])');
       const currentIndex = Array.from(allRows).findIndex(row => row.classList.contains('keyboard-focus'));
-      
+
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         navigateRows(allRows, currentIndex, 1);
@@ -413,7 +413,7 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
       } else if (e.key === 'Enter' && currentIndex >= 0) {
         e.preventDefault();
         const focusedRow = allRows[currentIndex];
-        
+
         // Determine row type and trigger appropriate action
         if (focusedRow.classList.contains('env-row')) {
           const switchBtn = focusedRow.querySelector('.switch-btn');
@@ -426,7 +426,7 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
         }
       }
     }
-    
+
     // Tab navigation for buttons (built-in browser behavior, but ensure visible focus)
     if (e.key === 'Tab' && !e.target.matches('input, textarea, select')) {
       // Remove row focus when tabbing to buttons
@@ -434,7 +434,7 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
         el.classList.remove('keyboard-focus');
       });
     }
-    
+
     // Escape → Close modals/clear search
     if (e.key === 'Escape') {
       const openModal = document.querySelector('.modal.active');
@@ -451,7 +451,7 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
       }
     }
   });
-  
+
   // Clear keyboard focus when clicking anywhere
   document.addEventListener('click', () => {
     document.querySelectorAll('.keyboard-focus').forEach(el => {
@@ -462,11 +462,11 @@ function setupEnhancedKeyboardShortcuts(callbacks) {
 
 function navigateRows(rows, currentIndex, direction) {
   rows.forEach(row => row.classList.remove('keyboard-focus'));
-  
+
   let newIndex = currentIndex + direction;
   if (newIndex < 0) newIndex = 0;
   if (newIndex >= rows.length) newIndex = rows.length - 1;
-  
+
   if (rows[newIndex]) {
     rows[newIndex].classList.add('keyboard-focus');
     rows[newIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -478,12 +478,12 @@ function navigateRows(rows, currentIndex, direction) {
 function updatePlatformSpecificUI() {
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const modKey = isMac ? '⌘' : 'Ctrl';
-  
+
   const searchHint = document.getElementById('searchKeyboardHint');
   if (searchHint) {
     searchHint.textContent = `${modKey}K`;
   }
-  
+
   const modKey1 = document.getElementById('modKey1');
   const modKey2 = document.getElementById('modKey2');
   const modKey3 = document.getElementById('modKey3');
@@ -497,24 +497,24 @@ function updatePlatformSpecificUI() {
 function showToast(message, type = 'info', duration = 3000, onClickCallback = null) {
   const toast = document.getElementById('toast');
   if (!toast) return;
-  
+
   toast.textContent = message;
   toast.className = `toast toast-${type} active`;
-  
+
   // Add clickable styling if callback provided
   if (onClickCallback) {
     toast.style.cursor = 'pointer';
-    
+
     // Remove any existing click handlers
     const newToast = toast.cloneNode(true);
     toast.parentNode.replaceChild(newToast, toast);
-    
+
     // Add click handler
     newToast.addEventListener('click', () => {
       onClickCallback();
       newToast.classList.remove('active');
     });
-    
+
     // Auto-hide after duration
     setTimeout(() => {
       newToast.classList.remove('active');
@@ -537,7 +537,7 @@ function showToast(message, type = 'info', duration = 3000, onClickCallback = nu
  */
 async function loadSAPAICoreModels(config) {
   const { clientId, clientSecret, baseUrl, authUrl, resourceGroup } = config;
-  
+
   try {
     // Step 1: Get OAuth token
     const tokenResponse = await fetch(authUrl, {
@@ -551,21 +551,21 @@ async function loadSAPAICoreModels(config) {
         client_secret: clientSecret
       })
     });
-    
+
     if (!tokenResponse.ok) {
       throw new Error(`Auth failed: ${tokenResponse.status} ${tokenResponse.statusText}`);
     }
-    
+
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
-    
+
     if (!accessToken) {
       throw new Error('No access token received');
     }
-    
+
     // Step 2: Get deployments
     const deploymentsUrl = `${baseUrl}/v2/lm/deployments?$filter=executableId eq 'azure-openai' and targetStatus eq 'RUNNING'&resourceGroup=${resourceGroup}`;
-    
+
     const deploymentsResponse = await fetch(deploymentsUrl, {
       method: 'GET',
       headers: {
@@ -573,23 +573,23 @@ async function loadSAPAICoreModels(config) {
         'AI-Resource-Group': resourceGroup
       }
     });
-    
+
     if (!deploymentsResponse.ok) {
       throw new Error(`Failed to fetch deployments: ${deploymentsResponse.status}`);
     }
-    
+
     const deploymentsData = await deploymentsResponse.json();
     const deployments = deploymentsData.resources || [];
-    
+
     // Filter for RUNNING status only
-    const runningDeployments = deployments.filter(d => 
+    const runningDeployments = deployments.filter(d =>
       d.status === 'RUNNING' && d.targetStatus === 'RUNNING'
     );
-    
+
     if (runningDeployments.length === 0) {
       throw new Error('No running deployments found');
     }
-    
+
     // Format for dropdown
     const models = runningDeployments.map(d => ({
       id: d.id,
@@ -597,9 +597,9 @@ async function loadSAPAICoreModels(config) {
       status: d.status,
       scenario: d.scenarioId
     }));
-    
+
     return models;
-    
+
   } catch (error) {
     console.error('[SAP AI Core] Load models failed:', error);
     throw error;
@@ -611,9 +611,9 @@ async function loadSAPAICoreModels(config) {
 async function gatherDiagnostics(currentPageData) {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const browserInfo = await chrome.runtime.getPlatformInfo();
-  
+
   const result = await chrome.storage.local.get(['shortcuts', 'environments', 'notes']);
-  
+
   return {
     timestamp: new Date().toLocaleString(),
     instance: currentPageData || {},
@@ -631,7 +631,7 @@ function formatDiagnosticsReport(data) {
   const env = data.instance;
   const envLabel = env.environment ? ENV_LABELS[env.environment] : 'N/A';
   const emoji = env.environment ? ENV_EMOJIS[env.environment] : '';
-  
+
   let userInfo = '';
   if (env.userName) userInfo += `Full Name:       ${env.userName}\n`;
   if (env.userId) userInfo += `User ID:         ${env.userId}\n`;
@@ -642,7 +642,7 @@ function formatDiagnosticsReport(data) {
   }
   if (env.proxyId) userInfo += `Proxy ID:        ${env.proxyId}\n`;
   if (!userInfo) userInfo = 'No user information available\n';
-  
+
   return `═══════════════════════════════════════
 SAP PRO TOOLKIT - DIAGNOSTICS REPORT
 v${data.extension}
@@ -683,44 +683,56 @@ Copy this information when reporting issues
 
 /**
  * Test a prompt with the configured AI model
- * @param {string} promptText - The prompt to test
+ * @param {string|Object} promptInput - The prompt to test (string or {messages: [...]} object)
  * @returns {Promise<Object>} Result with content, model, provider, and usage
  */
-async function testPromptWithModel(promptText) {
-  if (!promptText || !promptText.trim()) {
-    throw new Error('Prompt text is required');
+async function testPromptWithModel(promptInput) {
+  // Support both legacy string format and new structured messages format
+  let messages;
+
+  if (typeof promptInput === 'string') {
+    // Legacy: Single string becomes user message
+    if (!promptInput.trim()) {
+      throw new Error('Prompt text is required');
+    }
+    messages = [{ role: 'user', content: promptInput }];
+  } else if (promptInput && promptInput.messages && Array.isArray(promptInput.messages)) {
+    // New: Structured message array
+    messages = promptInput.messages;
+  } else {
+    throw new Error('Invalid prompt format. Expected string or {messages: [...]} object');
   }
-  
+
   try {
     // Check which API keys are available
     const openaiKey = await window.CryptoUtils.retrieveAndDecrypt('apiKeyopenai');
     const anthropicKey = await window.CryptoUtils.retrieveAndDecrypt('apiKeyanthropic');
     const sapCredentials = await window.CryptoUtils.retrieveAndDecrypt('sapAiCoreCredentials');
-    
+
     // Get max tokens setting (default 4096)
     const maxTokensResult = await chrome.storage.local.get({ maxTokensDefault: 4096 });
     const maxTokens = maxTokensResult.maxTokensDefault;
-    
+
     // Try SAP AI Core first (if configured with primary model)
     if (sapCredentials && sapCredentials.primaryModel) {
       console.log('[AI Test] Using SAP AI Core with model:', sapCredentials.primaryModel);
-      return await testWithSAPAICore(promptText, sapCredentials, maxTokens);
+      return await testWithSAPAICore(messages, sapCredentials, maxTokens);
     }
-    
+
     // Try OpenAI
     if (openaiKey) {
       console.log('[AI Test] Using OpenAI');
-      return await testWithOpenAI(promptText, openaiKey, maxTokens);
+      return await testWithOpenAI(messages, openaiKey, maxTokens);
     }
-    
+
     // Try Anthropic
     if (anthropicKey) {
       console.log('[AI Test] Using Anthropic');
-      return await testWithAnthropic(promptText, anthropicKey, maxTokens);
+      return await testWithAnthropic(messages, anthropicKey, maxTokens);
     }
-    
+
     throw new Error('No API keys configured. Please configure at least one provider in Settings.');
-    
+
   } catch (error) {
     console.error('[AI Test] Failed:', error);
     throw error;
@@ -730,7 +742,7 @@ async function testPromptWithModel(promptText) {
 /**
  * Test with OpenAI API
  */
-async function testWithOpenAI(promptText, apiKey, maxTokens) {
+async function testWithOpenAI(messages, apiKey, maxTokens) {
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -739,18 +751,18 @@ async function testWithOpenAI(promptText, apiKey, maxTokens) {
     },
     body: JSON.stringify({
       model: 'gpt-4-turbo',
-      messages: [{ role: 'user', content: promptText }],
+      messages: messages,
       max_tokens: maxTokens
     })
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(`OpenAI API error: ${error.error?.message || response.statusText}`);
   }
-  
+
   const data = await response.json();
-  
+
   return {
     content: data.choices[0]?.message?.content || 'No response',
     model: data.model,
@@ -766,7 +778,7 @@ async function testWithOpenAI(promptText, apiKey, maxTokens) {
 /**
  * Test with Anthropic API
  */
-async function testWithAnthropic(promptText, apiKey, maxTokens) {
+async function testWithAnthropic(messages, apiKey, maxTokens) {
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -777,17 +789,18 @@ async function testWithAnthropic(promptText, apiKey, maxTokens) {
     body: JSON.stringify({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: maxTokens,
-      messages: [{ role: 'user', content: promptText }]
+      messages: messages.filter(m => m.role !== 'system'),
+      system: messages.find(m => m.role === 'system')?.content
     })
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(`Anthropic API error: ${error.error?.message || response.statusText}`);
   }
-  
+
   const data = await response.json();
-  
+
   return {
     content: data.content[0]?.text || 'No response',
     model: data.model,
@@ -804,15 +817,15 @@ async function testWithAnthropic(promptText, apiKey, maxTokens) {
  * Test with SAP AI Core - ROBUST MULTI-STRATEGY APPROACH
  * Tries orchestration first, then model-specific endpoints, then Claude fallback
  */
-async function testWithSAPAICore(promptText, credentials, maxTokens) {
+async function testWithSAPAICore(messages, credentials, maxTokens) {
   const { clientId, clientSecret, baseUrl, authUrl, resourceGroup, primaryModel, primaryDeploymentId } = credentials;
-  
+
   // Use deployment ID for API calls, model name for detection
   const deploymentId = primaryDeploymentId || primaryModel;
-  
+
   console.log('[SAP AI Core] Starting test with model:', primaryModel);
   console.log('[SAP AI Core] Using deployment ID:', deploymentId);
-  
+
   // Step 1: Get OAuth token
   const tokenResponse = await fetch(authUrl, {
     method: 'POST',
@@ -823,17 +836,17 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
       client_secret: clientSecret
     })
   });
-  
+
   if (!tokenResponse.ok) {
     throw new Error('SAP AI Core authentication failed. Check credentials in Settings.');
   }
-  
+
   const tokenData = await tokenResponse.json();
   const accessToken = tokenData.access_token;
-  
+
   // Step 2: Get deployment details
   const deploymentUrl = `${baseUrl}/v2/lm/deployments/${deploymentId}?resourceGroup=${resourceGroup}`;
-  
+
   const deploymentResponse = await fetch(deploymentUrl, {
     method: 'GET',
     headers: {
@@ -841,45 +854,45 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
       'AI-Resource-Group': resourceGroup
     }
   });
-  
+
   if (!deploymentResponse.ok) {
     throw new Error(`Failed to get deployment details: ${deploymentResponse.status}. Verify deployment ID in Settings.`);
   }
-  
+
   const deployment = await deploymentResponse.json();
-  
+
   // Extract model info and sanitize
-  let modelName = deployment.details?.scaling?.backendDetails?.model?.name || 
-                  deployment.configurationName || 
-                  deployment.scenarioId || 
-                  primaryModel;
-  
+  let modelName = deployment.details?.scaling?.backendDetails?.model?.name ||
+    deployment.configurationName ||
+    deployment.scenarioId ||
+    primaryModel;
+
   // Sanitize model name: Remove _autogenerated and other SAP-specific suffixes
   const originalModelName = modelName;
   modelName = modelName.replace(/_autogenerated$/i, '')
-                       .replace(/_deployment$/i, '')
-                       .replace(/_config$/i, '');
-  
+    .replace(/_deployment$/i, '')
+    .replace(/_config$/i, '');
+
   const deploymentInferenceUrl = deployment.deploymentUrl || '';
-  
+
   console.log('[SAP AI Core] Deployment info:', {
     originalModelName,
     sanitizedModelName: modelName,
     deploymentUrl: deploymentInferenceUrl,
     primaryModel
   });
-  
+
   // STRATEGY 1: Try Orchestration Endpoint (Universal, works for all models)
   try {
     console.log('[SAP AI Core] Strategy 1: Trying orchestration endpoint...');
     console.log('[SAP AI Core] 🔒 PRIVACY: Data sent to SAP AI Core for processing. See AI Transparency doc for details.');
-    
+
     const orchestrationUrl = `${baseUrl}/v2/inference/deployments/${deploymentId}/chat/completions?api-version=2023-05-15`;
     const orchestrationBody = {
-      messages: [{ role: 'user', content: promptText }],
+      messages: messages,
       max_tokens: maxTokens
     };
-    
+
     const orchestrationResponse = await fetch(orchestrationUrl, {
       method: 'POST',
       headers: {
@@ -889,22 +902,22 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
       },
       body: JSON.stringify(orchestrationBody)
     });
-    
+
     if (orchestrationResponse.ok) {
       const data = await orchestrationResponse.json();
       console.log('[SAP AI Core] ✅ Orchestration successful');
       console.log('[SAP AI Core] ⚠️ REMINDER: AI-generated content should be verified independently before use.');
-      
+
       // Parse response (supports both formats)
-      const content = data.choices?.[0]?.message?.content || 
-                     data.content?.[0]?.text || 
-                     'No response';
+      const content = data.choices?.[0]?.message?.content ||
+        data.content?.[0]?.text ||
+        'No response';
       const usage = {
         inputTokens: data.usage?.prompt_tokens || data.usage?.input_tokens || 0,
         outputTokens: data.usage?.completion_tokens || data.usage?.output_tokens || 0,
         cost: 'N/A (SAP AI Core)'
       };
-      
+
       return {
         content,
         model: modelName,
@@ -917,51 +930,62 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
   } catch (orchestrationError) {
     console.warn('[SAP AI Core] Orchestration error:', orchestrationError.message);
   }
-  
+
   // STRATEGY 2: Try Model-Specific Endpoints (with improved detection)
   try {
     console.log('[SAP AI Core] Strategy 2: Trying model-specific endpoints...');
     console.log('[SAP AI Core] 🔒 PRIVACY: Data sent to SAP AI Core for processing. See AI Transparency doc for details.');
-    
+
     const detectionString = (primaryModel + ' ' + modelName).toLowerCase();
     let requestBody, inferenceUrl, expectedResponseFormat;
-    
+
     if (detectionString.includes('anthropic') || detectionString.includes('claude')) {
       // Anthropic models use /invoke endpoint
       console.log('[SAP AI Core] Detected Anthropic/Claude model');
       inferenceUrl = `${deploymentInferenceUrl}/invoke`;
+
+      // Extract system message for Anthropic
+      const systemMessage = messages.find(m => m.role === 'system');
+      const anthropicMessages = messages.filter(m => m.role !== 'system');
+      const systemPrompt = systemMessage ? systemMessage.content : undefined;
+
       requestBody = {
         anthropic_version: 'bedrock-2023-05-31',
         max_tokens: maxTokens,
-        messages: [{ role: 'user', content: promptText }]
+        messages: anthropicMessages
       };
+
+      if (systemPrompt) {
+        requestBody.system = systemPrompt;
+      }
+
       expectedResponseFormat = 'anthropic';
-      
+
     } else if (detectionString.includes('gpt') || detectionString.includes('openai')) {
       // OpenAI models use /chat/completions
       console.log('[SAP AI Core] Detected OpenAI/GPT model');
       inferenceUrl = `${deploymentInferenceUrl}/chat/completions`;
       requestBody = {
         model: modelName || primaryModel,  // ✅ Always include model field
-        messages: [{ role: 'user', content: promptText }],
+        messages: messages,
         max_tokens: maxTokens
       };
       expectedResponseFormat = 'openai';
-      
+
     } else {
       // Unknown model type - try OpenAI format with fallback
       console.log('[SAP AI Core] Unknown model type, trying OpenAI format');
       inferenceUrl = `${deploymentInferenceUrl}/chat/completions`;
       requestBody = {
         model: modelName || primaryModel || 'gpt-4',  // ✅ Always include model field
-        messages: [{ role: 'user', content: promptText }],
+        messages: messages,
         max_tokens: maxTokens
       };
       expectedResponseFormat = 'openai';
     }
-    
+
     console.log('[SAP AI Core] Inference URL:', inferenceUrl);
-    
+
     const response = await fetch(inferenceUrl, {
       method: 'POST',
       headers: {
@@ -971,12 +995,12 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
       },
       body: JSON.stringify(requestBody)
     });
-    
+
     if (response.ok) {
       const data = await response.json();
       console.log('[SAP AI Core] ✅ Model-specific endpoint successful');
       console.log('[SAP AI Core] ⚠️ REMINDER: AI-generated content should be verified independently before use.');
-      
+
       // Parse based on format
       let content, usage;
       if (expectedResponseFormat === 'anthropic') {
@@ -994,7 +1018,7 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
           cost: 'N/A (SAP AI Core)'
         };
       }
-      
+
       return {
         content,
         model: modelName,
@@ -1004,7 +1028,7 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
     } else {
       const errorText = await response.text();
       console.warn('[SAP AI Core] Model-specific endpoint failed:', response.status, errorText);
-      
+
       // Provide helpful error messages
       if (errorText.includes('model') && (errorText.includes('required') || errorText.includes('not found'))) {
         throw new Error(`Model configuration error. Try: Settings → SAP AI Core → Select different deployment`);
@@ -1016,19 +1040,19 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
   } catch (specificError) {
     console.warn('[SAP AI Core] Model-specific endpoint error:', specificError.message);
   }
-  
+
   // STRATEGY 3: Claude 4.5 Fallback (Proven to work)
   try {
     console.log('[SAP AI Core] Strategy 3: Trying Claude 4.5 fallback format...');
     console.log('[SAP AI Core] 🔒 PRIVACY: Data sent to SAP AI Core for processing. See AI Transparency doc for details.');
-    
+
     const claudeFallbackUrl = `${deploymentInferenceUrl}/invoke`;
     const claudeFallbackBody = {
       anthropic_version: 'bedrock-2023-05-31',
       max_tokens: maxTokens,
-      messages: [{ role: 'user', content: promptText }]
+      messages: messages
     };
-    
+
     const fallbackResponse = await fetch(claudeFallbackUrl, {
       method: 'POST',
       headers: {
@@ -1038,12 +1062,12 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
       },
       body: JSON.stringify(claudeFallbackBody)
     });
-    
+
     if (fallbackResponse.ok) {
       const fallbackData = await fallbackResponse.json();
       console.log('[SAP AI Core] ✅ Claude fallback successful');
       console.log('[SAP AI Core] ⚠️ REMINDER: AI-generated content should be verified independently before use.');
-      
+
       return {
         content: fallbackData.content?.[0]?.text || 'No response',
         model: primaryModel + ' (Claude fallback)',
@@ -1058,7 +1082,7 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
   } catch (fallbackError) {
     console.error('[SAP AI Core] Claude fallback also failed:', fallbackError.message);
   }
-  
+
   // If all strategies fail
   throw new Error(`All SAP AI Core connection strategies failed. Check: 1) Deployment is RUNNING 2) Credentials are correct 3) Model type is supported`);
 }
@@ -1068,18 +1092,18 @@ async function testWithSAPAICore(promptText, credentials, maxTokens) {
  */
 function calculateOpenAICost(usage, model) {
   if (!usage) return '0.0000';
-  
+
   // Pricing per 1K tokens (as of 2024)
   const pricing = {
     'gpt-4-turbo': { input: 0.01, output: 0.03 },
     'gpt-4': { input: 0.03, output: 0.06 },
     'gpt-3.5-turbo': { input: 0.0005, output: 0.0015 }
   };
-  
+
   const modelPricing = pricing[model] || pricing['gpt-4-turbo'];
   const inputCost = (usage.prompt_tokens / 1000) * modelPricing.input;
   const outputCost = (usage.completion_tokens / 1000) * modelPricing.output;
-  
+
   return (inputCost + outputCost).toFixed(4);
 }
 
@@ -1088,18 +1112,18 @@ function calculateOpenAICost(usage, model) {
  */
 function calculateAnthropicCost(usage, model) {
   if (!usage) return '0.0000';
-  
+
   // Pricing per 1K tokens (as of 2024)
   const pricing = {
     'claude-3-5-sonnet-20241022': { input: 0.003, output: 0.015 },
     'claude-3-opus': { input: 0.015, output: 0.075 },
     'claude-3-haiku': { input: 0.00025, output: 0.00125 }
   };
-  
+
   const modelPricing = pricing[model] || pricing['claude-3-5-sonnet-20241022'];
   const inputCost = (usage.input_tokens / 1000) * modelPricing.input;
   const outputCost = (usage.output_tokens / 1000) * modelPricing.output;
-  
+
   return (inputCost + outputCost).toFixed(4);
 }
 

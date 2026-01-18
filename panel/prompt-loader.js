@@ -1,7 +1,7 @@
-// SF Pro Toolkit - Prompt Loader
+// SAP Pro Toolkit - Prompt Loader
 // Utility for loading, caching, and templating AI prompts from external files.
 
-(function(window) {
+(function (window) {
     const promptCache = new Map();
 
     /**
@@ -30,15 +30,38 @@
 
     /**
      * Fills a prompt template with the provided data.
-     * Replaces all instances of {{key}} with the corresponding value from the data object.
+     * Supports two formats:
+     * 1. Legacy: Simple string with {{key}} replacements → returns string
+     * 2. Structured: SYSTEM: ... ---USER--- {{key}} → returns {messages: [...]}
      * @param {string} template - The prompt template string.
      * @param {Object} data - An object containing key-value pairs for replacement.
-     * @returns {string} The filled prompt string.
+     * @returns {string|Object} The filled prompt string OR structured messages object.
      */
     function fillPromptTemplate(template, data) {
         if (!template || !data) {
             return '';
         }
+
+        // Check if template has SYSTEM/USER structure
+        if (template.includes('SYSTEM:') && template.includes('---USER---')) {
+            const [systemPart, userPart] = template.split('---USER---');
+            const systemContent = systemPart.replace('SYSTEM:', '').trim();
+            
+            // Fill user content with data replacements
+            const userContent = userPart.trim().replace(/\{\{(\w+)\}\}/g, (match, key) => {
+                return data.hasOwnProperty(key) ? data[key] : match;
+            });
+            
+            // Return structured messages format
+            return {
+                messages: [
+                    { role: 'system', content: systemContent },
+                    { role: 'user', content: userContent }
+                ]
+            };
+        }
+        
+        // Legacy: Simple string replacement for backward compatibility
         return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
             return data.hasOwnProperty(key) ? data[key] : match;
         });

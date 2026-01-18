@@ -260,12 +260,15 @@ function detectEnvironmentHeuristic(hostname) {
 
 /**
  * Scrape page content for AI shortcut creation
- * Returns page title, URL, content summary, and error detection
+ * Returns page title, URL, content summary, meta description, and error detection
  * @returns {Object} Scraped page data
  */
 function scrapePageContent() {
   const url = window.location.href;
   const title = document.title;
+  
+  // Extract meta description for non-SAP fallback
+  const metaDescription = extractMetaDescription();
   
   // Detect error pages
   const errorDetection = detectErrorPage();
@@ -277,9 +280,31 @@ function scrapePageContent() {
     title: title,
     url: url,
     content: content,
+    metaDescription: metaDescription,
     error: errorDetection.isError ? errorDetection.message : null,
     errorType: errorDetection.errorType || null
   };
+}
+
+/**
+ * Extract meta description from page head
+ * Checks multiple sources: Open Graph, standard meta, Twitter Card
+ * @returns {string} Meta description or empty string
+ */
+function extractMetaDescription() {
+  // Check Open Graph description (most common for sharing)
+  const ogDescription = document.querySelector('meta[property="og:description"]')?.content;
+  if (ogDescription) return ogDescription.trim();
+  
+  // Check standard meta description
+  const metaDescription = document.querySelector('meta[name="description"]')?.content;
+  if (metaDescription) return metaDescription.trim();
+  
+  // Check Twitter Card description
+  const twitterDescription = document.querySelector('meta[name="twitter:description"]')?.content;
+  if (twitterDescription) return twitterDescription.trim();
+  
+  return '';
 }
 
 /**
