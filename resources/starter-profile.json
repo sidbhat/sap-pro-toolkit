@@ -1,0 +1,55 @@
+{
+    "profileId": "custom-starter-profile",
+    "profileName": "Starter Profile",
+    "profileDescription": "Demo profile with example Notes, Shortcuts, and Environments",
+    "profileIcon": "ai",
+    "shortcuts": [
+        {
+            "id": "shortcut-starter-joule-community",
+            "name": "Joule Community",
+            "url": "https://community.sap.com/topics/joule",
+            "icon": "note",
+            "iconType": "sap",
+            "notes": "Q&A, best practices, and use cases for SAP Joule"
+        },
+        {
+            "id": "shortcut-starter-joule-roadmap",
+            "name": "Joule Roadmap",
+            "url": "https://roadmaps.sap.com/board?q=joule",
+            "icon": "target",
+            "iconType": "sap",
+            "notes": "Upcoming Joule features and release dates"
+        }
+    ],
+    "environments": [
+        {
+            "id": "env-starter-genai-trial",
+            "name": "Gen AI Hub Trial (Learning Journey)",
+            "hostname": "trials.cfapps.eu10-004.hana.ondemand.com",
+            "type": "trial",
+            "icon": "preview",
+            "iconType": "sap",
+            "notes": "SAP Generative AI Hub trial environment for learning and testing"
+        }
+    ],
+    "notes": [
+        {
+            "id": "note-starter-what-is-joule",
+            "title": "🤖 What is SAP Joule?",
+            "content": "What is SAP Joule?\n\nSAP Joule is your AI copilot built into SAP applications. Think of it as having an expert assistant who knows your company's data and can help you work faster.\n\nWhat Can Joule Do?\n\nAsk Questions in Plain English:\n• \"Show my team's pending time off requests\"\n• \"What's our cash position this quarter?\"\n• \"Summarize this employee's performance reviews\"\n\nAutomate Repetitive Tasks:\n• Generate reports from your data\n• Draft emails and documents\n• Fill in forms automatically\n\nGet Instant Insights:\n• Analyze trends in your business data\n• Compare metrics across departments\n• Identify patterns and anomalies\n\nWhere is Joule Available?\n\nJoule is built into these SAP products:\n• SAP SuccessFactors (HR & Talent)\n• SAP S/4HANA (Finance & Operations)\n• SAP Analytics Cloud (Reporting)\n• SAP BTP (Development Platform)\n\nGetting Started:\n\n1. Look for the Joule icon (✨) in your SAP application\n2. Click it to open the chat interface\n3. Type a question or request in natural language\n4. Joule will search your company data and provide answers\n\nTip: Be specific! Instead of \"show sales\", try \"show Q4 2025 sales by region with year-over-year comparison\"\n\nLearn More:\n• Community Q&A: community.sap.com/topics/joule\n• Feature Roadmap: roadmaps.sap.com/board?q=joule",
+            "noteType": "note",
+            "icon": "note",
+            "iconType": "sap",
+            "timestamp": 1737138000000
+        },
+        {
+            "id": "note-starter-resume-prompt",
+            "title": "📄 AI Prompt: Create My Resume",
+            "content": "Help me create a professional resume based on my work experience. Here's my information:\n\nPersonal Details:\n• Name: Sarah Chen\n• Current Role: Senior SAP Consultant\n• Years of Experience: 8 years\n• Industry: Enterprise Technology & HR Software\n\nWork Experience:\n1. Deloitte Digital (2021-Present) - Senior SAP Consultant\n   • Led 5 SuccessFactors implementations for Fortune 500 clients\n   • Reduced implementation timelines by 30% through reusable templates\n   • Managed teams of 4-8 consultants across global projects\n\n2. Accenture (2018-2021) - SAP Functional Consultant\n   • Delivered Employee Central configurations for 12 clients\n   • Trained 200+ end users on HR module functionality\n   • Achieved 95% client satisfaction scores\n\n3. IBM (2016-2018) - Associate Consultant\n   • Supported SAP HCM to SuccessFactors migrations\n   • Created technical documentation for 3 major rollouts\n\nSkills: SAP SuccessFactors, Employee Central, Recruiting, Onboarding, Integration Center, Workday, Project Management, Agile/Scrum, Change Management\n\nEducation: MBA (HR Management), BS Computer Science\n\nCertifications: SAP SuccessFactors Employee Central, PMP, Agile Certified Practitioner\n\nTarget Role: SAP SuccessFactors Practice Lead at a Big 4 consulting firm\n\nPlease create a resume that:\n1. Highlights my most relevant achievements for the target role\n2. Uses strong action verbs (led, developed, improved, achieved)\n3. Quantifies results where possible (increased by X%, saved $Y, managed Z people)\n4. Keeps it to 2 pages given my 8 years of experience\n5. Uses a clean, professional format\n\nStart with a compelling summary statement that captures my value proposition as a senior consultant ready to lead a practice.",
+            "noteType": "ai-prompt",
+            "icon": "note",
+            "iconType": "sap",
+            "timestamp": 1737138001000
+        }
+    ]
+}

@@ -1,0 +1,221 @@
+{
+  "id": "ai-joule",
+  "name": "SAP AI & Joule Hub",
+  "description": "Comprehensive resource center for SAP AI, Joule, Generative AI Hub, and prompt engineering",
+  "icon": "ai",
+  "color": "#00B8D4",
+  "version": "2.0",
+  "contentVersion": "2026-Q1",
+  "lastUpdated": "2026-01-13",
+  "globalShortcuts": [
+    {
+      "icon": "ai",
+      "id": "shortcut-joule-studio",
+      "name": "Joule Studio",
+      "notes": "Build custom Joule skills with low-code platform",
+      "url": "https://www.sap.com/products/artificial-intelligence/generative-ai-hub-trial.html"
+    },
+    {
+      "icon": "3",
+      "id": "shortcut-ai-hub-docs",
+      "name": "Generative AI Hub Docs",
+      "notes": "Official documentation for SAP BTP Generative AI Hub",
+      "url": "https://help.sap.com/docs/sap-ai-core"
+    },
+    {
+      "icon": "7",
+      "id": "shortcut-ai-sdk",
+      "name": "AI Core SDK (GitHub)",
+      "notes": "JavaScript/TypeScript SDK for SAP AI Core integration",
+      "url": "https://github.com/SAP/ai-sdk-js"
+    },
+    {
+      "icon": "4",
+      "id": "shortcut-joule-community",
+      "name": "Joule Community",
+      "notes": "Q&A, best practices, and use cases for SAP Joule",
+      "url": "https://community.sap.com/topics/joule"
+    },
+    {
+      "icon": "0",
+      "id": "shortcut-joule-roadmap",
+      "name": "Joule Roadmap",
+      "notes": "Upcoming Joule features and release dates",
+      "url": "https://roadmaps.sap.com/board?q=joule"
+    },
+    {
+      "icon": "6",
+      "id": "shortcut-ai-ethics",
+      "name": "SAP AI Ethics Guidelines",
+      "notes": "Responsible AI principles and governance framework",
+      "url": "https://www.sap.com/products/artificial-intelligence/ai-ethics.html"
+    },
+    {
+      "icon": "5",
+      "id": "shortcut-ai-business-office",
+      "name": "AI Business Office",
+      "notes": "AI governance, pricing, and compliance portal",
+      "url": "https://www.sap.com/products/artificial-intelligence.html"
+    },
+    {
+      "icon": "0",
+      "id": "shortcut-ai-cost-calc",
+      "name": "AI Cost Calculator",
+      "notes": "Estimate costs for Generative AI Hub usage",
+      "url": "https://discovery-center.cloud.sap/estimator"
+    }
+  ],
+  "environments": [],
+  "notes": [
+    {
+      "id": "note-ai-prompt-1-1736814000000",
+      "title": "Pattern: Document Summarization",
+      "content": "\"Analyze [document type] and generate [output format]: 1) Key decisions made, 2) Action items with owners, 3) Open questions requiring follow-up, 4) Important dates and deadlines.\"\n\nExample: \"Analyze this 50-page meeting transcript and generate executive summary: 1) Top 5 decisions with rationale, 2) Action items with assigned owners and due dates, 3) Unresolved issues flagged for escalation, 4) Critical milestones for Q2 2025.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736814000000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-ai-prompt-2-1736814001000",
+      "title": "Pattern: Foundation Model Comparison",
+      "content": "\"Compare [model A] vs [model B] for [use case]: 1) Quality/accuracy metrics, 2) Latency and performance, 3) Cost per 1000 tokens, 4) Context window size, 5) Specific strengths/weaknesses, 6) Recommended use cases for each.\"\n\nExample: \"Compare GPT-4 Turbo vs Claude 3 Opus for legal document analysis: 1) Accuracy on contract clause extraction, 2) Response time for 10K-token documents, 3) Cost analysis ($0.01/1K vs $0.015/1K input), 4) Context window (128K vs 200K), 5) GPT-4 better at structured output, Claude better at nuanced reasoning, 6) GPT-4 for high-volume batch processing, Claude for complex advisory.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736814001000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-ai-prompt-3-1736814002000",
+      "title": "Pattern: RAG Architecture Design",
+      "content": "\"Design RAG system for [use case] with [data volume]: 1) Document ingestion pipeline (chunking, metadata), 2) Embedding strategy and vector DB choice, 3) Retrieval logic (semantic search, hybrid), 4) LLM integration and prompt template, 5) Hallucination prevention techniques, 6) Cost estimate for [query volume].\"\n\nExample: \"Design RAG system for 100K internal policy documents with 50K queries/month: 1) Ingestion: 500-word chunks with title/date/department metadata using Apache Airflow, 2) Embeddings: OpenAI text-embedding-3-large stored in HANA Cloud Vector Engine, 3) Retrieval: Hybrid search (semantic + keyword) returning top 5 chunks, 4) LLM: Claude 3 Sonnet with prompt template including source citation requirement, 5) Prevention: Confidence scores, 'I don't know' fallback, citation verification, 6) Cost: $2,500/month (embeddings + vector storage + LLM calls).\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736814002000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-ai-prompt-4-1736814003000",
+      "title": "Pattern: AI Cost Optimization",
+      "content": "\"Analyze current AI spending for [scope] and propose cost reduction: 1) Usage patterns by feature/user, 2) Identify high-cost/low-value scenarios, 3) Model downgrade opportunities (GPT-4 → GPT-3.5 where quality sufficient), 4) Caching strategy for repeated queries, 5) Batch processing for non-real-time tasks, 6) Expected savings with risk assessment.\"\n\nExample: \"Analyze current AI spending ($50K/month) for customer support chatbot and propose 40% cost reduction: 1) Usage: 80% simple FAQs, 15% complex troubleshooting, 5% escalations, 2) High cost: Using GPT-4 for all queries regardless of complexity, 3) Downgrade: Route 80% FAQs to GPT-3.5 Turbo (5x cheaper, sufficient quality), 4) Caching: Implement Redis cache for top 1000 FAQ responses (90% hit rate), 5) Batch: Process sentiment analysis nightly instead of real-time, 6) Savings: $22K/month (44%) with <5% quality degradation on FAQs.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736814003000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-ai-prompt-5-1736814004000",
+      "title": "Pattern: Prompt Regression Testing",
+      "content": "\"Create test suite for [AI feature] to detect prompt degradation: 1) Define 20 golden examples with expected outputs, 2) Establish quality metrics (accuracy, relevance, safety), 3) Run tests against [model versions], 4) Flag regressions with severity classification, 5) Generate comparison report with recommendations.\"\n\nExample: \"Create test suite for expense report categorization to detect prompt degradation: 1) Golden examples: 20 expense descriptions with correct categories (travel, meals, software, etc.), 2) Metrics: Category accuracy (>95%), confidence scores (>80%), processing time (<500ms), 3) Test against GPT-4-0613, GPT-4-1106, GPT-4-turbo-2024-01, 4) Flag: Any drop >5% accuracy or new misclassifications, 5) Report showing GPT-4-turbo-2024-01 has 3% accuracy drop on ambiguous cases, recommend staying on GPT-4-1106.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736814004000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-ai-prompt-6-1736814005000",
+      "title": "Pattern: Multi-Step Workflow Automation",
+      "content": "\"Automate [business process] using AI orchestration: 1) Map current manual steps, 2) Identify AI automation opportunities at each step, 3) Define decision points and routing logic, 4) Specify human-in-the-loop checkpoints, 5) Design error handling and rollback, 6) Calculate ROI (time saved, error reduction).\"\n\nExample: \"Automate invoice processing using AI: 1) Current: 10 steps (receive PDF → extract data → validate → match PO → approve → post), 5 FTE, 48hr processing, 8% error rate, 2) AI opportunities: OCR extraction (Step 2), anomaly detection (Step 3), PO matching (Step 4), 3) Routing: <$500 auto-approve, $500-5000 manager review, >$5000 director approval, 4) Human checkpoints: Anomalies flagged (missing PO, price variance >10%), final approval for >$5000, 5) Error handling: OCR confidence <80% → manual queue, failed PO match → alert procurement, 6) ROI: Reduce to 1.5 FTE, 4hr processing, 2% error rate = $280K annual savings.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736814005000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-ai-prompt-7-1736814006000",
+      "title": "Pattern: AI Security Audit",
+      "content": "\"Security audit for [AI implementation]: 1) Data flow analysis (where sensitive data goes), 2) Access control review (who can use AI features), 3) Prompt injection vulnerability scan, 4) Output filtering for PII/secrets, 5) Audit logging gaps, 6) Compliance check for [regulation], 7) Remediation plan with priorities.\"\n\nExample: \"Security audit for customer support AI chatbot: 1) Data flow: Customer queries → OpenAI API → responses stored in AWS S3, 2) Access: All support agents (200 users) can access full chat history, 3) Vulnerability: No input sanitization, potential for prompt injection ('Ignore previous instructions...'), 4) Output: No PII filtering, chatbot may echo credit card numbers from queries, 5) Logging: No audit trail of who accessed which conversations, 6) Compliance: Violates GDPR (no data minimization), SOC2 (insufficient access controls), 7) Remediation: P1 - Implement PII filtering (2 weeks), P2 - Add prompt injection detection (3 weeks), P3 - Enable audit logging (1 week).\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736814006000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-ai-prompt-8-1736814007000",
+      "title": "Pattern: Multilingual AI Implementation",
+      "content": "\"Design multilingual AI solution for [use case] covering [languages]: 1) Language detection strategy, 2) Translation vs native language model comparison, 3) Cultural context handling, 4) Quality assurance per language, 5) Cost analysis by language, 6) Rollout plan by market.\"\n\nExample: \"Design multilingual AI solution for HR policy chatbot covering English, German, French, Japanese, Chinese: 1) Detection: Use fastText language classifier on first user message, 2) Approach: GPT-4 native support for all 5 languages (better than translate-process-translate), 3) Cultural context: Include country-specific policy variations in prompts, 4) QA: Native speaker validation with 50 test queries per language, 5) Cost: Same per query regardless of language ($0.03/query avg), 6) Rollout: English (Jan), German/French (Feb), Japanese/Chinese (Mar) with local HR validation at each phase.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736814007000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-ai-prompt-9-1736814008000",
+      "title": "Pattern: AI + Human-in-the-Loop Design",
+      "content": "\"Design human-AI collaboration for [task]: 1) Tasks AI handles fully automated, 2) Tasks requiring human review with AI assist, 3) Tasks that are human-only, 4) Handoff triggers and escalation criteria, 5) Feedback loop for AI improvement, 6) Efficiency metrics and quality gates.\"\n\nExample: \"Design human-AI collaboration for contract review: 1) Fully automated: Standard clause identification, metadata extraction, version comparison (95% accuracy), 2) AI-assisted: Risk assessment with confidence scores (human reviews <70% confidence cases), non-standard terms flagged for lawyer review, 3) Human-only: Final approval, negotiation strategy, complex legal interpretation, 4) Handoff: AI flags high-risk clauses (liability >$1M, unusual IP terms, regulatory concerns) → immediate lawyer review, 5) Feedback: Lawyer corrections fed back to fine-tune model quarterly, 6) Metrics: AI processes 80% contracts, 10hr → 2hr lawyer time per contract, quality maintained at 99%+ (no missed critical terms).\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736814008000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-ai-prompt-10-1736814009000",
+      "title": "Pattern: AI ROI Business Case",
+      "content": "\"Build AI investment business case for [initiative]: 1) Current state costs (time, errors, staffing), 2) Proposed AI solution with implementation costs, 3) Expected efficiency gains with conservative/realistic/optimistic scenarios, 4) Qualitative benefits (faster time-to-market, better CX), 5) Risk assessment and mitigation, 6) Payback period and 3-year NPV.\"\n\nExample: \"Build AI investment business case for automated expense report processing: 1) Current: 3 FTE at $75K each = $225K/year, 5000 reports/month, 48hr average processing, 8% error rate requiring rework, 2) Proposed: Document AI + workflow automation, $150K implementation + $30K/year operating cost, 3) Efficiency: Conservative 60% reduction (1.2 FTE), Realistic 75% (0.75 FTE), Optimistic 85% (0.45 FTE), 4) Qualitative: Faster reimbursement (48hr → 4hr) improves employee satisfaction, real-time expense tracking enables better budget control, 5) Risks: OCR accuracy varies by receipt quality (mitigation: human review queue for low-confidence extractions), model drift over time (mitigation: quarterly retraining), 6) Realistic scenario: Payback in 11 months, 3-year NPV $312K at 10% discount rate.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736814009000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-joule-activation",
+      "title": "📚 Joule Activation - Complete Guide",
+      "content": "=== Prerequisites (All SAP Solutions) ===\n• SAP Cloud product on latest release (check roadmap for Joule availability)\n• OAuth/SAML authentication configured\n• User roles and authorizations set up\n• BTP subaccount (for cross-solution Joule features)\n\n=== SuccessFactors Joule ===\n**SAP Note**: 3377766\n**Minimum Release**: H1 2025\n\n**Activation Steps**:\n1. Admin Center → System Configuration → Joule Settings\n2. Enable \"Joule Copilot\" toggle\n3. Configure SSO (SAML 2.0 identity provider)\n4. Assign roles: Joule User (end users), Joule Admin (administrators)\n5. Configure data access permissions per role\n6. Test with sample prompt: \"Show my team's pending time off requests\"\n\n**Common Issues**:\n• \"Joule icon not showing\" → Clear browser cache + force refresh (Cmd+Shift+R)\n• \"No data returned\" → Check user has Employee Central permissions\n• \"OAuth error\" → Regenerate OAuth client secret in Provisioning\n\n=== S/4HANA Cloud Joule ===\n**SAP Note**: 3391234\n**Minimum Release**: 2408 (August 2024)\n\n**Activation Steps**:\n1. Fiori Launchpad → Manage Joule Settings\n2. Connect to BTP AI Core tenant (enter tenant URL and credentials)\n3. Enable SAP_BR_JOULE_USER role for users\n4. Configure data access scope (company codes, controlling areas)\n5. Test with sample prompt: \"What's my current cash position?\"\n\n**Integration Requirements**:\n• BTP subaccount with AI services enabled\n• SAP AI Core service instance provisioned\n• Network connectivity: S/4HANA → BTP (check firewall rules)\n\n=== SAP Analytics Cloud (SAC) Joule ===\n**SAP Note**: 3405123\n**Minimum Release**: 2024.20 or later\n\n**Activation Steps**:\n1. SAC → System → Administration → Joule\n2. Enable \"Natural Language Query\" feature\n3. Publish data models (Joule only works with published models)\n4. Configure Smart Discovery settings\n5. Test with sample prompt: \"Show revenue trend by region for last quarter\"\n\n**Data Model Requirements**:\n• Models must be published (not in draft state)\n• Dimensions and measures properly labeled\n• Time dimensions configured (enables \"last quarter\", \"YoY\" queries)\n\n=== BTP Generative AI Hub ===\n**SAP Note**: 3405678\n\n**Setup Steps**:\n1. BTP Cockpit → Entitlements → Assign AI Units (minimum 100 AU)\n2. Create Cloud Foundry space with 2GB memory\n3. Subscribe to \"SAP AI Core\" service\n4. Create service instance and service key\n5. Configure destinations to foundation models:\n   • OpenAI: GPT-4, GPT-3.5-Turbo\n   • Anthropic: Claude 3 (Opus, Sonnet, Haiku)\n   • Google: Gemini Pro\n6. Build custom skills in Joule Studio: https://www.sap.com/products/artificial-intelligence/generative-ai-hub-trial.html\n\n**Cost Management**:\n• Set up budget alerts in BTP Cockpit\n• Monitor usage: BTP Cockpit → Usage & Billing → AI Units\n• Typical consumption: 1 AI Unit = ~500 API calls (varies by model)\n\n=== Post-Activation Checklist ===\n☐ Test Joule in production with 5-10 pilot users\n☐ Gather feedback on prompt accuracy and usefulness\n☐ Configure monitoring and usage analytics\n☐ Train end users with sample prompts\n☐ Document common use cases and best practices\n☐ Set up support process for Joule-related questions\n☐ Plan for quarterly updates as new features released\n\n=== Monitoring & Analytics ===\n• Joule usage dashboard: Check adoption rate by user/department\n• Failed prompts: Review logs to improve training\n• Performance metrics: Response time, accuracy, user satisfaction\n\n=== Resources ===\n• Joule Community: https://community.sap.com/topics/joule\n• Joule Help: https://help.sap.com/joule\n• Joule Roadmap: https://roadmaps.sap.com/board?q=joule\n• SAP AI Ethics: https://www.sap.com/products/artificial-intelligence/ai-ethics.html",
+      "noteType": "note",
+      "icon": "5",
+      "timestamp": 1736813500000
+    },
+    {
+      "id": "note-ai-pricing",
+      "title": "💰 AI Pricing & Cost Optimization (2026)",
+      "content": "=== SAP Business AI Pricing ===\n\n**Joule Base** (Included):\n• Included in SAP cloud product license (no extra cost)\n• Basic conversational AI\n• Standard prompts and Q&A\n• Data summarization\n\n**Joule Premium Skills** ($15/user/month):\n• Custom skill development in Joule Studio\n• Advanced analytics and insights\n• Workflow automation integration\n• 3rd-party data connections\n\n**Generative AI Hub (BTP)** ($0.50 per 1000 API calls):\n• Access to foundation models (GPT-4, Claude, Gemini)\n• Document processing and generation\n• Custom AI applications\n• API-based integration\n\n**Document Grounding** ($5/user/month):\n• Custom content indexing (internal docs, policies, procedures)\n• RAG (Retrieval-Augmented Generation) capabilities\n• Semantic search across company knowledge base\n\n=== Foundation Model Pricing (Per 1M Tokens) ===\n\n**GPT-4 Turbo**:\n• Input: $10/1M tokens\n• Output: $30/1M tokens\n• Context: 128K tokens\n• Best for: Complex reasoning, coding, structured output\n\n**GPT-3.5 Turbo**:\n• Input: $0.50/1M tokens\n• Output: $1.50/1M tokens\n• Context: 16K tokens\n• Best for: Simple tasks, high-volume processing, cost optimization\n\n**Claude 3 Opus**:\n• Input: $15/1M tokens\n• Output: $75/1M tokens\n• Context: 200K tokens\n• Best for: Complex analysis, nuanced reasoning, long documents\n\n**Claude 3 Sonnet**:\n• Input: $3/1M tokens\n• Output: $15/1M tokens\n• Context: 200K tokens\n• Best for: Balanced cost/quality, general-purpose\n\n**Claude 3 Haiku**:\n• Input: $0.25/1M tokens\n• Output: $1.25/1M tokens\n• Context: 200K tokens\n• Best for: High-speed, cost-sensitive applications\n\n**Gemini 1.5 Pro**:\n• Input: $7/1M tokens\n• Output: $21/1M tokens\n• Context: 1M tokens\n• Best for: Massive context windows, video/image analysis\n\n=== Cost Optimization Strategies ===\n\n**1. Model Selection**:\n• Use GPT-3.5 Turbo for simple classification/extraction (5x cheaper than GPT-4)\n• Reserve GPT-4 for complex reasoning and critical decisions\n• Consider Claude Haiku for high-volume, low-complexity tasks\n\n**2. Prompt Optimization**:\n• Reduce unnecessary context in prompts (every word costs money)\n• Use shorter system prompts (move instructions to user message)\n• Cache frequent prompts (OpenAI offers 50% discount on cached prompts)\n\n**3. Response Optimization**:\n• Set max_tokens limits (don't generate more than needed)\n• Use streaming for UX but stop early if sufficient answer received\n• Implement quality gates to avoid generating low-value responses\n\n**4. Batch Processing**:\n• Use batch APIs for non-real-time tasks (50% cost discount)\n• Process overnight reports, analytics, summarization\n• Queue low-priority requests during off-peak hours\n\n**5. Caching Strategy**:\n• Cache common questions and answers (FAQ-style)\n• Implement semantic caching (similar questions → same cached answer)\n• Redis or Memcached for <1ms retrieval vs 2-3s LLM call\n\n**6. Usage Monitoring**:\n• Track costs per feature, user, department\n• Identify high-cost/low-value usage patterns\n• Set budget alerts and rate limits\n\n=== Cost Example Scenarios ===\n\n**Scenario 1: Customer Support Chatbot**\n• Volume: 10,000 conversations/month\n• Average: 10 messages per conversation, 100 tokens each\n• Model: GPT-3.5 Turbo\n• Cost: 10K × 10 × 100 tokens × 2 (input + output) = 20M tokens\n• Monthly: $30/month (incredibly cheap for high value)\n\n**Scenario 2: Document Summarization**\n• Volume: 1,000 documents/month\n• Average: 5,000 tokens input, 500 tokens output\n• Model: Claude Sonnet (better quality for summaries)\n• Cost: (1K × 5K × $3/1M) + (1K × 500 × $15/1M) = $15 + $7.50 = $22.50/month\n\n**Scenario 3: Code Generation**\n• Volume: 500 code generation requests/month\n• Average: 500 tokens prompt, 2,000 tokens code output\n• Model: GPT-4 Turbo (best for coding)\n• Cost: (500 × 500 × $10/1M) + (500 × 2K × $30/1M) = $2.50 + $30 = $32.50/month\n\n=== Budgeting Tips ===\n• Start small: $500-1000/month pilot budget\n• Monitor weekly: Costs can spike unexpectedly\n• Set hard limits: Prevent runaway spending\n• Charge back: Bill AI costs to consuming departments\n• ROI tracking: Measure time saved vs dollars spent\n\n=== Resources ===\n• BTP Pricing Calculator: https://discovery-center.cloud.sap/estimator\n• SAP AI Documentation: https://help.sap.com/docs/sap-ai-core",
+      "noteType": "note",
+      "icon": "0",
+      "timestamp": 1736813600000
+    },
+    {
+      "id": "note-prompt-engineering",
+      "title": "🎓 Prompt Engineering Masterclass",
+      "content": "=== Core Principles ===\n\n**1. Be Specific and Detailed**\n❌ \"Write a report about sales\"\n✅ \"Write a 3-page executive summary of Q4 2024 sales performance for the EMEA region, highlighting top 5 products by revenue, year-over-year growth, and 3 key challenges. Format as: Executive Summary, Key Metrics (table), Analysis (2 paragraphs), Recommendations (5 bullet points).\"\n\n**2. Provide Context and Constraints**\n❌ \"Summarize this document\"\n✅ \"Summarize this 50-page technical specification for a non-technical executive audience. Focus on business impact and cost implications. Maximum 500 words. Use simple language (no jargon). Include risk assessment.\"\n\n**3. Specify Output Format**\n❌ \"Tell me about competitors\"\n✅ \"Create a competitive analysis table with columns: Feature, Our Product, Competitor A, Competitor B, Winner (with reason). Include 10 features. Add a summary paragraph at the end recommending which competitor poses the biggest threat.\"\n\n**4. Use Examples (Few-Shot Learning)**\n❌ \"Classify these transactions\"\n✅ \"Classify these transactions as 'Expense', 'Revenue', or 'Transfer'. Examples:\\n- 'Coffee at Starbucks $4.50' → Expense\\n- 'Invoice payment from ACME Corp $5,000' → Revenue\\n- 'Transfer to savings account $1,000' → Transfer\\nNow classify: [your transactions]\"\n\n**5. Break Complex Tasks into Steps**\n❌ \"Build me a business plan\"\n✅ \"Step 1: Analyze the market for [product] in [region]. Step 2: Identify 3 key competitors and their market share. Step 3: Define our unique value proposition. Step 4: Create financial projections for 3 years. Step 5: Summarize in a 1-page executive summary. Start with Step 1.\"\n\n=== Advanced Techniques ===\n\n**Chain-of-Thought Prompting**:\n\"Solve this problem step by step, showing your reasoning at each stage. Problem: [describe problem]. Think through: 1) What information do I have? 2) What information do I need? 3) What's my approach? 4) Execute the solution. 5) Validate the answer.\"\n\n**Role-Based Prompting**:\n\"You are a senior financial analyst with 15 years of experience in SaaS companies. Analyze this P&L statement and provide insights a CFO would care about. Focus on: unit economics, burn rate, runway, and efficiency metrics.\"\n\n**Constrained Generation**:\n\"Write a product description with EXACTLY these constraints: 150-200 words, mention '5G connectivity', include price ($299), highlight battery life (48 hours), end with a call-to-action, use excited but professional tone, target audience is business travelers.\"\n\n**Self-Consistency**:\n\"Generate 3 different analyses of this data, each using a different analytical approach. Then compare the conclusions and identify which analysis is most reliable and why.\"\n\n**Prompt Chaining**:\nPrompt 1: \"Extract all dollar amounts from this contract.\"\nPrompt 2: \"Using the amounts from your previous response, calculate: total contract value, average per year, variance from industry standard ($50K/year for similar contracts).\"\nPrompt 3: \"Based on your analysis, recommend: approve, negotiate, or reject. Provide 3 supporting reasons.\"\n\n=== Prompt Iteration Process ===\n\n1. **Start Simple**: Basic question\n2. **Test Output**: Run the prompt, review result\n3. **Identify Gaps**: What's missing or wrong?\n4. **Refine**: Add specificity, examples, constraints\n5. **Test Again**: Repeat until satisfied\n6. **Document**: Save successful prompts for reuse\n\n**Example Iteration**:\n\nV1: \"Summarize this article\"\nResult: Too long, misses key points\n\nV2: \"Summarize this article in 5 bullet points, focusing on business implications\"\nResult: Better, but still generic\n\nV3: \"Summarize this article in 5 bullet points for a CFO. Focus on: financial impact, implementation costs, ROI timeline, risks, and recommended next steps. Use data from the article to support each point.\"\nResult: Perfect! ✅\n\n=== Common Pitfalls to Avoid ===\n\n❌ **Vague Language**: \"good\", \"better\", \"nice\" (subjective)\n✅ **Specific Metrics**: \">10% improvement\", \"5-star rating\", \"<2 seconds load time\"\n\n❌ **Assuming Context**: LLM doesn't remember previous conversations (unless explicitly included)\n✅ **Provide Full Context**: Include relevant background in each prompt\n\n❌ **No Validation**: Accepting first output without review\n✅ **Verify**: Cross-check AI output against source data\n\n❌ **Overcomplicating**: 500-word prompt with 20 requirements\n✅ **Simplify**: Break into multiple prompts, each focused\n\n=== Testing Prompts ===\n\n**Regression Testing**:\n• Create 10-20 test cases with expected outputs\n• Run your prompt against all test cases\n• Track accuracy: should be >90% for production use\n• Re-test after model updates (GPT-4 versions, Claude releases)\n\n**A/B Testing**:\n• Create 2 versions of your prompt\n• Test on same input dataset\n• Measure: quality, speed, cost\n• Deploy the winner\n\n=== Prompt Library Organization ===\n\n**Template Structure**:\n```\nPrompt Name: [Descriptive name]\nUse Case: [When to use this]\nModel: [GPT-4, Claude Sonnet, etc.]\nCost: [Estimated tokens]\nAccuracy: [90%, 95%, etc. from testing]\n\nPrompt:\n[Full prompt text with [PLACEHOLDERS]]\n\nExample Input:\n[Sample input]\n\nExample Output:\n[Expected output]\n```\n\n**Versioning**:\n• Save each iteration: prompt-v1.txt, prompt-v2.txt\n• Document what changed and why\n• Track performance metrics per version\n\n=== Resources ===\n• Joule Community: https://community.sap.com/topics/joule\n• SAP AI Documentation: https://help.sap.com/docs/sap-ai-core",
+      "noteType": "note",
+      "icon": "3",
+      "timestamp": 1736813700000
+    },
+    {
+      "id": "note-rag-architecture",
+      "title": "🏗️ RAG Architecture Patterns",
+      "content": "=== What is RAG? ===\n\nRAG (Retrieval-Augmented Generation) combines:\n• **Retrieval**: Search through your documents to find relevant information\n• **Augmentation**: Add that information to the LLM's context\n• **Generation**: LLM generates answer using both its training and your documents\n\n**Why RAG?**\n• LLMs are trained on public data (outdated, generic)\n• RAG adds YOUR company data (current, specific)\n• Reduces hallucination (LLM cites real documents)\n• More accurate than pure LLM or pure keyword search\n\n=== RAG Architecture Components ===\n\n**1. Document Ingestion Pipeline**:\n```\nDocuments (PDF, DOCX, HTML)\n   ↓\nText Extraction (OCR if needed)\n   ↓\nChunking (500-1000 word sections)\n   ↓\nMetadata Extraction (title, date, author, tags)\n   ↓\nEmbedding Generation (OpenAI, Cohere)\n   ↓\nVector Database Storage (HANA Vector Engine, Pinecone)\n```\n\n**2. Query Processing**:\n```\nUser Question\n   ↓\nQuery Embedding (same model as documents)\n   ↓\nSemantic Search (cosine similarity)\n   ↓\nTop K Chunks Retrieved (typically 5-10)\n   ↓\nRerank (optional, improves relevance)\n   ↓\nContext Assembly\n```\n\n**3. LLM Prompting**:\n```\nSystem: You answer questions using ONLY the provided context.\nContext: [Retrieved chunks]\nUser Question: [Original question]\nInstructions: Cite sources. If unsure, say \"I don't know.\"\n   ↓\nLLM Response with Citations\n```\n\n=== Chunking Strategies ===\n\n**Fixed-Size Chunking** (Simple):\n• Split every 500 words\n• Overlap 50 words between chunks\n• Pro: Simple, consistent\n• Con: May split mid-sentence, mid-thought\n\n**Semantic Chunking** (Better):\n• Split at paragraph boundaries\n• Keep related sentences together\n• Pro: Preserves context\n• Con: Variable chunk sizes\n\n**Hierarchical Chunking** (Advanced):\n• Create summaries at multiple levels (section, chapter, document)\n• Search summaries first, then drill into details\n• Pro: Handles long documents well\n• Con: Complex to implement\n\n**Best Practice**: 500-1000 words per chunk with 50-100 word overlap\n\n=== Embedding Models ===\n\n**OpenAI text-embedding-3-large**:\n• Dimensions: 3072\n• Cost: $0.13 per 1M tokens\n• Quality: Excellent for general use\n• Context: 8191 tokens\n\n**OpenAI text-embedding-3-small**:\n• Dimensions: 1536\n• Cost: $0.02 per 1M tokens\n• Quality: Good for cost-sensitive applications\n• Context: 8191 tokens\n\n**Cohere embed-multilingual-v3**:\n• Dimensions: 1024\n• Cost: $0.10 per 1M tokens\n• Quality: Best for multilingual (100+ languages)\n• Context: 512 tokens\n\n**Recommendation**: Start with OpenAI text-embedding-3-large, optimize later if cost is issue\n\n=== Vector Databases ===\n\n**SAP HANA Cloud Vector Engine** (Recommended for SAP customers):\n• Native SAP integration\n• Combines vector search + SQL joins\n• Good for enterprise scale\n• Cost: Included in HANA Cloud license\n\n**Pinecone**:\n• Purpose-built for vectors\n• Excellent performance at scale\n• Managed service (low ops overhead)\n• Cost: $70/month starter plan\n\n**Qdrant**:\n• Open-source, self-hosted\n• Fast and memory-efficient\n• Good for on-premise deployments\n• Cost: Free (hosting costs only)\n\n**Weaviate**:\n• Open-source with commercial support\n• GraphQL API\n• Hybrid search (keyword + vector)\n• Cost: Free (hosting costs only)\n\n=== Retrieval Strategies ===\n\n**Simple Semantic Search**:\n• Embed query → Find top K similar chunks → Pass to LLM\n• Pro: Fast, easy to implement\n• Con: May miss important context\n\n**Hybrid Search** (Better):\n• Semantic search (vector) + Keyword search (BM25)\n• Combine scores (e.g., 70% semantic, 30% keyword)\n• Pro: More robust, catches edge cases\n• Con: Requires both indexes\n\n**Hypothetical Document Embeddings (HyDE)**:\n• LLM generates hypothetical answer to query\n• Embed hypothetical answer (not original query)\n• Search for chunks similar to hypothetical answer\n• Pro: Better retrieval for complex questions\n• Con: Extra LLM call adds cost/latency\n\n**Parent-Child Retrieval**:\n• Embed small chunks for precise search\n• Return parent document (full context) to LLM\n• Pro: Best of both worlds (precision + context)\n• Con: More complex architecture\n\n=== Hallucination Prevention ===\n\n**1. Strict Prompting**:\n```\nYou are a helpful assistant that answers questions using ONLY the provided context.\n\nRULES:\n1. If the answer is not in the context, respond: \"I don't have enough information to answer that.\"\n2. Never make up information or use your training data.\n3. Always cite the specific document/section where you found the information.\n4. If unsure, express uncertainty: \"The documents suggest...\"\n```\n\n**2. Source Citation**:\n• Require LLM to cite [Document Name, Page Number]\n• Users can verify answer against source\n• Builds trust, catches errors\n\n**3. Confidence Scoring**:\n• Embed user question\n• Calculate similarity to top retrieved chunk\n• If similarity < 0.7, warn: \"Low confidence - answer may be unreliable\"\n\n**4. Answer Validation**:\n• Generate answer\n• Ask separate LLM: \"Is this answer supported by this context?\"\n• Only return if validation passes\n\n=== Cost Example ===\n\n**Scenario: 10,000 Documents, 5,000 Queries/Month**\n\n**One-Time Ingestion**:\n• Text extraction: Free (in-house)\n• Chunking: Free (simple code)\n• Embeddings: 10K docs × 5 chunks/doc × 500 tokens/chunk = 25M tokens\n• Cost: 25M × $0.13/1M = $3.25 (one-time)\n• Vector storage: HANA Cloud Vector Engine (included in license)\n\n**Monthly Queries**:\n• Query embeddings: 5K queries × 50 tokens/query = 250K tokens = $0.03\n• Retrieval: Free (vector DB included)\n• LLM calls: 5K queries × (1K input + 500 output) × GPT-4 pricing\n  • Input: 5K × 1K × $10/1M = $50\n  • Output: 5K × 500 × $30/1M = $75\n• Total: $125.03/month\n\n**ROI**: If saves 10hr/month of research time ($50/hr) = $500 value for $125 cost (4x ROI)\n\n=== Implementation Checklist ===\n☐ Choose embedding model (OpenAI text-embedding-3-large recommended)\n☐ Set up vector database (HANA Cloud Vector Engine for SAP)\n☐ Build document ingestion pipeline (chunking, metadata extraction)\n☐ Test retrieval quality with 20 sample questions\n☐ Tune chunk size, overlap, and top K retrieved\n☐ Implement hallucination prevention (strict prompting + citations)\n☐ Add monitoring (query success rate, latency, cost)\n☐ Set up feedback loop (users flag incorrect answers)\n☐ Plan for incremental document updates (new docs added weekly)\n\n=== Resources ===\n• HANA Vector Engine: https://help.sap.com/docs/hana-cloud-database/hana-cloud-vector-engine\n• SAP AI Core Documentation: https://help.sap.com/docs/sap-ai-core",
+      "noteType": "note",
+      "icon": "7",
+      "timestamp": 1736813800000
+    },
+    {
+      "id": "note-model-selection",
+      "title": "📊 Foundation Model Selection Guide",
+      "content": "=== Model Comparison Matrix ===\n\n| Feature | GPT-4 Turbo | Claude 3 Opus | Claude 3 Sonnet | Gemini 1.5 Pro |\n|---------|-------------|---------------|-----------------|----------------|\n| Context Window | 128K | 200K | 200K | 1M (2M in API) |\n| Input Cost | $10/1M | $15/1M | $3/1M | $7/1M |\n| Output Cost | $30/1M | $75/1M | $15/1M | $21/1M |\n| Speed | Fast | Medium | Fast | Fast |\n| Reasoning | Excellent | Excellent | Very Good | Very Good |\n| Coding | Excellent | Very Good | Good | Good |\n| Multimodal | Images | Images | Images | Images + Video |\n| Best For | General, Code | Analysis, Writing | Balanced | Large context |\n\n=== Use Case → Model Recommendations ===\n\n**Code Generation & Review**:\n1. GPT-4 Turbo (best quality)\n2. Claude 3 Opus (close second)\n3. Claude 3 Sonnet (good + cheaper)\n\n**Long Document Analysis**:\n1. Gemini 1.5 Pro (1M context, handles entire books)\n2. Claude 3 Opus/Sonnet (200K, handles most documents)\n3. GPT-4 Turbo (128K, may need splitting)\n\n**Creative Writing**:\n1. Claude 3 Opus (more nuanced, literary style)\n2. GPT-4 Turbo (good but more formal)\n3. Claude 3 Sonnet (faster, still creative)\n\n**Business Analysis & Reasoning**:\n1. Claude 3 Opus (superior analytical depth)\n2. GPT-4 Turbo (strong logical reasoning)\n3. Gemini 1.5 Pro (good for multi-source analysis)\n\n**High-Volume/Cost-Sensitive**:\n1. GPT-3.5 Turbo ($0.50/$1.50 per 1M)\n2. Claude 3 Haiku ($0.25/$1.25 per 1M)\n3. Claude 3 Sonnet (mid-tier option)\n\n**Multilingual**:\n1. GPT-4 Turbo (100+ languages, best overall)\n2. Claude 3 (good multilingual)\n3. Gemini 1.5 Pro (strong in Asian languages)\n\n**Multimodal (Image + Text)**:\n1. GPT-4 Vision (most mature)\n2. Claude 3 Opus (strong vision capabilities)\n3. Gemini 1.5 Pro (includes video understanding)\n\n=== Decision Framework ===\n\n**Ask These Questions**:\n\n1. **What's my context size?**\n   • <16K tokens → GPT-3.5 Turbo (cheapest)\n   • 16-128K → GPT-4 Turbo or Claude 3\n   • 128-200K → Claude 3\n   • 200K-1M → Gemini 1.5 Pro\n\n2. **What's my quality requirement?**\n   • Mission-critical → GPT-4 Turbo or Claude 3 Opus\n   • High → Claude 3 Sonnet\n   • Good enough → GPT-3.5 Turbo or Claude Haiku\n\n3. **What's my volume?**\n   • <1K queries/day → Use best model (GPT-4/Claude Opus)\n   • 1K-10K/day → Consider mid-tier (Claude Sonnet)\n   • >10K/day → Evaluate cost carefully, mix models\n\n4. **What's my latency requirement?**\n   • Real-time (<1s) → GPT-3.5 Turbo, Claude Haiku\n   • Interactive (<3s) → GPT-4 Turbo, Claude Sonnet\n   • Batch (minutes OK) → Any model\n\n5. **Do I need multimodal?**\n   • Images → GPT-4 Vision, Claude 3 Opus\n   • Video → Gemini 1.5 Pro\n   • Text only → Any model\n\n=== Model-Specific Strengths ===\n\n**GPT-4 Turbo**:\n✅ Best at: Structured output (JSON), coding, function calling\n✅ Most reliable for: Production systems requiring consistency\n✅ Great for: Integrations via OpenAI API (extensive ecosystem)\n❌ Watch out: Can be verbose, sometimes misses nuance\n\n**Claude 3 Opus**:\n✅ Best at: Nuanced reasoning, long-form analysis, creative tasks\n✅ Most reliable for: Complex decision-making, strategic analysis\n✅ Great for: When quality > speed, willing to pay premium\n❌ Watch out: Slower than alternatives, highest cost\n\n**Claude 3 Sonnet**:\n✅ Best at: Balanced quality/cost/speed\n✅ Most reliable for: General-purpose production use\n✅ Great for: When you need better than GPT-3.5 but cheaper than GPT-4\n❌ Watch out: Not the best at anything specific\n\n**Gemini 1.5 Pro**:\n✅ Best at: Massive context (books, codebases, video)\n✅ Most reliable for: Multi-source analysis, research tasks\n✅ Great for: When context window is limiting factor\n❌ Watch out: Newer model, less community support\n\n=== Cost Optimization Strategies ===\n\n**1. Cascade Pattern**:\n```\nTry GPT-3.5 Turbo first (cheap)\n  ↓\nIf confidence < 80%, escalate to GPT-4\n  ↓\nIf still unsure, escalate to Claude 3 Opus\n```\nResult: 70% queries handled by cheap model, 20% by mid-tier, 10% by premium\n\n**2. Task Routing**:\n```\nSimple queries → GPT-3.5 Turbo\nComplex reasoning → GPT-4 Turbo\nCreative writing → Claude 3 Opus\nCode generation → GPT-4 Turbo\n```\nRoute automatically based on query classification\n\n**3. Hybrid Approach**:\n• Use Claude Sonnet as default\n• Escalate to Opus for user-flagged \"incorrect\" answers\n• Downgrade to Haiku for low-value/high-volume tasks\n\n=== Testing & Validation ===\n\n**Create Test Suite**:\n1. 50 representative queries\n2. Test against 3 models\n3. Measure:\n   • Quality (human eval, 1-5 scale)\n   • Speed (average response time)\n   • Cost (tokens used)\n   • Consistency (run 3x, check variance)\n\n**Example Results**:\n```\nModel         Quality  Speed   Cost    Consistency\nGPT-4 Turbo   4.7/5    2.1s    $0.05   High (95%)\nClaude Opus   4.8/5    3.5s    $0.12   High (97%)\nClaude Sonnet 4.3/5    1.8s    $0.02   Medium (88%)\nGPT-3.5       3.9/5    0.8s    $0.003  Medium (85%)\n```\n\nDecision: Use Claude Sonnet for production (best quality/cost/speed balance)\n\n=== Monitoring in Production ===\n\n**Track These Metrics**:\n• Success rate (% queries answered correctly)\n• User satisfaction (thumbs up/down)\n• Cost per query (track total spend ÷ query count)\n• Latency (P50, P95, P99 response times)\n• Model performance drift (accuracy over time)\n\n**Alert On**:\n• Success rate drops >5%\n• Cost spikes >20% week-over-week\n• Latency exceeds SLA\n• New model version released (test before switching)\n\n=== Resources ===\n• SAP AI Core Documentation: https://help.sap.com/docs/sap-ai-core\n• SAP BTP Documentation: https://help.sap.com/docs/btp",
+      "noteType": "note",
+      "icon": "0",
+      "timestamp": 1736813900000
+    }
+  ]
+}

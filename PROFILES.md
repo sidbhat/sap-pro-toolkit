@@ -1,6 +1,6 @@
-# 📦 Community Profile Database
+# 📦 SAP Pro Toolkit Profile Database
 
-Welcome to the SAP Pro Toolkit Community Profile Database! This collection of curated profiles enables rapid configuration of the toolkit for different SAP solutions, roles, and use cases.
+Welcome to the SAP Pro Toolkit Profile Database! This collection includes professionally curated profiles and community contributions to help you configure the toolkit for different SAP solutions, roles, and use cases.
 
 ## 🎯 What are Profiles?
 
@@ -11,7 +11,13 @@ Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit wit
 - **AI Prompts**: Joule copilot prompt templates
 - **Notes**: Reference documentation and code snippets
 
-## 📚 Available Profiles
+---
+
+## 📚 System Profiles
+
+**System Profiles** are professionally maintained, pre-tested configurations curated by the SAP Pro Toolkit team. These profiles are regularly updated with the latest features, SAP Notes, and best practices.
+
+**✨ All 8 System Profiles are available in [`resources/`](resources/) directory**
 
 ### 1. 🌍 Global Profile
 **File**: [`resources/profile-global.json`](resources/profile-global.json)
@@ -141,6 +147,31 @@ Profiles are JSON configuration files that pre-configure the SAP Pro Toolkit wit
 
 ---
 
+## 🤝 Community Profiles
+
+**Community Profiles** are contributed by SAP professionals worldwide and showcase specialized workflows, industry-specific configurations, and innovative use cases.
+
+**📋 Current Status**: Accepting submissions! Be the first to contribute.
+
+### How Community Profiles Work
+
+1. **Contributor Attribution**: Each community profile includes the creator's name and optional LinkedIn/GitHub profile
+2. **Quality Reviewed**: All submissions are reviewed for security, quality, and value
+3. **Open Source**: Available for everyone to use, customize, and learn from
+4. **Credit Given**: Contributors are recognized in the profile metadata and this documentation
+
+### Want to Contribute?
+
+We welcome profiles for:
+- **Industry-Specific**: Healthcare, Retail, Manufacturing, Financial Services
+- **Role-Based**: Procurement managers, Payroll admins, IT administrators
+- **Solution-Specific**: Ariba, Concur, Fieldglass, Analytics Cloud
+- **Use Case**: Go-live checklists, Training environments, Demo scenarios
+
+**📖 See [Contributing Your Profile](#-contributing-your-profile) section below for submission guidelines**
+
+---
+
 ## 📥 How to Use Profiles
 
 ### Method 1: Import via Extension UI
@@ -240,14 +271,36 @@ Available icons (use in `icon` field with `"iconType": "library"`):
 
 ## 🤝 Contributing Your Profile
 
-We welcome community-contributed profiles! Here's how:
+We welcome community-contributed profiles! Your expertise can help thousands of SAP professionals worldwide.
+
+### Profile Contribution Benefits
+
+- ✅ **Recognition**: Your name and profile link displayed in the extension UI
+- ✅ **Community Impact**: Help SAP professionals be more productive
+- ✅ **Portfolio**: Showcase your SAP expertise with a public contribution
+- ✅ **Collaboration**: Learn from and connect with other SAP experts
 
 ### 1. Create Your Profile
 
-1. Start with [`starter-profile.json`](resources/starter-profile.json) template
-2. Customize with your shortcuts, environments, and prompts
-3. Test thoroughly in your environment
-4. Add meaningful descriptions and notes
+1. Download [`starter-profile.json`](resources/starter-profile.json) as a template
+2. Customize with your shortcuts, environments, and AI prompts
+3. Add your contributor information (see schema below)
+4. Test thoroughly in the SAP Pro Toolkit extension
+5. Add meaningful descriptions and helpful notes
+
+**Contributor Fields** (add to your profile JSON):
+```json
+{
+  "version": "2.0",
+  "profileName": "Your Profile Name",
+  "profileDescription": "What this profile provides",
+  "contributor": "Your Name",
+  "contributorUrl": "https://linkedin.com/in/yourprofile",
+  "contributorOrg": "Your Company (optional)",
+  "contributionDate": "2026-01-18",
+  ...
+}
+```
 
 ### 2. Sanitize Sensitive Data
 
@@ -266,46 +319,80 @@ We welcome community-contributed profiles! Here's how:
 
 ### 3. Submit Your Profile
 
-**Option A: GitHub Issue**
-1. Go to [Issues](https://github.com/sidbhat/sap-pro-toolkit/issues/new/choose)
+**Option A: GitHub Issue** (Easiest - Recommended)
+1. Go to [Issues → New Issue](https://github.com/sidbhat/sap-pro-toolkit/issues/new/choose)
 2. Select **✨ Feature Request**
-3. Choose **"Yes, I'd like to contribute a profile JSON"**
-4. Paste your profile JSON in the **Additional Context** section
+3. Title: "Community Profile: [Your Profile Name]"
+4. Choose **"Yes, I'd like to contribute a profile JSON"**
+5. Paste your sanitized profile JSON in the **Additional Context** section
+6. Submit!
 
-**Option B: Pull Request**
+**Option B: Pull Request** (Advanced)
 1. Fork the repository
-2. Add your profile: `resources/profile-[name].json`
-3. Update this PROFILES.md with profile description
-4. Submit PR with clear description
+2. Add your profile: `resources/profile-[descriptive-name].json`
+3. Update this `PROFILES.md` file:
+   - Add your profile to the "Community Profiles" section below
+   - Include name, description, contributor, and key features
+4. Submit PR with title: "feat: Add [Profile Name] community profile"
 
-### 4. Profile Contribution Guidelines
+### 4. Profile Review Process
 
-Your profile should:
-- ✅ Have a clear, descriptive name
-- ✅ Include meaningful descriptions for all items
-- ✅ Use appropriate icons from the library
-- ✅ Follow the schema structure
-- ✅ Be tested in the extension
-- ✅ Add value for a specific use case/role
+Your submission will be reviewed for:
+- ✅ **Security**: No sensitive data, credentials, or internal information
+- ✅ **Quality**: Helpful content, clear descriptions, proper formatting
+- ✅ **Value**: Fills a gap, serves a specific SAP role/solution/use case
+- ✅ **Schema**: Valid JSON structure matching the schema
+- ✅ **Testing**: Profile works correctly when imported
+- ✅ **Attribution**: Contributor fields properly filled out
 
-Profiles will be reviewed for:
-- Security (no sensitive data)
-- Quality (helpful content, good descriptions)
-- Uniqueness (fills a gap in existing profiles)
-- Schema compliance (valid JSON structure)
+**Typical review time**: 3-5 business days
+
+Once approved, your profile will be:
+1. Added to the [`resources/`](resources/) directory
+2. Listed in this PROFILES.md documentation
+3. Featured in the Community Profile Gallery
+4. Available for download to all SAP Pro Toolkit users
+
+---
+
+## 🌟 Community Profile Gallery
+
+*This section showcases profiles contributed by the SAP community*
+
+### Currently Accepting First Submissions!
+
+Be among the first contributors to the SAP Pro Toolkit community profile database. Your profile will be featured here with full attribution.
+
+**Ideal First Contributions:**
+- SAP Ariba procurement workflows
+- SAP Concur travel & expense management
+- SAP Analytics Cloud dashboard shortcuts
+- Industry-specific templates (Healthcare, Retail, Manufacturing)
+- Regional SAP resource collections
+
+**How to Get Featured:**
+1. Submit a high-quality profile (15+ well-documented items)
+2. Pass security and quality review
+3. Get merged into the repository
+4. Your profile + contributor info displayed here!
 
 ---
 
 ## 📖 Additional Resources
 
-### Documentation
+### Profile Documentation
+- [resources/README.md](resources/README.md) - Complete schema reference & contribution guide
+- [starter-profile.json](resources/starter-profile.json) - Template for creating profiles
+- This document - Profile catalog and guidelines
+
+### Extension Documentation
 - [README.md](README.md) - Full extension documentation
 - [AI-TRANSPARENCY.md](AI-TRANSPARENCY.md) - AI feature details
 - [PRIVACY-POLICY.md](PRIVACY-POLICY.md) - Data handling practices
 
-### Support
+### Support & Community
 - [Report a Bug](https://github.com/sidbhat/sap-pro-toolkit/issues/new?template=bug_report.yml) - File bug reports
-- [Request a Feature](https://github.com/sidbhat/sap-pro-toolkit/issues/new?template=feature_request.yml) - Suggest new features
+- [Request a Feature](https://github.com/sidbhat/sap-pro-toolkit/issues/new?template=feature_request.yml) - Suggest features or contribute profiles
 - [Discussions](https://github.com/sidbhat/sap-pro-toolkit/discussions) - Community Q&A
 
 ### SAP Resources
@@ -316,6 +403,8 @@ Profiles will be reviewed for:
 ---
 
 ## 📊 Profile Statistics
+
+### System Profiles
 
 | Profile | Shortcuts | Environments | AI Prompts | Notes | Use Case |
 |---------|-----------|--------------|------------|-------|----------|
@@ -328,22 +417,31 @@ Profiles will be reviewed for:
 | AI & Joule | 2+ | 0 | 20+ | 5+ | AI/Productivity |
 | Starter | 2 | 2 | 1 | 3 | Template |
 
----
+**Total System Profiles**: 8  
+**Total Items**: 200+ shortcuts, 50+ environments, 100+ AI prompts
 
-## 🎉 Community Highlights
+### Community Profiles
 
-*Coming soon: Showcase of community-contributed profiles!*
+| Profile | Contributor | Shortcuts | Environments | AI Prompts | Use Case |
+|---------|-------------|-----------|--------------|------------|----------|
+| *Accepting submissions!* | *Be the first!* | - | - | - | - |
 
-Have you created an amazing profile? Share it with the community! We'll feature the best contributions here.
+**Total Community Profiles**: 0 (submissions open!)
 
 ---
 
 ## 📝 Version History
 
-- **v2.0** (2026-01-18): Initial community profile database with 8 curated profiles
-- Profile schema standardization
-- AI prompt library integration
-- Icon library support
+- **v2.0** (2026-01-18): Community contribution system launched
+  - Added contributor attribution fields (`contributor`, `contributorUrl`, `contributorOrg`)
+  - Separated System Profiles (8 curated) from Community Profiles
+  - Created comprehensive contribution guidelines
+  - Established Community Profile Gallery for showcasing contributions
+  - Added `resources/README.md` with complete schema documentation
+- **v1.0** (2026-01-11): Initial profile database with 8 curated profiles
+  - Profile schema standardization
+  - AI prompt library integration
+  - Icon library support
 
 ---
 

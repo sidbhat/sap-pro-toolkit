@@ -1,0 +1,91 @@
+{
+  "version": "2.0",
+  "description": "SAP Business Technology Platform and development tools",
+  "globalShortcuts": [
+    {
+      "icon": "4",
+      "id": "shortcut-btp-discovery",
+      "name": "Discovery Center",
+      "notes": "Cost estimators, reference architectures, and BTP blueprints",
+      "url": "https://discovery-center.cloud.sap"
+    },
+    {
+      "icon": "5",
+      "id": "shortcut-btp-build",
+      "name": "SAP Build",
+      "notes": "Low-code platform (Apps, Process Automation, Work Zone)",
+      "url": "https://build.cloud.sap"
+    },
+    {
+      "icon": "3",
+      "id": "shortcut-btp-ai-hub",
+      "name": "Generative AI Hub",
+      "notes": "Access to foundation models and AI orchestration",
+      "url": "https://help.sap.com/docs/sap-ai-core"
+    },
+    {
+      "icon": "7",
+      "id": "shortcut-cap-samples",
+      "name": "CAP Samples (GitHub)",
+      "notes": "Official SAP CAP sample projects and best practices",
+      "url": "https://github.com/SAP-samples/cloud-cap-samples"
+    }
+  ],
+  "environments": [],
+  "notes": [
+    {
+      "id": "note-btp-prompt-1-1736813960000",
+      "title": "CAP Service Generation",
+      "content": "\"Generate a CAP service for managing [entity] with CRUD operations, input validation, and authorization checks.\"\n\nExample: \"Generate a CAP service for managing customer complaints integrated with S/4HANA with CRUD handlers, input validation (required fields: customer ID, description, severity), authorization checks (managers can see all, employees only their own), and basic unit tests.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813960000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-btp-prompt-2-1736813961000",
+      "title": "Security Audit",
+      "content": "\"Review my BTP subaccount configuration and identify: 1) Security vulnerabilities (overly permissive roles, public endpoints), 2) Missing audit logs, 3) Compliance gaps for [standard].\"\n\nExample: \"Review my BTP subaccount configuration and identify: 1) Security vulnerabilities (roles with wildcard permissions, endpoints without authentication), 2) Missing audit logs for sensitive operations, 3) Compliance gaps for SOC2 and ISO27001 certification requirements.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813961000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-btp-prompt-3-1736813962000",
+      "title": "RAG Implementation",
+      "content": "\"Design a document Q&A system using HANA Vector Engine + Generative AI Hub: 1) Architecture diagram showing data flow, 2) Document ingestion pipeline (chunking strategy, metadata extraction), 3) Embedding and retrieval logic, 4) Hallucination prevention techniques, 5) Cost estimate for [volume] queries/month.\"\n\nExample: \"Design a document Q&A system for 10,000 internal policy documents using HANA Vector Engine + Generative AI Hub: 1) Architecture diagram with component dependencies, 2) Ingestion pipeline (500-word chunks, extract title/date/department metadata), 3) Semantic search with 5 most relevant chunks, 4) Hallucination prevention (cite sources, confidence scores, fallback to 'I don't know'), 5) Cost estimate for 10K queries/month at $0.50 per 1000 API calls.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813962000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-btp-prompt-4-1736813963000",
+      "title": "Workflow Automation",
+      "content": "\"Design an approval workflow for [business process]: 1) Process steps with decision points, 2) Approval routing logic based on [criteria], 3) Integration points with SAP systems, 4) Notification and escalation rules, 5) Return JSON specification for Build Process Automation.\"\n\nExample: \"Design an expense report approval workflow: 1) Steps: Submit → Manager Review → Finance Review → Payment, 2) Routing: <$500 skip Finance, >$5000 require VP approval, 3) Integration: Read employee data from SuccessFactors, post to S/4HANA for payment, 4) Notifications: Email at each step, escalate if pending >3 days, 5) Return Build Process Automation JSON with service tasks and human tasks configured.\"",
+      "noteType": "ai-prompt",
+      "icon": "ai",
+      "timestamp": 1736813963000,
+      "aiConfig": {
+        "defaultModel": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "note-btp-pricing",
+      "title": "BTP Services Pricing (2025)",
+      "content": "BTP Services Pricing (PUPM Model):\n\n=== Core Services ===\n• Cloud Foundry Runtime: $0.03/GB-hour\n• HANA Cloud: $3.50/GB-month\n• PostgreSQL: $0.50/GB-month\n\n=== AI Services ===\n• Generative AI Hub: $0.50 per 1000 API calls\n• Document Information Extraction: $0.40/page\n• AI Core (training): $2.00/GPU-hour\n\n=== Integration ===\n• Integration Suite: $500/tenant/month\n• API Management: $250/tenant/month\n\n=== Low-Code ===\n• SAP Build Apps: $10/user/month\n• SAP Build Process Automation: $25/bot/month\n\n💡 Cost Optimization Tips:\n• Use free tier for dev (200 AUs/month)\n• Scale HANA compute separately from storage\n• Use Cloud Foundry vs Kyma based on workload\n• Monitor with SAP Cloud ALM\n\nPricing Calculator:\nhttps://discovery-center.cloud.sap/estimator",
+      "noteType": "note",
+      "icon": "pricing",
+      "timestamp": 1736633700000
+    }
+  ],
+  "exportDate": "2026-01-11T23:59:00.000Z",
+  "lastUpdated": "2026-01-13"
+}
