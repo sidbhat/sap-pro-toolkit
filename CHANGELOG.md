@@ -9,6 +9,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.5] - 2026-01-18
+### Fixed
+- ⌨️ **Keyboard Shortcuts Not Working**: Fixed missing function export
+  - Added `window.setupEnhancedKeyboardShortcuts` export in toolkit-core.js
+  - Cmd+J (Add Shortcut) now works correctly
+  - Cmd+Shift+N (Add Note) now works correctly - changed from Cmd+M to avoid Chrome minimize conflict
+  - Reduced environment quick-switch to Cmd+Shift+1-2 only (was 1-5)
+  - All keyboard shortcuts fully functional via document listeners
+
+### Changed
+- 🛡️ **Modal Click-Outside Behavior**: Disabled backdrop clicks to prevent accidental data loss
+  - Form modals (Add/Edit Environment, Shortcut, Note, Settings) NO LONGER close when clicking outside
+  - Users must explicitly click X button or Cancel button to close modals
+  - Prevents frustration from accidentally losing filled form data
+  - Follows industry best practices: Material Design, Apple HIG, Microsoft Fluent UI
+  - Especially critical for AI-generated content (prevents token/cost waste)
+
+### Technical
+- Commented out backdrop click event listener in `panel/main.js`
+- Added comprehensive documentation explaining UX rationale
+- Explicit close mechanisms remain functional: X button, Cancel button
+- Note: ESC key was not previously implemented (may add in future)
+
+---
+
+## [1.6.4] - 2026-01-18
+### Fixed
+- 🔧 **Profile Export/Import System**: Simplified and fixed critical bugs
+  - **Export**: Now exports exactly what's in current profile (no manipulation)
+    - Removed "Unknown" profile name fallback bug
+    - Removed forced `custom-` prefix logic
+    - Exports clean JSON with all metadata, shortcuts, environments, notes, and Quick Actions
+  - **Import**: Simplified to ALWAYS create new profile (no merge confusion)
+    - Added smart defaults: profileName → "Imported Profile", icon → 📁, description → ""
+    - Validates all arrays (handles corrupt data gracefully)
+    - Auto-generates unique profile ID: `custom-{name}-{timestamp}`
+    - Removed complex branching (exists vs. doesn't exist, merge vs. create)
+  - **Solutions Import**: Fixed Quick Actions not importing correctly
+    - Added solutions to storage initialization in `createCustomProfile()`
+    - Only imports solutions if array exists and has items
+  - Result: Simple, elegant flow - export → import → create new profile
+
+### Technical
+- Reduced import logic from 150+ lines to 80 lines
+- Added validation for all imported data structures
+- Smart defaults prevent crashes on incomplete JSON
+- Clear confirmation dialog shows exact counts before import
+
+---
+
 ## [1.6.3] - 2026-01-18
 ### Fixed
 - 🔧 **Icon Rendering System**: Corrected icon ID format mismatch (CRITICAL)
