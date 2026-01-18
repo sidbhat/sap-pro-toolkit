@@ -159,7 +159,7 @@ We support three AI model providers. **You choose which one to use:**
 
 ### Questions About AI Features
 - **GitHub Issues:** https://github.com/sidbhat/sap-pro-toolkit/issues
-- **Documentation:** https://github.com/sidbhat/sap-pro-toolkit/blob/main/README.md
+- **Documentation:** https://github.com/sidbhat/sap-pro-toolkit
 
 ### Report AI Issues
 If you encounter:
