@@ -2,7 +2,7 @@
 
 > A Chrome extension for SAP professionals - Your command center for SuccessFactors, S/4HANA, BTP, and more
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshots1.png" alt="SAP Pro Toolkit" width="400">
+<img src="screenshots/sap%20pro%20toolkil%20screenshots1.png" alt="SAP Pro Toolkit" width="300">
 
 **Version**: 1.6.5 | **Status**: Production Ready | **Languages**: 10 supported
 
@@ -33,7 +33,10 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 | **Global** | Everyone | Universal SAP resources, community links |
 | **Starter** | New users | Template with examples |
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshotsSTARTER4.png" alt="Profile System" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsSTARTER4.png" alt="Profile System" width="300">
+</details>
 
 **Switch profiles instantly** with the dropdown in the header. Each profile maintains its own environments, shortcuts, and notes.
 
@@ -41,14 +44,20 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 2. ✨ **AI-Powered Features** - Test, Search, Analyze
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshotsAISEARCH9.png" alt="AI Search" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsAISEARCH9.png" alt="AI Search" width="300">
+</details>
 
 **AI Search** (`Cmd+I`): Search across all your environments, shortcuts, and notes with intelligent insights
 - Understands context and relationships
 - Provides relevance scoring
 - Suggests related items
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshotsAIPROMPT5.png" alt="AI Prompts" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsAIPROMPT5.png" alt="AI Prompts" width="300">
+</details>
 
 **Live AI Prompt Testing**: Test Joule copilot prompts with real AI models
 - **Supported Models**: OpenAI GPT-4, Anthropic Claude, SAP AI Core
@@ -56,7 +65,10 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 - Save responses as notes for reference
 - Download responses in TXT/MD/HTML formats
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshotsAIRESPONSENOTE10.png" alt="AI Response" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsAIRESPONSENOTE10.png" alt="AI Response" width="300">
+</details>
 
 **AI Diagnostics**: Generate intelligent page analysis reports
 - Automatic troubleshooting insights
@@ -72,7 +84,10 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 3. 🌐 **Environment Management** - Switch Safely
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshots2.png" alt="Environment Switching" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshots2.png" alt="Environment Switching" width="300">
+</details>
 
 **One-click switching** between Production, Preview, Sales, and Sandbox instances:
 - 🔴 **Production** - Red indicator with confirmation prompts
@@ -92,7 +107,10 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 4. ⚡ **Quick Actions** - One-Click Workflows
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshotsQUICKACTION6.png" alt="Quick Actions" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsQUICKACTION6.png" alt="Quick Actions" width="300">
+</details>
 
 **Solution-specific workflows** that adapt to your current profile:
 - Admin tools (Provisioning, RBP, User Management)
@@ -101,7 +119,10 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 - Time management (Time Off, Time Sheets)
 - Compensation planning
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshotsCONFIGUREQA14.png" alt="Configure Quick Actions" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsCONFIGUREQA14.png" alt="Configure Quick Actions" width="300">
+</details>
 
 **Customize in Settings**: Edit names and paths for each profile
 
@@ -109,7 +130,10 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 5. 🔍 **Diagnostics & System Info**
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshotsPAGEDIAGNOSTICS12.png" alt="Page Diagnostics" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsPAGEDIAGNOSTICS12.png" alt="Page Diagnostics" width="300">
+</details>
 
 **One-click diagnostic reports** for troubleshooting:
 - Environment details (datacenter, region, platform)
@@ -118,7 +142,10 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 - API endpoints and configuration
 - **Copy to clipboard** for support tickets
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshotsSFPAGEDIAGNOSTICS13.png" alt="SF Diagnostics" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsSFPAGEDIAGNOSTICS13.png" alt="SF Diagnostics" width="300">
+</details>
 
 **Enhanced for SuccessFactors**: Extracts additional SF-specific data when available
 
@@ -128,7 +155,10 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 📋 **Smart Shortcuts** - Organize External Links
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshotsADDSHORTCUT8.png" alt="Add Shortcut" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsADDSHORTCUT8.png" alt="Add Shortcut" width="300">
+</details>
 
 **External link management** with AI-powered summaries:
 - Add any external URL (documentation, roadmaps, communities)
@@ -195,7 +225,10 @@ Auto-detects from SAP environment (`?locale=`) or browser settings
 
 ### 📦 **Import/Export**
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshotsEXPORT11.png" alt="Export Profile" width="400">
+<details>
+<summary>📸 View Screenshot</summary>
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsEXPORT11.png" alt="Export Profile" width="300">
+</details>
 
 **Backup and share configurations**:
 - Export current profile as JSON file
