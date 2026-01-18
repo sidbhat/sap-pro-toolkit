@@ -18,7 +18,7 @@ This guide explains how to enable GitHub's native security features to complemen
 **What it does**: Scans for 200+ secret patterns and blocks pushes containing secrets
 
 **How to enable**:
-1. Go to: https://github.com/sidbhat/sf-pro-toolkit/settings/security_analysis
+1. Go to: https://github.com/sidbhat/sap-pro-toolkit/settings/security_analysis
 2. Scroll to "Secret scanning"
 3. Click **"Enable"** for:
    - ✅ Secret scanning
@@ -41,7 +41,7 @@ This guide explains how to enable GitHub's native security features to complemen
 **What it does**: Scans npm packages for known vulnerabilities and auto-creates PRs to fix them
 
 **How to enable**:
-1. Same page: https://github.com/sidbhat/sf-pro-toolkit/settings/security_analysis
+1. Same page: https://github.com/sidbhat/sap-pro-toolkit/settings/security_analysis
 2. Scroll to "Dependabot"
 3. Click **"Enable"** for:
    - ✅ Dependabot alerts (notifies you of vulnerable dependencies)
@@ -61,7 +61,7 @@ This guide explains how to enable GitHub's native security features to complemen
 **What it does**: Advanced static analysis to find security vulnerabilities in code logic
 
 **How to enable**:
-1. Same page: https://github.com/sidbhat/sf-pro-toolkit/settings/security_analysis
+1. Same page: https://github.com/sidbhat/sap-pro-toolkit/settings/security_analysis
 2. Scroll to "Code scanning"
 3. Click **"Set up"** → **"Default"**
 4. GitHub auto-creates `.github/workflows/codeql.yml`

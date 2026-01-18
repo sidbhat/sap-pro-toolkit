@@ -540,7 +540,7 @@ chrome.storage.local.get('customProfiles', (result) => {
 ## 📞 Support
 
 For additional help:
-- GitHub Issues: https://github.com/sidbhat/sf-pro-toolkit/issues
+- GitHub Issues: https://github.com/sidbhat/sap-pro-toolkit/issues
 - Check `TESTING-GUIDE.md` for testing procedures
 - Review `IMPLEMENTATION-STATUS.md` for feature documentation
 

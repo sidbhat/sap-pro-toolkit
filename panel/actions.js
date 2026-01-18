@@ -747,13 +747,13 @@ ${note.content || ''}
 
   // Detect if this is an AI-generated note
   const isAINote = note.noteType === 'ai-prompt' || note.title.startsWith('AI Response');
-  
+
   // Use conditional header and disclaimer based on AI detection
-  const header = isAINote 
+  const header = isAINote
     ? window.i18n('exportHeaderToolkitAINote')
     : window.i18n('exportHeaderToolkitNote');
-  
-  const disclaimer = isAINote 
+
+  const disclaimer = isAINote
     ? window.i18n('aiDisclaimerExport')
     : window.i18n('toolkitDisclaimerExport');
 
@@ -1364,15 +1364,24 @@ window.exportCurrentProfile = async function () {
     }
 
     // Build export data with profile metadata
+    // Ensure all exports have custom- prefix so they import safely
+    let exportId = window.currentProfile;
+    let exportType = isCustom ? 'custom' : 'system';
+
+    if (!isCustom) {
+      exportId = `custom-${window.currentProfile}`;
+      exportType = 'custom'; // Treat as custom for import logic
+    }
+
     const exportData = {
       version: '1.0',
       exportType: 'single-profile',
       exportDate: new Date().toISOString(),
-      profileId: window.currentProfile,
+      profileId: exportId,
       profileName: profile.name,
       profileIcon: profile.icon || '📁',
       profileDescription: profile.description || '',
-      profileType: isCustom ? 'custom' : 'system',
+      profileType: exportType,
       environments: window.environments,
       shortcuts: window.shortcuts,
       notes: window.notes,
@@ -1565,32 +1574,8 @@ window.handleFileImport = async function (event) {
       return;
     }
 
-    // SIMPLIFIED IMPORT LOGIC: Always create new custom profile
-    // Generate auto-incremented profile name
-    let baseName = data.profileName || 'Imported Profile';
-    let profileName = baseName;
-    let counter = 1;
-
-    // Keep incrementing until we find an unused name
-    while (window.availableProfiles.some(p => p.name === profileName)) {
-      profileName = `${baseName} ${counter}`;
-      counter++;
-    }
-
-    // Generate profile ID from name
-    const profileId = `custom-${profileName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
-
-    console.log('[Import] Creating new custom profile:', { profileName, profileId });
-
-    // Create new custom profile with imported data
-    const success = await window.createCustomProfile(profileId, profileName, data);
-
-    if (success) {
-      const itemCount = (data.shortcuts?.length || 0) + (data.environments?.length || 0) + (data.notes?.length || 0);
-      if (window.showToast) {
-        window.showToast(window.i18n('importedIntoNewProfile', [itemCount.toString(), profileName]), 'success');
-      }
-    }
+    // Pass to single profile handler
+    await handleSingleProfileImport(data, event);
 
   } catch (error) {
     console.error('Import failed:', error);
@@ -1697,6 +1682,32 @@ async function handleFullBackupImport(data, event) {
 async function handleSingleProfileImport(data, event) {
   try {
     console.log('[Import Single Profile] Starting...', data.profileName);
+
+    // Fix "Unknown" profile names from failed exports
+    if (data.profileName === 'Unknown') {
+      data.profileName = 'Imported Profile';
+    }
+
+    // Safety: Protect Standard Profiles
+    // If it's not a custom profile ID, force it to be a new custom copy
+    if (!data.profileId.startsWith('custom-')) {
+      console.log('[Import] Standard profile detected - forcing copy');
+
+      // Create new unique ID and name
+      data.profileId = `custom-${data.profileName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
+      data.profileName = `${data.profileName} (Copy)`;
+      data.profileType = 'custom';
+
+      // Proceed to create as new
+      await window.createCustomProfile(data.profileId, data.profileName, data);
+
+      if (window.showToast) {
+        window.showToast(window.i18n('importedIntoNewProfile', ['(Standard Profile Copy)', data.profileName]), 'success');
+      }
+
+      event.target.value = '';
+      return;
+    }
 
     const isCustom = data.profileType === 'custom';
     const profileId = data.profileId;

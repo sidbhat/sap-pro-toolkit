@@ -383,7 +383,7 @@ A Chrome extension that transforms SAP productivity through three core capabilit
 - **Support**: support@sapprotoolkit.com
 - **Security**: security@sapprotoolkit.com
 - **Website**: https://sapprotoolkit.com
-- **GitHub**: https://github.com/sidbhat/sf-pro-toolkit
+- **GitHub**: https://github.com/sidbhat/sap-pro-toolkit
 
 ---
 

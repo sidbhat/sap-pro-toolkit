@@ -1,4 +1,5 @@
 {
+    "profileId": "custom-starter-profile",
     "profileName": "Starter Profile",
     "profileDescription": "A demo profile with examples of Notes, Environments, and Shortcuts. Feel free to delete!",
     "profileIcon": "ai",

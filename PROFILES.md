@@ -267,7 +267,7 @@ We welcome community-contributed profiles! Here's how:
 ### 3. Submit Your Profile
 
 **Option A: GitHub Issue**
-1. Go to [Issues](https://github.com/sidbhat/sf-pro-toolkit/issues/new/choose)
+1. Go to [Issues](https://github.com/sidbhat/sap-pro-toolkit/issues/new/choose)
 2. Select **✨ Feature Request**
 3. Choose **"Yes, I'd like to contribute a profile JSON"**
 4. Paste your profile JSON in the **Additional Context** section
@@ -304,9 +304,9 @@ Profiles will be reviewed for:
 - [PRIVACY-POLICY.md](PRIVACY-POLICY.md) - Data handling practices
 
 ### Support
-- [Report a Bug](https://github.com/sidbhat/sf-pro-toolkit/issues/new?template=bug_report.yml) - File bug reports
-- [Request a Feature](https://github.com/sidbhat/sf-pro-toolkit/issues/new?template=feature_request.yml) - Suggest new features
-- [Discussions](https://github.com/sidbhat/sf-pro-toolkit/discussions) - Community Q&A
+- [Report a Bug](https://github.com/sidbhat/sap-pro-toolkit/issues/new?template=bug_report.yml) - File bug reports
+- [Request a Feature](https://github.com/sidbhat/sap-pro-toolkit/issues/new?template=feature_request.yml) - Suggest new features
+- [Discussions](https://github.com/sidbhat/sap-pro-toolkit/discussions) - Community Q&A
 
 ### SAP Resources
 - [SAP Community](https://community.sap.com) - Expert discussions
@@ -383,9 +383,9 @@ Have you created an amazing profile? Share it with the community! We'll feature 
 
 ## 📞 Questions?
 
-- **General Questions**: [GitHub Discussions](https://github.com/sidbhat/sf-pro-toolkit/discussions)
-- **Bug Reports**: [GitHub Issues](https://github.com/sidbhat/sf-pro-toolkit/issues)
-- **Feature Requests**: [Feature Request Template](https://github.com/sidbhat/sf-pro-toolkit/issues/new?template=feature_request.yml)
+- **General Questions**: [GitHub Discussions](https://github.com/sidbhat/sap-pro-toolkit/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/sidbhat/sap-pro-toolkit/issues)
+- **Feature Requests**: [Feature Request Template](https://github.com/sidbhat/sap-pro-toolkit/issues/new?template=feature_request.yml)
 
 ---
 

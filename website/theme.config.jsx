@@ -1,11 +1,11 @@
 export default {
-  logo: <span>SF Pro Toolkit</span>,
+  logo: <span>SAP Pro Toolkit</span>,
   project: {
-    link: 'https://github.com/sidbhat/sf-pro-toolkit'
+    link: 'https://github.com/sidbhat/sap-pro-toolkit'
   },
-  docsRepositoryBase: 'https://github.com/sidbhat/sf-pro-toolkit/tree/main/website',
+  docsRepositoryBase: 'https://github.com/sidbhat/sap-pro-toolkit/tree/main/website',
   footer: {
-    text: 'SF Pro Toolkit - Made with ❤️ by the SAP Community'
+    text: 'SAP Pro Toolkit - Made with ❤️ by the SAP Community'
   },
   useNextSeoProps() {
     return {
@@ -15,8 +15,8 @@ export default {
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta property="og:title" content="SF Pro Toolkit" />
-      <meta property="og:description" content="Supercharge your SAP workflows with AI-powered insights, quick actions, and community profiles" />
+      <meta property="og:title" content="SAP Pro Toolkit" />
+      <meta property="og:description" content="Community-driven profiles, documentation, and contributions for SAP Pro Toolkit" />
     </>
   ),
   primaryHue: 210,

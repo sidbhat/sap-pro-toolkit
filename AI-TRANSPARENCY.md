@@ -136,7 +136,7 @@ We support three AI model providers. **You choose which one to use:**
 ### How to Exercise Your Rights
 - **Disable AI Features:** Settings > API Keys > Clear all keys
 - **View AI Transparency:** Click "AI Transparency & Privacy" link in extension footer
-- **Contact Support:** Open issue on GitHub: https://github.com/sidbhat/sf-pro-toolkit/issues
+- **Contact Support:** Open issue on GitHub: https://github.com/sidbhat/sap-pro-toolkit/issues
 
 ---
 
@@ -158,8 +158,8 @@ We support three AI model providers. **You choose which one to use:**
 ## Contact & Support
 
 ### Questions About AI Features
-- **GitHub Issues:** https://github.com/sidbhat/sf-pro-toolkit/issues
-- **Documentation:** https://github.com/sidbhat/sf-pro-toolkit/blob/main/README.md
+- **GitHub Issues:** https://github.com/sidbhat/sap-pro-toolkit/issues
+- **Documentation:** https://github.com/sidbhat/sap-pro-toolkit/blob/main/README.md
 
 ### Report AI Issues
 If you encounter:
