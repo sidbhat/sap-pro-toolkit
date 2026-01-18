@@ -349,7 +349,7 @@ Extension pending Chrome Web Store review
 - 💬 [Discussions](https://github.com/sidbhat/sap-pro-toolkit/discussions)
 - 📦 [Download Profiles](https://github.com/sidbhat/sap-pro-toolkit/tree/main/resources)
 
-**Learn More**: [PROFILES.md](PROFILES.md) • [COMMUNITY-PROFILE-GUIDE.md](COMMUNITY-PROFILE-GUIDE.md)
+**Learn More**: [PROFILES.md](https://github.com/sidbhat/sap-pro-toolkit/blob/master/PROFILES.md)
 
 ---
 
