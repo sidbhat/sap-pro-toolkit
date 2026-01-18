@@ -1,16 +1,344 @@
 # Coding Standards & Best Practices
 
-**Last Updated**: 2026-01-16  
-**Purpose**: Prevent hasty fixes, enforce systematic debugging, and maintain code quality
+**Last Updated**: 2026-01-18  
+**Purpose**: Prevent hasty fixes, enforce systematic debugging, comprehensive QA, and maintain code quality
 
 ---
 
 ## Core Principles
 
-1. **Modularity and Code Reuse**: Always check for existing implementations before writing new code
-2. **Security**: This is a Manifest V3 Chrome extension - understand CSP, XSS, and security implications
-3. **Consistency**: Reuse existing CSS styles, components, and patterns
-4. **Systematic Debugging**: Invest 30 minutes in diagnosis to save 3+ hours of wrong fixes
+1. **Second-Order Impact Analysis**: ALWAYS analyze cross-file impact BEFORE writing ANY code
+2. **Comprehensive QA**: Test changes across entire project, not just modified files
+3. **Modularity and Code Reuse**: Always check for existing implementations before writing new code
+4. **Security**: This is a Manifest V3 Chrome extension - understand CSP, XSS, and security implications
+5. **Consistency**: Reuse existing CSS styles, components, and patterns
+6. **Systematic Debugging**: Invest 30 minutes in diagnosis to save 3+ hours of wrong fixes
+
+---
+
+## 🎯 SECOND-ORDER IMPACT ANALYSIS (NEW - CRITICAL)
+
+### The Icon Fix Lesson: Hidden Ripple Effects (2026-01-18)
+
+**What happened**: Fixed icon URI format in 3 files, but didn't check OTHER profile JSONs for same issue.
+
+**Discovery**: After "completing" the fix, found 8 additional profile JSONs with invalid icon IDs (numeric values, "rocket", "pricing").
+
+**Why it matters**: A "complete" fix that only addresses visible symptoms creates technical debt and inconsistent behavior across the system.
+
+---
+
+### MANDATORY: Before Writing ANY Code
+
+**Cross-File Impact Checklist (DO NOT SKIP!):**
+
+```bash
+# 1. Find ALL files that use the same data structure/pattern
+grep -rn "pattern\|field\|function" --include="*.js" --include="*.json" .
+
+# 2. Find ALL files that depend on the change you're making
+grep -rn "functionName\|variableName\|constantName" --include="*.js" .
+
+# 3. Check ALL similar files (e.g., if fixing one JSON, check all JSONs)
+find resources -name "*.json" -type f
+
+# 4. Search for the same pattern across the entire project
+grep -rn "icon.*:" --include="*.json" resources/
+
+# 5. Identify integration points (who calls this? who depends on this?)
+grep -rn "yourFunction\|yourVariable" --include="*.js" .
+```
+
+**Answer these questions:**
+- [ ] What OTHER files use this same pattern/structure?
+- [ ] What OTHER components depend on this change?
+- [ ] What SIDE EFFECTS might this change cause?
+- [ ] What DATA might be affected by this change?
+- [ ] What USER WORKFLOWS might break from this change?
+
+**Time Investment**: 15-20 minutes of impact analysis prevents days of bug hunting
+
+---
+
+### ✅ CORRECT: Second-Order Impact Analysis Example
+
+**Scenario**: Fixing icon URI format issue
+
+```
+Primary Change:
+├─> panel/state.js (DEFAULT_ICONS)
+├─> resources/starter-profile.json (icon values)
+└─> panel/toolkit-core.js (rendering)
+
+Second-Order Impact Analysis:
+├─> Are there OTHER profile JSONs? 
+│   └─> YES: 8 more profile JSONs exist
+│       └─> Check: Do they have same icon format issue?
+│           └─> FOUND: All 8 have invalid icon IDs!
+│
+├─> Does this affect icon picker?
+│   └─> Check: panel/icon-picker.js integration
+│       └─> VERIFIED: Picker returns library IDs (correct)
+│
+├─> Does this affect rendering in OTHER places?
+│   └─> Check: All renderX() functions
+│       └─> VERIFIED: All use window.renderSAPIcon() (centralized)
+│
+└─> Does this affect user data?
+    └─> Check: Migration logic in load functions
+        └─> VERIFIED: Applies DEFAULT_ICONS to migrated data (correct)
+```
+
+**Result**: Discovered 8 additional files needing fixes BEFORE claiming "done"
+
+---
+
+### ❌ WRONG: Fixing in Isolation
+
+```
+1. See bug in file A
+2. Fix file A
+3. Test file A works
+4. Commit → "Fixed!" ❌
+
+Missing:
+- Didn't check if files B, C, D have same issue
+- Didn't verify integration with files E, F, G
+- Didn't test full user workflows
+- Created inconsistent system (1 file fixed, 8 broken)
+```
+
+**Result**: Incomplete fix, technical debt, inconsistent behavior
+
+---
+
+## 🔍 COMPREHENSIVE QA PROTOCOL (NEW - MANDATORY)
+
+### The Icon Fix QA Lesson (2026-01-18)
+
+After implementing ANY code change, you MUST perform comprehensive QA:
+
+---
+
+### Phase 1: MODIFIED FILES VERIFICATION (5 checks)
+
+**Check 1: Syntax Validation**
+```bash
+# JavaScript files
+node --check panel/your-file.js
+
+# JSON files  
+python3 -m json.tool resources/your-file.json > /dev/null
+
+# CSS files (visual inspection)
+# Look for: missing semicolons, unclosed brackets, invalid properties
+```
+
+**Check 2: Data Consistency**
+```bash
+# If you changed a data format, verify ALL occurrences
+grep -rn "yourDataField" --include="*.json" resources/
+
+# If you changed a constant, verify ALL references
+grep -rn "YOUR_CONSTANT" --include="*.js" .
+```
+
+**Check 3: Integration Points**
+```bash
+# Find ALL functions that call your modified function
+grep -rn "yourModifiedFunction()" --include="*.js" .
+
+# Find ALL places that read your modified data
+grep -rn "yourDataStructure\." --include="*.js" .
+```
+
+**Check 4: Function Signature Changes**
+```bash
+# If you changed parameters, find ALL call sites
+grep -rn "yourFunction(" --include="*.js" .
+
+# Verify all calls pass correct number/type of parameters
+```
+
+**Check 5: Breaking Changes**
+- [ ] Does old data format still work? (backward compatibility)
+- [ ] Are there migration paths for existing users?
+- [ ] Will this break any external dependencies?
+
+---
+
+### Phase 2: CROSS-FILE REGRESSION TESTING (4 checks)
+
+**Check 1: Similar Files**
+```bash
+# If you modified a JSON, check ALL JSONs for consistency
+find resources -name "*.json" -type f
+
+# If you modified a component, check similar components
+find panel -name "*-component.js" -type f
+```
+
+**Check 2: Data Flow End-to-End**
+```
+Storage → Load → Process → Render → Display
+  ↓        ↓        ↓         ↓        ↓
+[Test each step individually]
+```
+
+**Example for Icon System**:
+```bash
+# 1. Storage: Check all profile JSONs
+grep '"icon":' resources/*.json
+
+# 2. Load: Verify migration logic
+grep -A 10 "iconType" panel/state.js
+
+# 3. Render: Check rendering calls
+grep "renderSAPIcon" panel/ui-render.js
+
+# 4. Display: Test in browser (visual verification)
+```
+
+**Check 3: Feature Interactions**
+- [ ] Does Feature A still work after changing Feature B?
+- [ ] Do modals/dropdowns/tooltips still function?
+- [ ] Do keyboard shortcuts still work?
+- [ ] Does profile switching preserve state?
+
+**Check 4: Edge Cases**
+- [ ] Empty state (no data)
+- [ ] Large datasets (100+ items)
+- [ ] Rapid interactions (spam clicks)
+- [ ] Invalid/missing data fields
+- [ ] Browser compatibility (Chrome, Edge)
+
+---
+
+### Phase 3: FULL PROJECT SCAN (3 checks)
+
+**Check 1: Pattern Consistency**
+```bash
+# Find ALL instances of the pattern you changed
+grep -rn "yourPattern" --include="*.js" --include="*.json" .
+
+# Verify consistency (are some files using old pattern?)
+# Example: Icon format
+grep -rn '"icon":' resources/*.json | grep -v "ai\|note\|link\|folder"
+```
+
+**Check 2: Unused Code Detection**
+```bash
+# After refactoring, check for orphaned code
+grep -rn "oldFunctionName" --include="*.js" .
+
+# Should return 0 results if properly refactored
+```
+
+**Check 3: Documentation Sync**
+```bash
+# Verify docs match code reality
+# Check: README.md, CHANGELOG.md, technical docs
+# Look for outdated examples, incorrect function signatures
+```
+
+---
+
+### Phase 4: USER JOURNEY TESTING (5 scenarios)
+
+**Scenario 1: Fresh Install**
+- [ ] Extension loads without errors
+- [ ] Default data populates correctly
+- [ ] All features accessible
+
+**Scenario 2: Existing User (Migration)**
+- [ ] Old data migrates successfully
+- [ ] No data loss
+- [ ] Icons/functionality preserved
+
+**Scenario 3: Full CRUD Cycle**
+- [ ] Create new item → Works
+- [ ] Edit item → Works  
+- [ ] Delete item → Works
+- [ ] List updates correctly
+
+**Scenario 4: Context Switching**
+- [ ] Switch profiles → Works
+- [ ] Switch environments → Works
+- [ ] Data persists correctly
+
+**Scenario 5: Error Handling**
+- [ ] Invalid input handled gracefully
+- [ ] Network errors don't crash extension
+- [ ] Storage errors show user-friendly messages
+
+---
+
+## 📊 QA CHECKLIST TEMPLATE
+
+Copy this checklist before EVERY code change:
+
+```markdown
+## Pre-Code Analysis
+- [ ] Mapped full code flow (entry → processing → output)
+- [ ] Identified ALL files using this pattern/structure
+- [ ] Listed ALL functions that depend on this change
+- [ ] Analyzed second-order impacts (ripple effects)
+- [ ] Checked for similar code patterns in other files
+
+## Implementation
+- [ ] Code written following established patterns
+- [ ] No duplicate code introduced
+- [ ] Proper error handling added
+- [ ] Comments/documentation added
+
+## Modified Files QA (5 checks)
+- [ ] Syntax validation (no parse errors)
+- [ ] Data consistency verified
+- [ ] Integration points tested
+- [ ] Function signatures correct
+- [ ] Backward compatibility maintained
+
+## Cross-File Regression (4 checks)
+- [ ] Similar files checked for consistency
+- [ ] Data flow tested end-to-end
+- [ ] Feature interactions verified
+- [ ] Edge cases tested
+
+## Full Project Scan (3 checks)
+- [ ] Pattern consistency across project
+- [ ] No orphaned code remaining
+- [ ] Documentation synced with code
+
+## User Journey Testing (5 scenarios)
+- [ ] Fresh install tested
+- [ ] Existing user migration tested
+- [ ] Full CRUD cycle tested
+- [ ] Context switching tested
+- [ ] Error handling tested
+
+## Pre-Commit Final Check
+- [ ] Security audit passed (/security)
+- [ ] No console errors
+- [ ] CHANGELOG.md updated
+- [ ] All tests passed
+```
+
+---
+
+## 🚨 LESSONS FROM REAL BUGS
+
+### Bug 1: Section Toggle (2026-01-16) - 4 hours wasted
+**Mistake**: Hasty fix, tested only initial load
+**Lesson**: Test full lifecycle, not just happy path
+
+### Bug 2: Icon URI Format (2026-01-18) - Incomplete fix
+**Mistake**: Fixed 3 files, didn't check 8 other profile JSONs
+**Lesson**: Always scan for pattern across ENTIRE project
+
+**Combined Lesson**: 
+- 30 minutes of diagnosis + 20 minutes of impact analysis = 50 minutes
+- Saves 4+ hours of wrong fixes + days of bug reports
+- **ROI: 5-10x time savings**
 
 ---
 
