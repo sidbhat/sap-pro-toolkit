@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation
+    url: https://github.com/sidbhat/sf-pro-toolkit/blob/main/README.md
+    about: Read the full documentation and feature guides
+  - name: 💬 Discussions
+    url: https://github.com/sidbhat/sf-pro-toolkit/discussions
+    about: Ask questions and discuss features with the community
+  - name: 🌐 Community Profiles
+    url: https://github.com/sidbhat/sf-pro-toolkit/blob/main/PROFILES.md
+    about: Browse and download community-contributed profiles
