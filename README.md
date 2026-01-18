@@ -2,7 +2,7 @@
 
 > A Chrome extension for SAP professionals - Your command center for SuccessFactors, S/4HANA, BTP, and more
 
-![SAP Pro Toolkit](screenshots/sap%20pro%20toolkil%20screenshots1.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshots1.png" alt="SAP Pro Toolkit" width="600">
 
 **Version**: 1.6.5 | **Status**: Production Ready | **Languages**: 10 supported
 
@@ -33,7 +33,7 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 | **Global** | Everyone | Universal SAP resources, community links |
 | **Starter** | New users | Template with examples |
 
-![Profile System](screenshots/sap%20pro%20toolkil%20screenshotsSTARTER4.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsSTARTER4.png" alt="Profile System" width="600">
 
 **Switch profiles instantly** with the dropdown in the header. Each profile maintains its own environments, shortcuts, and notes.
 
@@ -41,14 +41,14 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 2. ✨ **AI-Powered Features** - Test, Search, Analyze
 
-![AI Search](screenshots/sap%20pro%20toolkil%20screenshotsAISEARCH9.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsAISEARCH9.png" alt="AI Search" width="600">
 
 **AI Search** (`Cmd+I`): Search across all your environments, shortcuts, and notes with intelligent insights
 - Understands context and relationships
 - Provides relevance scoring
 - Suggests related items
 
-![AI Prompts](screenshots/sap%20pro%20toolkil%20screenshotsAIPROMPT5.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsAIPROMPT5.png" alt="AI Prompts" width="600">
 
 **Live AI Prompt Testing**: Test Joule copilot prompts with real AI models
 - **Supported Models**: OpenAI GPT-4, Anthropic Claude, SAP AI Core
@@ -56,7 +56,7 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 - Save responses as notes for reference
 - Download responses in TXT/MD/HTML formats
 
-![AI Response](screenshots/sap%20pro%20toolkil%20screenshotsAIRESPONSENOTE10.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsAIRESPONSENOTE10.png" alt="AI Response" width="600">
 
 **AI Diagnostics**: Generate intelligent page analysis reports
 - Automatic troubleshooting insights
@@ -72,7 +72,7 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 3. 🌐 **Environment Management** - Switch Safely
 
-![Environment Switching](screenshots/sap%20pro%20toolkil%20screenshots2.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshots2.png" alt="Environment Switching" width="600">
 
 **One-click switching** between Production, Preview, Sales, and Sandbox instances:
 - 🔴 **Production** - Red indicator with confirmation prompts
@@ -92,7 +92,7 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 4. ⚡ **Quick Actions** - One-Click Workflows
 
-![Quick Actions](screenshots/sap%20pro%20toolkil%20screenshotsQUICKACTION6.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsQUICKACTION6.png" alt="Quick Actions" width="600">
 
 **Solution-specific workflows** that adapt to your current profile:
 - Admin tools (Provisioning, RBP, User Management)
@@ -101,7 +101,7 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 - Time management (Time Off, Time Sheets)
 - Compensation planning
 
-![Configure Quick Actions](screenshots/sap%20pro%20toolkil%20screenshotsCONFIGUREQA14.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsCONFIGUREQA14.png" alt="Configure Quick Actions" width="600">
 
 **Customize in Settings**: Edit names and paths for each profile
 
@@ -109,7 +109,7 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 5. 🔍 **Diagnostics & System Info**
 
-![Page Diagnostics](screenshots/sap%20pro%20toolkil%20screenshotsPAGEDIAGNOSTICS12.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsPAGEDIAGNOSTICS12.png" alt="Page Diagnostics" width="600">
 
 **One-click diagnostic reports** for troubleshooting:
 - Environment details (datacenter, region, platform)
@@ -118,7 +118,7 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 - API endpoints and configuration
 - **Copy to clipboard** for support tickets
 
-![SF Diagnostics](screenshots/sap%20pro%20toolkil%20screenshotsSFPAGEDIAGNOSTICS13.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsSFPAGEDIAGNOSTICS13.png" alt="SF Diagnostics" width="600">
 
 **Enhanced for SuccessFactors**: Extracts additional SF-specific data when available
 
@@ -128,7 +128,7 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 📋 **Smart Shortcuts** - Organize External Links
 
-![Add Shortcut](screenshots/sap%20pro%20toolkil%20screenshotsADDSHORTCUT8.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsADDSHORTCUT8.png" alt="Add Shortcut" width="600">
 
 **External link management** with AI-powered summaries:
 - Add any external URL (documentation, roadmaps, communities)
@@ -195,7 +195,7 @@ Auto-detects from SAP environment (`?locale=`) or browser settings
 
 ### 📦 **Import/Export**
 
-![Export Profile](screenshots/sap%20pro%20toolkil%20screenshotsEXPORT11.png)
+<img src="screenshots/sap%20pro%20toolkil%20screenshotsEXPORT11.png" alt="Export Profile" width="600">
 
 **Backup and share configurations**:
 - Export current profile as JSON file
@@ -339,13 +339,6 @@ Extension pending Chrome Web Store review
 
 ---
 
-## 📚 Documentation
-
-- **[PROFILES.md](PROFILES.md)** - Complete profile system guide
-- **[CHANGELOG.md](CHANGELOG.md)** - Version history and release notes
-- **[I18N-GUIDE.md](I18N-GUIDE.md)** - Internationalization documentation
-- **[COMMUNITY-PROFILE-GUIDE.md](COMMUNITY-PROFILE-GUIDE.md)** - How to create and share profiles
-
 ---
 
 ## 🤝 Community & Support
@@ -356,45 +349,9 @@ Extension pending Chrome Web Store review
 - 💬 [Discussions](https://github.com/sidbhat/sap-pro-toolkit/discussions)
 - 📦 [Download Profiles](https://github.com/sidbhat/sap-pro-toolkit/tree/main/resources)
 
-**Documentation Website**: [Coming Soon - Vercel Deployment]
+**Learn More**: [PROFILES.md](PROFILES.md) • [COMMUNITY-PROFILE-GUIDE.md](COMMUNITY-PROFILE-GUIDE.md)
 
 ---
-
-## 📋 Version History
-
-### v1.6.5 (2026-01-18) - Latest
-- 🐛 **Fixed**: Keyboard shortcuts not working (Cmd+J, Cmd+Shift+N)
-- 🛡️ **Changed**: Modal behavior - forms no longer close on backdrop click (prevents data loss)
-
-### v1.6.4 (2026-01-18)
-- 🔧 **Fixed**: Profile export/import system - simplified logic, fixed "Unknown" profile bug
-- 📦 **Fixed**: Solutions (Quick Actions) now import correctly
-
-### v1.6.3 (2026-01-18)
-- 🔧 **Fixed**: Icon rendering system - corrected format mismatch (URIs → library IDs)
-
-### v1.6.2 (2026-01-14)
-- ✨ **Improved**: AI blocking overlay - better visibility during operations
-- 🔒 **Security**: Removed hardcoded SAP AI Core credentials from HTML
-
-### v1.6.0 (2026-01-12)
-- ⭐ **Added**: Universal pin/favorite system for all items
-- ⌨️ **Added**: Enhanced keyboard shortcuts (Cmd+E, Cmd+Shift+1/2)
-- 📊 **Added**: Environment usage tracking (last accessed, access count)
-
-### v1.5.0 (2026-01-11)
-- 🚀 **Added**: Go-Live & Cutover profile for S/4HANA implementations
-
-### v1.4.0 (2026-01-11)
-- 🛠️ **Added**: Build automation system (npm scripts)
-- 🚀 **Added**: S/4HANA Go-Live profile
-
-### v1.3.0 (2026-01-11)
-- 🌍 **Added**: 10-language internationalization
-- 📝 **Added**: Personal notes with color-coding
-- ⌨️ **Added**: Keyboard shortcuts throughout
-
-[Full changelog](CHANGELOG.md)
 
 ---
 
