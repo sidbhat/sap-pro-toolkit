@@ -6,6 +6,8 @@
 
 **Version**: 1.7.0 | **Status**: Production Ready | **Languages**: 10 supported
 
+🚀 **[Download Beta Release →](https://github.com/sidbhat/sap-pro-toolkit/releases/tag/beta)**
+
 ---
 
 ## 🎯 What is SAP Pro Toolkit?
