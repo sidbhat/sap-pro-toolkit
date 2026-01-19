@@ -379,13 +379,30 @@ Extension pending Chrome Web Store review
 ## ❓ FAQ
 
 **Q: What AI features does the extension include?**
-A: The extension offers 4 AI-powered features: (1) AI Search - intelligent search across your environments, shortcuts, and notes with relevance scoring and suggestions, (2) Live AI Prompt Testing - test Joule copilot prompts with OpenAI GPT-4, Anthropic Claude, or SAP AI Core, (3) AI Diagnostics - generate intelligent page analysis and troubleshooting reports, and (4) AI Note Enhancement - refine and expand your notes with AI assistance.
+
+A: The extension offers 4 AI-powered features:
+1. **AI Search** - Intelligent search across your environments, shortcuts, and notes with relevance scoring and suggestions
+2. **Live AI Prompt Testing** - Test Joule copilot prompts with OpenAI GPT-4, Anthropic Claude, or SAP AI Core
+3. **AI Diagnostics** - Generate intelligent page analysis and troubleshooting reports
+4. **AI Note Enhancement** - Refine and expand your notes with AI assistance
 
 **Q: How do I configure AI features?**
-A: Open Settings (⚙️ in footer) → API Keys tab. Enter your API key for OpenAI, Anthropic Claude, or SAP AI Core. Click "Test Connection" to verify. Once configured, all AI features become active throughout the extension. Note: AI features are optional - the extension works fully without them.
+
+A: Configuration steps:
+1. Open Settings (⚙️ in footer) → API Keys tab
+2. Enter your API key for OpenAI, Anthropic Claude, or SAP AI Core
+3. Click "Test Connection" to verify
+4. Once configured, all AI features become active throughout the extension
+
+Note: AI features are optional - the extension works fully without them.
 
 **Q: Can I save AI prompt responses?**
-A: Yes! After testing a prompt, you can: (1) Save the response as a note for future reference, (2) Download in TXT, Markdown, or HTML format, (3) Copy to clipboard, or (4) Use the AI Note Enhancement feature to refine it further.
+
+A: Yes! After testing a prompt, you can:
+1. Save the response as a note for future reference
+2. Download in TXT, Markdown, or HTML format
+3. Copy to clipboard
+4. Use the AI Note Enhancement feature to refine it further
 
 **Q: What is AI Diagnostics and when should I use it?**
 A: AI Diagnostics analyzes the current SAP page and generates an intelligent troubleshooting report. Use it when debugging issues or documenting system configurations. It automatically extracts environment details, validates configurations, and provides performance recommendations. The report can be copied to clipboard for support tickets.
