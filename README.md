@@ -2,7 +2,7 @@
 
 > A Chrome extension for SAP professionals - Your command center for SuccessFactors, S/4HANA, BTP, and more
 
-<img src="screenshots/sap%20pro%20toolkil%20screenshots1.png" alt="SAP Pro Toolkit" width="300">
+<img src="screenshots/sap%20pro%20hero%20image0.png" alt="SAP Pro Toolkit" width="600">
 
 **Version**: 1.7.0 | **Status**: Production Ready | **Languages**: 10 supported
 
