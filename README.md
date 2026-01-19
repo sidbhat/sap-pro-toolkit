@@ -4,7 +4,7 @@
 
 <img src="screenshots/sap%20pro%20toolkil%20screenshots1.png" alt="SAP Pro Toolkit" width="300">
 
-**Version**: 1.6.5 | **Status**: Production Ready | **Languages**: 10 supported
+**Version**: 1.7.0 | **Status**: Production Ready | **Languages**: 10 supported
 
 ---
 
@@ -172,8 +172,7 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ### 📝 **Scratch Notes** - Personal Knowledge Base
 
-**Color-coded notes** for temporary information:
-- 5 color options (Yellow, Blue, Green, Pink, Orange)
+**Organized notes** for temporary information:
 - **Two types**: Regular notes (📝) and AI prompts (✨)
 - ⭐ Pin important notes to top
 - 💾 Download in TXT/MD/HTML formats
@@ -182,17 +181,6 @@ A **Chrome side panel extension** that transforms how SAP professionals work acr
 
 ---
 
-### 🔒 **Auto-Login** - Secure Credential Storage (PREMIUM NOT IMPLEMENTED)
-
-**Optional encrypted auto-login** for faster environment switching:
-- AES-256-GCM enterprise-grade encryption
-- Support for SuccessFactors two-step login flow
-- Company ID management
-- Cookie clearing for fresh sessions
-- SSO/OAuth detection with graceful fallback
-- Password visibility toggle
-
-**Recommended for**: Preview, Sales, and Sandbox environments only
 
 ---
 
@@ -241,8 +229,6 @@ Auto-detects from SAP environment (`?locale=`) or browser settings
 ### 🎨 **Customization**
 
 - **Icon picker** for visual organization (100+ SAP icons)
-- **Color themes** for notes and UI elements
-- **Drag-to-reorder** for environments, shortcuts, notes
 - **Custom tags** for categorization
 - **Per-item notes** for additional context
 
@@ -396,8 +382,6 @@ A: The extension uses **side panel mode** (persistent panel on left/right) for c
 **Q: Do I need API keys to use the extension?**
 A: No. AI features require API keys (OpenAI/Anthropic/SAP AI Core), but all other features work without configuration.
 
-**Q: Is auto-login secure?**
-A: Yes. Credentials are encrypted with AES-256-GCM before storage and only decrypted when needed. Recommended for non-production environments.
 
 **Q: Can I share profiles with my team?**
 A: Yes. Export your profile as JSON (Settings → Import/Export) and share the file. Team members can import it to create their own copy.
@@ -415,10 +399,10 @@ A: Partially. Saved environments/shortcuts work offline. AI features and diagnos
 **Completed** ✅:
 - Profile system with 8 curated profiles
 - AI-powered search and prompt testing
-- Auto-login with encryption
 - Universal pin/favorite system
 - 10-language support
 - Keyboard shortcuts
+- Feedback button for bug reports
 
 **In Progress** 🚧:
 - Chrome Web Store submission
