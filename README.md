@@ -366,7 +366,7 @@ Extension pending Chrome Web Store review
 - 🐛 [Report Bugs](https://github.com/sidbhat/sap-pro-toolkit/issues/new?template=bug_report.yml)
 - 💡 [Request Features](https://github.com/sidbhat/sap-pro-toolkit/issues/new?template=feature_request.yml)
 - 💬 [Discussions](https://github.com/sidbhat/sap-pro-toolkit/discussions)
-- 📦 [Download Profiles](https://github.com/sidbhat/sap-pro-toolkit/tree/main/resources)
+- 📦 [Download Profiles](https://github.com/sidbhat/sap-pro-toolkit/tree/master/resources)
 
 **Learn More**: [PROFILES.md](https://github.com/sidbhat/sap-pro-toolkit/blob/master/PROFILES.md)
 
